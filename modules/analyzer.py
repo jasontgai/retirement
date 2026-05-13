@@ -21,7 +21,7 @@ from house_pension import estimate_house_pension
 from tax_calculator import (
     calculate_income_tax, calculate_pension_income_deduction,
     calculate_financial_income_tax, calculate_health_insurance_local,
-    check_dependent_eligibility,
+    calculate_health_insurance_employee, check_dependent_eligibility,
 )
 
 
@@ -129,7 +129,10 @@ class RetirementAnalyzer:
                     annual_return=pension.annual_return_rate,
                 )
 
-                payout_years = pension.payout_period_years or 20
+                _is_lifetime = pension.payout_period_years == 0
+                _lifespan = self.profile.personal.expected_lifespan
+                # 종신(0)이면 기대수명까지의 기간으로 계산, 저장은 0 유지
+                payout_years = (_lifespan - pension.expected_start_age) if _is_lifetime else (pension.payout_period_years or 20)
                 payout = calculate_pension_payout(
                     total_amount=projection['balance_at_payout_start'],
                     start_age=pension.expected_start_age,
@@ -150,7 +153,7 @@ class RetirementAnalyzer:
                     '수령시점_적립금': projection['balance_at_payout_start'],
                     '월수령액': payout['monthly_payout'],
                     '연수령액': payout['annual_payout'],
-                    '수령기간': payout['payout_years'],
+                    '수령기간': 0 if _is_lifetime else payout['payout_years'],
                     '예상세금': tax_info['tax'],
                     '세후월수령액': round((payout['annual_payout'] -
                                           tax_info['tax']) / 12),
@@ -284,9 +287,13 @@ class RetirementAnalyzer:
                 if start <= age < end:
                     sources[ins.name] = ins.monthly_payout
 
-            # 은퇴 후 근로소득
+            # 근로소득: 은퇴 전=급여, 은퇴 후=파트타임
             inc = self.profile.current_income
-            if inc.parttime_monthly > 0 and retirement_age <= age < inc.parttime_until_age:
+            if age < retirement_age:
+                _sal = round((inc.annual_salary + inc.annual_bonus) / 12)
+                if _sal > 0:
+                    sources['근로소득'] = _sal
+            elif inc.parttime_monthly > 0 and age < inc.parttime_until_age:
                 sources['근로소득'] = int(inc.parttime_monthly)
 
             # 배우자 연금
@@ -296,10 +303,45 @@ class RetirementAnalyzer:
             if p_info.spouse_other_monthly > 0 and age >= p_info.spouse_other_start_age:
                 sources['배우자 기타연금'] = int(p_info.spouse_other_monthly)
 
+            # 월세금 계산 (소득세 + 건보료 월환산)
+            _annual_income = sum(sources.values()) * 12
+            if age < retirement_age:
+                # 근로소득공제
+                _g = _annual_income
+                if _g <= 5_000_000:
+                    _labor_ded = _g * 0.70
+                elif _g <= 15_000_000:
+                    _labor_ded = 3_500_000 + (_g - 5_000_000) * 0.40
+                elif _g <= 45_000_000:
+                    _labor_ded = 7_500_000 + (_g - 15_000_000) * 0.15
+                elif _g <= 100_000_000:
+                    _labor_ded = 12_000_000 + (_g - 45_000_000) * 0.05
+                else:
+                    _labor_ded = 20_000_000
+                _taxable = max(0, _g - _labor_ded - 1_500_000)
+                _tax_m = round(calculate_income_tax(_taxable)['total'] / 12)
+                _hi_m = calculate_health_insurance_employee(_annual_income)['monthly_total']
+            else:
+                # 은퇴 후: 연금소득 기준 (임대·금융·근로소득 제외)
+                _pension_annual = sum(
+                    v for k, v in sources.items()
+                    if k not in ('임대수입', '금융자산수익', '근로소득')
+                ) * 12
+                _p_ded = calculate_pension_income_deduction(_pension_annual)
+                _taxable = max(0, _pension_annual - _p_ded - 1_500_000)
+                _tax_m = round(calculate_income_tax(_taxable)['total'] / 12)
+                _hi_m = calculate_health_insurance_local(
+                    annual_pension_income=_pension_annual,
+                    annual_financial_income=fi_monthly * 12,
+                    annual_other_income=rental_monthly * 12,
+                )['monthly_total']
+            _monthly_tax = _tax_m + _hi_m
+
             rows.append({
                 '나이': age,
                 '월수입': sum(sources.values()),
                 '항목별': sources,
+                '월세금': _monthly_tax,
             })
 
         return rows
@@ -415,7 +457,11 @@ class RetirementAnalyzer:
                 annual_return=pension.annual_return_rate,
             )
             balance = projection['balance_at_payout_start']
-            current_years = pension.payout_period_years or 20
+            _is_lifetime = pension.payout_period_years == 0
+            _lifespan = self.profile.personal.expected_lifespan
+            current_years = 0 if _is_lifetime else (pension.payout_period_years or 20)
+            # 월수령 계산용 실제 기간 (종신=기대수명까지)
+            _calc_years = (_lifespan - pension.expected_start_age) if _is_lifetime else current_years
 
             period_map = {}
             for years in [5, 10, 15, 20, 25, 30]:
@@ -428,7 +474,7 @@ class RetirementAnalyzer:
                 }
 
             cur_payout = calculate_pension_payout(
-                balance, pension.expected_start_age, current_years, pension.annual_return_rate
+                balance, pension.expected_start_age, _calc_years, pension.annual_return_rate
             )
             results.append({
                 '연금명': pension.name,

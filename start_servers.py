@@ -3,7 +3,6 @@ import subprocess, time, os, urllib.request, sys
 
 APPDIR = os.path.dirname(os.path.abspath(__file__))
 PYTHON  = os.path.join(APPDIR, r'.venv\Scripts\python.exe')
-STREAM  = os.path.join(APPDIR, r'.venv\Scripts\streamlit.exe')
 BACKEND_PORT = 8080
 FRONTEND_PORT = 8501
 
@@ -66,7 +65,7 @@ else:
 # 3. 프론트엔드 시작 (새 콘솔 창)
 print(f'[3/3] 프론트엔드 시작 (port {FRONTEND_PORT})...')
 fe = subprocess.Popen(
-    [STREAM, 'run', 'frontend/app.py',
+    [PYTHON, '-m', 'streamlit', 'run', 'frontend/app.py',
      '--server.port', str(FRONTEND_PORT),
      '--server.headless', 'true'],
     cwd=APPDIR,

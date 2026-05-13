@@ -16,6 +16,7 @@ from fastapi import FastAPI, HTTPException, Depends, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -51,6 +52,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+_static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
+app.mount("/static", StaticFiles(directory=_static_dir), name="static")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -398,9 +402,11 @@ def register(data: RegisterIn, db: Session = Depends(get_db)):
 
 @app.post("/auth/login", response_model=TokenOut)
 def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = auth_utils.authenticate_user(db, form.username, form.password)
+    user = auth_utils.get_user_by_email(db, form.username)
     if not user:
-        raise HTTPException(status_code=401, detail="이메일 또는 비밀번호가 올바르지 않습니다.")
+        raise HTTPException(status_code=401, detail="등록되지 않은 이메일입니다.")
+    if not user.password_hash or not auth_utils.verify_password(form.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="비밀번호가 올바르지 않습니다.")
     token = auth_utils.create_access_token(user.id, user.email)
     return TokenOut(access_token=token, user_id=user.id, name=user.name)
 
@@ -666,17 +672,17 @@ def house_pension(req: HousePensionRequest):
     return estimate_house_pension(req.house_value, req.age)
 
 
-@app.post("/house-pension/compare")
-def house_pension_compare(req: "HousePensionCompareRequest"):
-    return compare_sell_vs_pension(req.house_value, req.age, req.rental_income, req.end_age, req.investment_return)
-
-
 class HousePensionCompareRequest(BaseModel):
     house_value: float
     age: int
     rental_income: float = 0
     end_age: int = 90
     investment_return: float = 0.03
+
+
+@app.post("/house-pension/compare")
+def house_pension_compare(req: HousePensionCompareRequest):
+    return compare_sell_vs_pension(req.house_value, req.age, req.rental_income, req.end_age, req.investment_return)
 
 
 class IncomeTaxRequest(BaseModel):
@@ -776,7 +782,8 @@ def delete_me(
 # ============================================================
 
 def _callback_uri(provider: str) -> str:
-    return f"http://localhost:8000/auth/callback/{provider}"
+    base = os.getenv("BACKEND_URL", "http://localhost:8080")
+    return f"{base}/auth/callback/{provider}"
 
 
 def _parse_oauth_user(provider: str, data: dict) -> tuple[str, str, str]:

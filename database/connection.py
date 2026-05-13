@@ -2,6 +2,7 @@
 MySQL 연결 및 세션 관리 (SQLAlchemy 2.x)
 """
 import os
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
@@ -9,8 +10,8 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 load_dotenv()
 
 DATABASE_URL = (
-    f"mysql+pymysql://{os.getenv('DB_USER', 'root')}:"
-    f"{os.getenv('DB_PASSWORD', '')}@"
+    f"mysql+pymysql://{quote_plus(os.getenv('DB_USER', 'root'))}:"
+    f"{quote_plus(os.getenv('DB_PASSWORD', ''))}@"
     f"{os.getenv('DB_HOST', 'localhost')}:"
     f"{os.getenv('DB_PORT', '3306')}/"
     f"{os.getenv('DB_NAME', 'retirement_app')}"
