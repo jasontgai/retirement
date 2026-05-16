@@ -6,9 +6,10 @@
 import sys
 import os
 import secrets
+import hashlib
 import time
 import requests as http_client
-from datetime import date
+from datetime import date, datetime, timedelta
 from typing import List, Optional
 from urllib.parse import urlencode, quote
 
@@ -37,6 +38,8 @@ from modules.tax_calculator import (
 from database.connection import get_db, create_all_tables
 from database import auth as auth_utils
 from database import repository as repo
+from database.orm_models import PasswordResetToken, RevokedToken
+from backend.email_sender import send_password_reset_email
 
 
 app = FastAPI(
@@ -106,6 +109,10 @@ def get_current_user(
     payload = auth_utils.decode_token(token)
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="토큰이 유효하지 않습니다.")
+    # 로그아웃된 토큰(블랙리스트) 체크
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    if db.query(RevokedToken).filter(RevokedToken.token_hash == token_hash).first():
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="로그아웃된 토큰입니다.")
     user = db.query(auth_utils.User).filter(auth_utils.User.id == int(payload["sub"])).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="사용자를 찾을 수 없습니다.")
@@ -238,7 +245,7 @@ class FullProfileIn(BaseModel):
     debts: List[DebtIn] = []
     insurances: List[InsuranceIn] = []
     expected_expense: ExpectedExpenseIn = Field(default_factory=ExpectedExpenseIn)
-    inflation_rate: float = 0.025
+    inflation_rate: float = 0.025  # 2.5%
 
 
 # ============================================================
@@ -409,6 +416,78 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
         raise HTTPException(status_code=401, detail="비밀번호가 올바르지 않습니다.")
     token = auth_utils.create_access_token(user.id, user.email)
     return TokenOut(access_token=token, user_id=user.id, name=user.name)
+
+
+# ============================================================
+# 비밀번호 재설정 (이메일 인증번호)
+# ============================================================
+
+class PasswordResetRequestIn(BaseModel):
+    email: str
+
+class PasswordResetConfirmIn(BaseModel):
+    email: str
+    code: str
+    new_password: str
+
+@app.post("/auth/password-reset/request", status_code=200)
+def password_reset_request(data: PasswordResetRequestIn, db: Session = Depends(get_db)):
+    """이메일로 6자리 인증번호 발송 (항상 200 반환 — 이메일 존재 여부 노출 방지)"""
+    user = auth_utils.get_user_by_email(db, data.email)
+    if user and user.password_hash:  # OAuth 전용 계정은 비밀번호 재설정 불가
+        # 기존 미사용 토큰 만료 처리
+        db.query(PasswordResetToken).filter(
+            PasswordResetToken.user_id == user.id,
+            PasswordResetToken.used == False,
+        ).update({"used": True})
+
+        # 6자리 숫자 인증번호 생성
+        code = f"{secrets.randbelow(1_000_000):06d}"
+        token_hash = hashlib.sha256(code.encode()).hexdigest()
+        expires_at = datetime.utcnow() + timedelta(minutes=15)
+
+        db.add(PasswordResetToken(
+            user_id=user.id,
+            token_hash=token_hash,
+            expires_at=expires_at,
+        ))
+        db.commit()
+        sent = send_password_reset_email(user.email, user.name, code)
+        if not sent:
+            import logging
+            logging.getLogger(__name__).warning(
+                "비밀번호 재설정 이메일 발송 실패 — SMTP 설정을 확인하세요. (user_id=%s)", user.id
+            )
+
+    return {"message": "입력하신 이메일로 인증번호를 발송했습니다."}
+
+
+@app.post("/auth/password-reset/confirm", status_code=200)
+def password_reset_confirm(data: PasswordResetConfirmIn, db: Session = Depends(get_db)):
+    """인증번호 확인 후 비밀번호 변경"""
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="비밀번호는 6자 이상이어야 합니다.")
+
+    user = auth_utils.get_user_by_email(db, data.email)
+    if not user:
+        raise HTTPException(status_code=400, detail="인증번호가 올바르지 않거나 만료되었습니다.")
+
+    token_hash = hashlib.sha256(data.code.encode()).hexdigest()
+    reset_token = db.query(PasswordResetToken).filter(
+        PasswordResetToken.user_id == user.id,
+        PasswordResetToken.token_hash == token_hash,
+        PasswordResetToken.used == False,
+        PasswordResetToken.expires_at > datetime.utcnow(),
+    ).first()
+
+    if not reset_token:
+        raise HTTPException(status_code=400, detail="인증번호가 올바르지 않거나 만료되었습니다.")
+
+    user.password_hash = auth_utils.hash_password(data.new_password)
+    reset_token.used = True
+    db.commit()
+
+    return {"message": "비밀번호가 성공적으로 변경되었습니다."}
 
 
 # ============================================================
@@ -732,6 +811,25 @@ def get_me(current_user=Depends(get_current_user)):
         "name": current_user.name,
         "created_at": str(current_user.created_at),
     }
+
+
+@app.post("/auth/logout", status_code=200)
+def logout(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db),
+):
+    """토큰을 블랙리스트에 등록해 즉시 무효화. 만료 토큰은 주기적으로 정리."""
+    payload = auth_utils.decode_token(token)
+    if payload:
+        token_hash = hashlib.sha256(token.encode()).hexdigest()
+        # 중복 등록 방지
+        if not db.query(RevokedToken).filter(RevokedToken.token_hash == token_hash).first():
+            exp = datetime.utcfromtimestamp(payload.get("exp", 0))
+            db.add(RevokedToken(token_hash=token_hash, expires_at=exp))
+            # 만료된 블랙리스트 항목 정리 (로그아웃마다 한 번씩)
+            db.query(RevokedToken).filter(RevokedToken.expires_at < datetime.utcnow()).delete()
+            db.commit()
+    return {"message": "로그아웃되었습니다."}
 
 
 class UpdateMeIn(BaseModel):

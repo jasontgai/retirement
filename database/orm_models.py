@@ -198,3 +198,25 @@ class AnalysisResult(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     profile: Mapped["Profile"] = relationship("Profile", back_populates="analyses")
+
+
+class RevokedToken(Base):
+    """로그아웃된 JWT 블랙리스트 (토큰 만료 전 무효화)"""
+    __tablename__ = "revoked_tokens"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    token_hash: Mapped[str] = mapped_column(String(64), nullable=False, index=True)  # SHA-256
+    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)  # JWT exp (정리용)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class PasswordResetToken(Base):
+    """비밀번호 재설정 인증번호"""
+    __tablename__ = "password_reset_tokens"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    token_hash: Mapped[str] = mapped_column(String(64), nullable=False)  # SHA-256 hex
+    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    used: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())

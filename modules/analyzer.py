@@ -5,6 +5,7 @@
 """
 import sys
 import os
+import math
 from datetime import date as _today_date
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -40,9 +41,10 @@ class RetirementAnalyzer:
             '자산현황': self._analyze_assets(),
             '연금분석': self._analyze_pensions(),
             '주택연금': self._analyze_house_pension(),
+            '기초연금': self._analyze_basic_pension(),
             '예상수입': self._project_retirement_income(),
             '나이별수입': self._project_income_by_age(),
-            '퇴직연금_포트폴리오': self._analyze_pension_portfolio_scenarios(),
+            '재투자시뮬레이션': self._project_reinvestment(),
             '세금건보료': self._analyze_tax_and_insurance(),
             '현금흐름': self._project_cash_flow(),
             '현금흐름_보완': self._check_shortfall_remedies(),
@@ -237,10 +239,93 @@ class RetirementAnalyzer:
             monthly_sources['배우자 기타연금'] = int(p_info.spouse_other_monthly)
             annual_total += p_info.spouse_other_monthly * 12
 
+        # 기초연금 (만 65세 이후, 소득인정액 기준 수급 여부 판단)
+        if self.profile.personal.retirement_age >= 65:
+            nps_monthly = next(
+                (int(info.get('월수령액_조정') or info.get('월수령액', 0))
+                 for name, info in self._analyze_pensions().items()
+                 if '국민연금' in name),
+                0,
+            )
+            has_spouse = p_info.spouse_nps_monthly > 0 or p_info.spouse_other_monthly > 0
+            bp = self._calc_basic_pension(sum(monthly_sources.values()), nps_monthly, has_spouse)
+            if bp > 0:
+                monthly_sources['기초연금'] = bp
+                annual_total += bp * 12
+
         return {
             '월수입_합계': sum(monthly_sources.values()),
             '연수입_합계': annual_total,
             '항목별': monthly_sources,
+        }
+
+    def _calc_basic_pension(self, monthly_total: int, nps_monthly: int, has_spouse: bool) -> int:
+        """
+        기초연금 수급액 계산 (2025년 기준)
+        - 선정기준: 소득인정액 ≤ 213만원(단독) / 340.8만원(부부)
+        - 기준연금액: 334,810원
+        - NPS 연계감액: NPS > 기준×1.5 시 초과분의 50% 감액
+        - 부부 수령 시 각각 20% 추가 감액
+        """
+        BASE = 334_810
+        THRESHOLD_SOLO   = 2_130_000
+        THRESHOLD_COUPLE = 3_408_000
+
+        threshold = THRESHOLD_COUPLE if has_spouse else THRESHOLD_SOLO
+        if monthly_total > threshold:
+            return 0
+
+        nps_limit = round(BASE * 1.5)  # 502,215원
+        if nps_monthly > nps_limit:
+            benefit = BASE - round((nps_monthly - nps_limit) * 0.5)
+            benefit = max(benefit, round(BASE * 0.5))  # 최저 167,405원
+        else:
+            benefit = BASE
+
+        if has_spouse:
+            benefit = round(benefit * 0.8)
+
+        return benefit
+
+    def _analyze_basic_pension(self) -> dict:
+        """기초연금 수급 가능성 요약 분석"""
+        p_info = self.profile.personal
+        BASE = 334_810
+        THRESHOLD_SOLO   = 2_130_000
+        THRESHOLD_COUPLE = 3_408_000
+
+        retirement_income = self._project_retirement_income()
+        monthly_total = retirement_income['월수입_합계']
+
+        nps_monthly = next(
+            (int(info.get('월수령액_조정') or info.get('월수령액', 0))
+             for name, info in self._analyze_pensions().items()
+             if '국민연금' in name),
+            0,
+        )
+        has_spouse = p_info.spouse_nps_monthly > 0 or p_info.spouse_other_monthly > 0
+        threshold = THRESHOLD_COUPLE if has_spouse else THRESHOLD_SOLO
+
+        eligible_at_65 = p_info.retirement_age >= 65
+        income_eligible = monthly_total <= threshold
+
+        benefit = self._calc_basic_pension(monthly_total, nps_monthly, has_spouse) if eligible_at_65 else 0
+
+        nps_deducted = nps_monthly > round(BASE * 1.5) and eligible_at_65 and income_eligible
+
+        return {
+            '수급가능': eligible_at_65 and income_eligible,
+            '월수급액': benefit,
+            '소득인정액': monthly_total,
+            '선정기준액': threshold,
+            'NPS감액여부': nps_deducted,
+            '기준연금액': BASE,
+            '비고': (
+                '만 65세 미만으로 수급 불가' if not eligible_at_65
+                else '소득인정액 초과로 수급 불가' if not income_eligible
+                else 'NPS 연계 감액 적용' if nps_deducted
+                else '전액 수급 가능'
+            ),
         }
 
     def _project_income_by_age(self) -> list:
@@ -276,6 +361,9 @@ class RetirementAnalyzer:
                 if start <= age < end:
                     amt = info.get('월수령액_조정') or info.get('월수령액', 0)
                     if amt > 0:
+                        # 국민연금은 매년 물가상승률만큼 인상 (법정 CPI 연동)
+                        if pension.pension_type.value == '국민연금':
+                            amt = round(amt * (1 + self.inflation_rate) ** max(0, age - start))
                         sources[pension.name] = amt
 
             for ins in self.profile.insurances:
@@ -299,12 +387,29 @@ class RetirementAnalyzer:
             # 배우자 연금
             p_info = self.profile.personal
             if p_info.spouse_nps_monthly > 0 and age >= p_info.spouse_nps_start_age:
-                sources['배우자 국민연금'] = int(p_info.spouse_nps_monthly)
+                _sp_nps_years = max(0, age - p_info.spouse_nps_start_age)
+                sources['배우자 국민연금'] = round(
+                    int(p_info.spouse_nps_monthly) * (1 + self.inflation_rate) ** _sp_nps_years
+                )
             if p_info.spouse_other_monthly > 0 and age >= p_info.spouse_other_start_age:
                 sources['배우자 기타연금'] = int(p_info.spouse_other_monthly)
 
+            # 기초연금: 만 65세 이상, 소득인정액 기준 수급 가능 시 포함
+            if age >= 65:
+                _nps_m = sources.get('국민연금', 0)
+                _has_sp = p_info.spouse_nps_monthly > 0 or p_info.spouse_other_monthly > 0
+                _bp = self._calc_basic_pension(sum(sources.values()), _nps_m, _has_sp)
+                if _bp > 0:
+                    sources['기초연금'] = _bp
+
             # 월세금 계산 (소득세 + 건보료 월환산)
             _annual_income = sum(sources.values()) * 12
+            _tax_detail: dict = {}
+
+            # 사적연금 이름 → 타입 맵 (분리/종합과세 판정용)
+            _private_types = {'퇴직연금DB', '퇴직연금DC', 'IRP', '연금저축'}
+            _pension_name_type = {p.name: p.pension_type.value for p in self.profile.pensions}
+
             if age < retirement_age:
                 # 근로소득공제
                 _g = _annual_income
@@ -319,8 +424,20 @@ class RetirementAnalyzer:
                 else:
                     _labor_ded = 20_000_000
                 _taxable = max(0, _g - _labor_ded - 1_500_000)
-                _tax_m = round(calculate_income_tax(_taxable)['total'] / 12)
+                _tax_result = calculate_income_tax(_taxable)
+                _tax_m = round(_tax_result['total'] / 12)
                 _hi_m = calculate_health_insurance_employee(_annual_income)['monthly_total']
+                _tax_detail = {
+                    '소득구분': '근로소득',
+                    '연소득': round(_annual_income / 10000),
+                    '근로소득공제': round(_labor_ded / 10000),
+                    '기본공제': 150,
+                    '과세표준': round(_taxable / 10000),
+                    '연소득세': round(_tax_result['total'] / 10000),
+                    '실효세율': _tax_result['effective_rate'],
+                    '건보료구분': '직장가입자',
+                    '건보료_월': round(_hi_m / 10000, 1),
+                }
             else:
                 # 은퇴 후: 연금소득 기준 (임대·금융·근로소득 제외)
                 _pension_annual = sum(
@@ -329,19 +446,55 @@ class RetirementAnalyzer:
                 ) * 12
                 _p_ded = calculate_pension_income_deduction(_pension_annual)
                 _taxable = max(0, _pension_annual - _p_ded - 1_500_000)
-                _tax_m = round(calculate_income_tax(_taxable)['total'] / 12)
-                _hi_m = calculate_health_insurance_local(
+                _tax_result = calculate_income_tax(_taxable)
+                _tax_m = round(_tax_result['total'] / 12)
+                _hi_result = calculate_health_insurance_local(
                     annual_pension_income=_pension_annual,
                     annual_financial_income=fi_monthly * 12,
                     annual_other_income=rental_monthly * 12,
-                )['monthly_total']
-            _monthly_tax = _tax_m + _hi_m
+                )
+                _hi_m = _hi_result['monthly_total']
 
+                # 사적연금(퇴직연금·IRP·연금저축) 연수령액 합계 → 분리/종합과세 판정
+                _private_annual = sum(
+                    v for k, v in sources.items()
+                    if _pension_name_type.get(k) in _private_types
+                ) * 12
+                if _private_annual > 15_000_000:
+                    _pvt_tax_method = f'종합과세 또는 16.5% 분리과세 선택 (연 {round(_private_annual/10000)}만원)'
+                elif _private_annual > 0:
+                    _pvt_rate = 5.5 if age < 70 else (4.4 if age < 80 else 3.3)
+                    _pvt_tax_method = f'저율 분리과세 {_pvt_rate}% (연 {round(_private_annual/10000)}만원)'
+                else:
+                    _pvt_tax_method = None
+
+                _tax_detail = {
+                    '소득구분': '연금소득',
+                    '연연금소득': round(_pension_annual / 10000),
+                    '연금소득공제': round(_p_ded / 10000),
+                    '기본공제': 150,
+                    '과세표준': round(_taxable / 10000),
+                    '연소득세': round(_tax_result['total'] / 10000),
+                    '실효세율': _tax_result['effective_rate'],
+                    '건보료구분': '지역가입자',
+                    '건보료_월': round(_hi_m / 10000, 1),
+                    '건보료_소득반영': round(_hi_result.get('income_for_calc', 0) / 10000),
+                    '사적연금_과세': _pvt_tax_method,
+                }
+
+            # NaN/inf 방어: 비정상 값은 0으로 대체
+            clean_sources = {
+                k: v for k, v in sources.items()
+                if isinstance(v, (int, float)) and math.isfinite(v)
+            }
             rows.append({
                 '나이': age,
-                '월수입': sum(sources.values()),
-                '항목별': sources,
-                '월세금': _monthly_tax,
+                '월수입': sum(clean_sources.values()),
+                '항목별': clean_sources,
+                '월소득세': _tax_m,
+                '월건보료': _hi_m,
+                '월세금': _tax_m + _hi_m,
+                '세금계산기준': _tax_detail,
             })
 
         return rows
@@ -363,28 +516,35 @@ class RetirementAnalyzer:
         for re in self.profile.real_estates:
             annual_rental += re.monthly_rent_income * 12
 
-        # 부동산 공시가격 합산 (건보료 산정용)
-        property_value = sum(
-            (re.official_price or re.market_value * 0.7)
-            for re in self.profile.real_estates
-        )
-        # 회원권도 재산에 포함
-        membership_value = sum(m.market_value for m in self.profile.memberships)
-        total_property = property_value + membership_value
+        # ── 재산 산정 ────────────────────────────────────────────
+        # 건보료 지역가입자 산정: 공시가격 기준
+        re_property_list = []
+        for re in self.profile.real_estates:
+            official = re.official_price or round(re.market_value * 0.7)
+            re_property_list.append({
+                'name': re.name,
+                'official_price': official,
+                'tax_base': round(official * 0.6),   # 재산세 과표 = 공시가 × 60%
+                'is_primary': re.is_primary_residence,
+                'has_rental': re.monthly_rent_income > 0,
+            })
+        re_property_total      = sum(r['official_price'] for r in re_property_list)
+        # 피부양자 기준 재산세 과표 합산 (주택 공시가 × 60% + 회원권 시가)
+        dep_tax_base_total = sum(r['tax_base'] for r in re_property_list)
+        membership_value   = sum(m.market_value for m in self.profile.memberships)
+        dep_tax_base_total += membership_value
+        # 건보료 지역가입자용 property_value (공시가 합산)
+        total_property = re_property_total + membership_value
 
-        # 종합소득세 (연금 + 임대 + 금융소득 종합과세분)
+        # ── 소득세 ───────────────────────────────────────────────
         pension_deduction = calculate_pension_income_deduction(annual_pension)
-        taxable_pension = max(0, annual_pension - pension_deduction)
-        # 단순화: 기본공제 150만원만 적용
-        taxable_income = taxable_pension + annual_rental - 1_500_000
-        income_tax = calculate_income_tax(max(0, taxable_income))
+        taxable_pension   = max(0, annual_pension - pension_deduction)
+        taxable_income    = taxable_pension + annual_rental - 1_500_000
+        income_tax        = calculate_income_tax(max(0, taxable_income))
 
-        # 금융소득세
-        fi_tax = calculate_financial_income_tax(
-            annual_financial, taxable_income
-        )
+        fi_tax = calculate_financial_income_tax(annual_financial, taxable_income)
 
-        # 건강보험료 (지역가입자 가정)
+        # ── 건강보험료 (지역가입자) ──────────────────────────────
         health = calculate_health_insurance_local(
             annual_pension_income=annual_pension,
             annual_financial_income=annual_financial,
@@ -392,13 +552,70 @@ class RetirementAnalyzer:
             property_value=total_property,
         )
 
-        # 피부양자 가능성
-        total_income_for_dependent = (
-            annual_pension * 0.5 + annual_financial + annual_rental
-        )
+        # ── 피부양자 자격 (2022.9 개편 기준) ────────────────────
+        # 소득 기준: 공적연금 전액 + 금융소득(1천만 초과 시만 산입) + 임대소득
+        FI_DEP_THRESHOLD = 10_000_000  # 금융소득 1천만 초과 시 전액 산입
+        dep_fi_income = annual_financial if annual_financial > FI_DEP_THRESHOLD else 0
+        dep_annual_income = annual_pension + dep_fi_income + annual_rental
+        has_rental_income = annual_rental > 0
+
         dep_check = check_dependent_eligibility(
-            total_income_for_dependent, total_property
+            dep_annual_income, dep_tax_base_total,
+            has_business_income=has_rental_income,  # 임대소득 = 사업소득 간주
         )
+
+        # 피부양자 등재 시 절감액
+        dep_saving_annual = health['annual_total'] if dep_check['eligible'] else 0
+
+        # 자녀 피부양자 가능 여부 안내 (자녀 수 > 0 이면 해당)
+        has_dependents = self.profile.personal.dependents > 0
+
+        # 재산 기준 상세
+        dep_property_ok   = dep_tax_base_total <= 540_000_000
+        dep_property_mid  = 360_000_000 < dep_tax_base_total <= 540_000_000
+        dep_income_ok     = dep_annual_income <= 20_000_000
+        dep_income_mid_ok = dep_annual_income <= 10_000_000  # 재산 3.6~5.4억 구간
+
+        dep_detail = {
+            '연간소득_피부양자기준': round(dep_annual_income),
+            '재산세과표_합계': round(dep_tax_base_total),
+            '소득기준_충족': dep_income_ok,
+            '재산기준_충족': dep_property_ok,
+            '임대소득_없음': not has_rental_income,
+            '재산중간구간': dep_property_mid,
+            '재산중간구간_소득기준_충족': dep_income_mid_ok if dep_property_mid else None,
+            '자녀_있음': has_dependents,
+            '절감_예상_연': round(dep_saving_annual),
+            '재산_항목': re_property_list,
+        }
+        dep_check.update(dep_detail)
+
+        # ── 직장 임의계속가입 계산 ───────────────────────────────
+        # 퇴직 전 급여 기반으로 임의계속가입 보험료 산정
+        # 임의계속가입: 사업주+본인 부담분 전액 본인 부담 = 직장 본인분 × 2
+        annual_salary = self.profile.current_income.annual_salary
+        monthly_salary = annual_salary / 12
+        from config.tax_config import HEALTH_INSURANCE_RATE_EMPLOYEE, LONG_TERM_CARE_RATE
+        # 전체 직장 보험료 (사업주+본인) = 월급 × 7.09% × (1+장기요양율)
+        voluntary_health   = monthly_salary * HEALTH_INSURANCE_RATE_EMPLOYEE
+        voluntary_ltc      = voluntary_health * LONG_TERM_CARE_RATE
+        voluntary_monthly  = round(voluntary_health + voluntary_ltc)
+
+        local_monthly = health['monthly_total']
+
+        # 임의계속가입이 유리한지 여부
+        voluntary_saves = local_monthly - voluntary_monthly  # 양수면 임의계속가입이 유리
+        is_voluntary_better = voluntary_monthly < local_monthly
+
+        voluntary_info = {
+            '월_보험료': voluntary_monthly,
+            '연_보험료': voluntary_monthly * 12,
+            '기준_월급여': round(monthly_salary),
+            '지역가입자_대비_절감_월': max(0, voluntary_saves),
+            '임의계속가입_유리': is_voluntary_better,
+            '적용기간': 36,  # 최대 36개월
+            '신청기한': '퇴직일로부터 2개월 이내',
+        }
 
         return {
             '예상연금소득': annual_pension,
@@ -410,6 +627,7 @@ class RetirementAnalyzer:
             '금융소득세': fi_tax,
             '건강보험료': health,
             '피부양자_가능여부': dep_check,
+            '임의계속가입': voluntary_info,
             '총_세부담_연': (income_tax['total'] +
                              (fi_tax.get('total_tax') or fi_tax.get('tax', 0)) +
                              health['annual_total']),
@@ -439,6 +657,63 @@ class RetirementAnalyzer:
             '월지출_합계': round(total_expense),
             '월잉여(부족)': round(income['월수입_합계'] - total_expense),
             '연잉여(부족)': round((income['월수입_합계'] - total_expense) * 12),
+        }
+
+    def _project_reinvestment(self, reinvest_rate: float = 0.03,
+                               inflation_rate: float = None) -> dict:
+        """잉여금 자동 재투자 시뮬레이션 (은퇴~기대수명)
+        매년 (월수입 - 월지출물가반영 - 월세금)의 잉여/부족을 재투자 계좌에 반영.
+        부족 시 계좌에서 인출, 계좌 소진 후엔 누적 적자로 표시.
+        """
+        if inflation_rate is None:
+            inflation_rate = self.inflation_rate
+        personal = self.profile.personal
+        retirement_age = personal.retirement_age
+        lifespan = personal.expected_lifespan
+        expense = self.profile.expected_expense
+
+        # 은퇴 시점 기준 월지출 (생활비 + 회원권 + 차량)
+        membership_dues = sum(m.annual_dues for m in self.profile.memberships) / 12
+        vehicle_cost = sum(v.annual_cost for v in self.profile.vehicles) / 12
+        base_monthly_expense = expense.total_monthly + membership_dues + vehicle_cost
+
+        age_rows = self._project_income_by_age()
+        age_map = {r['나이']: r for r in age_rows}
+
+        balance = 0.0
+        rows = []
+        exhausted_age = None  # 계좌 소진 나이
+
+        for age in range(retirement_age, lifespan + 1):
+            row = age_map.get(age, {})
+            monthly_income = row.get('월수입', 0)
+            monthly_tax    = row.get('월세금', 0)
+
+            years_since_retire = age - retirement_age
+            monthly_expense = base_monthly_expense * ((1 + inflation_rate) ** years_since_retire)
+
+            monthly_surplus = monthly_income - monthly_expense - monthly_tax
+            annual_surplus  = monthly_surplus * 12
+
+            # 전년도 잔액에 수익 적용 후 당해 잉여 반영
+            balance = balance * (1 + reinvest_rate) + annual_surplus
+
+            if balance < 0 and exhausted_age is None and annual_surplus < 0:
+                exhausted_age = age
+
+            rows.append({
+                '나이': age,
+                '월잉여': round(monthly_surplus),
+                '누적잔액': round(balance),
+            })
+
+        final_balance = rows[-1]['누적잔액'] if rows else 0
+        return {
+            '수익률': reinvest_rate,
+            '물가상승률': inflation_rate,
+            '나이별': rows,
+            '최종누적잔액': final_balance,
+            '소진나이': exhausted_age,
         }
 
     def _get_private_pension_scenarios(self) -> list:
@@ -591,65 +866,6 @@ class RetirementAnalyzer:
             )
 
         return scenarios
-
-    def _analyze_pension_portfolio_scenarios(self) -> list:
-        """DC형·IRP 퇴직연금의 포트폴리오 유형별 시나리오 비교"""
-        SCENARIOS = [
-            ('예금형',  0.015),
-            ('채권형',  0.040),
-            ('TDF/혼합', 0.055),
-            ('주식형',  0.080),
-        ]
-        current_age = self.profile.personal.current_age
-        results = []
-
-        for pension in self.profile.pensions:
-            if pension.pension_type.value not in ('퇴직연금DC', 'IRP', '연금저축'):
-                continue
-
-            payout_years = pension.payout_period_years or 20
-            scenarios_out = []
-            current_rate = pension.annual_return_rate
-
-            for label, rate in SCENARIOS:
-                proj = project_pension_at_retirement(
-                    current_balance=pension.current_balance,
-                    monthly_contribution=pension.monthly_contribution,
-                    current_age=current_age,
-                    contribution_end_age=pension.contribution_end_age,
-                    payout_start_age=pension.expected_start_age,
-                    annual_return=rate,
-                )
-                payout = calculate_pension_payout(
-                    total_amount=proj['balance_at_payout_start'],
-                    start_age=pension.expected_start_age,
-                    payout_years=payout_years,
-                    annual_return=rate,
-                )
-                is_current = abs(rate - current_rate) < 0.005
-                scenarios_out.append({
-                    '유형': label,
-                    '수익률': rate,
-                    '수령시점_적립금': proj['balance_at_payout_start'],
-                    '월수령액': payout['monthly_payout'],
-                    '현재설정': is_current,
-                })
-
-            # 현재 설정 기준 비교값 계산
-            base = next((s for s in scenarios_out if s['현재설정']), scenarios_out[0])
-            for s in scenarios_out:
-                s['월수령액_증감'] = s['월수령액'] - base['월수령액']
-                s['적립금_증감'] = s['수령시점_적립금'] - base['수령시점_적립금']
-
-            results.append({
-                '연금명': pension.name,
-                '종류': pension.pension_type.value,
-                '현재_수익률': current_rate,
-                '수령기간': payout_years,
-                '시나리오': scenarios_out,
-            })
-
-        return results
 
     def _analyze_tax_optimization(self) -> dict:
         """IRP/연금저축 세액공제 최적화 분석"""

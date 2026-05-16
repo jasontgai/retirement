@@ -157,12 +157,12 @@ def delete_profile(db: Session, profile_id: int, user_id: int) -> bool:
 
 
 def upsert_profile(db: Session, user_id: int, user_profile, profile_id: int | None = None, title: str = "기본 플랜") -> Profile:
-    """기존 프로필 있으면 삭제 후 재생성"""
+    """기존 프로필 있으면 같은 트랜잭션에서 삭제 후 재생성 (원자적)"""
     if profile_id:
         existing = get_profile(db, profile_id, user_id)
         if existing:
             db.delete(existing)
-            db.commit()
+            # commit 하지 않음 — save_profile의 commit이 delete+insert를 한 번에 처리
     return save_profile(db, user_id, user_profile, title)
 
 
