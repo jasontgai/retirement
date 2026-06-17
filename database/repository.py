@@ -195,3 +195,4 @@ def get_analysis(db: Session, analysis_id: int, profile_id: int) -> AnalysisResu
         AnalysisResult.id == analysis_id,
         AnalysisResult.profile_id == profile_id,
     ).first()
+

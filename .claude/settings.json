@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import ast; ast.parse\\(open\\('frontend/app.py'\\).read\\(\\)\\); print\\('syntax OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('frontend/app.py', encoding='utf-8'\\).read\\(\\)\\); print\\('syntax OK'\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('frontend/app.py', encoding='utf-8'\\).read\\(\\)\\); print\\('OK'\\)\")",
+      "Bash(python -c \"import altair; print\\(altair.__version__\\)\")"
+    ]
+  }
+}

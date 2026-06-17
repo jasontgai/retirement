@@ -3,7 +3,7 @@ import subprocess, time, os, urllib.request, sys
 
 APPDIR = os.path.dirname(os.path.abspath(__file__))
 PYTHON  = os.path.join(APPDIR, r'.venv\Scripts\python.exe')
-BACKEND_PORT = 8080
+BACKEND_PORT = 9080
 FRONTEND_PORT = 8501
 
 

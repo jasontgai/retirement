@@ -107,15 +107,57 @@ class RetirementAnalyzer:
             if pension.pension_type.value == "국민연금":
                 normal_age = get_pension_start_age(birth_year)
                 actual_start = max(pension.expected_start_age, normal_age - 5)
+                original_monthly = round(pension.expected_monthly_payout)
                 adjusted_monthly = adjust_pension_amount(
                     pension.expected_monthly_payout, normal_age, actual_start
                 )
+                diff_years = actual_start - normal_age
+                if diff_years < 0:
+                    timing_reason = f"조기수령 {abs(diff_years)}년 (연 6% 감액, {diff_years * 6:+.0f}%)"
+                elif diff_years > 0:
+                    timing_reason = f"연기수령 {diff_years}년 (연 7.2% 가산, +{diff_years * 7.2:.1f}%)"
+                else:
+                    timing_reason = "정상수령 (조정 없음)"
+
+                # 재직자 노령연금 감액 (2025년 A값 기준, 최대 5년 적용)
+                _NPS_A_VALUE = 2_989_237
+                _inc = self.profile.current_income
+                if actual_start < retirement_age:
+                    _income_at_start = (_inc.annual_salary + _inc.annual_bonus) // 12
+                elif _inc.parttime_monthly > 0 and actual_start <= _inc.parttime_until_age:
+                    _income_at_start = _inc.parttime_monthly
+                else:
+                    _income_at_start = 0
+
+                income_deduction = 0
+                income_deduction_reason = ''
+                if _income_at_start > _NPS_A_VALUE:
+                    _excess = _income_at_start - _NPS_A_VALUE
+                    _reduction = 0
+                    for _cap, _rate in [(1_000_000, 0.05), (1_000_000, 0.10),
+                                        (1_000_000, 0.15), (1_000_000, 0.20), (float('inf'), 0.25)]:
+                        _chunk = min(_excess, _cap)
+                        _reduction += _chunk * _rate
+                        _excess -= _chunk
+                        if _excess <= 0:
+                            break
+                    income_deduction = round(min(_reduction, adjusted_monthly * 0.5))
+                    income_deduction_reason = (
+                        f"재직자 노령연금 감액 — 소득 {_income_at_start:,}원/월이 "
+                        f"A값({_NPS_A_VALUE:,}원) 초과, 최대 5년간 적용"
+                    )
+
                 results[pension.name] = {
                     '종류': pension.pension_type.value,
                     '정상수급연령': normal_age,
                     '실제수급연령': actual_start,
                     '수령시작_연령': actual_start,
                     '개시년도': current_year + max(0, actual_start - current_age),
+                    '월수령액_원래': original_monthly,
+                    '조정_차이': round(adjusted_monthly) - original_monthly,
+                    '조정_사유': timing_reason,
+                    '재직자_감액': income_deduction,
+                    '재직자_감액_사유': income_deduction_reason,
                     '월수령액_조정': round(adjusted_monthly),
                     '연수령액': round(adjusted_monthly * 12),
                     '과세방식': '연금소득세 (종합소득 합산)',
@@ -340,8 +382,15 @@ class RetirementAnalyzer:
             fa.amount * fa.annual_return_rate for fa in self.profile.financial_assets
         ) / 12)
 
+        _today = _today_date.today()
+        _bd = personal.birth_date
+        _current_age = _today.year - _bd.year - (
+            1 if (_today.month, _today.day) < (_bd.month, _bd.day) else 0
+        )
+        _start_age = max(1, min(_current_age, retirement_age - 1))
+
         rows = []
-        for age in range(55, lifespan + 1):
+        for age in range(_start_age, lifespan + 1):
             sources = {}
             if age >= retirement_age:
                 if rental_monthly > 0:
@@ -361,9 +410,33 @@ class RetirementAnalyzer:
                 if start <= age < end:
                     amt = info.get('월수령액_조정') or info.get('월수령액', 0)
                     if amt > 0:
-                        # 국민연금은 매년 물가상승률만큼 인상 (법정 CPI 연동)
                         if pension.pension_type.value == '국민연금':
+                            # 물가상승률 반영 (법정 CPI 연동)
                             amt = round(amt * (1 + self.inflation_rate) ** max(0, age - start))
+                            # 재직자 노령연금 감액: 연금 수령 후 최대 5년간, 근로소득 > A값 시 적용
+                            _years_since_start = age - start
+                            if _years_since_start < 5:
+                                _NPS_A = 2_989_237
+                                _inc2 = self.profile.current_income
+                                _earned = 0
+                                if age < retirement_age:
+                                    _earned = round((_inc2.annual_salary + _inc2.annual_bonus) / 12)
+                                elif _inc2.parttime_monthly > 0 and age < _inc2.parttime_until_age:
+                                    _earned = int(_inc2.parttime_monthly)
+                                if _earned > _NPS_A:
+                                    _excess = _earned - _NPS_A
+                                    _red = 0
+                                    for _cap, _rate in [
+                                        (1_000_000, 0.05), (1_000_000, 0.10),
+                                        (1_000_000, 0.15), (1_000_000, 0.20),
+                                        (float('inf'), 0.25)
+                                    ]:
+                                        _chunk = min(_excess, _cap)
+                                        _red += _chunk * _rate
+                                        _excess -= _chunk
+                                        if _excess <= 0:
+                                            break
+                                    amt = max(0, amt - round(min(_red, amt * 0.5)))
                         sources[pension.name] = amt
 
             for ins in self.profile.insurances:

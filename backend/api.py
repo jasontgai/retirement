@@ -5,6 +5,7 @@
 """
 import sys
 import os
+import json
 import secrets
 import hashlib
 import time
@@ -880,7 +881,7 @@ def delete_me(
 # ============================================================
 
 def _callback_uri(provider: str) -> str:
-    base = os.getenv("BACKEND_URL", "http://localhost:8080")
+    base = os.getenv("BACKEND_URL", "http://localhost:9080")
     return f"{base}/auth/callback/{provider}"
 
 
@@ -996,6 +997,57 @@ def oauth_callback(
         f"&name={quote(user.name)}"
         f"&email={quote(user.email)}"
     )
+
+
+# ============================================================
+# 시나리오 비교 (JSON 파일 기반 — DB 불필요)
+# ============================================================
+_SCENARIOS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "scenarios")
+os.makedirs(_SCENARIOS_DIR, exist_ok=True)
+
+
+def _scenario_path(user_id: int, label: str) -> str:
+    safe_label = label.upper().replace(" ", "_")
+    return os.path.join(_SCENARIOS_DIR, f"{user_id}_{safe_label}.json")
+
+
+class ScenarioIn(BaseModel):
+    label: str
+    retire_age: int
+    monthly_income: int
+    monthly_expense: int
+    monthly_surplus: int
+    total_assets: int
+    detail: dict = {}
+
+
+@app.post("/scenarios", status_code=201)
+def save_scenario(data: ScenarioIn, current_user=Depends(get_current_user)):
+    from datetime import datetime as _dt
+    payload = data.dict()
+    payload["saved_at"] = _dt.now().strftime("%Y-%m-%d %H:%M")
+    path = _scenario_path(current_user.id, data.label)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    return {"label": data.label, "saved_at": payload["saved_at"]}
+
+
+@app.get("/scenarios")
+def get_scenarios(current_user=Depends(get_current_user)):
+    result = []
+    for label in ["GOOD", "BEST"]:
+        path = _scenario_path(current_user.id, label)
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as f:
+                result.append(json.load(f))
+    return result
+
+
+@app.delete("/scenarios/{label}", status_code=204)
+def delete_scenario(label: str, current_user=Depends(get_current_user)):
+    path = _scenario_path(current_user.id, label)
+    if os.path.exists(path):
+        os.remove(path)
 
 
 if __name__ == "__main__":
