@@ -1,9 +1,9 @@
 {
-  "label": "GOOD",
+  "label": "BEST",
   "retire_age": 65,
-  "monthly_income": 5254382,
+  "monthly_income": 6837492,
   "monthly_expense": 4985987,
-  "monthly_surplus": 268395,
+  "monthly_surplus": 1851505,
   "total_assets": 1530000000,
   "detail": {
     "총자산": 0,
@@ -11,5 +11,5 @@
     "금융자산": 130000000,
     "부동산": 1400000000
   },
-  "saved_at": "2026-06-18 01:02"
+  "saved_at": "2026-06-18 00:07"
 }

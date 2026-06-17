@@ -11,7 +11,6 @@ import pandas as pd
 import altair as alt
 from datetime import date as _date, datetime as _datetime, timedelta as _timedelta
 from urllib.parse import unquote
-import extra_streamlit_components as stx
 
 # ============================================================
 # 설정
@@ -22,7 +21,7 @@ except Exception:
     try:
         from dotenv import load_dotenv as _lde
         import os as _os
-        _lde(dotenv_path=_os.path.join(_os.path.dirname(_os.path.dirname(__file__)), '.env'))
+        _lde(dotenv_path=_os.path.join(_os.path.dirname(_os.path.dirname(__file__)), '.env'), override=True)
         API_BASE = _os.getenv("BACKEND_URL", "http://localhost:9080")
     except Exception:
         API_BASE = "http://localhost:9080"
@@ -240,30 +239,56 @@ def init_state():
 
 init_state()
 
-# ── 쿠키 기반 세션 유지 ──────────────────────────────────────
-_cm = stx.CookieManager(key="ret_cookies")
+# ── 쿠키 기반 세션 유지 (st.context.cookies + st.html JS 방식) ──────────
+_COOKIE_MAX_AGE = 30 * 24 * 60 * 60  # 30일(초)
 
 def _save_session_to_cookie(token, user_id, user_name, user_email):
-    _exp = _datetime.now() + _timedelta(days=30)
-    _cm.set('ret_token', token,        expires_at=_exp, key='cks_tok')
-    _cm.set('ret_uid',   str(user_id), expires_at=_exp, key='cks_uid')
-    _cm.set('ret_name',  user_name,    expires_at=_exp, key='cks_name')
-    _cm.set('ret_email', user_email,   expires_at=_exp, key='cks_email')
+    """다음 렌더에서 JavaScript로 쿠키 저장"""
+    st.session_state['_pending_cookie'] = {
+        'action': 'set',
+        'token':  token,
+        'uid':    str(user_id),
+        'name':   user_name.replace('"', ''),
+        'email':  user_email.replace('"', ''),
+    }
 
 def _clear_session_cookie():
-    for _ck in ('ret_token', 'ret_uid', 'ret_name', 'ret_email'):
-        try:
-            _cm.delete(_ck)
-        except Exception:
-            pass
+    """다음 렌더에서 JavaScript로 쿠키 삭제"""
+    st.session_state['_pending_cookie'] = {'action': 'delete'}
 
-# 새로고침 후 쿠키에서 세션 복원
-# session_invalidated=True 이면 로그아웃된 상태 → 쿠키 복원 건너뜀
-# CookieManager는 첫 렌더에서 None 반환 → JS 로드 후 자동 rerun → 두 번째에 실제값
+def _flush_cookie_js():
+    """보류 중인 쿠키 작업을 JavaScript로 실행 (렌더 초반에 호출)"""
+    _pc = st.session_state.pop('_pending_cookie', None)
+    if _pc is None:
+        return
+    _ma = _COOKIE_MAX_AGE
+    if _pc['action'] == 'set':
+        _js = f"""<script>
+var a={_ma};
+document.cookie="ret_token={_pc['token']};max-age="+a+";path=/;SameSite=Lax";
+document.cookie="ret_uid={_pc['uid']};max-age="+a+";path=/;SameSite=Lax";
+document.cookie="ret_name={_pc['name']};max-age="+a+";path=/;SameSite=Lax";
+document.cookie="ret_email={_pc['email']};max-age="+a+";path=/;SameSite=Lax";
+</script>"""
+    else:
+        _js = """<script>
+["ret_token","ret_uid","ret_name","ret_email"].forEach(function(n){{
+    document.cookie=n+"=;max-age=0;path=/;SameSite=Lax";
+}});
+</script>"""
+    st.html(f'<span style="display:none">{_js}</span>', unsafe_allow_javascript=True)
+
+# 보류 중인 쿠키 JS 실행 (로그인/로그아웃 직후 rerun 시 쿠키 기록)
+_flush_cookie_js()
+
+# 새로고침 후 쿠키에서 세션 복원 (st.context.cookies = HTTP 요청 헤더에서 직접 읽음)
 if not st.session_state.token and not st.session_state.get('session_invalidated'):
-    _ck_token = _cm.get('ret_token')
+    _ck = st.context.cookies
+    _ck_token = _ck.get('ret_token')
     if _ck_token:
-        # 401/403 응답 시에만 토큰 무효 처리. 네트워크 오류·서버 다운 시엔 세션 복원 유지
+        _ck_uid   = _ck.get('ret_uid', '0')
+        _ck_name  = _ck.get('ret_name', '')
+        _ck_email = _ck.get('ret_email', '')
         _revoked = False
         try:
             _verify_resp = requests.get(
@@ -275,9 +300,9 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
                 _revoked = True
             elif _verify_resp.status_code == 200:
                 _me = _verify_resp.json()
-                st.session_state.user_id    = _me.get('id') or int(_cm.get('ret_uid') or 0)
-                st.session_state.user_name  = _me.get('name') or _cm.get('ret_name') or ''
-                st.session_state.user_email = _me.get('email') or _cm.get('ret_email') or ''
+                st.session_state.user_id    = _me.get('id') or int(_ck_uid or 0)
+                st.session_state.user_name  = _me.get('name') or _ck_name or ''
+                st.session_state.user_email = _me.get('email') or _ck_email or ''
         except Exception:
             pass  # 서버 연결 실패 → 쿠키 값 그대로 사용
         if _revoked:
@@ -286,9 +311,9 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
         else:
             st.session_state.token = _ck_token
             if not st.session_state.user_id:
-                st.session_state.user_id    = int(_cm.get('ret_uid') or 0)
-                st.session_state.user_name  = _cm.get('ret_name') or ''
-                st.session_state.user_email = _cm.get('ret_email') or ''
+                st.session_state.user_id    = int(_ck_uid or 0)
+                st.session_state.user_name  = _ck_name or ''
+                st.session_state.user_email = _ck_email or ''
             st.rerun()
 
 # OAuth 콜백 처리 (소셜 로그인 완료 후 리다이렉트)
@@ -2319,6 +2344,16 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 
         # ── 시나리오 비교 (GOOD / BEST 저장 & 비교표) ───────────
         _retire_age_cur = result.get('사용자정보', {}).get('희망은퇴연령', 0)
+        def _asset_num(v):
+            if isinstance(v, dict):
+                return int(v.get('합계', v.get('시세_합계', 0)))
+            if isinstance(v, str):
+                try:
+                    return int(float(v))
+                except (ValueError, TypeError):
+                    return 0
+            return int(v or 0)
+
         _snap_payload = {
             'label': '',
             'retire_age':      int(_retire_age_cur),
@@ -2327,10 +2362,10 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
             'monthly_surplus': int(cf.get('월잉여(부족)', 0)),
             'total_assets':    int(assets.get('순자산', 0)),
             'detail': {
-                '총자산':    int(assets.get('총자산', 0)),
-                '총부채':    int(assets.get('총부채', 0)),
-                '금융자산':  str(assets.get('금융자산', 0)),
-                '부동산':    str(assets.get('부동산', 0)),
+                '총자산':   int(assets.get('총자산', 0)),
+                '총부채':   int(assets.get('총부채', 0)),
+                '금융자산': _asset_num(assets.get('금융자산', 0)),
+                '부동산':   _asset_num(assets.get('부동산', 0)),
             },
         }
         _sc_b1, _sc_b2, _sc_b3 = st.columns([2, 2, 4])
@@ -2360,15 +2395,25 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
             if _snap_map:
                 st.divider()
                 st.markdown("#### 📊 시나리오 비교")
-                _cols_hdr = ['항목', '현재 상황']
+                # 우리나라 평균 (통계청 2024 가계금융복지조사 기준, 50대 가구)
+                _KR_AVG = {
+                    '은퇴연령':  '62세',
+                    '월 수입':   fmt_won(1_200_000),   # 국민연금+기타 평균
+                    '월 지출':   fmt_won(2_700_000),   # 은퇴 부부 생활비
+                    '월 잉여':   fmt_won(-1_500_000),
+                    '순자산':    fmt_won(370_000_000),
+                    '금융자산':  fmt_won(150_000_000),
+                    '부동산':    fmt_won(220_000_000),
+                }
+                _cols_hdr = ['항목', '현재 상황', '🇰🇷 우리나라 평균']
                 _cols_data = {
-                    '은퇴연령':  [f"{_retire_age_cur}세"],
-                    '월 수입':   [fmt_won(cf.get('월수입', 0))],
-                    '월 지출':   [fmt_won(cf.get('월지출_합계', 0))],
-                    '월 잉여':   [fmt_won(cf.get('월잉여(부족)', 0))],
-                    '순자산':    [fmt_won(assets.get('순자산', 0))],
-                    '금융자산':  [fmt_won(assets.get('금융자산', 0))],
-                    '부동산':    [fmt_won(assets.get('부동산', 0))],
+                    '은퇴연령':  [f"{_retire_age_cur}세",         _KR_AVG['은퇴연령']],
+                    '월 수입':   [fmt_won(cf.get('월수입', 0)),   _KR_AVG['월 수입']],
+                    '월 지출':   [fmt_won(cf.get('월지출_합계', 0)), _KR_AVG['월 지출']],
+                    '월 잉여':   [fmt_won(cf.get('월잉여(부족)', 0)), _KR_AVG['월 잉여']],
+                    '순자산':    [fmt_won(assets.get('순자산', 0)), _KR_AVG['순자산']],
+                    '금융자산':  [fmt_won(_asset_num(assets.get('금융자산', 0))), _KR_AVG['금융자산']],
+                    '부동산':    [fmt_won(_asset_num(assets.get('부동산', 0))),   _KR_AVG['부동산']],
                 }
                 for _lbl in ['GOOD', 'BEST']:
                     _emoji = '📌 GOOD CASE' if _lbl == 'GOOD' else '🏆 BEST CASE'
@@ -2380,8 +2425,8 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                         _cols_data['월 지출'].append(fmt_won(_s['monthly_expense']))
                         _cols_data['월 잉여'].append(fmt_won(_s['monthly_surplus']))
                         _cols_data['순자산'].append(fmt_won(_s['total_assets']))
-                        _cols_data['금융자산'].append(fmt_won(_s['detail'].get('금융자산', 0)))
-                        _cols_data['부동산'].append(fmt_won(_s['detail'].get('부동산', 0)))
+                        _cols_data['금융자산'].append(fmt_won(_asset_num(_s['detail'].get('금융자산', 0))))
+                        _cols_data['부동산'].append(fmt_won(_asset_num(_s['detail'].get('부동산', 0))))
 
                 _tbl_rows = []
                 for _item, _vals in _cols_data.items():
