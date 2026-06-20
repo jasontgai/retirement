@@ -135,6 +135,7 @@ class TokenOut(BaseModel):
     token_type: str = "bearer"
     user_id: int
     name: str
+    is_admin: bool = False
 
 
 class PersonalInfoIn(BaseModel):
@@ -405,7 +406,8 @@ def register(data: RegisterIn, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="이미 사용 중인 이메일입니다.")
     user = auth_utils.create_user(db, data.email, data.password, data.name)
     token = auth_utils.create_access_token(user.id, user.email)
-    return TokenOut(access_token=token, user_id=user.id, name=user.name)
+    return TokenOut(access_token=token, user_id=user.id, name=user.name,
+                    is_admin=bool(getattr(user, 'is_admin', False)))
 
 
 @app.post("/auth/login", response_model=TokenOut)
@@ -416,7 +418,8 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
     if not user.password_hash or not auth_utils.verify_password(form.password, user.password_hash):
         raise HTTPException(status_code=401, detail="비밀번호가 올바르지 않습니다.")
     token = auth_utils.create_access_token(user.id, user.email)
-    return TokenOut(access_token=token, user_id=user.id, name=user.name)
+    return TokenOut(access_token=token, user_id=user.id, name=user.name,
+                    is_admin=bool(getattr(user, 'is_admin', False)))
 
 
 # ============================================================
@@ -810,6 +813,7 @@ def get_me(current_user=Depends(get_current_user)):
         "id": current_user.id,
         "email": current_user.email,
         "name": current_user.name,
+        "is_admin": bool(getattr(current_user, 'is_admin', False)),
         "created_at": str(current_user.created_at),
     }
 
@@ -991,63 +995,150 @@ def oauth_callback(
             user = auth_utils.create_oauth_user(db, email, name, provider, oauth_id)
 
     jwt_token = auth_utils.create_access_token(user.id, user.email)
+    _is_admin = int(bool(getattr(user, 'is_admin', False)))
     return RedirectResponse(
         f"{STREAMLIT_URL}?token={jwt_token}"
         f"&user_id={user.id}"
         f"&name={quote(user.name)}"
         f"&email={quote(user.email)}"
+        f"&is_admin={_is_admin}"
     )
 
 
 # ============================================================
-# 시나리오 비교 (JSON 파일 기반 — DB 불필요)
+# 시나리오 비교 (DB 기반 — GOOD / BEST / STANDARD)
 # ============================================================
-_SCENARIOS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "scenarios")
-os.makedirs(_SCENARIOS_DIR, exist_ok=True)
-
-
-def _scenario_path(user_id: int, label: str) -> str:
-    safe_label = label.upper().replace(" ", "_")
-    return os.path.join(_SCENARIOS_DIR, f"{user_id}_{safe_label}.json")
-
 
 class ScenarioIn(BaseModel):
-    label: str
-    retire_age: int
-    monthly_income: int
-    monthly_expense: int
-    monthly_surplus: int
-    total_assets: int
+    label: str        # GOOD | BEST | STANDARD
+    retire_age: int = 0
+    monthly_income: int = 0
+    monthly_expense: int = 0
+    monthly_surplus: int = 0
+    total_assets: int = 0
     detail: dict = {}
 
 
+def require_admin(current_user=Depends(get_current_user)):
+    if not getattr(current_user, 'is_admin', False):
+        raise HTTPException(status_code=403, detail="관리자만 접근 가능합니다.")
+    return current_user
+
+
+def _scenario_row_to_dict(row) -> dict:
+    return {
+        "label":           row.label,
+        "user_id":         row.user_id,
+        "retire_age":      row.retire_age,
+        "monthly_income":  row.monthly_income,
+        "monthly_expense": row.monthly_expense,
+        "monthly_surplus": row.monthly_surplus,
+        "total_assets":    row.total_assets,
+        "detail":          json.loads(row.detail_json) if row.detail_json else {},
+    }
+
+
+@app.get("/admin/users")
+def admin_list_users(
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    UserModel = auth_utils.User
+    users = db.query(UserModel).order_by(UserModel.id).all()
+    return [
+        {
+            "id":         u.id,
+            "email":      u.email,
+            "name":       u.name,
+            "is_admin":   bool(u.is_admin),
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+        }
+        for u in users
+    ]
+
+
+@app.put("/admin/users/{user_id}/toggle-admin")
+def admin_toggle_admin(
+    user_id: int,
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    if user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="자신의 관리자 권한은 변경할 수 없습니다.")
+    UserModel = auth_utils.User
+    u = db.query(UserModel).filter(UserModel.id == user_id).first()
+    if not u:
+        raise HTTPException(status_code=404, detail="사용자 없음")
+    u.is_admin = not bool(u.is_admin)
+    db.commit()
+    return {"id": u.id, "email": u.email, "is_admin": bool(u.is_admin)}
+
+
 @app.post("/scenarios", status_code=201)
-def save_scenario(data: ScenarioIn, current_user=Depends(get_current_user)):
-    from datetime import datetime as _dt
-    payload = data.dict()
-    payload["saved_at"] = _dt.now().strftime("%Y-%m-%d %H:%M")
-    path = _scenario_path(current_user.id, data.label)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
-    return {"label": data.label, "saved_at": payload["saved_at"]}
+def save_scenario(
+    data: ScenarioIn,
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    import traceback
+    from database.orm_models import Scenario as ScenarioRow
+    try:
+        label = data.label.upper()
+        row = db.query(ScenarioRow).filter(
+            ScenarioRow.label == label,
+        ).first()
+        detail_json = json.dumps(data.detail, ensure_ascii=False)
+        if row:
+            row.retire_age      = data.retire_age
+            row.monthly_income  = data.monthly_income
+            row.monthly_expense = data.monthly_expense
+            row.monthly_surplus = data.monthly_surplus
+            row.total_assets    = data.total_assets
+            row.detail_json     = detail_json
+        else:
+            db.add(ScenarioRow(
+                user_id=None, label=label,
+                retire_age=data.retire_age,
+                monthly_income=data.monthly_income,
+                monthly_expense=data.monthly_expense,
+                monthly_surplus=data.monthly_surplus,
+                total_assets=data.total_assets,
+                detail_json=detail_json,
+            ))
+        db.commit()
+        return {"label": label, "status": "saved"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"저장 오류: {traceback.format_exc()}")
 
 
 @app.get("/scenarios")
-def get_scenarios(current_user=Depends(get_current_user)):
+def get_scenarios(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    from database.orm_models import Scenario as ScenarioRow
     result = []
-    for label in ["GOOD", "BEST"]:
-        path = _scenario_path(current_user.id, label)
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as f:
-                result.append(json.load(f))
+    for lbl in ("GOOD", "BEST", "STANDARD"):
+        row = db.query(ScenarioRow).filter(
+            ScenarioRow.label == lbl,
+        ).first()
+        if row:
+            result.append(_scenario_row_to_dict(row))
     return result
 
 
 @app.delete("/scenarios/{label}", status_code=204)
-def delete_scenario(label: str, current_user=Depends(get_current_user)):
-    path = _scenario_path(current_user.id, label)
-    if os.path.exists(path):
-        os.remove(path)
+def delete_scenario(
+    label: str,
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    from database.orm_models import Scenario as ScenarioRow
+    label = label.upper()
+    row = db.query(ScenarioRow).filter(
+        ScenarioRow.label == label,
+    ).first()
+    if row:
+        db.delete(row)
+        db.commit()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,2933 @@
+09:33:19 [render] token=False invalidated=None
+09:33:19 [cookie] ret_token=없음
+09:33:19 [qp] {}
+09:33:30 [render] token=False invalidated=None
+09:33:30 [cookie] ret_token=없음
+09:33:30 [qp] {}
+09:34:35 [render] token=False invalidated=None
+09:34:35 [cookie] ret_token=없음
+09:34:35 [qp] {}
+09:34:59 [render] token=False invalidated=None
+09:34:59 [cookie] ret_token=없음
+09:34:59 [qp] {}
+09:36:03 [render] token=False invalidated=None
+09:36:03 [cookie] ret_token=있음
+09:36:03 Starting new HTTP connection (1): localhost:9080
+09:36:05 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+09:36:05 [auth/me] status=200
+09:36:05 [render] token=True invalidated=None
+09:36:05 [qp] {}
+09:36:05 Starting new HTTP connection (1): localhost:9080
+09:36:07 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2202
+09:36:07 [render] token=True invalidated=None
+09:36:07 [qp] {}
+09:36:07 Starting new HTTP connection (1): localhost:9080
+09:36:09 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41756
+09:36:09 [render] token=True invalidated=None
+09:36:09 [qp] {}
+09:36:09 Starting new HTTP connection (1): localhost:9080
+09:36:11 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+09:36:14 [render] token=True invalidated=None
+09:36:14 [qp] {}
+09:36:14 [render] token=True invalidated=None
+09:36:14 [qp] {}
+09:36:14 Starting new HTTP connection (1): localhost:9080
+09:36:15 [render] token=True invalidated=None
+09:36:15 [qp] {}
+09:36:15 Starting new HTTP connection (1): localhost:9080
+09:36:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+09:36:17 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+09:36:17 [render] token=False invalidated=True
+09:36:17 [qp] {}
+09:36:20 [render] token=False invalidated=None
+09:36:20 [cookie] ret_token=있음
+09:36:20 Starting new HTTP connection (1): localhost:9080
+09:36:22 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 45
+09:36:22 [auth/me] status=401
+09:36:22 [cookie] 토큰 만료 → 쿠키 삭제
+09:36:22 [qp] {}
+09:40:52 [render] token=False invalidated=None
+09:40:52 [cookie] ret_token=없음
+09:40:52 [qp] {}
+09:44:38 [render] token=False invalidated=None
+09:44:38 [cookie] ret_token=없음
+09:44:38 [qp] {}
+09:45:31 [render] token=False invalidated=None
+09:45:31 [cookie] ret_token=없음
+09:45:31 [qp] {}
+09:46:10 [render] token=False invalidated=None
+09:46:10 [cookie] ret_token=없음
+09:46:10 [qp] {}
+09:46:22 [render] token=False invalidated=None
+09:46:22 [cookie] ret_token=없음
+09:46:22 [qp] {}
+09:46:28 [render] token=False invalidated=None
+09:46:28 [cookie] ret_token=없음
+09:46:28 [qp] {}
+09:50:52 [render] token=False invalidated=None
+09:50:52 [cookie] ret_token=없음
+09:50:52 [qp] {}
+09:51:15 [render] token=False invalidated=None
+09:51:15 [cookie] ret_token=없음
+09:51:15 [qp] {}
+09:54:47 [render] token=False invalidated=None
+09:54:47 [cookie] ret_token=없음
+09:54:47 [qp] {}
+09:54:56 [render] token=False invalidated=None
+09:54:56 [cookie] ret_token=없음
+09:54:56 [qp] {}
+09:55:37 [render] token=False invalidated=None
+09:55:37 [cookie] ret_token=없음
+09:55:37 [qp] {}
+09:56:01 [render] token=False invalidated=None
+09:56:01 [cookie] ret_token=없음
+09:56:01 [qp] {}
+09:56:50 [render] token=False invalidated=None
+09:56:50 [cookie] ret_token=없음
+09:56:50 [qp] {}
+09:57:41 [render] token=False invalidated=None
+09:57:41 [cookie] ret_token=없음
+09:57:41 [qp] {}
+09:59:14 [render] token=False invalidated=None
+09:59:14 [cookie] ret_token=없음
+09:59:14 [qp] {}
+10:02:29 [render] token=False invalidated=None
+10:02:29 [cookie] ret_token=없음
+10:02:29 [qp] {}
+10:06:34 [render] token=False invalidated=None
+10:06:34 [cookie] ret_token=없음
+10:06:34 [qp] {}
+10:06:40 [render] token=False invalidated=None
+10:06:40 [cookie] ret_token=없음
+10:06:40 [qp] {}
+10:08:08 [render] token=False invalidated=None
+10:08:08 [cookie] ret_token=없음
+10:08:08 [qp] {}
+10:08:13 [render] token=False invalidated=None
+10:08:13 [cookie] ret_token=없음
+10:08:13 [qp] {}
+10:08:37 [render] token=False invalidated=None
+10:08:37 [cookie] ret_token=없음
+10:08:37 [qp] {}
+10:09:18 [render] token=False invalidated=None
+10:09:18 [cookie] ret_token=없음
+10:09:18 [qp] {}
+10:16:55 [render] token=False invalidated=None
+10:16:55 [cookie] ret_token=없음
+10:16:55 [qp] {}
+10:17:05 [render] token=False invalidated=None
+10:17:05 [cookie] ret_token=없음
+10:17:05 [qp] {}
+10:22:55 [render] token=False invalidated=None
+10:22:55 [cookie] ret_token=없음
+10:22:55 [qp] {}
+10:23:00 [render] token=False invalidated=None
+10:23:00 [cookie] ret_token=없음
+10:23:00 [qp] {}
+10:23:07 [render] token=False invalidated=None
+10:23:07 [cookie] ret_token=없음
+10:23:07 [qp] {}
+10:23:28 [render] token=False invalidated=None
+10:23:28 [cookie] ret_token=없음
+10:23:28 [qp] {}
+10:25:39 [render] token=False invalidated=None
+10:25:39 [cookie] ret_token=없음
+10:25:39 [qp] {}
+10:25:54 [render] token=False invalidated=None
+10:25:54 [cookie] ret_token=없음
+10:25:54 [qp] {}
+10:26:51 [render] token=False invalidated=None
+10:26:51 [cookie] ret_token=없음
+10:26:51 [qp] {}
+10:28:42 [render] token=False invalidated=None
+10:28:42 [cookie] ret_token=없음
+10:28:42 [qp] {}
+10:46:21 [render] token=False invalidated=None
+10:46:21 [cookie] ret_token=없음
+10:46:21 [qp] {}
+10:54:07 [render] token=False invalidated=None
+10:54:07 [cookie] ret_token=없음
+10:54:07 [qp] {}
+10:54:16 [render] token=False invalidated=None
+10:54:16 [cookie] ret_token=없음
+10:54:16 [qp] {}
+10:54:17 [render] token=False invalidated=None
+10:54:17 [cookie] ret_token=없음
+10:54:17 [qp] {}
+10:54:25 [render] token=False invalidated=None
+10:54:25 [cookie] ret_token=없음
+10:54:25 [qp] {}
+10:56:08 [render] token=False invalidated=None
+10:56:08 [cookie] ret_token=없음
+10:56:08 [qp] {}
+10:56:13 [render] token=False invalidated=None
+10:56:13 [cookie] ret_token=없음
+10:56:13 [qp] {}
+10:56:18 [render] token=False invalidated=None
+10:56:18 [cookie] ret_token=없음
+10:56:18 [qp] {}
+10:56:18 [render] token=False invalidated=None
+10:56:18 [cookie] ret_token=없음
+10:56:18 [qp] {}
+10:56:18 Starting new HTTP connection (1): localhost:9080
+10:56:20 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 229
+10:56:20 [flush_cookie] action=set
+10:56:20 [flush_cookie] st.html 호출 전
+10:56:20 [flush_cookie] st.html 호출 후
+10:56:20 [render] token=True invalidated=None
+10:56:20 [qp] {}
+10:56:20 Starting new HTTP connection (1): localhost:9080
+10:56:23 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2202
+10:56:23 [render] token=True invalidated=None
+10:56:23 [qp] {}
+10:56:23 Starting new HTTP connection (1): localhost:9080
+10:56:25 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41756
+10:56:25 [render] token=True invalidated=None
+10:56:25 [qp] {}
+10:56:25 Starting new HTTP connection (1): localhost:9080
+10:56:27 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:56:40 [render] token=False invalidated=None
+10:56:40 [cookie] ret_token=없음
+10:56:40 [qp] {}
+10:56:42 [render] token=False invalidated=None
+10:56:42 [cookie] ret_token=없음
+10:56:42 [qp] {}
+10:56:42 Starting new HTTP connection (1): localhost:9080
+10:56:44 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 229
+10:56:44 [flush_cookie] action=set
+10:56:44 [flush_cookie] st.html 호출 전
+10:56:44 [flush_cookie] st.html 호출 후
+10:56:44 [render] token=True invalidated=None
+10:56:44 [qp] {}
+10:56:44 Starting new HTTP connection (1): localhost:9080
+10:56:46 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2202
+10:56:47 [render] token=True invalidated=None
+10:56:47 [qp] {}
+10:56:47 Starting new HTTP connection (1): localhost:9080
+10:56:49 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41756
+10:56:49 [render] token=True invalidated=None
+10:56:49 [qp] {}
+10:56:49 Starting new HTTP connection (1): localhost:9080
+10:56:51 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:57:14 [render] token=True invalidated=None
+10:57:14 [qp] {}
+10:57:14 Starting new HTTP connection (1): localhost:9080
+10:57:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:57:19 [render] token=True invalidated=None
+10:57:19 [qp] {}
+10:57:20 Starting new HTTP connection (1): localhost:9080
+10:57:22 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:57:22 [render] token=True invalidated=None
+10:57:22 [qp] {}
+10:57:22 Starting new HTTP connection (1): localhost:9080
+10:57:24 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41761
+10:57:25 [render] token=True invalidated=None
+10:57:25 [qp] {}
+10:57:25 Starting new HTTP connection (1): localhost:9080
+10:57:27 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:57:44 [render] token=True invalidated=None
+10:57:44 [qp] {}
+10:57:44 Starting new HTTP connection (1): localhost:9080
+10:57:46 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:57:47 [render] token=True invalidated=None
+10:57:47 [qp] {}
+10:57:48 Starting new HTTP connection (1): localhost:9080
+10:57:50 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:57:50 [render] token=True invalidated=None
+10:57:50 [qp] {}
+10:57:50 Starting new HTTP connection (1): localhost:9080
+10:57:52 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+10:57:52 [render] token=True invalidated=None
+10:57:52 [qp] {}
+10:57:52 Starting new HTTP connection (1): localhost:9080
+10:57:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 565
+10:58:05 [render] token=True invalidated=None
+10:58:05 [qp] {}
+10:58:05 Starting new HTTP connection (1): localhost:9080
+10:58:07 http://localhost:9080 "POST /scenarios HTTP/1.1" 201 46
+10:58:07 [render] token=True invalidated=None
+10:58:07 [qp] {}
+10:58:08 Starting new HTTP connection (1): localhost:9080
+10:58:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:00:40 [render] token=True invalidated=None
+11:00:40 [qp] {}
+11:00:40 Starting new HTTP connection (1): localhost:9080
+11:00:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:01:44 [render] token=True invalidated=None
+11:01:44 [qp] {}
+11:01:45 Starting new HTTP connection (1): localhost:9080
+11:01:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:01:49 [render] token=True invalidated=None
+11:01:49 [qp] {}
+11:01:49 Starting new HTTP connection (1): localhost:9080
+11:01:51 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:02:00 [render] token=True invalidated=None
+11:02:00 [qp] {}
+11:02:00 Starting new HTTP connection (1): localhost:9080
+11:02:02 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:02:15 [render] token=True invalidated=None
+11:02:15 [qp] {}
+11:02:15 Starting new HTTP connection (1): localhost:9080
+11:02:18 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:03:02 [render] token=True invalidated=None
+11:03:02 [qp] {}
+11:03:02 Starting new HTTP connection (1): localhost:9080
+11:03:04 http://localhost:9080 "PUT /profiles/336 HTTP/1.1" 200 69
+11:03:04 Starting new HTTP connection (1): localhost:9080
+11:03:06 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:03:06 [render] token=True invalidated=None
+11:03:06 [qp] {}
+11:03:07 Starting new HTTP connection (1): localhost:9080
+11:03:09 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:05:21 [render] token=False invalidated=None
+11:05:21 [cookie] ret_token=있음
+11:05:21 Starting new HTTP connection (1): localhost:9080
+11:05:23 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:05:23 [auth/me] status=200
+11:05:23 [render] token=True invalidated=None
+11:05:23 [qp] {}
+11:05:23 Starting new HTTP connection (1): localhost:9080
+11:05:26 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:05:26 [render] token=True invalidated=None
+11:05:26 [qp] {}
+11:05:26 Starting new HTTP connection (1): localhost:9080
+11:05:28 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:05:28 [render] token=True invalidated=None
+11:05:28 [qp] {}
+11:05:28 Starting new HTTP connection (1): localhost:9080
+11:05:30 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:09:19 [render] token=False invalidated=None
+11:09:19 [cookie] ret_token=있음
+11:09:19 Starting new HTTP connection (1): localhost:9080
+11:09:22 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:09:22 [auth/me] status=200
+11:09:22 [render] token=True invalidated=None
+11:09:22 [qp] {}
+11:09:22 Starting new HTTP connection (1): localhost:9080
+11:09:24 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:09:24 [render] token=True invalidated=None
+11:09:24 [qp] {}
+11:09:24 Starting new HTTP connection (1): localhost:9080
+11:09:26 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:09:26 [render] token=True invalidated=None
+11:09:26 [qp] {}
+11:09:26 Starting new HTTP connection (1): localhost:9080
+11:09:28 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:24:41 [render] token=True invalidated=None
+11:24:41 [qp] {}
+11:24:41 Starting new HTTP connection (1): localhost:9080
+11:24:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:26:41 [render] token=False invalidated=None
+11:26:41 [cookie] ret_token=있음
+11:26:41 Starting new HTTP connection (1): localhost:9080
+11:26:44 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:26:44 [auth/me] status=200
+11:26:44 [render] token=True invalidated=None
+11:26:44 [qp] {}
+11:26:44 Starting new HTTP connection (1): localhost:9080
+11:26:46 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:26:46 [render] token=True invalidated=None
+11:26:46 [qp] {}
+11:26:46 Starting new HTTP connection (1): localhost:9080
+11:26:48 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:26:48 [render] token=True invalidated=None
+11:26:48 [qp] {}
+11:26:48 Starting new HTTP connection (1): localhost:9080
+11:26:50 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:41:39 [render] token=False invalidated=None
+11:41:39 [cookie] ret_token=있음
+11:41:39 Starting new HTTP connection (1): localhost:9080
+11:41:41 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:41:41 [auth/me] status=200
+11:41:41 [render] token=True invalidated=None
+11:41:41 [qp] {}
+11:41:41 Starting new HTTP connection (1): localhost:9080
+11:41:43 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:41:43 [render] token=True invalidated=None
+11:41:43 [qp] {}
+11:41:43 Starting new HTTP connection (1): localhost:9080
+11:41:45 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:41:45 [render] token=True invalidated=None
+11:41:45 [qp] {}
+11:41:45 Starting new HTTP connection (1): localhost:9080
+11:41:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:43:16 [render] token=False invalidated=None
+11:43:16 [cookie] ret_token=있음
+11:43:16 Starting new HTTP connection (1): localhost:9080
+11:43:18 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:43:18 [auth/me] status=200
+11:43:18 [render] token=True invalidated=None
+11:43:18 [qp] {}
+11:43:18 Starting new HTTP connection (1): localhost:9080
+11:43:20 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:43:20 [render] token=True invalidated=None
+11:43:20 [qp] {}
+11:43:20 Starting new HTTP connection (1): localhost:9080
+11:43:22 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:43:22 [render] token=True invalidated=None
+11:43:22 [qp] {}
+11:43:22 Starting new HTTP connection (1): localhost:9080
+11:43:24 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 564
+11:46:32 [render] token=False invalidated=None
+11:46:32 [cookie] ret_token=있음
+11:46:32 Starting new HTTP connection (1): localhost:9080
+11:46:34 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:46:34 [auth/me] status=200
+11:46:34 [render] token=True invalidated=None
+11:46:34 [qp] {}
+11:46:34 Starting new HTTP connection (1): localhost:9080
+11:46:36 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:46:36 [render] token=True invalidated=None
+11:46:36 [qp] {}
+11:46:36 Starting new HTTP connection (1): localhost:9080
+11:46:38 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:46:38 [render] token=True invalidated=None
+11:46:38 [qp] {}
+11:46:38 Starting new HTTP connection (1): localhost:9080
+11:46:40 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+11:47:13 [render] token=False invalidated=None
+11:47:13 [cookie] ret_token=있음
+11:47:13 Starting new HTTP connection (1): localhost:9080
+11:47:16 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:47:16 [auth/me] status=200
+11:47:16 [render] token=True invalidated=None
+11:47:16 [qp] {}
+11:47:16 Starting new HTTP connection (1): localhost:9080
+11:47:18 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:47:18 [render] token=True invalidated=None
+11:47:18 [qp] {}
+11:47:18 Starting new HTTP connection (1): localhost:9080
+11:47:20 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:47:20 [render] token=True invalidated=None
+11:47:20 [qp] {}
+11:47:20 Starting new HTTP connection (1): localhost:9080
+11:47:22 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+11:47:48 [render] token=True invalidated=None
+11:47:48 [qp] {}
+11:47:48 Starting new HTTP connection (1): localhost:9080
+11:47:50 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:47:50 Starting new HTTP connection (1): localhost:9080
+11:47:52 http://localhost:9080 "PUT /profiles/337 HTTP/1.1" 200 69
+11:47:52 [render] token=True invalidated=None
+11:47:52 [qp] {}
+11:47:52 Starting new HTTP connection (1): localhost:9080
+11:47:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+11:55:14 [render] token=False invalidated=None
+11:55:14 [cookie] ret_token=있음
+11:55:14 Starting new HTTP connection (1): localhost:9080
+11:55:16 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:55:16 [auth/me] status=200
+11:55:16 [render] token=True invalidated=None
+11:55:16 [qp] {}
+11:55:16 Starting new HTTP connection (1): localhost:9080
+11:55:18 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:55:18 [render] token=True invalidated=None
+11:55:18 [qp] {}
+11:55:18 Starting new HTTP connection (1): localhost:9080
+11:55:20 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:55:20 [render] token=True invalidated=None
+11:55:20 [qp] {}
+11:55:20 Starting new HTTP connection (1): localhost:9080
+11:55:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+11:58:12 [render] token=False invalidated=None
+11:58:12 [cookie] ret_token=있음
+11:58:12 Starting new HTTP connection (1): localhost:9080
+11:58:14 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+11:58:14 [auth/me] status=200
+11:58:14 [render] token=True invalidated=None
+11:58:14 [qp] {}
+11:58:14 Starting new HTTP connection (1): localhost:9080
+11:58:17 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+11:58:17 [render] token=True invalidated=None
+11:58:17 [qp] {}
+11:58:17 Starting new HTTP connection (1): localhost:9080
+11:58:19 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+11:58:19 [render] token=True invalidated=None
+11:58:19 [qp] {}
+11:58:19 Starting new HTTP connection (1): localhost:9080
+11:58:21 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:06:28 [render] token=False invalidated=None
+12:06:28 [cookie] ret_token=있음
+12:06:28 Starting new HTTP connection (1): localhost:9080
+12:06:30 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:06:30 [auth/me] status=200
+12:06:30 [render] token=True invalidated=None
+12:06:30 [qp] {}
+12:06:30 Starting new HTTP connection (1): localhost:9080
+12:06:32 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+12:06:32 [render] token=True invalidated=None
+12:06:32 [qp] {}
+12:06:32 Starting new HTTP connection (1): localhost:9080
+12:06:34 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+12:06:34 [render] token=True invalidated=None
+12:06:34 [qp] {}
+12:07:27 [render] token=False invalidated=None
+12:07:27 [cookie] ret_token=있음
+12:07:27 Starting new HTTP connection (1): localhost:9080
+12:07:29 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:07:29 [auth/me] status=200
+12:07:29 [render] token=True invalidated=None
+12:07:29 [qp] {}
+12:07:29 Starting new HTTP connection (1): localhost:9080
+12:07:31 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2201
+12:07:31 [render] token=True invalidated=None
+12:07:31 [qp] {}
+12:07:31 Starting new HTTP connection (1): localhost:9080
+12:07:34 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41368
+12:07:34 [render] token=True invalidated=None
+12:07:34 [qp] {}
+12:07:34 Starting new HTTP connection (1): localhost:9080
+12:07:36 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:08:56 [render] token=True invalidated=None
+12:08:56 [qp] {}
+12:08:56 Starting new HTTP connection (1): localhost:9080
+12:08:57 [render] token=True invalidated=None
+12:08:57 [qp] {}
+12:08:57 Starting new HTTP connection (1): localhost:9080
+12:08:58 [render] token=True invalidated=None
+12:08:58 [qp] {}
+12:08:58 Starting new HTTP connection (1): localhost:9080
+12:08:58 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:08:59 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:00 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:00 [render] token=True invalidated=None
+12:09:00 [qp] {}
+12:09:01 Starting new HTTP connection (1): localhost:9080
+12:09:02 [render] token=True invalidated=None
+12:09:02 [qp] {}
+12:09:02 Starting new HTTP connection (1): localhost:9080
+12:09:03 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:03 [render] token=True invalidated=None
+12:09:03 [qp] {}
+12:09:03 Starting new HTTP connection (1): localhost:9080
+12:09:04 [render] token=True invalidated=None
+12:09:04 [qp] {}
+12:09:04 Starting new HTTP connection (1): localhost:9080
+12:09:04 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:05 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:06 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:08 [render] token=True invalidated=None
+12:09:08 [qp] {}
+12:09:08 Starting new HTTP connection (1): localhost:9080
+12:09:09 [render] token=True invalidated=None
+12:09:09 [qp] {}
+12:09:09 Starting new HTTP connection (1): localhost:9080
+12:09:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:10 [render] token=True invalidated=None
+12:09:10 [qp] {}
+12:09:10 Starting new HTTP connection (1): localhost:9080
+12:09:11 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:12 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:13 [render] token=True invalidated=None
+12:09:13 [qp] {}
+12:09:13 Starting new HTTP connection (1): localhost:9080
+12:09:15 [render] token=True invalidated=None
+12:09:15 [qp] {}
+12:09:15 Starting new HTTP connection (1): localhost:9080
+12:09:15 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:17 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:09:17 Starting new HTTP connection (1): localhost:9080
+12:09:19 http://localhost:9080 "PUT /profiles/338 HTTP/1.1" 200 69
+12:09:19 Starting new HTTP connection (1): localhost:9080
+12:09:21 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41484
+12:09:21 [render] token=True invalidated=None
+12:09:21 [qp] {}
+12:09:21 Starting new HTTP connection (1): localhost:9080
+12:09:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:10:18 [render] token=True invalidated=None
+12:10:18 [qp] {}
+12:10:18 Starting new HTTP connection (1): localhost:9080
+12:10:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:10:23 [render] token=True invalidated=None
+12:10:23 [qp] {}
+12:10:23 Starting new HTTP connection (1): localhost:9080
+12:10:25 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:10:25 Starting new HTTP connection (1): localhost:9080
+12:10:27 http://localhost:9080 "PUT /profiles/339 HTTP/1.1" 200 69
+12:10:27 Starting new HTTP connection (1): localhost:9080
+12:10:29 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:10:29 [render] token=True invalidated=None
+12:10:29 [qp] {}
+12:10:29 Starting new HTTP connection (1): localhost:9080
+12:10:31 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:15:32 [render] token=False invalidated=None
+12:15:32 [cookie] ret_token=있음
+12:15:32 Starting new HTTP connection (1): localhost:9080
+12:15:34 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:15:34 [auth/me] status=200
+12:15:34 [render] token=True invalidated=None
+12:15:34 [qp] {}
+12:15:34 Starting new HTTP connection (1): localhost:9080
+12:15:36 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+12:15:36 [render] token=True invalidated=None
+12:15:36 [qp] {}
+12:15:36 Starting new HTTP connection (1): localhost:9080
+12:15:38 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:15:38 [render] token=True invalidated=None
+12:15:38 [qp] {}
+12:15:38 Starting new HTTP connection (1): localhost:9080
+12:15:40 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:19:44 [render] token=False invalidated=None
+12:19:44 [cookie] ret_token=있음
+12:19:44 Starting new HTTP connection (1): localhost:9080
+12:19:46 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:19:46 [auth/me] status=200
+12:19:46 [render] token=True invalidated=None
+12:19:46 [qp] {}
+12:19:46 Starting new HTTP connection (1): localhost:9080
+12:19:48 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+12:19:48 [render] token=True invalidated=None
+12:19:48 [qp] {}
+12:19:48 Starting new HTTP connection (1): localhost:9080
+12:19:50 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:19:50 [render] token=True invalidated=None
+12:19:50 [qp] {}
+12:19:50 Starting new HTTP connection (1): localhost:9080
+12:19:52 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:26:36 [render] token=False invalidated=None
+12:26:36 [cookie] ret_token=있음
+12:26:36 Starting new HTTP connection (1): localhost:9080
+12:26:38 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:26:38 [auth/me] status=200
+12:26:38 [render] token=True invalidated=None
+12:26:38 [qp] {}
+12:26:38 Starting new HTTP connection (1): localhost:9080
+12:26:40 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+12:26:40 [render] token=True invalidated=None
+12:26:40 [qp] {}
+12:26:40 Starting new HTTP connection (1): localhost:9080
+12:26:42 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:26:42 [render] token=True invalidated=None
+12:26:42 [qp] {}
+12:26:42 Starting new HTTP connection (1): localhost:9080
+12:26:45 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:26:45 Starting new HTTP connection (1): localhost:9080
+12:26:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:27:25 [render] token=True invalidated=None
+12:27:25 [qp] {}
+12:27:25 [render] token=True invalidated=None
+12:27:25 [qp] {}
+12:27:25 Starting new HTTP connection (1): localhost:9080
+12:27:27 [render] token=True invalidated=None
+12:27:27 [qp] {}
+12:27:27 Starting new HTTP connection (1): localhost:9080
+12:27:27 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:27:29 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+12:27:29 [render] token=False invalidated=True
+12:27:29 [qp] {}
+12:27:32 [render] token=False invalidated=True
+12:27:32 [qp] {}
+12:27:34 [render] token=False invalidated=True
+12:27:34 [qp] {}
+12:27:34 [render] token=False invalidated=True
+12:27:34 [qp] {}
+12:27:34 Starting new HTTP connection (1): localhost:9080
+12:27:36 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 229
+12:27:36 [flush_cookie] action=set
+12:27:36 [flush_cookie] st.html 호출 전
+12:27:36 [flush_cookie] st.html 호출 후
+12:27:36 [render] token=True invalidated=None
+12:27:36 [qp] {}
+12:27:36 Starting new HTTP connection (1): localhost:9080
+12:27:38 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+12:27:38 [render] token=True invalidated=None
+12:27:38 [qp] {}
+12:27:38 Starting new HTTP connection (1): localhost:9080
+12:27:40 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:27:40 [render] token=True invalidated=None
+12:27:40 [qp] {}
+12:27:40 Starting new HTTP connection (1): localhost:9080
+12:27:43 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:27:43 Starting new HTTP connection (1): localhost:9080
+12:27:45 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:28:24 [render] token=True invalidated=None
+12:28:24 [qp] {}
+12:28:24 Starting new HTTP connection (1): localhost:9080
+12:28:26 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:28:26 Starting new HTTP connection (1): localhost:9080
+12:28:29 http://localhost:9080 "PUT /profiles/340 HTTP/1.1" 200 69
+12:28:29 Starting new HTTP connection (1): localhost:9080
+12:28:31 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:28:31 [render] token=True invalidated=None
+12:28:31 [qp] {}
+12:28:31 Starting new HTTP connection (1): localhost:9080
+12:28:33 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:29:26 [render] token=True invalidated=None
+12:29:26 [qp] {}
+12:29:26 Starting new HTTP connection (1): localhost:9080
+12:29:28 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:29:28 Starting new HTTP connection (1): localhost:9080
+12:29:30 http://localhost:9080 "PUT /profiles/341 HTTP/1.1" 200 69
+12:29:30 [render] token=True invalidated=None
+12:29:30 [qp] {}
+12:29:30 Starting new HTTP connection (1): localhost:9080
+12:29:32 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+12:35:07 [render] token=False invalidated=None
+12:35:07 [cookie] ret_token=있음
+12:35:07 Starting new HTTP connection (1): localhost:9080
+12:35:09 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 45
+12:35:09 [auth/me] status=401
+12:35:09 [cookie] 토큰 만료 → 쿠키 삭제
+12:35:09 [qp] {}
+12:35:20 [flush_cookie] action=delete
+12:35:20 [flush_cookie] st.html 호출 전
+12:35:20 [flush_cookie] st.html 호출 후
+12:35:20 [render] token=False invalidated=True
+12:35:20 [qp] {}
+12:35:27 [render] token=False invalidated=True
+12:35:27 [qp] {}
+12:35:27 Starting new HTTP connection (1): localhost:9080
+12:35:29 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 229
+12:35:29 [flush_cookie] action=set
+12:35:29 [flush_cookie] st.html 호출 전
+12:35:29 [flush_cookie] st.html 호출 후
+12:35:29 [render] token=True invalidated=None
+12:35:29 [qp] {}
+12:35:29 Starting new HTTP connection (1): localhost:9080
+12:35:31 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+12:35:31 [render] token=True invalidated=None
+12:35:31 [qp] {}
+12:35:31 Starting new HTTP connection (1): localhost:9080
+12:35:33 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+12:35:33 [render] token=True invalidated=None
+12:35:33 [qp] {}
+12:35:34 Starting new HTTP connection (1): localhost:9080
+12:35:36 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+12:35:36 Starting new HTTP connection (1): localhost:9080
+12:35:38 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:06:09 [render] token=True invalidated=None
+14:06:09 [qp] {}
+14:06:09 [render] token=True invalidated=None
+14:06:09 [qp] {}
+14:06:09 Starting new HTTP connection (1): localhost:9080
+14:06:10 [render] token=True invalidated=None
+14:06:10 [qp] {}
+14:06:10 Starting new HTTP connection (1): localhost:9080
+14:06:11 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:06:12 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+14:06:12 [render] token=False invalidated=True
+14:06:12 [qp] {}
+14:06:17 [render] token=False invalidated=None
+14:06:17 [cookie] ret_token=있음
+14:06:17 Starting new HTTP connection (1): localhost:9080
+14:06:20 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 45
+14:06:20 [auth/me] status=401
+14:06:20 [cookie] 토큰 만료 → 쿠키 삭제
+14:06:20 [qp] {}
+14:06:24 [flush_cookie] action=delete
+14:06:24 [flush_cookie] st.html 호출 전
+14:06:24 [flush_cookie] st.html 호출 후
+14:06:24 [render] token=False invalidated=True
+14:06:24 [qp] {}
+14:06:27 [render] token=False invalidated=True
+14:06:27 [qp] {}
+14:06:28 [render] token=False invalidated=True
+14:06:28 [qp] {}
+14:06:28 Starting new HTTP connection (1): localhost:9080
+14:06:30 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 229
+14:06:30 [flush_cookie] action=set
+14:06:30 [flush_cookie] st.html 호출 전
+14:06:30 [flush_cookie] st.html 호출 후
+14:06:30 [render] token=True invalidated=None
+14:06:30 [qp] {}
+14:06:30 Starting new HTTP connection (1): localhost:9080
+14:06:32 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+14:06:32 [render] token=True invalidated=None
+14:06:32 [qp] {}
+14:06:32 Starting new HTTP connection (1): localhost:9080
+14:06:34 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:06:34 [render] token=True invalidated=None
+14:06:34 [qp] {}
+14:06:35 Starting new HTTP connection (1): localhost:9080
+14:06:37 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+14:06:37 Starting new HTTP connection (1): localhost:9080
+14:06:39 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:07:28 [render] token=True invalidated=None
+14:07:28 [qp] {}
+14:07:28 Starting new HTTP connection (1): localhost:9080
+14:07:31 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:07:31 Starting new HTTP connection (1): localhost:9080
+14:07:33 http://localhost:9080 "PUT /profiles/342 HTTP/1.1" 200 69
+14:07:33 Starting new HTTP connection (1): localhost:9080
+14:07:35 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:07:35 [render] token=True invalidated=None
+14:07:35 [qp] {}
+14:07:35 Starting new HTTP connection (1): localhost:9080
+14:07:37 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:07:46 [render] token=True invalidated=None
+14:07:46 [qp] {}
+14:07:46 Starting new HTTP connection (1): localhost:9080
+14:07:48 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:07:48 Starting new HTTP connection (1): localhost:9080
+14:07:50 http://localhost:9080 "PUT /profiles/343 HTTP/1.1" 200 69
+14:07:50 [render] token=True invalidated=None
+14:07:50 [qp] {}
+14:07:50 Starting new HTTP connection (1): localhost:9080
+14:07:52 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:08:43 [render] token=False invalidated=None
+14:08:43 [cookie] ret_token=없음
+14:08:43 [qp] {}
+14:08:49 [render] token=False invalidated=None
+14:08:49 [cookie] ret_token=없음
+14:08:49 [qp] {}
+14:08:55 [render] token=False invalidated=None
+14:08:55 [cookie] ret_token=없음
+14:08:55 [qp] {}
+14:08:57 [render] token=False invalidated=None
+14:08:57 [cookie] ret_token=없음
+14:08:57 [qp] {}
+14:08:57 Starting new HTTP connection (1): localhost:9080
+14:08:59 [render] token=False invalidated=None
+14:08:59 [cookie] ret_token=없음
+14:08:59 [qp] {}
+14:08:59 Starting new HTTP connection (1): localhost:9080
+14:09:00 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 229
+14:09:01 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 229
+14:09:01 [flush_cookie] action=set
+14:09:01 [flush_cookie] st.html 호출 전
+14:09:01 [flush_cookie] st.html 호출 후
+14:09:01 [render] token=True invalidated=None
+14:09:01 [qp] {}
+14:09:01 Starting new HTTP connection (1): localhost:9080
+14:09:04 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+14:09:04 [render] token=True invalidated=None
+14:09:04 [qp] {}
+14:09:04 Starting new HTTP connection (1): localhost:9080
+14:09:06 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:09:06 [render] token=True invalidated=None
+14:09:06 [qp] {}
+14:09:06 Starting new HTTP connection (1): localhost:9080
+14:09:08 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+14:09:08 Starting new HTTP connection (1): localhost:9080
+14:09:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:09:14 [render] token=True invalidated=None
+14:09:14 [qp] {}
+14:09:14 Starting new HTTP connection (1): localhost:9080
+14:09:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:09:16 Starting new HTTP connection (1): localhost:9080
+14:09:18 http://localhost:9080 "PUT /profiles/344 HTTP/1.1" 200 69
+14:09:18 Starting new HTTP connection (1): localhost:9080
+14:09:20 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:09:20 [render] token=True invalidated=None
+14:09:20 [qp] {}
+14:09:20 Starting new HTTP connection (1): localhost:9080
+14:09:22 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:09:32 [render] token=True invalidated=None
+14:09:32 [qp] {}
+14:09:32 Starting new HTTP connection (1): localhost:9080
+14:09:34 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:09:34 Starting new HTTP connection (1): localhost:9080
+14:09:37 http://localhost:9080 "PUT /profiles/345 HTTP/1.1" 200 69
+14:09:37 [render] token=True invalidated=None
+14:09:37 [qp] {}
+14:09:37 Starting new HTTP connection (1): localhost:9080
+14:09:39 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:13:42 [render] token=True invalidated=None
+14:13:42 [qp] {}
+14:13:42 Starting new HTTP connection (1): localhost:9080
+14:13:44 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:14:06 [render] token=True invalidated=None
+14:14:06 [qp] {}
+14:14:06 Starting new HTTP connection (1): localhost:9080
+14:14:08 http://localhost:9080 "POST /scenarios HTTP/1.1" 500 21
+14:14:08 Starting new HTTP connection (1): localhost:9080
+14:14:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:15:13 [render] token=False invalidated=None
+14:15:13 [cookie] ret_token=있음
+14:15:13 Starting new HTTP connection (1): localhost:9080
+14:15:15 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+14:15:15 [auth/me] status=200
+14:15:15 [render] token=True invalidated=None
+14:15:15 [qp] {}
+14:15:15 Starting new HTTP connection (1): localhost:9080
+14:15:17 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+14:15:17 [render] token=True invalidated=None
+14:15:17 [qp] {}
+14:15:17 Starting new HTTP connection (1): localhost:9080
+14:15:19 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:15:19 [render] token=True invalidated=None
+14:15:19 [qp] {}
+14:15:19 Starting new HTTP connection (1): localhost:9080
+14:15:21 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 89
+14:15:21 Starting new HTTP connection (1): localhost:9080
+14:15:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:15:30 [render] token=True invalidated=None
+14:15:30 [qp] {}
+14:15:30 Starting new HTTP connection (1): localhost:9080
+14:15:32 http://localhost:9080 "POST /scenarios HTTP/1.1" 500 21
+14:15:32 Starting new HTTP connection (1): localhost:9080
+14:15:34 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+14:22:51 [render] token=False invalidated=None
+14:22:51 [cookie] ret_token=있음
+14:22:51 Starting new HTTP connection (1): localhost:9080
+14:22:53 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:22:53 [auth/me] status=200
+14:22:53 [render] token=True invalidated=None
+14:22:53 [qp] {}
+14:22:53 Starting new HTTP connection (1): localhost:9080
+14:22:55 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+14:22:55 [render] token=True invalidated=None
+14:22:55 [qp] {}
+14:22:55 Starting new HTTP connection (1): localhost:9080
+14:22:57 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:22:57 [render] token=True invalidated=None
+14:22:57 [qp] {}
+14:22:57 Starting new HTTP connection (1): localhost:9080
+14:22:59 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:22:59 Starting new HTTP connection (1): localhost:9080
+14:23:01 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 401
+14:23:06 [render] token=True invalidated=None
+14:23:06 [qp] {}
+14:23:06 Starting new HTTP connection (1): localhost:9080
+14:23:08 http://localhost:9080 "POST /scenarios HTTP/1.1" 201 33
+14:23:08 [render] token=True invalidated=None
+14:23:08 [qp] {}
+14:23:08 Starting new HTTP connection (1): localhost:9080
+14:23:11 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 969
+14:23:13 [render] token=True invalidated=None
+14:23:13 [qp] {}
+14:23:13 Starting new HTTP connection (1): localhost:9080
+14:23:16 http://localhost:9080 "POST /scenarios HTTP/1.1" 201 33
+14:23:16 [render] token=True invalidated=None
+14:23:16 [qp] {}
+14:23:16 Starting new HTTP connection (1): localhost:9080
+14:23:18 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 1461
+14:28:56 [render] token=False invalidated=None
+14:28:56 [cookie] ret_token=있음
+14:28:56 Starting new HTTP connection (1): localhost:9080
+14:28:58 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:28:58 [auth/me] status=200
+14:28:58 [render] token=True invalidated=None
+14:28:58 [qp] {}
+14:28:58 Starting new HTTP connection (1): localhost:9080
+14:29:00 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+14:29:00 [render] token=True invalidated=None
+14:29:00 [qp] {}
+14:29:00 Starting new HTTP connection (1): localhost:9080
+14:29:02 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:29:02 [render] token=True invalidated=None
+14:29:02 [qp] {}
+14:29:02 Starting new HTTP connection (1): localhost:9080
+14:29:05 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:29:05 Starting new HTTP connection (1): localhost:9080
+14:29:07 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2208
+14:50:12 [render] token=False invalidated=None
+14:50:12 [cookie] ret_token=있음
+14:50:12 Starting new HTTP connection (1): localhost:9080
+14:50:14 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:50:14 [auth/me] status=200
+14:50:14 [render] token=True invalidated=None
+14:50:14 [qp] {}
+14:50:14 Starting new HTTP connection (1): localhost:9080
+14:50:16 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+14:50:17 [render] token=True invalidated=None
+14:50:17 [qp] {}
+14:50:17 Starting new HTTP connection (1): localhost:9080
+14:50:19 http://localhost:9080 "POST /analyze HTTP/1.1" 200 41503
+14:50:19 [render] token=True invalidated=None
+14:50:19 [qp] {}
+14:50:19 Starting new HTTP connection (1): localhost:9080
+14:50:21 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:50:21 Starting new HTTP connection (1): localhost:9080
+14:50:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:51:44 [render] token=True invalidated=None
+14:51:44 [qp] {}
+14:51:45 Starting new HTTP connection (1): localhost:9080
+14:51:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:51:50 [render] token=True invalidated=None
+14:51:50 [qp] {}
+14:51:50 Starting new HTTP connection (1): localhost:9080
+14:51:52 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:51:52 Starting new HTTP connection (1): localhost:9080
+14:51:54 http://localhost:9080 "PUT /profiles/346 HTTP/1.1" 200 69
+14:51:54 Starting new HTTP connection (1): localhost:9080
+14:51:56 http://localhost:9080 "POST /analyze HTTP/1.1" 200 46253
+14:51:56 [render] token=True invalidated=None
+14:51:56 [qp] {}
+14:51:56 Starting new HTTP connection (1): localhost:9080
+14:51:58 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:52:15 [render] token=False invalidated=None
+14:52:15 [cookie] ret_token=있음
+14:52:15 Starting new HTTP connection (1): localhost:9080
+14:52:17 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:52:17 [auth/me] status=200
+14:52:17 [render] token=True invalidated=None
+14:52:17 [qp] {}
+14:52:17 Starting new HTTP connection (1): localhost:9080
+14:52:19 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2207
+14:52:19 [render] token=True invalidated=None
+14:52:19 [qp] {}
+14:52:19 Starting new HTTP connection (1): localhost:9080
+14:52:21 http://localhost:9080 "POST /analyze HTTP/1.1" 200 46253
+14:52:21 [render] token=True invalidated=None
+14:52:21 [qp] {}
+14:52:21 Starting new HTTP connection (1): localhost:9080
+14:52:23 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:52:23 Starting new HTTP connection (1): localhost:9080
+14:52:25 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:52:53 [render] token=True invalidated=None
+14:52:53 [qp] {}
+14:52:53 Starting new HTTP connection (1): localhost:9080
+14:52:55 http://localhost:9080 "POST /analyze HTTP/1.1" 200 46253
+14:52:55 Starting new HTTP connection (1): localhost:9080
+14:52:57 http://localhost:9080 "PUT /profiles/347 HTTP/1.1" 200 69
+14:52:57 [render] token=True invalidated=None
+14:52:57 [qp] {}
+14:52:57 Starting new HTTP connection (1): localhost:9080
+14:52:59 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:53:02 [render] token=True invalidated=None
+14:53:02 [qp] {}
+14:53:02 Starting new HTTP connection (1): localhost:9080
+14:53:04 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:53:04 Starting new HTTP connection (1): localhost:9080
+14:53:06 http://localhost:9080 "PUT /profiles/348 HTTP/1.1" 200 69
+14:53:06 Starting new HTTP connection (1): localhost:9080
+14:53:08 http://localhost:9080 "POST /analyze HTTP/1.1" 200 28292
+14:53:08 [render] token=True invalidated=None
+14:53:08 [qp] {}
+14:53:08 Starting new HTTP connection (1): localhost:9080
+14:53:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:03 [render] token=True invalidated=None
+14:54:03 [qp] {}
+14:54:03 Starting new HTTP connection (1): localhost:9080
+14:54:04 [render] token=True invalidated=None
+14:54:04 [qp] {}
+14:54:04 Starting new HTTP connection (1): localhost:9080
+14:54:05 [render] token=True invalidated=None
+14:54:05 [qp] {}
+14:54:05 Starting new HTTP connection (1): localhost:9080
+14:54:06 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:06 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:08 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:08 [render] token=True invalidated=None
+14:54:08 [qp] {}
+14:54:08 Starting new HTTP connection (1): localhost:9080
+14:54:09 [render] token=True invalidated=None
+14:54:09 [qp] {}
+14:54:09 Starting new HTTP connection (1): localhost:9080
+14:54:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:11 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:15 [render] token=True invalidated=None
+14:54:15 [qp] {}
+14:54:15 Starting new HTTP connection (1): localhost:9080
+14:54:17 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:17 Starting new HTTP connection (1): localhost:9080
+14:54:19 http://localhost:9080 "PUT /profiles/349 HTTP/1.1" 200 69
+14:54:19 Starting new HTTP connection (1): localhost:9080
+14:54:21 http://localhost:9080 "POST /analyze HTTP/1.1" 200 33359
+14:54:21 [render] token=True invalidated=None
+14:54:21 [qp] {}
+14:54:21 Starting new HTTP connection (1): localhost:9080
+14:54:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:35 [render] token=True invalidated=None
+14:54:35 [qp] {}
+14:54:35 Starting new HTTP connection (1): localhost:9080
+14:54:37 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:40 [render] token=True invalidated=None
+14:54:40 [qp] {}
+14:54:41 Starting new HTTP connection (1): localhost:9080
+14:54:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:54:43 Starting new HTTP connection (1): localhost:9080
+14:54:45 http://localhost:9080 "PUT /profiles/350 HTTP/1.1" 200 69
+14:54:45 Starting new HTTP connection (1): localhost:9080
+14:54:47 http://localhost:9080 "POST /analyze HTTP/1.1" 200 32985
+14:54:47 [render] token=True invalidated=None
+14:54:47 [qp] {}
+14:54:47 Starting new HTTP connection (1): localhost:9080
+14:54:49 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2214
+14:56:37 [render] token=True invalidated=None
+14:56:37 [qp] {}
+14:56:37 Starting new HTTP connection (1): localhost:9080
+14:56:39 http://localhost:9080 "POST /scenarios HTTP/1.1" 201 33
+14:56:39 [render] token=True invalidated=None
+14:56:39 [qp] {}
+14:56:39 Starting new HTTP connection (1): localhost:9080
+14:56:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2218
+14:57:07 [render] token=True invalidated=None
+14:57:07 [qp] {}
+14:57:07 Starting new HTTP connection (1): localhost:9080
+14:57:09 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2218
+14:57:11 [render] token=True invalidated=None
+14:57:11 [qp] {}
+14:57:11 Starting new HTTP connection (1): localhost:9080
+14:57:13 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2218
+14:57:13 Starting new HTTP connection (1): localhost:9080
+14:57:15 http://localhost:9080 "PUT /profiles/351 HTTP/1.1" 200 69
+14:57:15 Starting new HTTP connection (1): localhost:9080
+14:57:17 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30780
+14:57:17 [render] token=True invalidated=None
+14:57:17 [qp] {}
+14:57:17 Starting new HTTP connection (1): localhost:9080
+14:57:19 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2218
+14:59:34 [render] token=True invalidated=None
+14:59:34 [qp] {}
+14:59:34 [render] token=True invalidated=None
+14:59:34 [qp] {}
+14:59:34 Starting new HTTP connection (1): localhost:9080
+14:59:36 [render] token=True invalidated=None
+14:59:36 [qp] {}
+14:59:36 Starting new HTTP connection (1): localhost:9080
+14:59:36 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2218
+14:59:38 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+14:59:38 [render] token=False invalidated=True
+14:59:38 [qp] {}
+14:59:47 [render] token=False invalidated=True
+14:59:47 [qp] {}
+14:59:53 [render] token=False invalidated=True
+14:59:53 [qp] {}
+14:59:54 [render] token=False invalidated=True
+14:59:54 [qp] {}
+14:59:54 Starting new HTTP connection (1): localhost:9080
+14:59:56 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 243
+14:59:56 [flush_cookie] action=set
+14:59:56 [flush_cookie] st.html 호출 전
+14:59:56 [flush_cookie] st.html 호출 후
+14:59:56 [render] token=True invalidated=None
+14:59:56 [qp] {}
+14:59:56 Starting new HTTP connection (1): localhost:9080
+14:59:58 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+14:59:58 [render] token=True invalidated=None
+14:59:58 [qp] {}
+14:59:58 Starting new HTTP connection (1): localhost:9080
+15:00:00 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+15:00:00 [render] token=True invalidated=None
+15:00:00 [qp] {}
+15:00:00 Starting new HTTP connection (1): localhost:9080
+15:00:02 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:00:02 Starting new HTTP connection (1): localhost:9080
+15:00:05 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2218
+15:05:05 [render] token=False invalidated=None
+15:05:05 [cookie] ret_token=있음
+15:05:05 Starting new HTTP connection (1): localhost:9080
+15:05:07 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:05:07 [auth/me] status=200
+15:05:07 [render] token=True invalidated=None
+15:05:07 [qp] {}
+15:05:07 Starting new HTTP connection (1): localhost:9080
+15:05:10 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+15:05:10 [render] token=True invalidated=None
+15:05:10 [qp] {}
+15:05:10 Starting new HTTP connection (1): localhost:9080
+15:05:12 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+15:05:12 [render] token=True invalidated=None
+15:05:12 [qp] {}
+15:05:12 Starting new HTTP connection (1): localhost:9080
+15:05:14 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:05:14 Starting new HTTP connection (1): localhost:9080
+15:05:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 500 21
+15:08:20 [render] token=True invalidated=None
+15:08:20 [qp] {}
+15:08:20 [render] token=True invalidated=None
+15:08:20 [qp] {}
+15:08:20 Starting new HTTP connection (1): localhost:9080
+15:08:22 [render] token=True invalidated=None
+15:08:22 [qp] {}
+15:08:22 Starting new HTTP connection (1): localhost:9080
+15:08:22 http://localhost:9080 "GET /scenarios HTTP/1.1" 500 21
+15:08:24 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+15:08:24 [render] token=False invalidated=True
+15:08:24 [qp] {}
+15:08:30 [render] token=False invalidated=True
+15:08:30 [qp] {}
+15:08:31 [render] token=False invalidated=True
+15:08:31 [qp] {}
+15:08:31 [render] token=False invalidated=True
+15:08:31 [qp] {}
+15:08:31 Starting new HTTP connection (1): localhost:9080
+15:08:34 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+15:08:34 [flush_cookie] action=set
+15:08:34 [flush_cookie] st.html 호출 전
+15:08:34 [flush_cookie] st.html 호출 후
+15:08:34 [render] token=True invalidated=None
+15:08:34 [qp] {}
+15:08:34 Starting new HTTP connection (1): localhost:9080
+15:08:36 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2199
+15:08:36 [render] token=True invalidated=None
+15:08:36 [qp] {}
+15:08:36 Starting new HTTP connection (1): localhost:9080
+15:08:38 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30780
+15:08:38 [render] token=True invalidated=None
+15:08:38 [qp] {}
+15:08:38 Starting new HTTP connection (1): localhost:9080
+15:08:40 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:08:40 Starting new HTTP connection (1): localhost:9080
+15:08:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 500 21
+15:14:31 [render] token=False invalidated=None
+15:14:31 [cookie] ret_token=있음
+15:14:31 Starting new HTTP connection (1): localhost:9080
+15:14:33 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:14:33 [auth/me] status=200
+15:14:33 [render] token=True invalidated=None
+15:14:33 [qp] {}
+15:14:33 Starting new HTTP connection (1): localhost:9080
+15:14:36 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2199
+15:14:36 [render] token=True invalidated=None
+15:14:36 [qp] {}
+15:14:36 Starting new HTTP connection (1): localhost:9080
+15:14:38 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30780
+15:14:38 [render] token=True invalidated=None
+15:14:38 [qp] {}
+15:14:38 Starting new HTTP connection (1): localhost:9080
+15:14:40 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:14:40 Starting new HTTP connection (1): localhost:9080
+15:14:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+15:20:37 [render] token=False invalidated=None
+15:20:37 [cookie] ret_token=있음
+15:20:37 Starting new HTTP connection (1): localhost:9080
+15:20:39 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:20:39 [auth/me] status=200
+15:20:39 [render] token=True invalidated=None
+15:20:39 [qp] {}
+15:20:39 Starting new HTTP connection (1): localhost:9080
+15:20:41 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2199
+15:20:41 [render] token=True invalidated=None
+15:20:41 [qp] {}
+15:20:41 Starting new HTTP connection (1): localhost:9080
+15:20:43 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30780
+15:20:43 [render] token=True invalidated=None
+15:20:43 [qp] {}
+15:20:43 Starting new HTTP connection (1): localhost:9080
+15:20:45 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:20:45 Starting new HTTP connection (1): localhost:9080
+15:20:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2
+15:26:09 [render] token=False invalidated=None
+15:26:09 [cookie] ret_token=있음
+15:26:09 Starting new HTTP connection (1): localhost:9080
+15:26:11 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:26:11 [auth/me] status=200
+15:26:11 [render] token=True invalidated=None
+15:26:11 [qp] {}
+15:26:11 Starting new HTTP connection (1): localhost:9080
+15:26:14 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2199
+15:26:14 [render] token=True invalidated=None
+15:26:14 [qp] {}
+15:26:14 Starting new HTTP connection (1): localhost:9080
+15:26:16 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30780
+15:26:16 [render] token=True invalidated=None
+15:26:16 [qp] {}
+15:26:16 Starting new HTTP connection (1): localhost:9080
+15:26:18 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:26:18 Starting new HTTP connection (1): localhost:9080
+15:26:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:42:31 [render] token=False invalidated=None
+15:42:31 [cookie] ret_token=있음
+15:42:31 Starting new HTTP connection (1): localhost:9080
+15:42:33 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:42:33 [auth/me] status=200
+15:42:33 [render] token=True invalidated=None
+15:42:33 [qp] {}
+15:42:33 Starting new HTTP connection (1): localhost:9080
+15:42:35 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2199
+15:42:35 [render] token=True invalidated=None
+15:42:35 [qp] {}
+15:42:35 Starting new HTTP connection (1): localhost:9080
+15:42:37 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30780
+15:42:37 [render] token=True invalidated=None
+15:42:37 [qp] {}
+15:42:37 Starting new HTTP connection (1): localhost:9080
+15:42:40 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:42:40 Starting new HTTP connection (1): localhost:9080
+15:42:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:44:06 [render] token=True invalidated=None
+15:44:06 [qp] {}
+15:44:06 Starting new HTTP connection (1): localhost:9080
+15:44:08 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:44:18 [render] token=True invalidated=None
+15:44:18 [qp] {}
+15:44:19 Starting new HTTP connection (1): localhost:9080
+15:44:21 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:44:24 [render] token=True invalidated=None
+15:44:24 [qp] {}
+15:44:24 Starting new HTTP connection (1): localhost:9080
+15:44:26 [render] token=True invalidated=None
+15:44:26 [qp] {}
+15:44:26 Starting new HTTP connection (1): localhost:9080
+15:44:26 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:44:28 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:44:29 [render] token=True invalidated=None
+15:44:29 [qp] {}
+15:44:29 Starting new HTTP connection (1): localhost:9080
+15:44:31 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:44:34 [render] token=True invalidated=None
+15:44:34 [qp] {}
+15:44:34 Starting new HTTP connection (1): localhost:9080
+15:44:36 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:44:37 [render] token=True invalidated=None
+15:44:37 [qp] {}
+15:44:37 Starting new HTTP connection (1): localhost:9080
+15:44:39 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30792
+15:44:39 [render] token=True invalidated=None
+15:44:39 [qp] {}
+15:44:39 Starting new HTTP connection (1): localhost:9080
+15:44:41 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2263
+15:45:01 [render] token=True invalidated=None
+15:45:01 [qp] {}
+15:45:01 Starting new HTTP connection (1): localhost:9080
+15:45:03 http://localhost:9080 "POST /scenarios HTTP/1.1" 201 33
+15:45:03 [render] token=True invalidated=None
+15:45:03 [qp] {}
+15:45:03 Starting new HTTP connection (1): localhost:9080
+15:45:06 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:46:38 [render] token=True invalidated=None
+15:46:38 [qp] {}
+15:46:38 [render] token=True invalidated=None
+15:46:38 [qp] {}
+15:46:39 Starting new HTTP connection (1): localhost:9080
+15:46:40 [render] token=True invalidated=None
+15:46:40 [qp] {}
+15:46:40 Starting new HTTP connection (1): localhost:9080
+15:46:41 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:46:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:46:42 Starting new HTTP connection (1): localhost:9080
+15:46:44 http://localhost:9080 "PUT /profiles/352 HTTP/1.1" 200 69
+15:46:44 Starting new HTTP connection (1): localhost:9080
+15:46:46 http://localhost:9080 "POST /analyze HTTP/1.1" 200 28949
+15:46:47 [render] token=True invalidated=None
+15:46:47 [qp] {}
+15:46:47 Starting new HTTP connection (1): localhost:9080
+15:46:47 [render] token=True invalidated=None
+15:46:47 [qp] {}
+15:46:47 Starting new HTTP connection (1): localhost:9080
+15:46:49 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:46:49 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:47:32 [render] token=True invalidated=None
+15:47:32 [qp] {}
+15:47:32 Starting new HTTP connection (1): localhost:9080
+15:47:34 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:47:34 Starting new HTTP connection (1): localhost:9080
+15:47:36 http://localhost:9080 "PUT /profiles/353 HTTP/1.1" 200 69
+15:47:36 Starting new HTTP connection (1): localhost:9080
+15:47:39 http://localhost:9080 "POST /analyze HTTP/1.1" 200 28949
+15:47:39 [render] token=True invalidated=None
+15:47:39 [qp] {}
+15:47:39 Starting new HTTP connection (1): localhost:9080
+15:47:41 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:47:52 [render] token=True invalidated=None
+15:47:52 [qp] {}
+15:47:52 Starting new HTTP connection (1): localhost:9080
+15:47:52 [render] token=True invalidated=None
+15:47:52 [qp] {}
+15:47:53 Starting new HTTP connection (1): localhost:9080
+15:47:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:47:55 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:47:56 [render] token=True invalidated=None
+15:47:56 [qp] {}
+15:47:56 Starting new HTTP connection (1): localhost:9080
+15:47:58 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:47:58 Starting new HTTP connection (1): localhost:9080
+15:48:00 http://localhost:9080 "PUT /profiles/354 HTTP/1.1" 200 69
+15:48:00 Starting new HTTP connection (1): localhost:9080
+15:48:02 http://localhost:9080 "POST /analyze HTTP/1.1" 200 28623
+15:48:02 [render] token=True invalidated=None
+15:48:02 [qp] {}
+15:48:02 Starting new HTTP connection (1): localhost:9080
+15:48:05 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:22 [render] token=True invalidated=None
+15:48:22 [qp] {}
+15:48:22 Starting new HTTP connection (1): localhost:9080
+15:48:23 [render] token=True invalidated=None
+15:48:23 [qp] {}
+15:48:23 Starting new HTTP connection (1): localhost:9080
+15:48:23 [render] token=True invalidated=None
+15:48:23 [qp] {}
+15:48:23 Starting new HTTP connection (1): localhost:9080
+15:48:24 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:25 [render] token=True invalidated=None
+15:48:25 [qp] {}
+15:48:25 Starting new HTTP connection (1): localhost:9080
+15:48:25 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:25 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:26 [render] token=True invalidated=None
+15:48:26 [qp] {}
+15:48:26 Starting new HTTP connection (1): localhost:9080
+15:48:27 [render] token=True invalidated=None
+15:48:27 [qp] {}
+15:48:27 Starting new HTTP connection (1): localhost:9080
+15:48:27 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:28 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:29 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:29 [render] token=True invalidated=None
+15:48:29 [qp] {}
+15:48:29 Starting new HTTP connection (1): localhost:9080
+15:48:30 [render] token=True invalidated=None
+15:48:30 [qp] {}
+15:48:30 Starting new HTTP connection (1): localhost:9080
+15:48:31 [render] token=True invalidated=None
+15:48:31 [qp] {}
+15:48:31 Starting new HTTP connection (1): localhost:9080
+15:48:31 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:32 [render] token=True invalidated=None
+15:48:32 [qp] {}
+15:48:32 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:33 Starting new HTTP connection (1): localhost:9080
+15:48:33 [render] token=True invalidated=None
+15:48:33 [qp] {}
+15:48:33 Starting new HTTP connection (1): localhost:9080
+15:48:33 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:34 [render] token=True invalidated=None
+15:48:34 [qp] {}
+15:48:35 Starting new HTTP connection (1): localhost:9080
+15:48:35 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:35 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:36 [render] token=True invalidated=None
+15:48:36 [qp] {}
+15:48:36 Starting new HTTP connection (1): localhost:9080
+15:48:36 [render] token=True invalidated=None
+15:48:36 [qp] {}
+15:48:37 Starting new HTTP connection (1): localhost:9080
+15:48:37 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:38 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:39 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:39 [render] token=True invalidated=None
+15:48:39 [qp] {}
+15:48:40 Starting new HTTP connection (1): localhost:9080
+15:48:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:48:42 Starting new HTTP connection (1): localhost:9080
+15:48:44 http://localhost:9080 "PUT /profiles/355 HTTP/1.1" 200 69
+15:48:44 Starting new HTTP connection (1): localhost:9080
+15:48:46 http://localhost:9080 "POST /analyze HTTP/1.1" 200 28740
+15:48:46 [render] token=True invalidated=None
+15:48:46 [qp] {}
+15:48:46 Starting new HTTP connection (1): localhost:9080
+15:48:48 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2238
+15:49:15 [render] token=True invalidated=None
+15:49:15 [qp] {}
+15:49:16 Starting new HTTP connection (1): localhost:9080
+15:49:18 http://localhost:9080 "POST /scenarios HTTP/1.1" 201 33
+15:49:18 [render] token=True invalidated=None
+15:49:18 [qp] {}
+15:49:18 Starting new HTTP connection (1): localhost:9080
+15:49:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:49:37 [render] token=True invalidated=None
+15:49:37 [qp] {}
+15:49:37 Starting new HTTP connection (1): localhost:9080
+15:49:39 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:49:40 Starting new HTTP connection (1): localhost:9080
+15:49:42 http://localhost:9080 "PUT /profiles/356 HTTP/1.1" 200 69
+15:49:42 Starting new HTTP connection (1): localhost:9080
+15:49:44 http://localhost:9080 "POST /analyze HTTP/1.1" 200 28740
+15:49:44 [render] token=True invalidated=None
+15:49:44 [qp] {}
+15:49:44 Starting new HTTP connection (1): localhost:9080
+15:49:46 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:50:33 [render] token=True invalidated=None
+15:50:33 [qp] {}
+15:50:33 [render] token=True invalidated=None
+15:50:33 [qp] {}
+15:50:33 Starting new HTTP connection (1): localhost:9080
+15:50:35 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:51:20 [render] token=True invalidated=None
+15:51:20 [qp] {}
+15:51:20 Starting new HTTP connection (1): localhost:9080
+15:51:22 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:51:22 Starting new HTTP connection (1): localhost:9080
+15:51:24 http://localhost:9080 "PUT /profiles/357 HTTP/1.1" 200 69
+15:51:24 Starting new HTTP connection (1): localhost:9080
+15:51:26 http://localhost:9080 "POST /analyze HTTP/1.1" 200 28740
+15:51:26 [render] token=True invalidated=None
+15:51:26 [qp] {}
+15:51:26 Starting new HTTP connection (1): localhost:9080
+15:51:28 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:51:39 [render] token=True invalidated=None
+15:51:39 [qp] {}
+15:51:39 Starting new HTTP connection (1): localhost:9080
+15:51:40 [render] token=True invalidated=None
+15:51:40 [qp] {}
+15:51:40 Starting new HTTP connection (1): localhost:9080
+15:51:41 [render] token=True invalidated=None
+15:51:41 [qp] {}
+15:51:41 Starting new HTTP connection (1): localhost:9080
+15:51:41 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:51:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:51:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:51:45 [render] token=True invalidated=None
+15:51:45 [qp] {}
+15:51:45 Starting new HTTP connection (1): localhost:9080
+15:51:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:51:47 Starting new HTTP connection (1): localhost:9080
+15:51:50 http://localhost:9080 "PUT /profiles/358 HTTP/1.1" 200 69
+15:51:50 Starting new HTTP connection (1): localhost:9080
+15:51:52 http://localhost:9080 "POST /analyze HTTP/1.1" 200 33100
+15:51:52 [render] token=True invalidated=None
+15:51:52 [qp] {}
+15:51:52 Starting new HTTP connection (1): localhost:9080
+15:51:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:52:19 [render] token=True invalidated=None
+15:52:19 [qp] {}
+15:52:19 Starting new HTTP connection (1): localhost:9080
+15:52:21 http://localhost:9080 "POST /analyze HTTP/1.1" 200 33100
+15:52:21 Starting new HTTP connection (1): localhost:9080
+15:52:23 http://localhost:9080 "PUT /profiles/359 HTTP/1.1" 200 69
+15:52:23 [render] token=True invalidated=None
+15:52:23 [qp] {}
+15:52:23 Starting new HTTP connection (1): localhost:9080
+15:52:25 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2239
+15:52:39 [render] token=True invalidated=None
+15:52:39 [qp] {}
+15:52:39 Starting new HTTP connection (1): localhost:9080
+15:52:41 http://localhost:9080 "POST /scenarios HTTP/1.1" 201 33
+15:52:41 [render] token=True invalidated=None
+15:52:41 [qp] {}
+15:52:41 Starting new HTTP connection (1): localhost:9080
+15:52:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:08 [render] token=True invalidated=None
+15:53:08 [qp] {}
+15:53:08 [render] token=True invalidated=None
+15:53:08 [qp] {}
+15:53:08 Starting new HTTP connection (1): localhost:9080
+15:53:10 [render] token=True invalidated=None
+15:53:10 [qp] {}
+15:53:10 Starting new HTTP connection (1): localhost:9080
+15:53:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:12 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:12 Starting new HTTP connection (1): localhost:9080
+15:53:14 http://localhost:9080 "PUT /profiles/360 HTTP/1.1" 200 69
+15:53:14 Starting new HTTP connection (1): localhost:9080
+15:53:17 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30062
+15:53:17 [render] token=True invalidated=None
+15:53:17 [qp] {}
+15:53:17 Starting new HTTP connection (1): localhost:9080
+15:53:17 [render] token=True invalidated=None
+15:53:17 [qp] {}
+15:53:18 Starting new HTTP connection (1): localhost:9080
+15:53:18 [render] token=True invalidated=None
+15:53:18 [qp] {}
+15:53:18 Starting new HTTP connection (1): localhost:9080
+15:53:19 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:20 Starting new HTTP connection (1): localhost:9080
+15:53:22 http://localhost:9080 "PUT /profiles/361 HTTP/1.1" 200 69
+15:53:22 Starting new HTTP connection (1): localhost:9080
+15:53:24 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30062
+15:53:24 [render] token=True invalidated=None
+15:53:24 [qp] {}
+15:53:25 Starting new HTTP connection (1): localhost:9080
+15:53:27 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:27 [render] token=True invalidated=None
+15:53:27 [qp] {}
+15:53:27 Starting new HTTP connection (1): localhost:9080
+15:53:30 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:30 Starting new HTTP connection (1): localhost:9080
+15:53:32 http://localhost:9080 "PUT /profiles/362 HTTP/1.1" 200 69
+15:53:32 Starting new HTTP connection (1): localhost:9080
+15:53:34 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30062
+15:53:34 [render] token=True invalidated=None
+15:53:34 [qp] {}
+15:53:34 Starting new HTTP connection (1): localhost:9080
+15:53:36 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:40 [render] token=True invalidated=None
+15:53:40 [qp] {}
+15:53:40 [render] token=True invalidated=None
+15:53:40 [qp] {}
+15:53:40 Starting new HTTP connection (1): localhost:9080
+15:53:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:43 [render] token=True invalidated=None
+15:53:43 [qp] {}
+15:53:43 [render] token=True invalidated=None
+15:53:43 [qp] {}
+15:53:43 Starting new HTTP connection (1): localhost:9080
+15:53:45 [render] token=True invalidated=None
+15:53:45 [qp] {}
+15:53:45 Starting new HTTP connection (1): localhost:9080
+15:53:46 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:48 Starting new HTTP connection (1): localhost:9080
+15:53:50 http://localhost:9080 "PUT /profiles/363 HTTP/1.1" 200 69
+15:53:50 Starting new HTTP connection (1): localhost:9080
+15:53:52 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30016
+15:53:52 [render] token=True invalidated=None
+15:53:52 [qp] {}
+15:53:52 Starting new HTTP connection (1): localhost:9080
+15:53:53 [render] token=True invalidated=None
+15:53:53 [qp] {}
+15:53:53 [render] token=True invalidated=None
+15:53:53 [qp] {}
+15:53:53 Starting new HTTP connection (1): localhost:9080
+15:53:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:53:55 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:54:05 [render] token=True invalidated=None
+15:54:05 [qp] {}
+15:54:05 Starting new HTTP connection (1): localhost:9080
+15:54:07 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:54:07 Starting new HTTP connection (1): localhost:9080
+15:54:10 http://localhost:9080 "PUT /profiles/364 HTTP/1.1" 200 69
+15:54:10 Starting new HTTP connection (1): localhost:9080
+15:54:12 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30016
+15:54:12 [render] token=True invalidated=None
+15:54:12 [qp] {}
+15:54:12 Starting new HTTP connection (1): localhost:9080
+15:54:14 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:54:18 [render] token=True invalidated=None
+15:54:18 [qp] {}
+15:54:18 Starting new HTTP connection (1): localhost:9080
+15:54:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:54:20 Starting new HTTP connection (1): localhost:9080
+15:54:22 http://localhost:9080 "PUT /profiles/365 HTTP/1.1" 200 69
+15:54:22 Starting new HTTP connection (1): localhost:9080
+15:54:24 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30016
+15:54:24 [render] token=True invalidated=None
+15:54:24 [qp] {}
+15:54:24 Starting new HTTP connection (1): localhost:9080
+15:54:26 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:54:35 [render] token=True invalidated=None
+15:54:35 [qp] {}
+15:54:35 [render] token=True invalidated=None
+15:54:35 [qp] {}
+15:54:35 Starting new HTTP connection (1): localhost:9080
+15:54:37 [render] token=True invalidated=None
+15:54:37 [qp] {}
+15:54:37 Starting new HTTP connection (1): localhost:9080
+15:54:37 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:54:39 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+15:54:39 [render] token=False invalidated=True
+15:54:39 [qp] {}
+15:56:20 [render] token=False invalidated=None
+15:56:20 [cookie] ret_token=있음
+15:56:20 Starting new HTTP connection (1): localhost:9080
+15:56:22 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 45
+15:56:22 [auth/me] status=401
+15:56:22 [cookie] 토큰 만료 → 쿠키 삭제
+15:56:22 [qp] {}
+15:56:26 [flush_cookie] action=delete
+15:56:26 [flush_cookie] st.html 호출 전
+15:56:26 [flush_cookie] st.html 호출 후
+15:56:26 [render] token=False invalidated=True
+15:56:26 [qp] {}
+15:56:30 [render] token=False invalidated=True
+15:56:30 [qp] {}
+15:56:39 [render] token=False invalidated=True
+15:56:39 [qp] {}
+15:56:39 Starting new HTTP connection (1): localhost:9080
+15:56:41 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 250
+15:56:41 [flush_cookie] action=set
+15:56:41 [flush_cookie] st.html 호출 전
+15:56:41 [flush_cookie] st.html 호출 후
+15:56:41 [render] token=True invalidated=None
+15:56:41 [qp] {}
+15:56:41 Starting new HTTP connection (1): localhost:9080
+15:56:43 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 3023
+15:56:43 [render] token=True invalidated=None
+15:56:43 [qp] {}
+15:56:43 Starting new HTTP connection (1): localhost:9080
+15:56:46 http://localhost:9080 "POST /analyze HTTP/1.1" 200 31215
+15:56:46 [render] token=True invalidated=None
+15:56:46 [qp] {}
+15:56:46 Starting new HTTP connection (1): localhost:9080
+15:56:48 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 110
+15:56:48 Starting new HTTP connection (1): localhost:9080
+15:56:50 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:58:34 [render] token=True invalidated=None
+15:58:34 [qp] {}
+15:58:34 Starting new HTTP connection (1): localhost:9080
+15:58:37 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:58:42 [render] token=True invalidated=None
+15:58:42 [qp] {}
+15:58:42 Starting new HTTP connection (1): localhost:9080
+15:58:44 [render] token=True invalidated=None
+15:58:44 [qp] {}
+15:58:44 Starting new HTTP connection (1): localhost:9080
+15:58:44 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:58:45 [render] token=True invalidated=None
+15:58:45 [qp] {}
+15:58:45 Starting new HTTP connection (1): localhost:9080
+15:58:46 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+15:58:48 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2212
+16:52:05 [render] token=False invalidated=None
+16:52:05 [cookie] ret_token=있음
+16:52:05 Starting new HTTP connection (1): localhost:9080
+16:52:07 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 110
+16:52:07 [auth/me] status=200
+16:52:07 [render] token=True invalidated=None
+16:52:07 [qp] {}
+16:52:07 Starting new HTTP connection (1): localhost:9080
+16:52:09 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2725
+16:52:10 [render] token=True invalidated=None
+16:52:10 [qp] {}
+16:52:10 Starting new HTTP connection (1): localhost:9080
+16:52:12 http://localhost:9080 "POST /analyze HTTP/1.1" 200 29237
+16:52:12 [render] token=True invalidated=None
+16:52:12 [qp] {}
+16:52:12 Starting new HTTP connection (1): localhost:9080
+16:52:14 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 110
+16:52:14 Starting new HTTP connection (1): localhost:9080
+16:52:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:52:34 [render] token=True invalidated=None
+16:52:34 [qp] {}
+16:52:34 [render] token=True invalidated=None
+16:52:34 [qp] {}
+16:52:35 Starting new HTTP connection (1): localhost:9080
+16:52:36 [render] token=True invalidated=None
+16:52:36 [qp] {}
+16:52:36 Starting new HTTP connection (1): localhost:9080
+16:52:37 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:52:38 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+16:52:38 [render] token=False invalidated=True
+16:52:38 [qp] {}
+16:52:55 [render] token=False invalidated=True
+16:52:55 [qp] {}
+16:52:58 [render] token=False invalidated=True
+16:52:58 [qp] {}
+16:53:01 [render] token=False invalidated=True
+16:53:01 [qp] {}
+16:53:01 Starting new HTTP connection (1): localhost:9080
+16:53:03 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 251
+16:53:03 [flush_cookie] action=set
+16:53:03 [flush_cookie] st.html 호출 전
+16:53:03 [flush_cookie] st.html 호출 후
+16:53:03 [render] token=True invalidated=None
+16:53:03 [qp] {}
+16:53:03 Starting new HTTP connection (1): localhost:9080
+16:53:06 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2631
+16:53:06 [render] token=True invalidated=None
+16:53:06 [qp] {}
+16:53:06 Starting new HTTP connection (1): localhost:9080
+16:53:08 http://localhost:9080 "POST /analyze HTTP/1.1" 200 31317
+16:53:08 [render] token=True invalidated=None
+16:53:08 [qp] {}
+16:53:08 Starting new HTTP connection (1): localhost:9080
+16:53:10 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 112
+16:53:10 Starting new HTTP connection (1): localhost:9080
+16:53:12 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:54:52 [render] token=True invalidated=None
+16:54:52 [qp] {}
+16:54:52 Starting new HTTP connection (1): localhost:9080
+16:54:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:55:15 [render] token=True invalidated=None
+16:55:15 [qp] {}
+16:55:15 [render] token=True invalidated=None
+16:55:15 [qp] {}
+16:55:15 Starting new HTTP connection (1): localhost:9080
+16:55:17 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:55:18 [render] token=True invalidated=None
+16:55:18 [qp] {}
+16:55:18 Starting new HTTP connection (1): localhost:9080
+16:55:20 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+16:55:20 [render] token=False invalidated=True
+16:55:20 [qp] {}
+16:55:35 [render] token=False invalidated=True
+16:55:35 [qp] {}
+16:55:38 [render] token=False invalidated=True
+16:55:38 [qp] {}
+16:55:46 [render] token=False invalidated=True
+16:55:46 [qp] {}
+16:55:46 Starting new HTTP connection (1): localhost:9080
+16:55:48 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+16:55:48 [flush_cookie] action=set
+16:55:48 [flush_cookie] st.html 호출 전
+16:55:48 [flush_cookie] st.html 호출 후
+16:55:48 [render] token=True invalidated=None
+16:55:48 [qp] {}
+16:55:48 Starting new HTTP connection (1): localhost:9080
+16:55:50 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2622
+16:55:50 [render] token=True invalidated=None
+16:55:50 [qp] {}
+16:55:50 Starting new HTTP connection (1): localhost:9080
+16:55:52 http://localhost:9080 "POST /analyze HTTP/1.1" 200 27785
+16:55:52 [render] token=True invalidated=None
+16:55:52 [qp] {}
+16:55:52 Starting new HTTP connection (1): localhost:9080
+16:55:54 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 106
+16:55:54 Starting new HTTP connection (1): localhost:9080
+16:55:56 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:56:46 [render] token=True invalidated=None
+16:56:46 [qp] {}
+16:56:46 Starting new HTTP connection (1): localhost:9080
+16:56:48 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:59:18 [render] token=True invalidated=None
+16:59:18 [qp] {}
+16:59:18 [render] token=True invalidated=None
+16:59:18 [qp] {}
+16:59:18 Starting new HTTP connection (1): localhost:9080
+16:59:20 [render] token=True invalidated=None
+16:59:20 [qp] {}
+16:59:20 Starting new HTTP connection (1): localhost:9080
+16:59:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:59:21 [render] token=True invalidated=None
+16:59:21 [qp] {}
+16:59:21 Starting new HTTP connection (1): localhost:9080
+16:59:22 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+16:59:23 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+16:59:23 [render] token=False invalidated=True
+16:59:23 [qp] {}
+16:59:26 [render] token=False invalidated=True
+16:59:26 [qp] {}
+16:59:28 [render] token=False invalidated=True
+16:59:28 [qp] {}
+16:59:28 [render] token=False invalidated=True
+16:59:28 [qp] {}
+16:59:28 Starting new HTTP connection (1): localhost:9080
+16:59:30 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+16:59:30 [flush_cookie] action=set
+16:59:30 [flush_cookie] st.html 호출 전
+16:59:30 [flush_cookie] st.html 호출 후
+16:59:30 [render] token=True invalidated=None
+16:59:30 [qp] {}
+16:59:30 Starting new HTTP connection (1): localhost:9080
+16:59:32 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2464
+16:59:32 [render] token=True invalidated=None
+16:59:32 [qp] {}
+16:59:32 Starting new HTTP connection (1): localhost:9080
+16:59:34 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30016
+16:59:35 [render] token=True invalidated=None
+16:59:35 [qp] {}
+16:59:35 Starting new HTTP connection (1): localhost:9080
+16:59:37 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+16:59:37 Starting new HTTP connection (1): localhost:9080
+16:59:39 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:47 [render] token=True invalidated=None
+17:03:47 [qp] {}
+17:03:47 Starting new HTTP connection (1): localhost:9080
+17:03:48 [render] token=True invalidated=None
+17:03:48 [qp] {}
+17:03:48 Starting new HTTP connection (1): localhost:9080
+17:03:49 [render] token=True invalidated=None
+17:03:49 [qp] {}
+17:03:49 Starting new HTTP connection (1): localhost:9080
+17:03:49 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:49 [render] token=True invalidated=None
+17:03:49 [qp] {}
+17:03:49 Starting new HTTP connection (1): localhost:9080
+17:03:50 [render] token=True invalidated=None
+17:03:50 [qp] {}
+17:03:50 Starting new HTTP connection (1): localhost:9080
+17:03:50 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:51 [render] token=True invalidated=None
+17:03:51 [qp] {}
+17:03:51 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:51 Starting new HTTP connection (1): localhost:9080
+17:03:52 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:52 [render] token=True invalidated=None
+17:03:52 [qp] {}
+17:03:52 Starting new HTTP connection (1): localhost:9080
+17:03:52 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:53 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:56 [render] token=True invalidated=None
+17:03:56 [qp] {}
+17:03:56 Starting new HTTP connection (1): localhost:9080
+17:03:58 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:03:58 Starting new HTTP connection (1): localhost:9080
+17:04:00 http://localhost:9080 "PUT /profiles/366 HTTP/1.1" 200 69
+17:04:00 Starting new HTTP connection (1): localhost:9080
+17:04:02 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30760
+17:04:03 [render] token=True invalidated=None
+17:04:03 [qp] {}
+17:04:03 Starting new HTTP connection (1): localhost:9080
+17:04:05 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:04:11 [render] token=True invalidated=None
+17:04:11 [qp] {}
+17:04:11 Starting new HTTP connection (1): localhost:9080
+17:04:13 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:04:41 [render] token=True invalidated=None
+17:04:41 [qp] {}
+17:04:41 [render] token=True invalidated=None
+17:04:41 [qp] {}
+17:04:41 Starting new HTTP connection (1): localhost:9080
+17:04:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:04:44 [render] token=True invalidated=None
+17:04:44 [qp] {}
+17:04:44 [render] token=True invalidated=None
+17:04:44 [qp] {}
+17:04:44 Starting new HTTP connection (1): localhost:9080
+17:04:46 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:04:58 [render] token=True invalidated=None
+17:04:58 [qp] {}
+17:04:58 Starting new HTTP connection (1): localhost:9080
+17:05:00 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:05:00 Starting new HTTP connection (1): localhost:9080
+17:05:02 http://localhost:9080 "PUT /profiles/369 HTTP/1.1" 200 69
+17:05:02 Starting new HTTP connection (1): localhost:9080
+17:05:06 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:05:06 [render] token=True invalidated=None
+17:05:06 [qp] {}
+17:05:06 Starting new HTTP connection (1): localhost:9080
+17:05:08 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:08:14 [render] token=True invalidated=None
+17:08:14 [qp] {}
+17:08:14 [render] token=True invalidated=None
+17:08:14 [qp] {}
+17:08:14 Starting new HTTP connection (1): localhost:9080
+17:08:15 [render] token=True invalidated=None
+17:08:15 [qp] {}
+17:08:15 Starting new HTTP connection (1): localhost:9080
+17:08:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:08:17 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+17:08:17 [render] token=False invalidated=True
+17:08:17 [qp] {}
+17:08:21 [render] token=False invalidated=True
+17:08:21 [qp] {}
+17:08:23 [render] token=False invalidated=True
+17:08:23 [qp] {}
+17:08:23 [render] token=False invalidated=True
+17:08:23 [qp] {}
+17:08:23 Starting new HTTP connection (1): localhost:9080
+17:08:25 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+17:08:25 [flush_cookie] action=set
+17:08:25 [flush_cookie] st.html 호출 전
+17:08:25 [flush_cookie] st.html 호출 후
+17:08:25 [render] token=True invalidated=None
+17:08:25 [qp] {}
+17:08:25 Starting new HTTP connection (1): localhost:9080
+17:08:28 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:08:28 [render] token=True invalidated=None
+17:08:28 [qp] {}
+17:08:28 Starting new HTTP connection (1): localhost:9080
+17:08:30 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:08:30 [render] token=True invalidated=None
+17:08:30 [qp] {}
+17:08:30 Starting new HTTP connection (1): localhost:9080
+17:08:32 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:08:32 Starting new HTTP connection (1): localhost:9080
+17:08:34 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:08:34 Starting new HTTP connection (1): localhost:9080
+17:08:36 http://localhost:9080 "GET /admin/users HTTP/1.1" 500 21
+17:08:36 Starting new HTTP connection (1): localhost:9080
+17:08:38 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:08:59 [render] token=True invalidated=None
+17:08:59 [qp] {}
+17:08:59 [render] token=True invalidated=None
+17:08:59 [qp] {}
+17:08:59 Starting new HTTP connection (1): localhost:9080
+17:09:00 [render] token=True invalidated=None
+17:09:00 [qp] {}
+17:09:00 Starting new HTTP connection (1): localhost:9080
+17:09:01 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:09:02 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+17:09:02 [render] token=False invalidated=True
+17:09:02 [qp] {}
+17:09:14 [render] token=False invalidated=True
+17:09:14 [qp] {}
+17:09:18 [render] token=False invalidated=True
+17:09:18 [qp] {}
+17:09:22 [render] token=False invalidated=True
+17:09:22 [qp] {}
+17:09:22 Starting new HTTP connection (1): localhost:9080
+17:09:25 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 243
+17:09:25 [flush_cookie] action=set
+17:09:25 [flush_cookie] st.html 호출 전
+17:09:25 [flush_cookie] st.html 호출 후
+17:09:25 [render] token=True invalidated=None
+17:09:25 [qp] {}
+17:09:25 Starting new HTTP connection (1): localhost:9080
+17:09:27 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+17:09:27 [render] token=True invalidated=None
+17:09:27 [qp] {}
+17:09:27 Starting new HTTP connection (1): localhost:9080
+17:09:29 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+17:09:29 [render] token=True invalidated=None
+17:09:29 [qp] {}
+17:09:29 Starting new HTTP connection (1): localhost:9080
+17:09:31 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+17:09:31 Starting new HTTP connection (1): localhost:9080
+17:09:33 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:10:20 [render] token=True invalidated=None
+17:10:20 [qp] {}
+17:10:20 [render] token=True invalidated=None
+17:10:20 [qp] {}
+17:10:21 Starting new HTTP connection (1): localhost:9080
+17:10:22 [render] token=True invalidated=None
+17:10:22 [qp] {}
+17:10:22 Starting new HTTP connection (1): localhost:9080
+17:10:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:10:24 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+17:10:24 [render] token=False invalidated=True
+17:10:24 [qp] {}
+17:10:27 [render] token=False invalidated=True
+17:10:27 [qp] {}
+17:10:33 [render] token=False invalidated=True
+17:10:33 [qp] {}
+17:10:33 [render] token=False invalidated=True
+17:10:33 [qp] {}
+17:10:33 Starting new HTTP connection (1): localhost:9080
+17:10:35 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+17:10:35 [flush_cookie] action=set
+17:10:35 [flush_cookie] st.html 호출 전
+17:10:35 [flush_cookie] st.html 호출 후
+17:10:35 [render] token=True invalidated=None
+17:10:35 [qp] {}
+17:10:35 Starting new HTTP connection (1): localhost:9080
+17:10:37 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:10:38 [render] token=True invalidated=None
+17:10:38 [qp] {}
+17:10:38 Starting new HTTP connection (1): localhost:9080
+17:10:40 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:10:40 [render] token=True invalidated=None
+17:10:40 [qp] {}
+17:10:40 Starting new HTTP connection (1): localhost:9080
+17:10:42 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:10:42 Starting new HTTP connection (1): localhost:9080
+17:10:44 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:10:44 Starting new HTTP connection (1): localhost:9080
+17:10:46 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:10:46 Starting new HTTP connection (1): localhost:9080
+17:10:48 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:11:13 [render] token=False invalidated=None
+17:11:13 [cookie] ret_token=있음
+17:11:13 Starting new HTTP connection (1): localhost:9080
+17:11:15 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:11:15 [auth/me] status=200
+17:11:15 [render] token=True invalidated=None
+17:11:15 [qp] {}
+17:11:15 Starting new HTTP connection (1): localhost:9080
+17:11:18 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:11:18 [render] token=True invalidated=None
+17:11:18 [qp] {}
+17:11:18 Starting new HTTP connection (1): localhost:9080
+17:11:20 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:11:20 [render] token=True invalidated=None
+17:11:20 [qp] {}
+17:11:20 Starting new HTTP connection (1): localhost:9080
+17:11:22 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:11:22 Starting new HTTP connection (1): localhost:9080
+17:11:24 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:11:24 Starting new HTTP connection (1): localhost:9080
+17:11:26 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:11:26 Starting new HTTP connection (1): localhost:9080
+17:11:28 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:12:26 [render] token=False invalidated=None
+17:12:26 [cookie] ret_token=있음
+17:12:26 Starting new HTTP connection (1): localhost:9080
+17:12:28 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:12:28 [auth/me] status=200
+17:12:28 [render] token=True invalidated=None
+17:12:28 [qp] {}
+17:12:28 Starting new HTTP connection (1): localhost:9080
+17:12:30 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:12:30 [render] token=True invalidated=None
+17:12:30 [qp] {}
+17:12:30 Starting new HTTP connection (1): localhost:9080
+17:12:32 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:12:32 [render] token=True invalidated=None
+17:12:32 [qp] {}
+17:12:32 Starting new HTTP connection (1): localhost:9080
+17:12:34 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:12:34 Starting new HTTP connection (1): localhost:9080
+17:12:36 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:12:36 Starting new HTTP connection (1): localhost:9080
+17:12:39 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:12:39 Starting new HTTP connection (1): localhost:9080
+17:12:41 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:12:59 [render] token=True invalidated=None
+17:12:59 [qp] {}
+17:12:59 Starting new HTTP connection (1): localhost:9080
+17:13:01 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:13:01 Starting new HTTP connection (1): localhost:9080
+17:13:03 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:13:03 Starting new HTTP connection (1): localhost:9080
+17:13:05 http://localhost:9080 "PUT /admin/users/20/toggle-admin HTTP/1.1" 200 52
+17:13:05 [render] token=True invalidated=None
+17:13:05 [qp] {}
+17:13:05 Starting new HTTP connection (1): localhost:9080
+17:13:07 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:13:07 Starting new HTTP connection (1): localhost:9080
+17:13:09 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1305
+17:13:10 Starting new HTTP connection (1): localhost:9080
+17:13:12 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:13:28 [render] token=True invalidated=None
+17:13:28 [qp] {}
+17:13:28 [render] token=True invalidated=None
+17:13:28 [qp] {}
+17:13:29 Starting new HTTP connection (1): localhost:9080
+17:13:31 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:13:31 Starting new HTTP connection (1): localhost:9080
+17:13:31 [render] token=True invalidated=None
+17:13:31 [qp] {}
+17:13:31 Starting new HTTP connection (1): localhost:9080
+17:13:33 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1305
+17:13:33 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+17:13:33 [render] token=False invalidated=True
+17:13:33 [qp] {}
+17:13:45 [render] token=False invalidated=True
+17:13:45 [qp] {}
+17:13:49 [render] token=False invalidated=True
+17:13:49 [qp] {}
+17:13:49 [render] token=False invalidated=True
+17:13:49 [qp] {}
+17:13:49 Starting new HTTP connection (1): localhost:9080
+17:13:51 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 242
+17:13:51 [flush_cookie] action=set
+17:13:51 [flush_cookie] st.html 호출 전
+17:13:51 [flush_cookie] st.html 호출 후
+17:13:51 [render] token=True invalidated=None
+17:13:51 [qp] {}
+17:13:51 Starting new HTTP connection (1): localhost:9080
+17:13:54 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+17:13:54 [render] token=True invalidated=None
+17:13:54 [qp] {}
+17:13:54 Starting new HTTP connection (1): localhost:9080
+17:13:56 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+17:13:56 [render] token=True invalidated=None
+17:13:56 [qp] {}
+17:13:56 Starting new HTTP connection (1): localhost:9080
+17:13:58 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 103
+17:13:58 Starting new HTTP connection (1): localhost:9080
+17:14:00 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:14:00 Starting new HTTP connection (1): localhost:9080
+17:14:02 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1305
+17:14:02 Starting new HTTP connection (1): localhost:9080
+17:14:04 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:14:15 [render] token=True invalidated=None
+17:14:15 [qp] {}
+17:14:15 Starting new HTTP connection (1): localhost:9080
+17:14:17 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:14:17 Starting new HTTP connection (1): localhost:9080
+17:14:19 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1305
+17:14:19 Starting new HTTP connection (1): localhost:9080
+17:14:21 http://localhost:9080 "PUT /admin/users/20/toggle-admin HTTP/1.1" 200 53
+17:14:21 [render] token=True invalidated=None
+17:14:21 [qp] {}
+17:14:21 Starting new HTTP connection (1): localhost:9080
+17:14:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:14:23 Starting new HTTP connection (1): localhost:9080
+17:14:25 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:14:25 Starting new HTTP connection (1): localhost:9080
+17:14:25 [render] token=True invalidated=None
+17:14:25 [qp] {}
+17:14:25 [render] token=True invalidated=None
+17:14:25 [qp] {}
+17:14:26 Starting new HTTP connection (1): localhost:9080
+17:14:27 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:14:28 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:14:28 Starting new HTTP connection (1): localhost:9080
+17:14:30 http://localhost:9080 "GET /admin/users HTTP/1.1" 403 49
+17:14:30 Starting new HTTP connection (1): localhost:9080
+17:14:32 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:15:22 [render] token=True invalidated=None
+17:15:22 [qp] {}
+17:15:22 Starting new HTTP connection (1): localhost:9080
+17:15:24 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+17:15:24 [render] token=False invalidated=True
+17:15:24 [qp] {}
+17:15:49 [render] token=False invalidated=True
+17:15:49 [qp] {}
+17:15:51 [render] token=False invalidated=True
+17:15:51 [qp] {}
+17:15:51 [render] token=False invalidated=True
+17:15:51 [qp] {}
+17:15:51 Starting new HTTP connection (1): localhost:9080
+17:15:53 [render] token=False invalidated=True
+17:15:53 [qp] {}
+17:15:53 Starting new HTTP connection (1): localhost:9080
+17:15:53 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+17:15:55 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+17:15:56 [flush_cookie] action=set
+17:15:56 [flush_cookie] st.html 호출 전
+17:15:56 [flush_cookie] st.html 호출 후
+17:15:56 [render] token=True invalidated=None
+17:15:56 [qp] {}
+17:15:56 Starting new HTTP connection (1): localhost:9080
+17:15:58 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:15:58 [render] token=True invalidated=None
+17:15:58 [qp] {}
+17:15:58 Starting new HTTP connection (1): localhost:9080
+17:16:00 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:16:00 [render] token=True invalidated=None
+17:16:00 [qp] {}
+17:16:00 Starting new HTTP connection (1): localhost:9080
+17:16:02 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:16:02 Starting new HTTP connection (1): localhost:9080
+17:16:04 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:04 Starting new HTTP connection (1): localhost:9080
+17:16:06 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:16:06 Starting new HTTP connection (1): localhost:9080
+17:16:08 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:32 [render] token=True invalidated=None
+17:16:32 [qp] {}
+17:16:32 Starting new HTTP connection (1): localhost:9080
+17:16:34 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:34 Starting new HTTP connection (1): localhost:9080
+17:16:36 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:16:36 Starting new HTTP connection (1): localhost:9080
+17:16:38 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:40 [render] token=True invalidated=None
+17:16:40 [qp] {}
+17:16:40 Starting new HTTP connection (1): localhost:9080
+17:16:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:42 Starting new HTTP connection (1): localhost:9080
+17:16:44 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:16:44 [render] token=True invalidated=None
+17:16:44 [qp] {}
+17:16:44 Starting new HTTP connection (1): localhost:9080
+17:16:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:47 Starting new HTTP connection (1): localhost:9080
+17:16:49 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:16:49 Starting new HTTP connection (1): localhost:9080
+17:16:51 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:51 [render] token=True invalidated=None
+17:16:51 [qp] {}
+17:16:51 Starting new HTTP connection (1): localhost:9080
+17:16:53 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:16:53 Starting new HTTP connection (1): localhost:9080
+17:16:55 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:16:56 Starting new HTTP connection (1): localhost:9080
+17:16:58 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:22:37 [render] token=False invalidated=None
+17:22:37 [cookie] ret_token=있음
+17:22:37 Starting new HTTP connection (1): localhost:9080
+17:22:39 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:22:39 [auth/me] status=200
+17:22:39 [render] token=True invalidated=None
+17:22:39 [qp] {}
+17:22:39 Starting new HTTP connection (1): localhost:9080
+17:22:41 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:22:41 [render] token=True invalidated=None
+17:22:41 [qp] {}
+17:22:41 Starting new HTTP connection (1): localhost:9080
+17:22:43 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:22:44 [render] token=True invalidated=None
+17:22:44 [qp] {}
+17:22:44 Starting new HTTP connection (1): localhost:9080
+17:22:46 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:22:46 Starting new HTTP connection (1): localhost:9080
+17:22:48 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:22:48 Starting new HTTP connection (1): localhost:9080
+17:22:50 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:34:30 [render] token=False invalidated=None
+17:34:30 [cookie] ret_token=있음
+17:34:30 Starting new HTTP connection (1): localhost:9080
+17:34:32 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:34:32 [auth/me] status=200
+17:34:32 [render] token=True invalidated=None
+17:34:32 [qp] {}
+17:34:32 Starting new HTTP connection (1): localhost:9080
+17:34:35 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:34:35 [render] token=True invalidated=None
+17:34:35 [qp] {}
+17:34:35 Starting new HTTP connection (1): localhost:9080
+17:34:37 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:34:37 [render] token=True invalidated=None
+17:34:37 [qp] {}
+17:34:37 Starting new HTTP connection (1): localhost:9080
+17:34:39 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:34:39 Starting new HTTP connection (1): localhost:9080
+17:34:41 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:36:03 [render] token=False invalidated=None
+17:36:03 [cookie] ret_token=있음
+17:36:03 Starting new HTTP connection (1): localhost:9080
+17:36:05 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:36:05 [auth/me] status=200
+17:36:05 [render] token=True invalidated=None
+17:36:05 [qp] {}
+17:36:05 Starting new HTTP connection (1): localhost:9080
+17:36:07 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:36:07 [render] token=True invalidated=None
+17:36:07 [qp] {}
+17:36:07 Starting new HTTP connection (1): localhost:9080
+17:36:09 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:36:09 [render] token=True invalidated=None
+17:36:09 [qp] {}
+17:36:10 Starting new HTTP connection (1): localhost:9080
+17:36:12 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:36:12 Starting new HTTP connection (1): localhost:9080
+17:36:14 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:37:26 [render] token=False invalidated=None
+17:37:26 [cookie] ret_token=있음
+17:37:26 Starting new HTTP connection (1): localhost:9080
+17:37:28 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:37:28 [auth/me] status=200
+17:37:28 [render] token=True invalidated=None
+17:37:28 [qp] {}
+17:37:28 Starting new HTTP connection (1): localhost:9080
+17:37:30 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:37:30 [render] token=True invalidated=None
+17:37:30 [qp] {}
+17:37:30 Starting new HTTP connection (1): localhost:9080
+17:37:32 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:37:32 [render] token=True invalidated=None
+17:37:32 [qp] {}
+17:37:32 Starting new HTTP connection (1): localhost:9080
+17:37:34 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:37:34 Starting new HTTP connection (1): localhost:9080
+17:37:36 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:38:23 [render] token=False invalidated=None
+17:38:23 [cookie] ret_token=있음
+17:38:23 Starting new HTTP connection (1): localhost:9080
+17:38:25 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:38:25 [auth/me] status=200
+17:38:25 [render] token=True invalidated=None
+17:38:25 [qp] {}
+17:38:25 Starting new HTTP connection (1): localhost:9080
+17:38:27 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:38:27 [render] token=True invalidated=None
+17:38:27 [qp] {}
+17:38:27 Starting new HTTP connection (1): localhost:9080
+17:38:29 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:38:29 [render] token=True invalidated=None
+17:38:29 [qp] {}
+17:38:29 Starting new HTTP connection (1): localhost:9080
+17:38:31 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:38:31 Starting new HTTP connection (1): localhost:9080
+17:38:34 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:38:34 Starting new HTTP connection (1): localhost:9080
+17:38:36 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:45:07 [render] token=False invalidated=None
+17:45:07 [cookie] ret_token=있음
+17:45:07 Starting new HTTP connection (1): localhost:9080
+17:45:09 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:45:09 [auth/me] status=200
+17:45:09 [render] token=True invalidated=None
+17:45:09 [qp] {}
+17:45:09 Starting new HTTP connection (1): localhost:9080
+17:45:11 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:45:12 [render] token=True invalidated=None
+17:45:12 [qp] {}
+17:45:12 Starting new HTTP connection (1): localhost:9080
+17:45:14 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:45:14 [render] token=True invalidated=None
+17:45:14 [qp] {}
+17:45:14 Starting new HTTP connection (1): localhost:9080
+17:45:16 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:45:16 Starting new HTTP connection (1): localhost:9080
+17:45:18 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:45:18 Starting new HTTP connection (1): localhost:9080
+17:45:20 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:51:09 [render] token=False invalidated=None
+17:51:09 [cookie] ret_token=있음
+17:51:09 Starting new HTTP connection (1): localhost:9080
+17:51:11 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:51:11 [auth/me] status=200
+17:51:11 [render] token=True invalidated=None
+17:51:11 [qp] {}
+17:51:11 Starting new HTTP connection (1): localhost:9080
+17:51:14 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:51:14 [render] token=True invalidated=None
+17:51:14 [qp] {}
+17:51:14 Starting new HTTP connection (1): localhost:9080
+17:51:16 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:51:16 [render] token=True invalidated=None
+17:51:16 [qp] {}
+17:51:16 Starting new HTTP connection (1): localhost:9080
+17:51:18 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:51:18 Starting new HTTP connection (1): localhost:9080
+17:51:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:51:20 Starting new HTTP connection (1): localhost:9080
+17:51:22 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:52:40 [render] token=True invalidated=None
+17:52:40 [qp] {}
+17:52:44 [render] token=True invalidated=None
+17:52:44 [qp] {}
+17:53:01 [render] token=False invalidated=None
+17:53:01 [cookie] ret_token=있음
+17:53:01 Starting new HTTP connection (1): localhost:9080
+17:53:03 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:53:03 [auth/me] status=200
+17:53:03 [render] token=True invalidated=None
+17:53:03 [qp] {}
+17:53:03 Starting new HTTP connection (1): localhost:9080
+17:53:05 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:53:05 [render] token=True invalidated=None
+17:53:05 [qp] {}
+17:53:05 Starting new HTTP connection (1): localhost:9080
+17:53:07 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:53:08 [render] token=True invalidated=None
+17:53:08 [qp] {}
+17:53:08 Starting new HTTP connection (1): localhost:9080
+17:53:10 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:53:10 Starting new HTTP connection (1): localhost:9080
+17:53:12 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:53:12 Starting new HTTP connection (1): localhost:9080
+17:53:14 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:55:34 [render] token=False invalidated=None
+17:55:34 [cookie] ret_token=있음
+17:55:34 Starting new HTTP connection (1): localhost:9080
+17:55:36 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:55:36 [auth/me] status=200
+17:55:36 [render] token=True invalidated=None
+17:55:36 [qp] {}
+17:55:36 Starting new HTTP connection (1): localhost:9080
+17:55:39 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:55:39 [render] token=True invalidated=None
+17:55:39 [qp] {}
+17:55:39 Starting new HTTP connection (1): localhost:9080
+17:55:41 http://localhost:9080 "POST /analyze HTTP/1.1" 200 30828
+17:55:41 [render] token=True invalidated=None
+17:55:41 [qp] {}
+17:55:41 Starting new HTTP connection (1): localhost:9080
+17:55:43 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:55:43 Starting new HTTP connection (1): localhost:9080
+17:55:45 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:55:45 Starting new HTTP connection (1): localhost:9080
+17:55:47 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:57:18 [render] token=True invalidated=None
+17:57:18 [qp] {}
+17:57:19 [render] token=True invalidated=None
+17:57:19 [qp] {}
+17:57:23 [render] token=True invalidated=None
+17:57:23 [qp] {}
+17:57:23 Starting new HTTP connection (1): localhost:9080
+17:57:25 http://localhost:9080 "PUT /profiles/370 HTTP/1.1" 200 69
+17:57:25 Starting new HTTP connection (1): localhost:9080
+17:57:27 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+17:57:27 [render] token=True invalidated=None
+17:57:27 [qp] {}
+17:58:16 [render] token=False invalidated=None
+17:58:16 [cookie] ret_token=있음
+17:58:16 Starting new HTTP connection (1): localhost:9080
+17:58:18 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:58:18 [auth/me] status=200
+17:58:18 [render] token=True invalidated=None
+17:58:18 [qp] {}
+17:58:18 Starting new HTTP connection (1): localhost:9080
+17:58:20 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+17:58:20 [render] token=True invalidated=None
+17:58:20 [qp] {}
+17:58:20 Starting new HTTP connection (1): localhost:9080
+17:58:22 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+17:58:22 [render] token=True invalidated=None
+17:58:22 [qp] {}
+17:58:22 Starting new HTTP connection (1): localhost:9080
+17:58:24 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:58:24 Starting new HTTP connection (1): localhost:9080
+17:58:26 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+17:58:26 Starting new HTTP connection (1): localhost:9080
+17:58:29 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+18:02:02 [render] token=False invalidated=None
+18:02:02 [cookie] ret_token=있음
+18:02:02 Starting new HTTP connection (1): localhost:9080
+18:02:05 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:02:05 [auth/me] status=200
+18:02:05 [render] token=True invalidated=None
+18:02:05 [qp] {}
+18:02:05 Starting new HTTP connection (1): localhost:9080
+18:02:07 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+18:02:07 [render] token=True invalidated=None
+18:02:07 [qp] {}
+18:02:07 Starting new HTTP connection (1): localhost:9080
+18:02:09 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+18:02:09 [render] token=True invalidated=None
+18:02:09 [qp] {}
+18:02:09 Starting new HTTP connection (1): localhost:9080
+18:02:11 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:02:11 Starting new HTTP connection (1): localhost:9080
+18:02:13 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+18:02:13 Starting new HTTP connection (1): localhost:9080
+18:02:15 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+18:04:29 [render] token=False invalidated=None
+18:04:29 [cookie] ret_token=있음
+18:04:29 Starting new HTTP connection (1): localhost:9080
+18:04:31 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:04:31 [auth/me] status=200
+18:04:31 [render] token=True invalidated=None
+18:04:31 [qp] {}
+18:04:31 Starting new HTTP connection (1): localhost:9080
+18:04:34 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+18:04:34 [render] token=True invalidated=None
+18:04:34 [qp] {}
+18:04:34 Starting new HTTP connection (1): localhost:9080
+18:04:36 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+18:04:36 [render] token=True invalidated=None
+18:04:36 [qp] {}
+18:04:36 Starting new HTTP connection (1): localhost:9080
+18:04:38 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:04:38 Starting new HTTP connection (1): localhost:9080
+18:04:40 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+18:04:40 Starting new HTTP connection (1): localhost:9080
+18:04:42 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+18:09:11 [render] token=False invalidated=None
+18:09:11 [cookie] ret_token=있음
+18:09:11 Starting new HTTP connection (1): localhost:9080
+18:09:13 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:09:13 [auth/me] status=200
+18:09:13 [render] token=True invalidated=None
+18:09:13 [qp] {}
+18:09:13 Starting new HTTP connection (1): localhost:9080
+18:09:15 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+18:09:15 [render] token=True invalidated=None
+18:09:15 [qp] {}
+18:09:15 Starting new HTTP connection (1): localhost:9080
+18:09:17 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+18:09:17 [render] token=True invalidated=None
+18:09:17 [qp] {}
+18:09:17 Starting new HTTP connection (1): localhost:9080
+18:09:19 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:09:19 Starting new HTTP connection (1): localhost:9080
+18:09:21 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+18:11:33 [render] token=False invalidated=None
+18:11:33 [cookie] ret_token=있음
+18:11:33 Starting new HTTP connection (1): localhost:9080
+18:11:35 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:11:35 [auth/me] status=200
+18:11:35 [render] token=True invalidated=None
+18:11:35 [qp] {}
+18:11:35 Starting new HTTP connection (1): localhost:9080
+18:11:37 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+18:11:37 [render] token=True invalidated=None
+18:11:37 [qp] {}
+18:11:37 Starting new HTTP connection (1): localhost:9080
+18:11:39 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+18:11:39 [render] token=True invalidated=None
+18:11:39 [qp] {}
+18:11:39 Starting new HTTP connection (1): localhost:9080
+18:11:41 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:11:41 Starting new HTTP connection (1): localhost:9080
+18:11:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+18:11:43 Starting new HTTP connection (1): localhost:9080
+18:11:46 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+23:09:43 [render] token=False invalidated=None
+23:09:43 [cookie] ret_token=있음
+23:09:43 Starting new HTTP connection (1): localhost:9080
+23:09:45 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+23:09:45 [auth/me] status=200
+23:09:45 [render] token=True invalidated=None
+23:09:45 [qp] {}
+23:09:45 Starting new HTTP connection (1): localhost:9080
+23:09:47 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+23:09:47 [render] token=True invalidated=None
+23:09:47 [qp] {}
+23:09:47 Starting new HTTP connection (1): localhost:9080
+23:09:49 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+23:09:49 [render] token=True invalidated=None
+23:09:49 [qp] {}
+23:09:49 Starting new HTTP connection (1): localhost:9080
+23:09:51 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+23:09:51 Starting new HTTP connection (1): localhost:9080
+23:09:53 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+23:09:53 Starting new HTTP connection (1): localhost:9080
+23:09:55 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+23:10:56 [render] token=False invalidated=None
+23:10:56 [cookie] ret_token=있음
+23:10:56 Starting new HTTP connection (1): localhost:9080
+23:10:58 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+23:10:58 [auth/me] status=200
+23:10:58 [render] token=True invalidated=None
+23:10:58 [qp] {}
+23:10:58 Starting new HTTP connection (1): localhost:9080
+23:11:00 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+23:11:00 [render] token=True invalidated=None
+23:11:00 [qp] {}
+23:11:00 Starting new HTTP connection (1): localhost:9080
+23:11:02 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+23:11:02 [render] token=True invalidated=None
+23:11:02 [qp] {}
+23:11:02 Starting new HTTP connection (1): localhost:9080
+23:11:05 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+23:11:05 Starting new HTTP connection (1): localhost:9080
+23:11:07 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+23:11:07 Starting new HTTP connection (1): localhost:9080
+23:11:09 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+06:34:39 [render] token=False invalidated=None
+06:34:39 [cookie] ret_token=있음
+06:34:39 Starting new HTTP connection (1): localhost:9080
+06:34:41 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+06:34:41 [auth/me] status=200
+06:34:41 [render] token=True invalidated=None
+06:34:41 [qp] {}
+06:34:41 Starting new HTTP connection (1): localhost:9080
+06:34:43 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+06:34:43 [render] token=True invalidated=None
+06:34:43 [qp] {}
+06:34:43 Starting new HTTP connection (1): localhost:9080
+06:34:45 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+06:34:45 [render] token=True invalidated=None
+06:34:45 [qp] {}
+06:34:46 Starting new HTTP connection (1): localhost:9080
+06:34:48 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+06:34:48 Starting new HTTP connection (1): localhost:9080
+06:34:50 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+06:34:50 Starting new HTTP connection (1): localhost:9080
+06:34:52 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+06:34:53 [render] token=True invalidated=None
+06:34:53 [qp] {}
+06:34:53 [render] token=True invalidated=None
+06:34:53 [qp] {}
+06:34:55 [render] token=True invalidated=None
+06:34:55 [qp] {}
+06:34:55 Starting new HTTP connection (1): localhost:9080
+06:34:57 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+06:34:57 [render] token=False invalidated=True
+06:34:57 [qp] {}
+06:35:12 [render] token=False invalidated=True
+06:35:12 [qp] {}
+06:35:17 [render] token=False invalidated=True
+06:35:17 [qp] {}
+06:35:17 Starting new HTTP connection (1): localhost:9080
+06:35:19 [render] token=False invalidated=True
+06:35:19 [qp] {}
+06:35:19 Starting new HTTP connection (1): localhost:9080
+06:35:19 http://localhost:9080 "POST /auth/login HTTP/1.1" 401 55
+06:35:21 [render] token=False invalidated=True
+06:35:21 [qp] {}
+06:35:21 Starting new HTTP connection (1): localhost:9080
+06:35:21 http://localhost:9080 "POST /auth/login HTTP/1.1" 401 55
+06:35:23 http://localhost:9080 "POST /auth/login HTTP/1.1" 401 55
+06:35:34 [render] token=False invalidated=True
+06:35:34 [qp] {}
+06:35:34 Starting new HTTP connection (1): localhost:9080
+06:35:36 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 243
+06:35:37 [flush_cookie] action=set
+06:35:37 [flush_cookie] st.html 호출 전
+06:35:37 [flush_cookie] st.html 호출 후
+06:35:37 [render] token=True invalidated=None
+06:35:37 [qp] {}
+06:35:37 Starting new HTTP connection (1): localhost:9080
+06:35:39 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+06:35:39 [render] token=True invalidated=None
+06:35:39 [qp] {}
+06:35:39 Starting new HTTP connection (1): localhost:9080
+06:35:41 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+06:35:41 [render] token=True invalidated=None
+06:35:41 [qp] {}
+06:35:41 Starting new HTTP connection (1): localhost:9080
+06:35:43 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+06:35:43 Starting new HTTP connection (1): localhost:9080
+06:35:45 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:21:52 [render] token=False invalidated=None
+15:21:52 [cookie] ret_token=있음
+15:21:52 Starting new HTTP connection (1): localhost:9080
+15:21:54 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:21:54 [auth/me] status=200
+15:21:54 [render] token=True invalidated=None
+15:21:54 [qp] {}
+15:21:54 Starting new HTTP connection (1): localhost:9080
+15:21:56 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+15:21:57 [render] token=True invalidated=None
+15:21:57 [qp] {}
+15:21:57 Starting new HTTP connection (1): localhost:9080
+15:21:59 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+15:21:59 [render] token=True invalidated=None
+15:21:59 [qp] {}
+15:21:59 Starting new HTTP connection (1): localhost:9080
+15:22:01 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:22:01 Starting new HTTP connection (1): localhost:9080
+15:22:03 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:22:03 [render] token=True invalidated=None
+15:22:03 [qp] {}
+15:22:03 [render] token=True invalidated=None
+15:22:03 [qp] {}
+15:22:34 [render] token=False invalidated=None
+15:22:34 [cookie] ret_token=있음
+15:22:34 Starting new HTTP connection (1): localhost:9080
+15:22:35 [render] token=False invalidated=None
+15:22:35 [cookie] ret_token=있음
+15:22:35 Starting new HTTP connection (1): localhost:9080
+15:22:36 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:22:36 [auth/me] status=200
+15:22:37 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:22:37 [auth/me] status=200
+15:22:37 [render] token=True invalidated=None
+15:22:37 [qp] {}
+15:22:37 Starting new HTTP connection (1): localhost:9080
+15:22:39 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+15:22:39 [render] token=True invalidated=None
+15:22:39 [qp] {}
+15:22:39 Starting new HTTP connection (1): localhost:9080
+15:22:41 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+15:22:41 [render] token=True invalidated=None
+15:22:41 [qp] {}
+15:22:42 Starting new HTTP connection (1): localhost:9080
+15:22:44 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:22:44 Starting new HTTP connection (1): localhost:9080
+15:22:45 [render] token=True invalidated=None
+15:22:45 [qp] {}
+15:22:45 [render] token=True invalidated=None
+15:22:45 [qp] {}
+15:22:45 Starting new HTTP connection (1): localhost:9080
+15:22:46 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:22:46 [render] token=True invalidated=None
+15:22:46 [qp] {}
+15:22:46 Starting new HTTP connection (1): localhost:9080
+15:22:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:22:48 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+15:22:48 [render] token=False invalidated=True
+15:22:48 [qp] {}
+15:22:55 [render] token=False invalidated=True
+15:22:55 [qp] {}
+15:23:02 [render] token=False invalidated=True
+15:23:02 [qp] {}
+15:23:06 [render] token=False invalidated=True
+15:23:06 [qp] {}
+15:23:06 Starting new HTTP connection (1): localhost:9080
+15:23:07 [render] token=False invalidated=True
+15:23:07 [qp] {}
+15:23:07 Starting new HTTP connection (1): localhost:9080
+15:23:09 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+15:23:09 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+15:23:09 [flush_cookie] action=set
+15:23:09 [flush_cookie] st.html 호출 전
+15:23:09 [flush_cookie] st.html 호출 후
+15:23:09 [render] token=True invalidated=None
+15:23:09 [qp] {}
+15:23:09 Starting new HTTP connection (1): localhost:9080
+15:23:12 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+15:23:12 [render] token=True invalidated=None
+15:23:12 [qp] {}
+15:23:12 Starting new HTTP connection (1): localhost:9080
+15:23:14 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+15:23:14 [render] token=True invalidated=None
+15:23:14 [qp] {}
+15:23:14 Starting new HTTP connection (1): localhost:9080
+15:23:16 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:23:16 Starting new HTTP connection (1): localhost:9080
+15:23:18 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:23:18 Starting new HTTP connection (1): localhost:9080
+15:23:20 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+15:23:29 [render] token=True invalidated=None
+15:23:29 [qp] {}
+15:23:29 [render] token=True invalidated=None
+15:23:29 [qp] {}
+15:24:53 [render] token=False invalidated=None
+15:24:53 [cookie] ret_token=있음
+15:24:53 Starting new HTTP connection (1): localhost:9080
+15:24:55 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:24:55 [auth/me] status=200
+15:24:55 [render] token=True invalidated=None
+15:24:55 [qp] {}
+15:24:55 Starting new HTTP connection (1): localhost:9080
+15:24:57 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2583
+15:24:58 [render] token=True invalidated=None
+15:24:58 [qp] {}
+15:24:58 Starting new HTTP connection (1): localhost:9080
+15:25:00 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37069
+15:25:00 [render] token=True invalidated=None
+15:25:00 [qp] {}
+15:25:00 Starting new HTTP connection (1): localhost:9080
+15:25:02 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:25:02 Starting new HTTP connection (1): localhost:9080
+15:25:04 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:25:04 Starting new HTTP connection (1): localhost:9080
+15:25:06 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+15:25:17 [render] token=True invalidated=None
+15:25:17 [qp] {}
+15:25:17 [render] token=True invalidated=None
+15:25:17 [qp] {}
+15:25:44 [render] token=True invalidated=None
+15:25:44 [qp] {}
+15:25:44 [render] token=True invalidated=None
+15:25:44 [qp] {}
+15:26:08 [render] token=True invalidated=None
+15:26:08 [qp] {}
+15:26:08 Starting new HTTP connection (1): localhost:9080
+15:26:11 http://localhost:9080 "PUT /profiles/371 HTTP/1.1" 200 69
+15:26:11 Starting new HTTP connection (1): localhost:9080
+15:26:12 [render] token=True invalidated=None
+15:26:12 [qp] {}
+15:26:12 Starting new HTTP connection (1): localhost:9080
+15:26:13 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37188
+15:26:14 http://localhost:9080 "PUT /profiles/372 HTTP/1.1" 200 69
+15:26:14 Starting new HTTP connection (1): localhost:9080
+15:26:16 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37188
+15:26:16 [render] token=True invalidated=None
+15:26:16 [qp] {}
+15:27:54 [render] token=True invalidated=None
+15:27:54 [qp] {}
+15:32:33 [render] token=False invalidated=None
+15:32:33 [cookie] ret_token=있음
+15:32:33 Starting new HTTP connection (1): localhost:9080
+15:32:35 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:32:35 [auth/me] status=200
+15:32:35 [render] token=True invalidated=None
+15:32:35 [qp] {}
+15:32:35 Starting new HTTP connection (1): localhost:9080
+15:32:37 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+15:32:37 [render] token=True invalidated=None
+15:32:37 [qp] {}
+15:32:37 Starting new HTTP connection (1): localhost:9080
+15:32:40 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37173
+15:32:40 [render] token=True invalidated=None
+15:32:40 [qp] {}
+15:32:40 Starting new HTTP connection (1): localhost:9080
+15:32:42 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:32:42 Starting new HTTP connection (1): localhost:9080
+15:32:44 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:32:44 Starting new HTTP connection (1): localhost:9080
+15:32:46 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+15:32:48 [render] token=True invalidated=None
+15:32:48 [qp] {}
+15:32:54 [render] token=True invalidated=None
+15:32:54 [qp] {}
+15:32:54 [render] token=True invalidated=None
+15:32:54 [qp] {}
+15:35:02 [render] token=False invalidated=None
+15:35:02 [cookie] ret_token=있음
+15:35:02 Starting new HTTP connection (1): localhost:9080
+15:35:04 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:35:04 [auth/me] status=200
+15:35:04 [render] token=True invalidated=None
+15:35:04 [qp] {}
+15:35:04 Starting new HTTP connection (1): localhost:9080
+15:35:06 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+15:35:06 [render] token=True invalidated=None
+15:35:06 [qp] {}
+15:35:06 Starting new HTTP connection (1): localhost:9080
+15:35:08 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37173
+15:35:08 [render] token=True invalidated=None
+15:35:08 [qp] {}
+15:35:08 Starting new HTTP connection (1): localhost:9080
+15:35:10 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:35:10 Starting new HTTP connection (1): localhost:9080
+15:35:12 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:35:12 Starting new HTTP connection (1): localhost:9080
+15:35:15 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+15:35:20 [render] token=True invalidated=None
+15:35:20 [qp] {}
+15:35:46 [render] token=False invalidated=None
+15:35:46 [cookie] ret_token=있음
+15:35:46 Starting new HTTP connection (1): localhost:9080
+15:35:48 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:35:48 [auth/me] status=200
+15:35:49 [render] token=True invalidated=None
+15:35:49 [qp] {}
+15:35:49 Starting new HTTP connection (1): localhost:9080
+15:35:51 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+15:35:51 [render] token=True invalidated=None
+15:35:51 [qp] {}
+15:35:51 Starting new HTTP connection (1): localhost:9080
+15:35:53 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37173
+15:35:53 [render] token=True invalidated=None
+15:35:53 [qp] {}
+15:35:53 Starting new HTTP connection (1): localhost:9080
+15:35:55 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:35:55 Starting new HTTP connection (1): localhost:9080
+15:35:57 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:35:57 Starting new HTTP connection (1): localhost:9080
+15:35:58 [render] token=True invalidated=None
+15:35:58 [qp] {}
+15:35:58 Starting new HTTP connection (1): localhost:9080
+15:35:59 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+15:36:00 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+15:36:09 [render] token=True invalidated=None
+15:36:09 [qp] {}
+15:36:09 [render] token=True invalidated=None
+15:36:09 [qp] {}
+15:36:36 [render] token=True invalidated=None
+15:36:36 [qp] {}
+15:36:37 [render] token=True invalidated=None
+15:36:37 [qp] {}
+15:37:10 [render] token=True invalidated=None
+15:37:10 [qp] {}
+15:37:10 [render] token=True invalidated=None
+15:37:10 [qp] {}
+15:37:33 [render] token=True invalidated=None
+15:37:33 [qp] {}
+15:37:33 Starting new HTTP connection (1): localhost:9080
+15:37:35 http://localhost:9080 "PUT /profiles/373 HTTP/1.1" 200 69
+15:37:35 Starting new HTTP connection (1): localhost:9080
+15:37:37 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+15:37:37 [render] token=True invalidated=None
+15:37:37 [qp] {}
+16:04:34 [render] token=False invalidated=None
+16:04:34 [cookie] ret_token=있음
+16:04:34 Starting new HTTP connection (1): localhost:9080
+16:04:36 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+16:04:36 [auth/me] status=200
+16:04:36 [render] token=True invalidated=None
+16:04:36 [qp] {}
+16:04:36 Starting new HTTP connection (1): localhost:9080
+16:04:38 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+16:04:38 [render] token=True invalidated=None
+16:04:38 [qp] {}
+16:04:38 Starting new HTTP connection (1): localhost:9080
+16:04:40 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+16:04:40 [render] token=True invalidated=None
+16:04:40 [qp] {}
+16:04:40 Starting new HTTP connection (1): localhost:9080
+16:04:42 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+16:04:42 Starting new HTTP connection (1): localhost:9080
+16:04:44 [render] token=True invalidated=None
+16:04:44 [qp] {}
+16:04:44 Starting new HTTP connection (1): localhost:9080
+16:04:44 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:04:46 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:04:46 Starting new HTTP connection (1): localhost:9080
+16:04:48 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+17:30:41 [render] token=False invalidated=None
+17:30:41 [cookie] ret_token=있음
+17:30:41 Starting new HTTP connection (1): localhost:9080
+17:30:43 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:30:43 [auth/me] status=200
+17:30:43 [render] token=True invalidated=None
+17:30:43 [qp] {}
+17:30:43 Starting new HTTP connection (1): localhost:9080
+17:30:45 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+17:30:46 [render] token=True invalidated=None
+17:30:46 [qp] {}
+17:30:46 Starting new HTTP connection (1): localhost:9080
+17:30:48 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+17:30:48 [render] token=True invalidated=None
+17:30:48 [qp] {}
+17:30:48 Starting new HTTP connection (1): localhost:9080
+17:30:50 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:31:06 [render] token=True invalidated=None
+17:31:06 [qp] {}
+17:31:06 Starting new HTTP connection (1): localhost:9080
+17:31:08 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+17:31:08 Starting new HTTP connection (1): localhost:9080
+17:31:10 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+19:05:08 [render] token=False invalidated=None
+19:05:08 [cookie] ret_token=있음
+19:05:08 Starting new HTTP connection (1): localhost:9080
+19:05:10 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+19:05:10 [auth/me] status=200
+19:05:10 [render] token=True invalidated=None
+19:05:10 [qp] {}
+19:05:10 Starting new HTTP connection (1): localhost:9080
+19:05:12 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+19:05:13 [render] token=True invalidated=None
+19:05:13 [qp] {}
+19:05:13 Starting new HTTP connection (1): localhost:9080
+19:05:15 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+19:05:15 [render] token=True invalidated=None
+19:05:15 [qp] {}
+19:05:15 Starting new HTTP connection (1): localhost:9080
+19:05:17 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+19:05:17 Starting new HTTP connection (1): localhost:9080
+19:05:19 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+19:49:15 [render] token=False invalidated=None
+19:49:15 [cookie] ret_token=있음
+19:49:15 Starting new HTTP connection (1): localhost:9080
+19:49:17 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+19:49:17 [auth/me] status=200
+19:49:17 [render] token=True invalidated=None
+19:49:17 [qp] {}
+19:49:17 Starting new HTTP connection (1): localhost:9080
+19:49:20 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+19:49:20 [render] token=True invalidated=None
+19:49:20 [qp] {}
+19:49:20 Starting new HTTP connection (1): localhost:9080
+19:49:22 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+19:49:22 [render] token=True invalidated=None
+19:49:22 [qp] {}
+19:49:22 Starting new HTTP connection (1): localhost:9080
+19:49:24 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+19:49:24 Starting new HTTP connection (1): localhost:9080
+19:49:26 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+19:49:26 Starting new HTTP connection (1): localhost:9080
+19:49:28 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+11:08:08 [render] token=False invalidated=None
+11:08:08 [cookie] ret_token=있음
+11:08:08 Starting new HTTP connection (1): localhost:9080
+11:08:10 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+11:08:10 [auth/me] status=401
+11:08:10 [cookie] 토큰 만료 → 쿠키 삭제
+11:08:10 [qp] {}
+11:08:17 [flush_cookie] action=delete
+11:08:17 [flush_cookie] st.html 호출 전
+11:08:17 [flush_cookie] st.html 호출 후
+11:08:17 [render] token=False invalidated=True
+11:08:17 [qp] {}
+11:08:24 [render] token=False invalidated=True
+11:08:24 [qp] {}
+11:08:55 [render] token=False invalidated=True
+11:08:55 [qp] {}
+11:08:55 Starting new HTTP connection (1): localhost:9080
+11:08:57 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+11:08:57 [flush_cookie] action=set
+11:08:57 [flush_cookie] st.html 호출 전
+11:08:57 [flush_cookie] st.html 호출 후
+11:08:57 [render] token=True invalidated=None
+11:08:57 [qp] {}
+11:08:57 Starting new HTTP connection (1): localhost:9080
+11:09:00 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+11:09:00 [render] token=True invalidated=None
+11:09:00 [qp] {}
+11:09:00 Starting new HTTP connection (1): localhost:9080
+11:09:02 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+11:09:02 [render] token=True invalidated=None
+11:09:02 [qp] {}
+11:09:02 Starting new HTTP connection (1): localhost:9080
+11:09:04 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+11:09:04 Starting new HTTP connection (1): localhost:9080
+11:09:06 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+11:09:06 Starting new HTTP connection (1): localhost:9080
+11:09:08 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306

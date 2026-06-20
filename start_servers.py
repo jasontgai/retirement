@@ -43,7 +43,7 @@ time.sleep(2)
 print(f'[2/3] 백엔드 시작 (port {BACKEND_PORT})...')
 be = subprocess.Popen(
     [PYTHON, '-m', 'uvicorn', 'backend.api:app',
-     '--host', '0.0.0.0', '--port', str(BACKEND_PORT)],
+     '--host', '0.0.0.0', '--port', str(BACKEND_PORT), '--reload'],
     cwd=APPDIR,
     creationflags=subprocess.CREATE_NEW_CONSOLE,
 )

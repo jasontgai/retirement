@@ -71,6 +71,7 @@ def run_column_migrations(engine):
         ('profiles', 'spouse_nps_start_age',  'INT DEFAULT 65'),
         ('profiles', 'spouse_other_monthly',  'BIGINT DEFAULT 0'),
         ('profiles', 'spouse_other_start_age','INT DEFAULT 65'),
+        ('users',    'is_admin',              'TINYINT(1) NOT NULL DEFAULT 0'),
     ]
     with engine.connect() as conn:
         for tbl, col, typedef in new_cols:

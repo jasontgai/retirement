@@ -18,8 +18,9 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    oauth_provider: Mapped[str | None] = mapped_column(String(20), nullable=True)   # kakao | naver | google
+    oauth_provider: Mapped[str | None] = mapped_column(String(20), nullable=True)
     oauth_id: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -208,6 +209,23 @@ class RevokedToken(Base):
     token_hash: Mapped[str] = mapped_column(String(64), nullable=False, index=True)  # SHA-256
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)  # JWT exp (정리용)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class Scenario(Base):
+    """시나리오 비교 (GOOD / BEST / STANDARD) — DB 저장"""
+    __tablename__ = "scenarios"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    label: Mapped[str] = mapped_column(String(20), nullable=False)   # GOOD | BEST | STANDARD
+    retire_age: Mapped[int] = mapped_column(Integer, default=0)
+    monthly_income: Mapped[int] = mapped_column(BigInteger, default=0)
+    monthly_expense: Mapped[int] = mapped_column(BigInteger, default=0)
+    monthly_surplus: Mapped[int] = mapped_column(BigInteger, default=0)
+    total_assets: Mapped[int] = mapped_column(BigInteger, default=0)
+    detail_json: Mapped[str | None] = mapped_column(Text(length=2**24), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
 
 class PasswordResetToken(Base):

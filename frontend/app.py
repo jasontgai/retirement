@@ -9,8 +9,18 @@ import math
 import base64
 import pandas as pd
 import altair as alt
+import logging as _logging
+import os as _os
 from datetime import date as _date, datetime as _datetime, timedelta as _timedelta
 from urllib.parse import unquote
+
+_LOG_PATH = _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), 'frontend_debug.log')
+_logging.basicConfig(
+    filename=_LOG_PATH, level=_logging.DEBUG,
+    format='%(asctime)s %(message)s', datefmt='%H:%M:%S',
+    encoding='utf-8',
+)
+_log = _logging.getLogger('ret')
 
 # ============================================================
 # 설정
@@ -32,8 +42,6 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed",
 )
-st.markdown("<script>document.title='은퇴설계';</script>", unsafe_allow_html=True)
-
 # ============================================================
 # 공통 CSS
 # ============================================================
@@ -181,6 +189,7 @@ def init_state():
         'user_id': None,
         'user_name': None,
         'user_email': None,
+        'is_admin': False,
         # 페이지: 'main' | 'account'
         'page': 'main',
         # 자산 입력
@@ -261,6 +270,7 @@ def _flush_cookie_js():
     _pc = st.session_state.pop('_pending_cookie', None)
     if _pc is None:
         return
+    _log.debug(f"[flush_cookie] action={_pc['action']}")
     _ma = _COOKIE_MAX_AGE
     if _pc['action'] == 'set':
         _js = f"""<script>
@@ -272,19 +282,23 @@ document.cookie="ret_email={_pc['email']};max-age="+a+";path=/;SameSite=Lax";
 </script>"""
     else:
         _js = """<script>
-["ret_token","ret_uid","ret_name","ret_email"].forEach(function(n){{
+["ret_token","ret_uid","ret_name","ret_email"].forEach(function(n){
     document.cookie=n+"=;max-age=0;path=/;SameSite=Lax";
-}});
+});
 </script>"""
+    _log.debug(f"[flush_cookie] st.html 호출 전")
     st.html(f'<span style="display:none">{_js}</span>', unsafe_allow_javascript=True)
+    _log.debug(f"[flush_cookie] st.html 호출 후")
 
 # 보류 중인 쿠키 JS 실행 (로그인/로그아웃 직후 rerun 시 쿠키 기록)
 _flush_cookie_js()
 
 # 새로고침 후 쿠키에서 세션 복원 (st.context.cookies = HTTP 요청 헤더에서 직접 읽음)
+_log.debug(f"[render] token={bool(st.session_state.token)} invalidated={st.session_state.get('session_invalidated')}")
 if not st.session_state.token and not st.session_state.get('session_invalidated'):
     _ck = st.context.cookies
     _ck_token = _ck.get('ret_token')
+    _log.debug(f"[cookie] ret_token={'있음' if _ck_token else '없음'}")
     if _ck_token:
         _ck_uid   = _ck.get('ret_uid', '0')
         _ck_name  = _ck.get('ret_name', '')
@@ -296,6 +310,7 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
                 headers={"Authorization": f"Bearer {_ck_token}"},
                 timeout=5,
             )
+            _log.debug(f"[auth/me] status={_verify_resp.status_code}")
             if _verify_resp.status_code in (401, 403):
                 _revoked = True
             elif _verify_resp.status_code == 200:
@@ -303,9 +318,11 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
                 st.session_state.user_id    = _me.get('id') or int(_ck_uid or 0)
                 st.session_state.user_name  = _me.get('name') or _ck_name or ''
                 st.session_state.user_email = _me.get('email') or _ck_email or ''
-        except Exception:
-            pass  # 서버 연결 실패 → 쿠키 값 그대로 사용
+                st.session_state.is_admin   = bool(_me.get('is_admin', False))
+        except Exception as _e:
+            _log.debug(f"[auth/me] 예외={_e}")
         if _revoked:
+            _log.debug("[cookie] 토큰 만료 → 쿠키 삭제")
             _clear_session_cookie()
             st.session_state.session_invalidated = True
         else:
@@ -318,17 +335,20 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
 
 # OAuth 콜백 처리 (소셜 로그인 완료 후 리다이렉트)
 _qp = st.query_params
+_log.debug(f"[qp] {dict(_qp)}")
 if "token" in _qp and not st.session_state.token:
     st.session_state.token      = _qp["token"]
     st.session_state.user_id    = int(_qp.get("user_id", 0))
     st.session_state.user_name  = unquote(_qp.get("name", ""))
     st.session_state.user_email = unquote(_qp.get("email", ""))
+    st.session_state.is_admin   = bool(int(_qp.get("is_admin", 0)))
     _save_session_to_cookie(st.session_state.token, st.session_state.user_id,
                             st.session_state.user_name, st.session_state.user_email)
     st.query_params.clear()
     st.rerun()
 elif "oauth_error" in _qp:
     _err = unquote(_qp["oauth_error"])
+    _log.debug(f"[oauth_error] {_err}")
     if "준비 중" in _err:
         st.info(f"ℹ️ {_err}")
     else:
@@ -494,11 +514,10 @@ def show_auth_screen():
 
     # --- 로그인 ---
     with tab_login:
-        with st.form("login_form"):
-            st.subheader("로그인")
-            login_email    = st.text_input("이메일", placeholder="example@email.com", key="login_email")
-            login_password = st.text_input("비밀번호", type="password", key="login_pw")
-            login_submitted = st.form_submit_button("로그인", width='stretch')
+        st.subheader("로그인")
+        login_email    = st.text_input("이메일", placeholder="example@email.com", key="login_email")
+        login_password = st.text_input("비밀번호", type="password", key="login_pw")
+        login_submitted = st.button("로그인", width='stretch', key="btn_login")
 
         if login_submitted:
             if not login_email or not login_password:
@@ -516,6 +535,7 @@ def show_auth_screen():
                     st.session_state.user_id    = login_result["user_id"]
                     st.session_state.user_name  = login_result["name"]
                     st.session_state.user_email = login_email
+                    st.session_state.is_admin   = bool(login_result.get("is_admin", False))
                     st.session_state.pop('session_invalidated', None)
                     _save_session_to_cookie(login_result["access_token"], login_result["user_id"],
                                             login_result["name"], login_email)
@@ -523,16 +543,15 @@ def show_auth_screen():
 
     # --- 회원가입 ---
     with tab_register:
-        with st.form("register_form"):
-            st.subheader("회원가입")
-            r_name  = st.text_input("이름", placeholder="홍길동", key="r_name")
-            r_age   = st.number_input("현재 나이", min_value=20, max_value=75,
-                                      value=45, step=1, key="r_age",
-                                      help="나이에 맞는 대한민국 평균 데이터로 시뮬레이션을 시작합니다")
-            r_email = st.text_input("이메일", placeholder="example@email.com", key="r_email")
-            r_pw    = st.text_input("비밀번호 (6자 이상)", type="password", key="r_pw")
-            r_pw2   = st.text_input("비밀번호 확인", type="password", key="r_pw2")
-            reg_submitted = st.form_submit_button("회원가입", width='stretch')
+        st.subheader("회원가입")
+        r_name  = st.text_input("이름", placeholder="홍길동", key="r_name")
+        r_age   = st.number_input("현재 나이", min_value=20, max_value=75,
+                                  value=45, step=1, key="r_age",
+                                  help="나이에 맞는 대한민국 평균 데이터로 시뮬레이션을 시작합니다")
+        r_email = st.text_input("이메일", placeholder="example@email.com", key="r_email")
+        r_pw    = st.text_input("비밀번호 (6자 이상)", type="password", key="r_pw")
+        r_pw2   = st.text_input("비밀번호 확인", type="password", key="r_pw2")
+        reg_submitted = st.button("회원가입", width='stretch', key="btn_register")
 
         if reg_submitted:
             if not all([r_name, r_email, r_pw, r_pw2]):
@@ -577,9 +596,8 @@ def show_auth_screen():
 
         if st.session_state.pw_reset_step == 'request':
             st.caption("가입하신 이메일 주소를 입력하면 6자리 인증번호를 발송합니다.")
-            with st.form("pw_reset_request_form"):
-                reset_email = st.text_input("이메일", placeholder="example@email.com", key="reset_email_input")
-                sent = st.form_submit_button("인증번호 발송", width='stretch')
+            reset_email = st.text_input("이메일", placeholder="example@email.com", key="reset_email_input")
+            sent = st.button("인증번호 발송", width='stretch', key="btn_reset_send")
             if sent:
                 if not reset_email:
                     st.error("이메일을 입력하세요.")
@@ -596,12 +614,11 @@ def show_auth_screen():
         else:
             _rst_email = st.session_state.get('pw_reset_email', '')
             st.info(f"📧 **{_rst_email}** 으로 발송된 6자리 인증번호를 입력하세요. (유효시간 15분)")
-            with st.form("pw_reset_confirm_form"):
-                rst_code  = st.text_input("인증번호 (6자리)", placeholder="123456",
-                                          max_chars=6, key="rst_code_input")
-                rst_pw1   = st.text_input("새 비밀번호 (6자 이상)", type="password", key="rst_pw1")
-                rst_pw2   = st.text_input("새 비밀번호 확인",       type="password", key="rst_pw2")
-                confirmed = st.form_submit_button("비밀번호 변경", width='stretch', type="primary")
+            rst_code  = st.text_input("인증번호 (6자리)", placeholder="123456",
+                                      max_chars=6, key="rst_code_input")
+            rst_pw1   = st.text_input("새 비밀번호 (6자 이상)", type="password", key="rst_pw1")
+            rst_pw2   = st.text_input("새 비밀번호 확인",       type="password", key="rst_pw2")
+            confirmed = st.button("비밀번호 변경", width='stretch', type="primary", key="btn_confirm_reset")
 
             if confirmed:
                 if not rst_code or not rst_pw1 or not rst_pw2:
@@ -1190,7 +1207,28 @@ def show_main_app():
 
     # 탭 네비게이션 (저장된 프로필이 있는 경우에만 표시)
     if not _is_onboarding:
-        tabs = st.tabs(["📊 분석", "🙋 본인", "💼 연금", "🏠 자산/부채", "💳 지출", "🎯 컨설팅"])
+        _tab_labels = ["📊 분석", "🙋 본인", "💼 연금", "🏠 자산/부채", "💳 지출", "🎯 컨설팅"]
+        if st.session_state.get('is_admin'):
+            _tab_labels.append("🔧 관리자")
+            # 관리자 탭 강조 CSS — 마지막 탭을 붉은 계열로
+            st.markdown("""
+<style>
+button[data-baseweb="tab"]:last-of-type {
+    background: linear-gradient(135deg,#7b1fa2,#c62828) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+}
+button[data-baseweb="tab"]:last-of-type:hover {
+    background: linear-gradient(135deg,#6a1b9a,#b71c1c) !important;
+    opacity: 0.9;
+}
+button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
+    background: linear-gradient(135deg,#4a148c,#c62828) !important;
+    box-shadow: 0 0 12px rgba(198,40,40,0.5) !important;
+}
+</style>""", unsafe_allow_html=True)
+        tabs = st.tabs(_tab_labels)
         # "내 정보 직접 입력하기" 클릭 후 본인 탭(index=1)으로 자동 포커스
         if st.session_state.pop('_goto_personal_tab', False):
             st.iframe("""<script>
@@ -2003,10 +2041,680 @@ def show_main_app():
         with tabs[5]:
             st.subheader("🎯 은퇴 재원마련 컨설팅")
 
+            # 탭 진입 시 관리자 상태 1회 갱신
+            if st.session_state.token and not st.session_state.get('_admin_checked'):
+                _am_resp, _am_err = call_api("/auth/me", method="GET")
+                if not _am_err and _am_resp:
+                    _new_is_admin = bool(_am_resp.get('is_admin', False))
+                    if _new_is_admin != st.session_state.get('is_admin', False):
+                        st.session_state.is_admin = _new_is_admin
+                        st.session_state['_admin_checked'] = True
+                        st.rerun()
+                st.session_state['_admin_checked'] = True
+
+            # 관리자 상태 표시 (진단용 — 확인 후 제거 가능)
+            if st.session_state.get('is_admin'):
+                st.success("🔑 관리자 모드 — 분석 실행 후 저장 버튼이 나타납니다.")
             _cons_result = st.session_state.get('analysis_result')
             if not _cons_result:
                 st.info("💡 내 정보를 입력하고 저장하면 맞춤 컨설팅을 확인할 수 있습니다.")
             else:
+                result = _cons_result
+                cf     = result.get('현금흐름', {})
+                assets = result.get('자산현황', {})
+                # ── 시나리오 비교 (GOOD / BEST 저장 & 비교표) ───────────
+                _retire_age_cur = result.get('사용자정보', {}).get('희망은퇴연령', 0)
+                def _asset_num(v):
+                    if isinstance(v, dict):
+                        return int(v.get('합계', v.get('시세_합계', 0)))
+                    if isinstance(v, str):
+                        try:
+                            return int(float(v))
+                        except (ValueError, TypeError):
+                            return 0
+                    return int(v or 0)
+
+                _pension_analysis = result.get('연금분석', {})
+                _nps_monthly = int(next(
+                    (info.get('월수령액_조정', info.get('세후월수령액', 0))
+                     for name, info in _pension_analysis.items() if '국민연금' in name),
+                    0
+                ))
+                _private_monthly = int(sum(
+                    info.get('월수령액_조정', info.get('세후월수령액', 0))
+                    for name, info in _pension_analysis.items() if '국민연금' not in name
+                ))
+                _pension_total = _nps_monthly + _private_monthly
+
+                # 연금 적립금 / 수익률 / 그룹별 상세 계산
+                _pensions_ss = st.session_state.get('pensions', [])
+
+                # ── 나이·기간 계산 (비교표 전체 공용) ───────────────────────
+                import datetime as _dt_ages
+                _cur_age_u    = (_dt_ages.date.today().year
+                                 - st.session_state.get('inp_birth_year',
+                                   _dt_ages.date.today().year - 50))
+                _yrs_to_ret_u = max(0, _retire_age_cur - _cur_age_u)
+                _yrs_to_nps_u = max(0, 65 - _cur_age_u)   # 국민연금 65세 개시
+
+                def _pv_for_user(pmt, rate_pct, yrs, payout_yr=20):
+                    """월수령액 → 수령 시점 PV → 사용자 현재 나이 기준 PV"""
+                    if pmt <= 0 or yrs < 0:
+                        return 0
+                    r_a = max(rate_pct / 100, 0.001)
+                    r   = r_a / 12
+                    n   = int(payout_yr * 12)
+                    pv_s = pmt * (1 - (1 + r) ** (-n)) / r
+                    return int(pv_s / (1 + r_a) ** yrs)
+
+                def _pen_pv_total(pen_dict, yrs_to_ret):
+                    """연금 그룹 딕셔너리 → 현재가치 적립금 합산 (시나리오별 은퇴연령 반영)"""
+                    return sum(
+                        _pv_for_user(
+                            pen_dict.get(_sg, {}).get('월수령액', 0),
+                            pen_dict.get(_sg, {}).get('수익률', 4.0),
+                            _yrs_to_nps_u if _sg == '국민연금' else yrs_to_ret,
+                        )
+                        for _sg in ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']
+                    )
+
+                def _pen_adj(pen_dict, yrs_to_ret):
+                    """저장된 연금 딕셔너리의 적립금을 현재가치로 교체 (시나리오별 은퇴연령 반영)"""
+                    out = {}
+                    for _sg in ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']:
+                        _gd  = pen_dict.get(_sg, {})
+                        _yrs = _yrs_to_nps_u if _sg == '국민연금' else yrs_to_ret
+                        out[_sg] = {**_gd,
+                                    '적립금': _pv_for_user(_gd.get('월수령액', 0),
+                                                           _gd.get('수익률', 4.0), _yrs)}
+                    return out
+
+                def _pension_group(pt):
+                    if pt == '국민연금':                      return '국민연금'
+                    if pt in ('퇴직연금DB', '퇴직연금DC'):    return '퇴직연금'
+                    if pt == 'IRP':                           return 'IRP'
+                    if pt in ('연금저축', '개인연금'):         return '개인연금'
+                    return '기타'
+
+                _GRP_ORDER = ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']
+                _grp_bal  = {g: 0  for g in _GRP_ORDER}
+                _grp_wt   = {g: [] for g in _GRP_ORDER}
+                _grp_mon  = {g: 0  for g in _GRP_ORDER}
+
+                for _pp in _pensions_ss:
+                    _g = _pension_group(_pp.get('pension_type', ''))
+                    _grp_bal[_g] += int(_pp.get('current_balance', 0))
+                    _rt = _pp.get('annual_return_rate', 0)
+                    if _rt > 0:
+                        _grp_wt[_g].append((_pp.get('current_balance', 0), _rt))
+
+                for _pname, _pinfo in _pension_analysis.items():
+                    _mon = int(_pinfo.get('월수령액_조정', _pinfo.get('세후월수령액', 0)))
+                    _pp_m = next((p for p in _pensions_ss if p.get('name') == _pname), None)
+                    _pt_m = _pp_m.get('pension_type', '') if _pp_m else _pname
+                    _grp_mon[_pension_group(_pt_m)] += _mon
+
+                _pension_by_group = {}
+                for _g in _GRP_ORDER:
+                    _b      = _grp_bal[_g]
+                    _wl     = _grp_wt[_g]
+                    _tot_wb = sum(wb for wb, _ in _wl)
+                    _avg_r  = round(sum(wb * wr for wb, wr in _wl) / _tot_wb * 100, 1) if _tot_wb > 0 else 0.0
+                    # 은퇴시점 잔액으로 저장 (현재잔액 × 복리 성장)
+                    _r_dec  = max(_avg_r / 100, 0.001)
+                    _yrs_g  = _yrs_to_nps_u if _g == '국민연금' else _yrs_to_ret_u
+                    _ret_b  = int(_b * (1 + _r_dec) ** _yrs_g)
+                    _pension_by_group[_g] = {'적립금': _ret_b, '월수령액': _grp_mon[_g], '수익률': _avg_r}
+
+                # 비교표 표시: 월수령액 기준 현재가치 역산 (STANDARD 방식과 동일)
+                _pension_bal_total = _pen_pv_total(_pension_by_group, _yrs_to_ret_u)
+                _bal_for_rate = [(p.get('current_balance', 0), p.get('annual_return_rate', 0))
+                                 for p in _pensions_ss if p.get('current_balance', 0) > 0]
+                if _bal_for_rate:
+                    _tot_b = sum(b for b, _ in _bal_for_rate)
+                    _pension_avg_return = round(sum(b * r for b, r in _bal_for_rate) / _tot_b * 100, 1)
+                else:
+                    _rates_only = [p.get('annual_return_rate', 0) for p in _pensions_ss if p.get('annual_return_rate', 0) > 0]
+                    _pension_avg_return = round(sum(_rates_only) / len(_rates_only) * 100, 1) if _rates_only else 0.0
+
+                _snap_payload = {
+                    'label': '',
+                    'retire_age':      int(_retire_age_cur),
+                    'monthly_income':  int(cf.get('월수입', 0)),
+                    'monthly_expense': int(cf.get('월지출_합계', 0)),
+                    'monthly_surplus': int(cf.get('월잉여(부족)', 0)),
+                    'total_assets':    int(assets.get('순자산', 0)),
+                    'detail': {
+                        '총자산':        int(assets.get('총자산', 0)),
+                        '총부채':        int(assets.get('총부채', 0)),
+                        '금융자산':      _asset_num(assets.get('금융자산', 0)),
+                        '부동산':        _asset_num(assets.get('부동산', 0)),
+                        '국민연금':      _nps_monthly,
+                        '사적연금':      _private_monthly,
+                        '연금합계':      _pension_total,
+                        '연금_총적립금': _pension_bal_total,
+                        '연금_평균수익률': _pension_avg_return,
+                        '연금상세': _pension_by_group,
+                    },
+                }
+                if st.session_state.get('is_admin'):
+                    _sc_b1, _sc_b2, _sc_b3 = st.columns(3)
+                    with _sc_b1:
+                        if st.button("📌 GOOD CASE 저장", key='btn_save_good', help="현재 분석 결과를 GOOD CASE로 저장", width='stretch'):
+                            _p = {**_snap_payload, 'label': 'GOOD'}
+                            _sr, _se = call_api("/scenarios", _p)
+                            if _se:
+                                st.error(f"저장 실패: {_se}")
+                            else:
+                                st.session_state._sc_dirty = True
+                                st.toast("✅ GOOD CASE 저장 완료!")
+                                st.rerun()
+                    with _sc_b2:
+                        if st.button("🏆 BEST CASE 저장", key='btn_save_best', help="현재 분석 결과를 BEST CASE로 저장", width='stretch'):
+                            _p = {**_snap_payload, 'label': 'BEST'}
+                            _sr, _se = call_api("/scenarios", _p)
+                            if _se:
+                                st.error(f"저장 실패: {_se}")
+                            else:
+                                st.session_state._sc_dirty = True
+                                st.toast("✅ BEST CASE 저장 완료!")
+                                st.rerun()
+                    with _sc_b3:
+                        if st.button("🇰🇷 우리나라 평균 저장", key='btn_save_std', help="현재 분석 결과를 우리나라 평균(STANDARD)으로 저장", width='stretch'):
+                            _p = {**_snap_payload, 'label': 'STANDARD'}
+                            _sr, _se = call_api("/scenarios", _p)
+                            if _se:
+                                st.error(f"저장 실패: {_se}")
+                            else:
+                                st.session_state._sc_dirty = True
+                                st.toast("✅ 우리나라 평균(STANDARD) 저장 완료!")
+                                st.rerun()
+
+                # 저장된 시나리오 불러와 비교표 — session_state 캐시로 매 rerun마다 HTTP 요청 방지
+                if '_sc_cache' not in st.session_state or st.session_state.pop('_sc_dirty', False):
+                    _snaps, _snaps_err = call_api("/scenarios", method="GET")
+                    st.session_state._sc_cache = (_snaps, _snaps_err)
+                _snaps, _snaps_err = st.session_state._sc_cache
+                _snap_map = {s['label']: s for s in (_snaps or [])} if not _snaps_err else {}
+                st.divider()
+                st.markdown("#### 📊 시나리오 비교")
+
+                # STANDARD: DB에서 로드, 없으면 기본값 사용
+                _std = _snap_map.get('STANDARD')
+                def _std_val(key, default):
+                    if _std:
+                        d = _std.get('detail', {})
+                        v = d.get(key)
+                        return v if v is not None else default
+                    return default
+
+                # ── 우리나라 평균 연금: 사용자 맞춤 현재가치 역산 ──────────
+                # (_pv_for_user, _yrs_to_ret_u, _yrs_to_nps_u 는 위에서 정의됨)
+                # STANDARD DB의 연금상세(월수령액·수익률)를 기준으로 사용자 맞춤 적립금 계산
+                _std_pen_raw = (_std or {}).get('detail', {}).get('연금상세') or {}
+                _std_pen_fb = {   # DB 없을 때 기본값
+                    '국민연금': {'월수령액': 660_000, '수익률': 4.0},
+                    '퇴직연금': {'월수령액': 448_000, '수익률': 4.0},
+                    'IRP':      {'월수령액': 135_000, '수익률': 4.0},
+                    '개인연금': {'월수령액': 191_000, '수익률': 3.5},
+                    '기타':     {'월수령액':       0, '수익률': 0.0},
+                }
+                _std_pen = {}
+                _yrs_to_ret_std = max(0, ((_std or {}).get('retire_age') or _retire_age_cur) - _cur_age_u)
+                for _sg in ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']:
+                    _rg  = _std_pen_raw.get(_sg) or _std_pen_fb.get(_sg, {})
+                    _pmt = _rg.get('월수령액', 0)
+                    _rte = _rg.get('수익률', 4.0)
+                    _yrs = _yrs_to_nps_u if _sg == '국민연금' else _yrs_to_ret_std
+                    _std_pen[_sg] = {
+                        '적립금':   _pv_for_user(_pmt, _rte, _yrs),
+                        '월수령액': _pmt,
+                        '수익률':   _rte,
+                    }
+                _std_total_bal = sum(_std_pen[g]['적립금'] for g in _std_pen)
+
+                _KR_AVG = {
+                    '은퇴연령':         f"{_std['retire_age']}세" if _std else '62세',
+                    '월 수입':          fmt_won(_std['monthly_income'] if _std else 1_200_000),
+                    '월 지출':          fmt_won(_std['monthly_expense'] if _std else 2_700_000),
+                    '월 잉여':          fmt_won(_std['monthly_surplus'] if _std else -1_500_000),
+                    '순자산':           fmt_won(_std['total_assets'] if _std else 370_000_000),
+                    '금융자산':         fmt_won(_std_val('금융자산', 150_000_000)),
+                    '부동산':           fmt_won(_std_val('부동산', 220_000_000)),
+                    '국민연금(월)':     fmt_won(_std_val('국민연금', 650_000)),
+                    '사적연금(월)':     fmt_won(_std_val('사적연금', 300_000)),
+                    '연금합계(월)':     fmt_won(_std_val('연금합계', 950_000)),
+                    '연금 적립금':      fmt_won(_std_total_bal),        # 사용자 맞춤 계산
+                    '연금 평균수익률':  f"{_std_val('연금_평균수익률', 4.0)}%",
+                }
+
+                _cols_hdr = ['항목', '현재 상황', '🇰🇷 우리나라 평균']
+                _cols_data = {
+                    '은퇴연령':        [f"{_retire_age_cur}세",                          _KR_AVG['은퇴연령']],
+                    '월 수입':         [fmt_won(cf.get('월수입', 0)),                    _KR_AVG['월 수입']],
+                    '월 지출':         [fmt_won(cf.get('월지출_합계', 0)),               _KR_AVG['월 지출']],
+                    '월 잉여':         [fmt_won(cf.get('월잉여(부족)', 0)),              _KR_AVG['월 잉여']],
+                    '순자산':          [fmt_won(assets.get('순자산', 0)),                _KR_AVG['순자산']],
+                    '금융자산':        [fmt_won(_asset_num(assets.get('금융자산', 0))),  _KR_AVG['금융자산']],
+                    '부동산':          [fmt_won(_asset_num(assets.get('부동산', 0))),    _KR_AVG['부동산']],
+                    '국민연금(월)':    [fmt_won(_nps_monthly),                          _KR_AVG['국민연금(월)']],
+                    '사적연금(월)':    [fmt_won(_private_monthly),                      _KR_AVG['사적연금(월)']],
+                    '연금합계(월)':    [fmt_won(_pension_total),                        _KR_AVG['연금합계(월)']],
+                    '연금 적립금':     [fmt_won(_pension_bal_total),                    _KR_AVG['연금 적립금']],
+                    '연금 평균수익률': [f"{_pension_avg_return}%",                      _KR_AVG['연금 평균수익률']],
+                }
+                for _lbl in ['GOOD', 'BEST']:
+                    _emoji = '📌 GOOD CASE' if _lbl == 'GOOD' else '🏆 BEST CASE'
+                    if _lbl in _snap_map:
+                        _s = _snap_map[_lbl]
+                        _cols_hdr.append(_emoji)
+                        _cols_data['은퇴연령'].append(f"{_s['retire_age']}세")
+                        _cols_data['월 수입'].append(fmt_won(_s['monthly_income']))
+                        _cols_data['월 지출'].append(fmt_won(_s['monthly_expense']))
+                        _cols_data['월 잉여'].append(fmt_won(_s['monthly_surplus']))
+                        _cols_data['순자산'].append(fmt_won(_s['total_assets']))
+                        _cols_data['금융자산'].append(fmt_won(_asset_num(_s['detail'].get('금융자산', 0))))
+                        _cols_data['부동산'].append(fmt_won(_asset_num(_s['detail'].get('부동산', 0))))
+                        _cols_data['국민연금(월)'].append(fmt_won(_s['detail'].get('국민연금', 0)))
+                        _cols_data['사적연금(월)'].append(fmt_won(_s['detail'].get('사적연금', 0)))
+                        _cols_data['연금합계(월)'].append(fmt_won(_s['detail'].get('연금합계', 0)))
+                        _s_yrs_ret = max(0, _s.get('retire_age', _retire_age_cur) - _cur_age_u)
+                        _s_pv = _pen_pv_total(_s.get('detail', {}).get('연금상세', {}), _s_yrs_ret)
+                        _cols_data['연금 적립금'].append(fmt_won(_s_pv))
+                        _cols_data['연금 평균수익률'].append(f"{_s['detail'].get('연금_평균수익률', 0)}%")
+
+                _df_cmp = pd.DataFrame(
+                    [[k] + v for k, v in _cols_data.items()],
+                    columns=_cols_hdr,
+                )
+                st.dataframe(_df_cmp, hide_index=True, width='stretch')
+
+                # ── 시나리오 비교 그래프 ────────────────────────────────
+                import plotly.graph_objects as go
+                from plotly.subplots import make_subplots
+
+                _lifespan_g = int(_cons_result.get('사용자정보', {}).get('기대수명', 90))
+
+                # 공통 팔레트 — 현재/STANDARD/GOOD/BEST
+                _SC_COLORS = {
+                    '현재 (나)':      '#1565c0',
+                    '🇰🇷 우리나라 평균': '#78909c',
+                    '📌 GOOD':        '#66bb6a',
+                    '🏆 BEST':        '#ffa726',
+                }
+
+                # ── 나이별 순자산 시뮬레이션 ──────────────────────────
+                def _asset_sim(start, m_inc, m_exp, r_age, lifespan, ret=0.04, inf=0.025):
+                    ages, vals = [], []
+                    a = start
+                    for i, age in enumerate(range(r_age, lifespan + 1)):
+                        ages.append(age)
+                        vals.append(round(a / 1e8, 2))   # 억원
+                        net = (m_inc - m_exp * (1 + inf) ** i) * 12
+                        a = a * (1 + ret) + net
+                    return ages, vals
+
+                _chart_series = {}
+                # 현재 상황
+                _chart_series['현재 (나)'] = _asset_sim(
+                    assets.get('순자산', 0),
+                    cf.get('월수입', 0),
+                    cf.get('월지출_합계', 0),
+                    _retire_age_cur,
+                    _lifespan_g,
+                )
+                # 저장된 시나리오
+                for _lbl, _emoji in [('STANDARD', '🇰🇷 우리나라 평균'), ('GOOD', '📌 GOOD'), ('BEST', '🏆 BEST')]:
+                    if _lbl in _snap_map:
+                        _sv = _snap_map[_lbl]
+                        _chart_series[_emoji] = _asset_sim(
+                            _sv['total_assets'],
+                            _sv['monthly_income'],
+                            _sv['monthly_expense'],
+                            _sv['retire_age'],
+                            _lifespan_g,
+                        )
+
+                with st.expander("📈 시나리오 비교 그래프", expanded=True):
+                    _gtab1, _gtab2, _gtab3, _gtab4 = st.tabs([
+                        "💰 자산 구성", "📊 수입/지출 구성", "📈 나이별 수입/지출", "🎯 종합 레이더"
+                    ])
+
+                    # ── 그래프 1: 자산 구성 비교 ──────────────────────
+                    with _gtab1:
+                        _bar_labels, _bar_re, _bar_fin, _bar_pen = [], [], [], []
+                        _bar_labels.append('현재 (나)')
+                        _bar_re.append(round(_asset_num(assets.get('부동산', 0)) / 1e8, 1))
+                        _bar_fin.append(round(_asset_num(assets.get('금융자산', 0)) / 1e8, 1))
+                        _bar_pen.append(round(_pension_bal_total / 1e8, 1))
+                        for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
+                            if _lbl in _snap_map:
+                                _sv = _snap_map[_lbl]
+                                _bar_labels.append(_emoji)
+                                _bar_re.append(round(_asset_num(_sv['detail'].get('부동산', 0)) / 1e8, 1))
+                                _bar_fin.append(round(_asset_num(_sv['detail'].get('금융자산', 0)) / 1e8, 1))
+                                _s_pr = _pen_pv_total(_sv.get('detail', {}).get('연금상세', {}),
+                                                      max(0, _sv.get('retire_age', _retire_age_cur) - _cur_age_u))
+                                _bar_pen.append(round(_s_pr / 1e8, 1))
+
+                        _fig1 = go.Figure()
+                        _fig1.add_trace(go.Bar(name='부동산', x=_bar_labels, y=_bar_re,
+                                               marker=dict(color='rgba(239,83,80,0.2)',
+                                                           line=dict(color='rgba(239,83,80,0.85)', width=1.5)),
+                                               hovertemplate='%{x}<br>부동산: <b>%{y:.1f}억</b><extra></extra>'))
+                        _fig1.add_trace(go.Bar(name='금융자산', x=_bar_labels, y=_bar_fin,
+                                               marker=dict(color='rgba(66,165,245,0.2)',
+                                                           line=dict(color='rgba(66,165,245,0.85)', width=1.5)),
+                                               hovertemplate='%{x}<br>금융자산: <b>%{y:.1f}억</b><extra></extra>'))
+                        _fig1.add_trace(go.Bar(name='연금 적립금(PV)', x=_bar_labels, y=_bar_pen,
+                                               marker=dict(color='rgba(102,187,106,0.2)',
+                                                           line=dict(color='rgba(102,187,106,0.85)', width=1.5)),
+                                               hovertemplate='%{x}<br>연금PV: <b>%{y:.1f}억</b><extra></extra>'))
+                        _fig1.update_layout(
+                            barmode='stack',
+                            title=dict(text="시나리오별 자산 구성 비교 (억원)", font=dict(size=16, color='#fff')),
+                            xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                            yaxis=dict(title="금액 (억원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                            font=dict(color='#ddd'),
+                            legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
+                            margin=dict(l=10, r=10, t=60, b=40),
+                        )
+                        st.plotly_chart(_fig1, use_container_width=True)
+
+                    # ── 그래프 2: 수입/지출 구성 (스냅샷 막대) ──────────
+                    with _gtab2:
+                        _cf_labels, _cf_inc, _cf_exp, _cf_sur = [], [], [], []
+                        def _add_cf(label, inc, exp):
+                            _cf_labels.append(label)
+                            _cf_inc.append(round(inc / 10000))
+                            _cf_exp.append(round(exp / 10000))
+                            _cf_sur.append(round((inc - exp) / 10000))
+                        _add_cf('현재 (나)', cf.get('월수입', 0), cf.get('월지출_합계', 0))
+                        for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
+                            if _lbl in _snap_map:
+                                _sv = _snap_map[_lbl]
+                                _add_cf(_emoji, _sv['monthly_income'], _sv['monthly_expense'])
+
+                        _fig2 = go.Figure()
+                        _fig2.add_trace(go.Bar(
+                            name='월 수입', x=_cf_labels, y=_cf_inc,
+                            marker=dict(color='rgba(66,165,245,0.2)',
+                                        line=dict(color='rgba(66,165,245,0.9)', width=1.5)),
+                            hovertemplate='%{x}<br>월수입: <b>%{y:,}만원</b><extra></extra>',
+                        ))
+                        _fig2.add_trace(go.Bar(
+                            name='월 지출', x=_cf_labels, y=_cf_exp,
+                            marker=dict(color='rgba(239,83,80,0.2)',
+                                        line=dict(color='rgba(239,83,80,0.9)', width=1.5)),
+                            hovertemplate='%{x}<br>월지출: <b>%{y:,}만원</b><extra></extra>',
+                        ))
+                        _fig2.add_trace(go.Scatter(
+                            name='월 잉여(+)/부족(-)', x=_cf_labels, y=_cf_sur,
+                            mode='lines+markers+text',
+                            text=[f"{v:+,}만" for v in _cf_sur],
+                            textposition='top center',
+                            textfont=dict(size=12, color='#ffd54f'),
+                            line=dict(color='#ffd54f', width=2, dash='dot'),
+                            marker=dict(size=8, color='#ffd54f', line=dict(color='#fff', width=1)),
+                            hovertemplate='%{x}<br>잉여: <b>%{y:+,}만원</b><extra></extra>',
+                        ))
+                        _fig2.add_hline(y=0, line_dash='dash', line_color='rgba(255,255,255,0.3)')
+                        _fig2.update_layout(
+                            barmode='group',
+                            title=dict(text="시나리오별 월 수입 / 지출 비교 (만원)", font=dict(size=16, color='#fff')),
+                            xaxis=dict(gridcolor='rgba(255,255,255,0.08)', color='#ccc'),
+                            yaxis=dict(title="금액 (만원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                            font=dict(color='#ddd'),
+                            legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
+                            margin=dict(l=10, r=10, t=60, b=40),
+                            hovermode='x unified',
+                        )
+                        st.plotly_chart(_fig2, use_container_width=True)
+
+                    # ── 그래프 3: 나이별 월수입·월지출 라인 ───────────
+                    with _gtab3:
+                        _inf_rate = st.session_state.get('inp_inflation', 2.5) / 100
+
+                        # 시나리오별 나이→(수입,지출) 데이터 생성
+                        def _cf_by_age(m_inc, m_exp, r_age, lifespan, inf=_inf_rate):
+                            ages, incs, exps = [], [], []
+                            for i, age in enumerate(range(r_age, lifespan + 1)):
+                                ages.append(age)
+                                incs.append(round(m_inc / 10000))          # 만원, 수입은 고정
+                                exps.append(round(m_exp * (1 + inf) ** i / 10000))  # 물가상승 반영
+                            return ages, incs, exps
+
+                        # 현재(나): 실제 나이별수입 데이터 사용
+                        _cage_rows_g = _cons_result.get('나이별수입', [])
+                        _g_ages  = [r['나이'] for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
+                        _g_incs  = [round(max(0, r.get('월수입', 0) - r.get('월세금', 0)) / 10000)
+                                    for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
+                        _g_base_exp = cf.get('월지출_합계', 0)
+                        _g_exps  = [round(_g_base_exp * (1 + _inf_rate) ** i / 10000)
+                                    for i, _ in enumerate(_g_ages)]
+
+                        _fig1 = go.Figure()
+
+                        # ── 현재(나) ──
+                        if _g_ages:
+                            _fig1.add_trace(go.Scatter(
+                                x=_g_ages, y=_g_incs, name='수입 — 현재(나)',
+                                mode='lines',
+                                line=dict(color='#1565c0', width=2.5),
+                                hovertemplate='%{x}세 수입: <b>%{y:,}만원</b><extra>현재(나)</extra>',
+                            ))
+                            _fig1.add_trace(go.Scatter(
+                                x=_g_ages, y=_g_exps, name='지출 — 현재(나)',
+                                mode='lines',
+                                line=dict(color='#1565c0', width=2.5, dash='dot'),
+                                hovertemplate='%{x}세 지출: <b>%{y:,}만원</b><extra>현재(나)</extra>',
+                            ))
+                            # 잉여/부족 영역
+                            _g_sur = [inc - exp for inc, exp in zip(_g_incs, _g_exps)]
+                            _fig1.add_trace(go.Scatter(
+                                x=_g_ages + _g_ages[::-1],
+                                y=[max(0, s) for s in _g_sur] + [0] * len(_g_ages),
+                                fill='toself', mode='none', showlegend=False,
+                                fillcolor='rgba(21,101,192,0.08)',
+                                hoverinfo='skip',
+                            ))
+
+                        # ── 저장된 시나리오 ──
+                        _sc_styles = {
+                            'STANDARD': ('🇰🇷 평균',  '#78909c'),
+                            'GOOD':     ('📌 GOOD',   '#66bb6a'),
+                            'BEST':     ('🏆 BEST',   '#ffa726'),
+                        }
+                        for _lbl, (_emoji, _scol) in _sc_styles.items():
+                            if _lbl not in _snap_map:
+                                continue
+                            _sv = _snap_map[_lbl]
+                            _sa, _si, _se = _cf_by_age(
+                                _sv['monthly_income'], _sv['monthly_expense'],
+                                _sv['retire_age'], _lifespan_g,
+                            )
+                            _fig1.add_trace(go.Scatter(
+                                x=_sa, y=_si, name=f'수입 — {_emoji}',
+                                mode='lines',
+                                line=dict(color=_scol, width=2),
+                                hovertemplate='%{x}세 수입: <b>%{y:,}만원</b><extra>' + _emoji + '</extra>',
+                            ))
+                            _fig1.add_trace(go.Scatter(
+                                x=_sa, y=_se, name=f'지출 — {_emoji}',
+                                mode='lines',
+                                line=dict(color=_scol, width=2, dash='dot'),
+                                hovertemplate='%{x}세 지출: <b>%{y:,}만원</b><extra>' + _emoji + '</extra>',
+                            ))
+
+                        _fig1.add_hline(y=0, line_dash='dash',
+                                        line_color='rgba(255,255,255,0.2)')
+                        _fig1.update_layout(
+                            title=dict(text="나이별 월 수입(실선) / 지출(점선) — 만원", font=dict(size=16, color='#fff')),
+                            xaxis=dict(title="나이", tickmode='linear', dtick=5,
+                                       gridcolor='rgba(255,255,255,0.08)', color='#ccc'),
+                            yaxis=dict(title="금액 (만원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            font=dict(color='#ddd'),
+                            legend=dict(orientation='h', yanchor='bottom', y=1.02,
+                                        bgcolor='rgba(0,0,0,0)', font=dict(size=11)),
+                            margin=dict(l=10, r=10, t=60, b=40),
+                            hovermode='x unified',
+                        )
+                        st.plotly_chart(_fig1, use_container_width=True)
+
+                    # ── 그래프 4: 종합 레이더 차트 ────────────────────
+                    with _gtab4:
+                        _r_cats = ['순자산<br>(억)', '월수입<br>(백만)', '월지출<br>(백만)', '연금합계<br>(월·만원)', '금융자산<br>(억)']
+                        def _radar_vals(net, m_inc, m_exp, pen, fin):
+                            return [round(net/1e8,1), round(m_inc/1e6,1), round(m_exp/1e6,1),
+                                    round(pen/10000,1), round(fin/1e8,1)]
+
+                        _r_data = {}
+                        # 현재
+                        _r_data['현재 (나)'] = _radar_vals(
+                            assets.get('순자산', 0), cf.get('월수입',0), cf.get('월지출_합계',0),
+                            _pension_total, _asset_num(assets.get('금융자산',0)),
+                        )
+                        for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
+                            if _lbl in _snap_map:
+                                _sv = _snap_map[_lbl]
+                                _r_data[_emoji] = _radar_vals(
+                                    _sv['total_assets'], _sv['monthly_income'], _sv['monthly_expense'],
+                                    _sv['detail'].get('연금합계', 0), _asset_num(_sv['detail'].get('금융자산',0)),
+                                )
+
+                        # 정규화 (최대값 기준)
+                        _r_maxes = [max((v[i] for v in _r_data.values()), default=1) or 1 for i in range(5)]
+
+                        _fig3 = go.Figure()
+                        for _sname, _rvals in _r_data.items():
+                            _norm = [round(v / _r_maxes[i] * 100, 1) for i, v in enumerate(_rvals)]
+                            _norm_closed = _norm + [_norm[0]]
+                            _cats_closed = _r_cats + [_r_cats[0]]
+                            _col = _SC_COLORS.get(_sname, '#aaaaaa')
+                            _hover = '<br>'.join(
+                                f"{_r_cats[i].replace('<br>', ' ')}: {_rvals[i]}" for i in range(5)
+                            )
+                            _h = _col.lstrip('#')
+                            _fc = f'rgba({int(_h[0:2],16)},{int(_h[2:4],16)},{int(_h[4:6],16)},0.18)'
+                            _fig3.add_trace(go.Scatterpolar(
+                                r=_norm_closed, theta=_cats_closed,
+                                fill='toself',
+                                fillcolor=_fc,
+                                name=_sname,
+                                line=dict(color=_col, width=2),
+                                hovertemplate=f"<b>{_sname}</b><br>{_hover}<extra></extra>",
+                            ))
+                        _fig3.update_layout(
+                            polar=dict(
+                                bgcolor='rgba(0,0,0,0)',
+                                radialaxis=dict(visible=True, range=[0, 100],
+                                                gridcolor='rgba(255,255,255,0.15)', color='#aaa',
+                                                ticksuffix='%'),
+                                angularaxis=dict(gridcolor='rgba(255,255,255,0.15)', color='#ccc'),
+                            ),
+                            title=dict(text="종합 지표 비교 (최대값 = 100%)", font=dict(size=16, color='#fff')),
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            font=dict(color='#ddd'),
+                            legend=dict(orientation='h', yanchor='bottom', y=-0.15,
+                                        bgcolor='rgba(0,0,0,0)'),
+                            margin=dict(l=30, r=30, t=60, b=60),
+                        )
+                        st.plotly_chart(_fig3, use_container_width=True)
+
+                # 연금 상세보기 (_std_pen 은 위에서 사용자 맞춤 계산 완료)
+                with st.expander("📋 연금 상세보기", expanded=False):
+                    _det_grps = ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']
+
+                    # GOOD/BEST: 저장된 월수령액·수익률 기반으로 현재가치 역산 (시나리오별 은퇴연령 반영)
+                    _good_det_raw  = _snap_map.get('GOOD', {}).get('detail', {}).get('연금상세', {})
+                    _best_det_raw  = _snap_map.get('BEST', {}).get('detail', {}).get('연금상세', {})
+                    _yrs_ret_good  = max(0, _snap_map.get('GOOD', {}).get('retire_age', _retire_age_cur) - _cur_age_u)
+                    _yrs_ret_best  = max(0, _snap_map.get('BEST', {}).get('retire_age', _retire_age_cur) - _cur_age_u)
+                    _user_pen_adj  = _pen_adj(_pension_by_group, _yrs_to_ret_u)
+                    _good_det      = _pen_adj(_good_det_raw, _yrs_ret_good) if _good_det_raw else {}
+                    _best_det      = _pen_adj(_best_det_raw, _yrs_ret_best) if _best_det_raw else {}
+
+                    def _grp_val(d, grp, key, default=0):
+                        return d.get(grp, {}).get(key, default)
+
+                    def _fw(d, grp, key):
+                        return fmt_won(_grp_val(d, grp, key)) if d else '-'
+
+                    def _fr(d, grp):
+                        if not d: return '-'
+                        v = _grp_val(d, grp, '수익률')
+                        return f"{v}%" if v else '-'
+
+                    # 열 헤더: 현재 + 우리나라 평균 고정, GOOD/BEST는 저장된 경우에만
+                    _det_hdr = ['연금 종류', '나 (현재)', '🇰🇷 우리나라 평균']
+                    if 'GOOD' in _snap_map: _det_hdr.append('📌 GOOD')
+                    if 'BEST' in _snap_map: _det_hdr.append('🏆 BEST')
+
+                    def _det_row(grp, key, fmt_fn):
+                        row = [grp,
+                               fmt_fn(_user_pen_adj, grp, key),   # 현재 (PV)
+                               fmt_fn(_std_pen, grp, key)]         # 우리나라 평균 (PV)
+                        if 'GOOD' in _snap_map: row.append(fmt_fn(_good_det, grp, key))
+                        if 'BEST' in _snap_map: row.append(fmt_fn(_best_det, grp, key))
+                        return row
+
+                    st.markdown("**적립금 현황** (현가평가연금액)")
+                    st.dataframe(
+                        pd.DataFrame(
+                            [_det_row(_g, '적립금', _fw) for _g in _det_grps],
+                            columns=_det_hdr,
+                        ),
+                        hide_index=True, width='stretch',
+                    )
+
+                    st.markdown("**예상 월수령액** (은퇴 후 수령액)")
+                    st.dataframe(
+                        pd.DataFrame(
+                            [_det_row(_g, '월수령액', _fw) for _g in _det_grps],
+                            columns=_det_hdr,
+                        ),
+                        hide_index=True, width='stretch',
+                    )
+
+                    st.markdown("**연 수익률**")
+                    _det_hdr_rt = ['연금 종류', '나 (현재)', '🇰🇷 우리나라 평균']
+                    if 'GOOD' in _snap_map: _det_hdr_rt.append('📌 GOOD')
+                    if 'BEST' in _snap_map: _det_hdr_rt.append('🏆 BEST')
+                    _rows_rt = []
+                    for _g in _det_grps:
+                        _v = _grp_val(_pension_by_group, _g, '수익률')
+                        _row_rt = [_g, f"{_v}%" if _v else '-', _fr(_std_pen, _g)]
+                        if 'GOOD' in _snap_map: _row_rt.append(_fr(_good_det_raw, _g))
+                        if 'BEST' in _snap_map: _row_rt.append(_fr(_best_det_raw, _g))
+                        _rows_rt.append(_row_rt)
+                    st.dataframe(pd.DataFrame(_rows_rt, columns=_det_hdr_rt),
+                                 hide_index=True, width='stretch')
+
+                if st.session_state.get('is_admin'):
+                    with st.expander("🗑️ 시나리오 삭제", expanded=False):
+                        _del_c1, _del_c2, _del_c3 = st.columns(3)
+                        with _del_c1:
+                            if 'GOOD' in _snap_map and st.button("GOOD 삭제", key='del_good'):
+                                call_api("/scenarios/GOOD", method="DELETE")
+                                st.session_state._sc_dirty = True
+                                st.rerun()
+                        with _del_c2:
+                            if 'BEST' in _snap_map and st.button("BEST 삭제", key='del_best'):
+                                call_api("/scenarios/BEST", method="DELETE")
+                                st.session_state._sc_dirty = True
+                                st.rerun()
+                        with _del_c3:
+                            if 'STANDARD' in _snap_map and st.button("STANDARD 삭제", key='del_std'):
+                                call_api("/scenarios/STANDARD", method="DELETE")
+                                st.session_state._sc_dirty = True
+                                st.rerun()
+
+
                 import datetime as _dt_mod
 
                 _ss = st.session_state
@@ -2283,6 +2991,186 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 
                 st.caption("※ 본 컨설팅은 참고용 정보이며, 실제 투자 결정은 공인 재무설계사(CFP)와 상담하시기 바랍니다.")
 
+        # ----------------------------------------------------------
+        # 탭 6: 관리자 (is_admin=True 일 때만 탭 존재)
+        # ----------------------------------------------------------
+        if st.session_state.get('is_admin'):
+            with tabs[6]:
+                st.subheader("🔧 관리자 패널")
+
+                _adm_tab1, _adm_tab2 = st.tabs(["👥 사용자 관리", "📊 시나리오 관리"])
+
+                # ── 사용자 관리 ──────────────────────────────────────
+                with _adm_tab1:
+                    st.markdown("#### 전체 회원 목록")
+                    if '_adm_users_cache' not in st.session_state or st.session_state.pop('_adm_users_dirty', False):
+                        _users_resp, _users_err = call_api("/admin/users", method="GET")
+                        st.session_state._adm_users_cache = (_users_resp, _users_err)
+                    _users_resp, _users_err = st.session_state._adm_users_cache
+                    if _users_err:
+                        st.error(f"사용자 목록 조회 실패: {_users_err}")
+                    elif _users_resp:
+                        # 확인 대기 중인 user_id (session_state로 관리)
+                        _pending_key = 'adm_pending_toggle_uid'
+                        for _u in _users_resp:
+                            _uid      = _u['id']
+                            _is_adm   = _u.get('is_admin', False)
+                            _ucol1, _ucol2, _ucol3, _ucol4, _ucol5 = st.columns([1, 4, 2, 2, 1])
+                            with _ucol1:
+                                st.write(f"**#{_uid}**")
+                            with _ucol2:
+                                st.write(_u['email'])
+                            with _ucol3:
+                                st.write(_u.get('name', ''))
+                            with _ucol4:
+                                if _is_adm:
+                                    st.markdown(
+                                        '<span style="display:inline-block;'
+                                        'background:linear-gradient(135deg,#7b1fa2,#c62828);'
+                                        'color:#fff;padding:3px 12px;border-radius:12px;'
+                                        'font-size:13px;font-weight:700;">🔑 관리자</span>',
+                                        unsafe_allow_html=True,
+                                    )
+                                else:
+                                    st.markdown(
+                                        '<span style="display:inline-block;'
+                                        'background:#455a64;color:#cfd8dc;'
+                                        'padding:3px 12px;border-radius:12px;'
+                                        'font-size:13px;">일반 사용자</span>',
+                                        unsafe_allow_html=True,
+                                    )
+                            with _ucol5:
+                                if st.button("변경", key=f"adm_toggle_{_uid}",
+                                             help="관리자 권한 변경"):
+                                    st.session_state[_pending_key] = _uid
+
+                            # 이 사용자가 확인 대기 중이면 예/아니오 표시
+                            if st.session_state.get(_pending_key) == _uid:
+                                _new_role = "일반 사용자" if _is_adm else "관리자"
+                                st.warning(
+                                    f"**{_u['email']}** 님을 **{_new_role}**로 변경하시겠습니까?",
+                                    icon="⚠️",
+                                )
+                                _yes_col, _no_col, _ = st.columns([1, 1, 5])
+                                with _yes_col:
+                                    if st.button("예", key=f"adm_yes_{_uid}", type="primary"):
+                                        _tr, _te = call_api(
+                                            f"/admin/users/{_uid}/toggle-admin",
+                                            method="PUT",
+                                        )
+                                        del st.session_state[_pending_key]
+                                        if _te:
+                                            st.error(f"변경 실패: {_te}")
+                                        else:
+                                            _new_state = "관리자" if _tr.get('is_admin') else "일반 사용자"
+                                            st.toast(f"✅ {_tr.get('email')} → {_new_state}")
+                                            st.session_state._adm_users_dirty = True
+                                        st.rerun()
+                                with _no_col:
+                                    if st.button("아니오", key=f"adm_no_{_uid}"):
+                                        del st.session_state[_pending_key]
+                                        st.rerun()
+
+                # ── 시나리오 관리 ────────────────────────────────────
+                with _adm_tab2:
+                    st.markdown("#### STANDARD / GOOD / BEST 기준값 저장")
+                    st.caption("분석 실행 없이 직접 수치를 입력하여 기준 시나리오를 저장할 수 있습니다.")
+
+                    # 현재 DB 값 로드 — 컨설팅 탭과 동일한 캐시 사용
+                    if '_sc_cache' not in st.session_state or st.session_state.pop('_sc_dirty', False):
+                        _sc_list, _sc_err = call_api("/scenarios", method="GET")
+                        st.session_state._sc_cache = (_sc_list, _sc_err)
+                    _sc_list, _sc_err = st.session_state._sc_cache
+                    _sc_db = {s['label']: s for s in (_sc_list or [])} if not _sc_err else {}
+
+                    _sc_label_sel = st.selectbox(
+                        "저장할 시나리오 선택",
+                        ["STANDARD", "GOOD", "BEST"],
+                        key="adm_sc_label",
+                    )
+                    _sc_cur = _sc_db.get(_sc_label_sel, {})
+                    _sc_det = _sc_cur.get('detail', {})
+
+                    with st.form("admin_scenario_form"):
+                        _fc1, _fc2 = st.columns(2)
+                        with _fc1:
+                            _f_retire  = st.number_input("은퇴 연령",         value=int(_sc_cur.get('retire_age', 60)),            min_value=50, max_value=80, step=1)
+                            _f_income  = st.number_input("월 수입 (원)",       value=int(_sc_cur.get('monthly_income', 0)),         min_value=0,  step=100_000)
+                            _f_expense = st.number_input("월 지출 (원)",       value=int(_sc_cur.get('monthly_expense', 0)),        min_value=0,  step=100_000)
+                            _f_surplus = st.number_input("월 잉여/부족 (원)",  value=int(_sc_cur.get('monthly_surplus', 0)),        step=100_000)
+                            _f_net     = st.number_input("순자산 (원)",        value=int(_sc_cur.get('total_assets', 0)),           min_value=0,  step=1_000_000)
+                        with _fc2:
+                            _f_total   = st.number_input("총자산 (원)",        value=int(_sc_det.get('총자산', 0)),                 min_value=0,  step=1_000_000)
+                            _f_debt    = st.number_input("총부채 (원)",        value=int(_sc_det.get('총부채', 0)),                 min_value=0,  step=1_000_000)
+                            _f_fin     = st.number_input("금융자산 (원)",      value=int(_sc_det.get('금융자산', 0)),               min_value=0,  step=1_000_000)
+                            _f_re      = st.number_input("부동산 (원)",        value=int(_sc_det.get('부동산', 0)),                 min_value=0,  step=1_000_000)
+                            _f_nps     = st.number_input("국민연금 월수령액",  value=int(_sc_det.get('국민연금', 0)),               min_value=0,  step=10_000)
+                            _f_priv    = st.number_input("사적연금 월수령액",  value=int(_sc_det.get('사적연금', 0)),               min_value=0,  step=10_000)
+
+                        if st.form_submit_button(f"💾 {_sc_label_sel} 저장", type="primary"):
+                            _sc_payload = {
+                                "label":           _sc_label_sel,
+                                "retire_age":      _f_retire,
+                                "monthly_income":  _f_income,
+                                "monthly_expense": _f_expense,
+                                "monthly_surplus": _f_surplus,
+                                "total_assets":    _f_net,
+                                "detail": {
+                                    "총자산":    _f_total,
+                                    "총부채":    _f_debt,
+                                    "금융자산":  _f_fin,
+                                    "부동산":    _f_re,
+                                    "국민연금":  _f_nps,
+                                    "사적연금":  _f_priv,
+                                    "연금합계":  _f_nps + _f_priv,
+                                },
+                            }
+                            _sr2, _se2 = call_api("/scenarios", _sc_payload)
+                            if _se2:
+                                st.error(f"저장 실패: {_se2}")
+                            else:
+                                st.session_state._sc_dirty = True
+                                st.success(f"✅ {_sc_label_sel} 저장 완료!")
+                                st.rerun()
+
+                    # 현재 DB 저장 현황 요약
+                    if _sc_db:
+                        st.divider()
+                        st.markdown("**현재 저장된 기준 시나리오**")
+                        _sc_rows = []
+                        for _lbl in ["STANDARD", "GOOD", "BEST"]:
+                            _s = _sc_db.get(_lbl)
+                            if _s:
+                                _sc_rows.append({
+                                    "라벨":        _lbl,
+                                    "은퇴연령":    f"{_s['retire_age']}세",
+                                    "월수입":      fmt_won(_s['monthly_income']),
+                                    "월지출":      fmt_won(_s['monthly_expense']),
+                                    "순자산":      fmt_won(_s['total_assets']),
+                                })
+                        if _sc_rows:
+                            st.dataframe(pd.DataFrame(_sc_rows), hide_index=True, width='stretch')
+
+                        # 삭제 버튼
+                        with st.expander("🗑️ 시나리오 삭제", expanded=False):
+                            _dc1, _dc2, _dc3 = st.columns(3)
+                            with _dc1:
+                                if "GOOD" in _sc_db and st.button("GOOD 삭제", key="adm_del_good"):
+                                    call_api("/scenarios/GOOD", method="DELETE")
+                                    st.session_state._sc_dirty = True
+                                    st.rerun()
+                            with _dc2:
+                                if "BEST" in _sc_db and st.button("BEST 삭제", key="adm_del_best"):
+                                    call_api("/scenarios/BEST", method="DELETE")
+                                    st.session_state._sc_dirty = True
+                                    st.rerun()
+                            with _dc3:
+                                if "STANDARD" in _sc_db and st.button("STANDARD 삭제", key="adm_del_std"):
+                                    call_api("/scenarios/STANDARD", method="DELETE")
+                                    st.session_state._sc_dirty = True
+                                    st.rerun()
+
+
     if not _is_onboarding:
         _save_col, _status_col = st.columns([2, 5])
         with _save_col:
@@ -2342,123 +3230,6 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
         assets = result.get('자산현황', {})
         st.metric("순자산", fmt_won(assets.get('순자산', 0)))
 
-        # ── 시나리오 비교 (GOOD / BEST 저장 & 비교표) ───────────
-        _retire_age_cur = result.get('사용자정보', {}).get('희망은퇴연령', 0)
-        def _asset_num(v):
-            if isinstance(v, dict):
-                return int(v.get('합계', v.get('시세_합계', 0)))
-            if isinstance(v, str):
-                try:
-                    return int(float(v))
-                except (ValueError, TypeError):
-                    return 0
-            return int(v or 0)
-
-        _snap_payload = {
-            'label': '',
-            'retire_age':      int(_retire_age_cur),
-            'monthly_income':  int(cf.get('월수입', 0)),
-            'monthly_expense': int(cf.get('월지출_합계', 0)),
-            'monthly_surplus': int(cf.get('월잉여(부족)', 0)),
-            'total_assets':    int(assets.get('순자산', 0)),
-            'detail': {
-                '총자산':   int(assets.get('총자산', 0)),
-                '총부채':   int(assets.get('총부채', 0)),
-                '금융자산': _asset_num(assets.get('금융자산', 0)),
-                '부동산':   _asset_num(assets.get('부동산', 0)),
-            },
-        }
-        _sc_b1, _sc_b2, _sc_b3 = st.columns([2, 2, 4])
-        with _sc_b1:
-            if st.button("📌 GOOD CASE 저장", key='btn_save_good', help="현재 분석 결과를 GOOD CASE로 저장"):
-                _p = {**_snap_payload, 'label': 'GOOD'}
-                _sr, _se = call_api("/scenarios", _p)
-                if _se:
-                    st.error(f"저장 실패: {_se}")
-                else:
-                    st.toast("✅ GOOD CASE 저장 완료!")
-                    st.rerun()
-        with _sc_b2:
-            if st.button("🏆 BEST CASE 저장", key='btn_save_best', help="현재 분석 결과를 BEST CASE로 저장"):
-                _p = {**_snap_payload, 'label': 'BEST'}
-                _sr, _se = call_api("/scenarios", _p)
-                if _se:
-                    st.error(f"저장 실패: {_se}")
-                else:
-                    st.toast("✅ BEST CASE 저장 완료!")
-                    st.rerun()
-
-        # 저장된 시나리오 불러와 비교표
-        _snaps, _snaps_err = call_api("/scenarios", method="GET")
-        if _snaps and not _snaps_err:
-            _snap_map = {s['label']: s for s in _snaps}
-            if _snap_map:
-                st.divider()
-                st.markdown("#### 📊 시나리오 비교")
-                # 우리나라 평균 (통계청 2024 가계금융복지조사 기준, 50대 가구)
-                _KR_AVG = {
-                    '은퇴연령':  '62세',
-                    '월 수입':   fmt_won(1_200_000),   # 국민연금+기타 평균
-                    '월 지출':   fmt_won(2_700_000),   # 은퇴 부부 생활비
-                    '월 잉여':   fmt_won(-1_500_000),
-                    '순자산':    fmt_won(370_000_000),
-                    '금융자산':  fmt_won(150_000_000),
-                    '부동산':    fmt_won(220_000_000),
-                }
-                _cols_hdr = ['항목', '현재 상황', '🇰🇷 우리나라 평균']
-                _cols_data = {
-                    '은퇴연령':  [f"{_retire_age_cur}세",         _KR_AVG['은퇴연령']],
-                    '월 수입':   [fmt_won(cf.get('월수입', 0)),   _KR_AVG['월 수입']],
-                    '월 지출':   [fmt_won(cf.get('월지출_합계', 0)), _KR_AVG['월 지출']],
-                    '월 잉여':   [fmt_won(cf.get('월잉여(부족)', 0)), _KR_AVG['월 잉여']],
-                    '순자산':    [fmt_won(assets.get('순자산', 0)), _KR_AVG['순자산']],
-                    '금융자산':  [fmt_won(_asset_num(assets.get('금융자산', 0))), _KR_AVG['금융자산']],
-                    '부동산':    [fmt_won(_asset_num(assets.get('부동산', 0))),   _KR_AVG['부동산']],
-                }
-                for _lbl in ['GOOD', 'BEST']:
-                    _emoji = '📌 GOOD CASE' if _lbl == 'GOOD' else '🏆 BEST CASE'
-                    if _lbl in _snap_map:
-                        _s = _snap_map[_lbl]
-                        _cols_hdr.append(_emoji)
-                        _cols_data['은퇴연령'].append(f"{_s['retire_age']}세")
-                        _cols_data['월 수입'].append(fmt_won(_s['monthly_income']))
-                        _cols_data['월 지출'].append(fmt_won(_s['monthly_expense']))
-                        _cols_data['월 잉여'].append(fmt_won(_s['monthly_surplus']))
-                        _cols_data['순자산'].append(fmt_won(_s['total_assets']))
-                        _cols_data['금융자산'].append(fmt_won(_asset_num(_s['detail'].get('금융자산', 0))))
-                        _cols_data['부동산'].append(fmt_won(_asset_num(_s['detail'].get('부동산', 0))))
-
-                _tbl_rows = []
-                for _item, _vals in _cols_data.items():
-                    _row_cells = [_item] + _vals
-                    # 잉여 컬럼은 색상 표시
-                    _tbl_rows.append(_row_cells)
-
-                _df_cmp = pd.DataFrame(_tbl_rows, columns=_cols_hdr)
-                st.dataframe(_df_cmp, hide_index=True, use_container_width=True)
-
-                # 저장 일시 표시
-                _ts_parts = []
-                for _lbl in ['GOOD', 'BEST']:
-                    if _lbl in _snap_map:
-                        _ts = _snap_map[_lbl].get('saved_at', _snap_map[_lbl].get('updated_at', ''))[:16].replace('T', ' ')
-                        _emoji = '📌' if _lbl == 'GOOD' else '🏆'
-                        _ts_parts.append(f"{_emoji} {_lbl}: {_ts}")
-                if _ts_parts:
-                    st.caption("저장 일시  |  " + "  |  ".join(_ts_parts))
-
-                # 삭제 버튼
-                with st.expander("🗑️ 시나리오 삭제", expanded=False):
-                    _del_c1, _del_c2 = st.columns(2)
-                    with _del_c1:
-                        if 'GOOD' in _snap_map and st.button("GOOD CASE 삭제", key='del_good'):
-                            call_api("/scenarios/GOOD", method="DELETE")
-                            st.rerun()
-                    with _del_c2:
-                        if 'BEST' in _snap_map and st.button("BEST CASE 삭제", key='del_best'):
-                            call_api("/scenarios/BEST", method="DELETE")
-                            st.rerun()
-
         # ── 기초연금 ─────────────────────────────────────────
         _bp = result.get('기초연금', {})
         if _bp:
@@ -2495,11 +3266,11 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     st.caption("은퇴 시점 지출을 100%로 볼 때 나이별 지출 비율 | 물가 반영은 별도 슬라이더로")
                     _sr_cols = st.columns(5)
                     _sr_cfg = [
-                        ('은퇴~64세', 'sr_under65',  100),
-                        ('65~69세',   'sr_65_69',    90),
-                        ('70~74세',   'sr_70_74',    80),
-                        ('75~79세',   'sr_75_79',    70),
-                        ('80세+',     'sr_80plus',   60),
+                        ('은퇴~69세', 'sr_under70',  100),
+                        ('70~74세',   'sr_70_74',    90),
+                        ('75~79세',   'sr_75_79',    80),
+                        ('80~84세',   'sr_80_84',    70),
+                        ('85세+',     'sr_85plus',   60),
                     ]
                     _spending_rates = {}
                     for _col, (_lbl, _key, _def) in zip(_sr_cols, _sr_cfg):
@@ -2512,11 +3283,11 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                             ) / 100.0
 
                 def _exp_mult(age):
-                    if age < 65:   return _spending_rates.get('은퇴~64세', 1.0)
-                    elif age < 70: return _spending_rates.get('65~69세', 0.9)
-                    elif age < 75: return _spending_rates.get('70~74세', 0.8)
-                    elif age < 80: return _spending_rates.get('75~79세', 0.7)
-                    else:          return _spending_rates.get('80세+', 0.6)
+                    if age < 70:   return _spending_rates.get('은퇴~69세', 1.0)
+                    elif age < 75: return _spending_rates.get('70~74세', 0.9)
+                    elif age < 80: return _spending_rates.get('75~79세', 0.8)
+                    elif age < 85: return _spending_rates.get('80~84세', 0.7)
+                    else:          return _spending_rates.get('85세+', 0.6)
 
                 # ── 시각화 차트 ──────────────────────────────────
                 # 현재 나이부터 5세 간격 눈금
