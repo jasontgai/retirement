@@ -107,6 +107,39 @@ st.markdown("""
         border-radius: 16px;
         margin-bottom: 8px;
     }
+    div[data-testid="stMetricLabel"],
+    div[data-testid="stMetricLabel"] > *,
+    div[data-testid="stMetricLabel"] p,
+    div[data-testid="stMetricLabel"] div,
+    div[data-testid="stMetricLabel"] span,
+    div[data-testid="stMetricLabel"] label,
+    div[data-testid="stMetric"] > div:first-child,
+    div[data-testid="stMetric"] > div:first-child * {
+        width: 100% !important;
+        text-align: center !important;
+        display: block !important;
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: inherit !important;
+    }
+    div[data-testid="stMetricValue"],
+    div[data-testid="stMetricValue"] > *,
+    div[data-testid="stMetric"] > div:nth-child(2),
+    div[data-testid="stMetric"] > div:nth-child(2) * {
+        text-align: right !important;
+        font-size: 0.95rem !important;
+        font-weight: 300 !important;
+    }
+    div[data-testid="stMetricDelta"],
+    div[data-testid="stMetricDelta"] > div,
+    div[data-testid="stMetricDelta"] span,
+    div[data-testid="stMetricDelta"] p {
+        text-align: right !important;
+        justify-content: flex-end !important;
+        display: flex !important;
+        width: 100% !important;
+        font-size: 0.82rem !important;
+    }
     button[data-baseweb="tab"] {
         font-size: 14px !important;
         padding: 10px 12px !important;
@@ -265,6 +298,14 @@ def _clear_session_cookie():
     """다음 렌더에서 JavaScript로 쿠키 삭제"""
     st.session_state['_pending_cookie'] = {'action': 'delete'}
 
+def _end_session():
+    """로그아웃/탈퇴 공통 세션 종료 — 쿠키 삭제 후 상태 초기화"""
+    # _pending_cookie를 먼저 보존하고 나머지만 삭제
+    for k in [k for k in st.session_state.keys() if k != '_pending_cookie']:
+        del st.session_state[k]
+    st.session_state['_pending_cookie'] = {'action': 'delete'}
+    st.session_state['session_invalidated'] = True
+
 def _flush_cookie_js():
     """보류 중인 쿠키 작업을 JavaScript로 실행 (렌더 초반에 호출)"""
     _pc = st.session_state.pop('_pending_cookie', None)
@@ -315,16 +356,17 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
                 _revoked = True
             elif _verify_resp.status_code == 200:
                 _me = _verify_resp.json()
-                st.session_state.user_id    = _me.get('id') or int(_ck_uid or 0)
-                st.session_state.user_name  = _me.get('name') or _ck_name or ''
-                st.session_state.user_email = _me.get('email') or _ck_email or ''
-                st.session_state.is_admin   = bool(_me.get('is_admin', False))
+                st.session_state.user_id        = _me.get('id') or int(_ck_uid or 0)
+                st.session_state.user_name      = _me.get('name') or _ck_name or ''
+                st.session_state.user_email     = _me.get('email') or _ck_email or ''
+                st.session_state.is_admin       = bool(_me.get('is_admin', False))
+                st.session_state.oauth_provider = _me.get('oauth_provider', '')
         except Exception as _e:
             _log.debug(f"[auth/me] 예외={_e}")
         if _revoked:
-            _log.debug("[cookie] 토큰 만료 → 쿠키 삭제")
-            _clear_session_cookie()
-            st.session_state.session_invalidated = True
+            _log.debug("[cookie] 토큰 만료 → 쿠키 삭제 후 rerun")
+            _end_session()
+            st.rerun()
         else:
             st.session_state.token = _ck_token
             if not st.session_state.user_id:
@@ -336,12 +378,21 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
 # OAuth 콜백 처리 (소셜 로그인 완료 후 리다이렉트)
 _qp = st.query_params
 _log.debug(f"[qp] {dict(_qp)}")
-if "token" in _qp and not st.session_state.token:
-    st.session_state.token      = _qp["token"]
-    st.session_state.user_id    = int(_qp.get("user_id", 0))
-    st.session_state.user_name  = unquote(_qp.get("name", ""))
-    st.session_state.user_email = unquote(_qp.get("email", ""))
-    st.session_state.is_admin   = bool(int(_qp.get("is_admin", 0)))
+if "account_deleted" in _qp:
+    st.query_params.clear()
+    _end_session()
+    st.session_state['_account_deleted'] = True
+    st.rerun()
+elif "token" in _qp:
+    # OAuth 콜백 토큰은 기존 세션보다 항상 우선 (다른 소셜로 전환 시 이전 쿠키 덮어씀)
+    _end_session()
+    st.session_state.token          = _qp["token"]
+    st.session_state.user_id        = int(_qp.get("user_id", 0))
+    st.session_state.user_name      = unquote(_qp.get("name", ""))
+    st.session_state.user_email     = unquote(_qp.get("email", ""))
+    st.session_state.is_admin       = bool(int(_qp.get("is_admin", 0)))
+    st.session_state.oauth_provider = _qp.get("oauth_provider", "")
+    st.session_state.pop('session_invalidated', None)
     _save_session_to_cookie(st.session_state.token, st.session_state.user_id,
                             st.session_state.user_name, st.session_state.user_email)
     st.query_params.clear()
@@ -459,26 +510,60 @@ def fmt_won(amount):
 
 
 def _sl(label, mn, mx, val, step=1, key=None, fmt=""):
-    """Slider (left 75%) + title/value (right 25%). fmt='won' expects 만원 units."""
-    c1, c2 = st.columns([3, 1])
-    with c1:
-        # key가 이미 session_state에 있으면 value= 생략 (중복 설정 경고 방지)
-        if key and key in st.session_state:
-            v = st.slider(label, min_value=mn, max_value=mx,
-                          step=step, key=key, label_visibility="collapsed")
-        else:
-            v = st.slider(label, min_value=mn, max_value=mx, value=val,
-                          step=step, key=key, label_visibility="collapsed")
-    with c2:
-        if fmt == "won":
-            disp = fmt_won(v * 10000)
-        elif fmt:
-            disp = f"{v}{fmt}"
-        else:
-            disp = str(v)
-        st.caption(label)
-        st.markdown(f"**{disp}**")
+    """number_input replacing slider. fmt='won' expects 만원 units."""
+    if fmt == "won":
+        full_label = f"{label} (만원)"
+    elif fmt:
+        full_label = f"{label} ({fmt})"
+    else:
+        full_label = label
+    if key and key in st.session_state:
+        v = st.number_input(full_label, min_value=mn, max_value=mx,
+                            step=step, key=key)
+    else:
+        v = st.number_input(full_label, min_value=mn, max_value=mx, value=val,
+                            step=step, key=key)
     return v
+
+
+def _metric_card(label, value, delta=None, delta_color="normal"):
+    """st.metric 대신 스타일 완전 제어 가능한 HTML 카드."""
+    delta_clr = "#66bb6a" if delta_color == "normal" else "#ef5350"
+    delta_html = (
+        f'<div style="text-align:center;font-size:0.8rem;color:{delta_clr};margin-top:4px;">{delta}</div>'
+        if delta else ""
+    )
+    st.markdown(f"""
+    <div style="background:rgba(25,118,210,0.1);padding:14px 16px;border-radius:16px;margin-bottom:8px;">
+        <div style="text-align:center;font-size:1.15rem;font-weight:700;margin-bottom:6px;">{label}</div>
+        <div style="text-align:center;font-size:1.05rem;font-weight:400;">{value}</div>
+        {delta_html}
+    </div>""", unsafe_allow_html=True)
+
+
+def _rtbl(df):
+    """첫 열(레이블)은 왼쪽, 나머지 값 열은 오른쪽 정렬한 HTML 테이블 문자열 반환."""
+    cols = list(df.columns)
+    th_style = "padding:6px 12px;border-bottom:1px solid rgba(255,255,255,0.15);font-weight:600;white-space:nowrap;"
+    td_style = "padding:5px 12px;border-bottom:1px solid rgba(255,255,255,0.06);white-space:nowrap;"
+    hdr = "".join(
+        f'<th style="{th_style}text-align:center;">{c}</th>'
+        for i, c in enumerate(cols)
+    )
+    body = ""
+    for _, row in df.iterrows():
+        cells = "".join(
+            f'<td style="{td_style}text-align:{"left" if i==0 else "right"};">{row[c]}</td>'
+            for i, c in enumerate(cols)
+        )
+        body += f"<tr>{cells}</tr>"
+    return (
+        '<div style="overflow-x:auto;">'
+        '<table style="width:100%;border-collapse:collapse;font-size:0.88rem;">'
+        f'<thead><tr style="background:rgba(255,255,255,0.05);">{hdr}</tr></thead>'
+        f'<tbody>{body}</tbody>'
+        '</table></div>'
+    )
 
 
 # ============================================================
@@ -499,16 +584,14 @@ def show_auth_screen():
     st.caption("연금·세금·건보료 종합 시뮬레이션")
     st.divider()
 
-    # 소셜 로그인 (준비 중)
-    # st.markdown("#### 소셜 계정으로 시작하기")
-    # st.markdown(
-    #     _social_btn("🟡  카카오로 시작하기",    f"{API_BASE}/auth/oauth/kakao",  "#FEE500", "#191919") +
-    #     _social_btn("🟢  네이버로 시작하기",    f"{API_BASE}/auth/oauth/naver",  "#03C75A") +
-    #     _social_btn("🔵  구글로 시작하기",      f"{API_BASE}/auth/oauth/google", "#4285F4"),
-    #     unsafe_allow_html=True,
-    # )
-    # st.markdown("<p style='text-align:center;color:#999;font-size:13px;margin:12px 0'>또는 이메일로 로그인</p>",
-    #             unsafe_allow_html=True)
+    st.markdown("#### 소셜 계정으로 시작하기")
+    st.markdown(
+        _social_btn("🟡  카카오로 시작하기", f"{API_BASE}/auth/oauth/kakao", "#FEE500", "#191919") +
+        _social_btn("🟢  네이버로 시작하기", f"{API_BASE}/auth/oauth/naver", "#03C75A", "#FFFFFF"),
+        unsafe_allow_html=True,
+    )
+    st.markdown("<p style='text-align:center;color:#999;font-size:13px;margin:12px 0'>또는 이메일로 로그인</p>",
+                unsafe_allow_html=True)
 
     tab_login, tab_register, tab_reset = st.tabs(["🔑 로그인", "📝 회원가입", "🔓 비밀번호 찾기"])
 
@@ -991,28 +1074,43 @@ def show_account_page():
     # --- 회원 탈퇴 ---
     with st.expander("⚠️ 회원 탈퇴", expanded=False):
         st.warning("탈퇴 시 모든 프로필과 분석 데이터가 **영구 삭제**됩니다.")
-        with st.form("delete_account_form"):
-            del_pw = st.text_input("비밀번호 입력 (탈퇴 확인)", type="password", key="del_pw")
-            confirm = st.checkbox("위 내용을 확인했으며 탈퇴에 동의합니다.")
-            with st.container():
-                st.markdown('<div class="danger-btn">', unsafe_allow_html=True)
-                submitted = st.form_submit_button("회원 탈퇴", width='stretch')
-                st.markdown('</div>', unsafe_allow_html=True)
+        _is_social = bool(st.session_state.get('oauth_provider', ''))
 
-            if submitted:
-                if not del_pw:
-                    st.error("비밀번호를 입력하세요.")
-                elif not confirm:
-                    st.error("동의 체크박스를 선택하세요.")
-                else:
-                    _, err = call_api("/auth/me", {"current_password": del_pw}, method="DELETE")
-                    if err:
-                        st.error(err)
+        if _is_social:
+            _prov_name = {"kakao": "카카오", "naver": "네이버", "google": "구글"}.get(
+                st.session_state.oauth_provider, st.session_state.oauth_provider)
+            st.info(f"소셜 계정({_prov_name})으로 가입하셨습니다. 탈퇴하려면 {_prov_name} 계정으로 본인 확인이 필요합니다.")
+            confirm_del = st.checkbox("위 내용을 확인했으며 탈퇴에 동의합니다.", key="social_del_confirm")
+            if st.button("🔐 본인 확인 후 탈퇴", type="primary", disabled=not confirm_del):
+                _dt_resp, _dt_err = call_api("/auth/delete-request", method="POST")
+                if _dt_err:
+                    st.error(_dt_err)
+                elif _dt_resp and _dt_resp.get("dt"):
+                    st.markdown(
+                        f'<meta http-equiv="refresh" content="0;url={API_BASE}/auth/delete-start?dt={_dt_resp["dt"]}">',
+                        unsafe_allow_html=True,
+                    )
+        else:
+            with st.form("delete_account_form"):
+                del_pw = st.text_input("비밀번호 입력 (탈퇴 확인)", type="password", key="del_pw")
+                confirm = st.checkbox("위 내용을 확인했으며 탈퇴에 동의합니다.")
+                with st.container():
+                    st.markdown('<div class="danger-btn">', unsafe_allow_html=True)
+                    submitted = st.form_submit_button("회원 탈퇴", width='stretch')
+                    st.markdown('</div>', unsafe_allow_html=True)
+
+                if submitted:
+                    if not del_pw:
+                        st.error("비밀번호를 입력하세요.")
+                    elif not confirm:
+                        st.error("동의 체크박스를 선택하세요.")
                     else:
-                        st.success("탈퇴 완료. 이용해주셔서 감사합니다.")
-                        for k in list(st.session_state.keys()):
-                            del st.session_state[k]
-                        st.rerun()
+                        _, err = call_api("/auth/me", {"current_password": del_pw}, method="DELETE")
+                        if err:
+                            st.error(err)
+                        else:
+                            _end_session()
+                            st.rerun()
 
 
 # ============================================================
@@ -1037,19 +1135,11 @@ def show_main_app():
             _lo_c1, _lo_c2 = st.columns(2)
             with _lo_c1:
                 if st.button("✅ 로그아웃", width='stretch', type="primary"):
-                    try:
-                        requests.post(
-                            f"{API_BASE}/auth/logout",
-                            headers={"Authorization": f"Bearer {st.session_state.token}"},
-                            timeout=5,
-                        )
-                    except Exception:
-                        pass
-                    _clear_session_cookie()
-                    for k in list(st.session_state.keys()):
-                        del st.session_state[k]
-                    st.session_state.session_invalidated = True
-                    st.rerun()
+                    # 브라우저를 /auth/logout-page로 이동 → 서버가 HTTP Set-Cookie로 쿠키 삭제
+                    # (JS 쿠키 삭제보다 신뢰성이 높음)
+                    st.html('<script>window.parent.location.href="/auth/logout-page";</script>',
+                            unsafe_allow_javascript=True)
+                    st.stop()
             with _lo_c2:
                 if st.button("❌ 취소", width='stretch'):
                     del st.session_state['_confirm_logout']
@@ -1286,9 +1376,13 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
 
             col3, col4 = st.columns(2)
             with col3:
-                birth_month = _sl("출생월", 1, 12, st.session_state.get("inp_birth_month", 1), 1, "inp_birth_month", "월")
+                birth_month = st.selectbox("출생월", list(range(1, 13)),
+                    index=st.session_state.get("inp_birth_month", 1) - 1,
+                    format_func=lambda m: f"{m}월", key="inp_birth_month")
             with col4:
-                birth_day = _sl("출생일", 1, 31, st.session_state.get("inp_birth_day", 1), 1, "inp_birth_day", "일")
+                birth_day = st.selectbox("출생일", list(range(1, 32)),
+                    index=st.session_state.get("inp_birth_day", 1) - 1,
+                    format_func=lambda d: f"{d}일", key="inp_birth_day")
 
             expected_lifespan = _sl("기대수명", 75, 120, st.session_state.get("inp_lifespan", 90), 1, "inp_lifespan", "세")
             dependents = _sl("부양가족 수", 0, 10, st.session_state.get("inp_dependents", 0), 1, "inp_dependents", "명")
@@ -1456,7 +1550,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                     st.markdown("#### 🔑 기본 수급 요건")
                     st.markdown("""
     | 요건 | 내용 |
-    |------|------|
+    |:---:|:---:|
     | **가입기간** | **최소 10년(120개월) 이상** 납부해야 노령연금 수급권 발생 |
     | **연령** | 출생연도에 따라 만 61~65세부터 수령 가능 |
     | **10년 미만** | 노령연금 불가 /**반환일시금** (납부액 + 이자) 일시 지급 |
@@ -1467,7 +1561,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                     for label, (s, e), age in _NPS_AGE_TABLE:
                         marker = " ✅ 나의 해당" if s <= birth_year <= e else ""
                         _age_rows.append(f"| {label} | **{age}세** |{marker}")
-                    st.markdown("| 출생연도 | 정상 수급개시 |\n|----------|------------|  \n" +
+                    st.markdown("| 출생연도 | 정상 수급개시 |\n|:---:|:---:|  \n" +
                                 "\n".join(_age_rows))
                     st.info(f"✅ **{birth_year}년생**의 정상 수급개시 연령: **{_user_nps_age}세**")
 
@@ -1478,7 +1572,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
     - 단, 신청 당시 **소득이 없어야** 함 (근로·사업소득 有 시 신청 불가)
 
     | 수령 시작 | 감액률 | 예시 (월 100만원 기준) |
-    |-----------|--------|----------------------|
+    |:---:|:---:|:---:|
     | {_user_nps_age - 5}세 (5년 조기) | **-30%** | 월 **70만원** |
     | {_user_nps_age - 4}세 (4년 조기) | -24% | 월 80만 4천원 |
     | {_user_nps_age - 3}세 (3년 조기) | -18% | 월 85만원 |
@@ -1494,7 +1588,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
     - 연기 기간 중에도 국민연금 가입 불필요
 
     | 수령 시작 | 가산률 | 예시 (월 100만원 기준) |
-    |-----------|--------|----------------------|
+    |:---:|:---:|:---:|
     | **{_user_nps_age}세** (정상) | **0%** | 월 **100만원** ⭐ |
     | {_user_nps_age + 1}세 (1년 연기) | +7.2% | 월 107만 2천원 |
     | {_user_nps_age + 2}세 (2년 연기) | +14.4% | 월 114만 4천원 |
@@ -1509,7 +1603,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
     - 초과 소득 구간별로 최대 **50% 감액** (5년 후 자동 해제)
 
     | 초과 소득 구간 | 감액 비율 |
-    |--------------|---------|
+    |:---:|:---:|
     | 100만원 미만 초과 | 초과액의 5% |
     | 100~200만원 | 5만원 + 100만원 초과분의 10% |
     | 200~300만원 | 15만원 + 200만원 초과분의 15% |
@@ -1529,7 +1623,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
     """)
                     st.markdown("#### 🔗 공식 사이트")
                     st.markdown(
-                        "| 용도 | 링크 |\n|------|------|\n"
+                        "| 용도 | 링크 |\n|:---:|:---:|\n"
                         "| 예상연금 모의계산 (로그인 불필요) | [국민연금공단 모의계산기](https://csa.nps.or.kr/ib2010/mvc/pension/pensionCalculation.do) |\n"
                         "| 내 가입내역·예상수령액 조회 | [내 연금 알아보기](https://www.nps.or.kr/jsppage/business/moca/moca_04.jsp) |\n"
                         "| 수급개시연령 · 감액기준 공식 안내 | [국민연금공단 노령연금](https://www.nps.or.kr/jsppage/pension/hd/hd_01_01.jsp) |\n"
@@ -1540,7 +1634,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 with st.expander("ℹ️ 사적연금 종류 안내", expanded=False):
                     st.markdown("""
     | 종류 | 세액공제 | 수령가능 | 특징 |
-    |------|---------|---------|------|
+    |:---:|:---:|:---:|:---:|
     | **IRP** | 연 900만원 한도 (16.5%) | 만 55세~ | 퇴직금 이전 가능, 가장 폭넓은 상품 |
     | **연금저축펀드** | IRP 포함 900만원 한도 | 만 55세~ | 직접 펀드 운용, 중도인출 가능 |
     | **퇴직연금 DC** | 회사 납입분 세액공제 | 퇴직 후 | 본인이 직접 운용, 수익률 본인 책임 |
@@ -1552,7 +1646,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
     """)
                     st.markdown("**🔗 공식 사이트**")
                     st.markdown(
-                        "| 용도 | 링크 |\n|------|------|\n"
+                        "| 용도 | 링크 |\n|:---:|:---:|\n"
                         "| 연금저축·IRP 세액공제 한도 안내 | [국세청 연금계좌](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6655&cntntsId=7751) |\n"
                         "| 퇴직연금 제도 안내 (고용노동부) | [퇴직연금 포털](https://www.moel.go.kr/retirementBenefit/main.do) |\n"
                         "| 연금상품 비교공시 | [금융감독원 통합연금포털](https://100lifeplan.fss.or.kr) |\n"
@@ -2033,13 +2127,22 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
             insurance = _sl("보험료", 0, 1000, st.session_state.get("inp_insurance", 0), 10, "inp_insurance", "won") * 10000
             other     = st.number_input("기타 (만원)", min_value=0, max_value=1000, step=10, key="inp_other") * 10000
             total_monthly = living + medical + leisure + family + insurance + other
-            st.metric("월 지출 합계", fmt_won(total_monthly))
+            _metric_card("월 지출 합계", fmt_won(total_monthly))
 
         # ----------------------------------------------------------
         # 탭 5: 컨설팅
         # ----------------------------------------------------------
         with tabs[5]:
             st.subheader("🎯 은퇴 재원마련 컨설팅")
+
+            # 나이별 체감율 (session_state 기반 — 그래프·진단 양쪽에서 공용)
+            def _age_spend_rate(age):
+                if age < 65:   return st.session_state.get('sr_under65', 100) / 100.0
+                elif age < 70: return st.session_state.get('sr_65_69',    95) / 100.0
+                elif age < 75: return st.session_state.get('sr_70_74',    85) / 100.0
+                elif age < 80: return st.session_state.get('sr_75_79',    75) / 100.0
+                elif age < 85: return st.session_state.get('sr_80_84',    65) / 100.0
+                else:          return st.session_state.get('sr_85plus',   55) / 100.0
 
             # 탭 진입 시 관리자 상태 1회 갱신
             if st.session_state.token and not st.session_state.get('_admin_checked'):
@@ -2327,7 +2430,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                     [[k] + v for k, v in _cols_data.items()],
                     columns=_cols_hdr,
                 )
-                st.dataframe(_df_cmp, hide_index=True, width='stretch')
+                st.markdown(_rtbl(_df_cmp), unsafe_allow_html=True)
 
                 # ── 시나리오 비교 그래프 ────────────────────────────────
                 import plotly.graph_objects as go
@@ -2420,7 +2523,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                             legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
                             margin=dict(l=10, r=10, t=60, b=40),
                         )
-                        st.plotly_chart(_fig1, use_container_width=True)
+                        st.plotly_chart(_fig1, width="stretch")
 
                     # ── 그래프 2: 수입/지출 구성 (스냅샷 막대) ──────────
                     with _gtab2:
@@ -2471,7 +2574,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                             margin=dict(l=10, r=10, t=60, b=40),
                             hovermode='x unified',
                         )
-                        st.plotly_chart(_fig2, use_container_width=True)
+                        st.plotly_chart(_fig2, width="stretch")
 
                     # ── 그래프 3: 나이별 월수입·월지출 라인 ───────────
                     with _gtab3:
@@ -2492,8 +2595,8 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                         _g_incs  = [round(max(0, r.get('월수입', 0) - r.get('월세금', 0)) / 10000)
                                     for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
                         _g_base_exp = cf.get('월지출_합계', 0)
-                        _g_exps  = [round(_g_base_exp * (1 + _inf_rate) ** i / 10000)
-                                    for i, _ in enumerate(_g_ages)]
+                        _g_exps  = [round(_g_base_exp * _age_spend_rate(age) * (1 + _inf_rate) ** i / 10000)
+                                    for i, age in enumerate(_g_ages)]
 
                         _fig1 = go.Figure()
 
@@ -2563,7 +2666,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                             margin=dict(l=10, r=10, t=60, b=40),
                             hovermode='x unified',
                         )
-                        st.plotly_chart(_fig1, use_container_width=True)
+                        st.plotly_chart(_fig1, width="stretch")
 
                     # ── 그래프 4: 종합 레이더 차트 ────────────────────
                     with _gtab4:
@@ -2624,7 +2727,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                                         bgcolor='rgba(0,0,0,0)'),
                             margin=dict(l=30, r=30, t=60, b=60),
                         )
-                        st.plotly_chart(_fig3, use_container_width=True)
+                        st.plotly_chart(_fig3, width="stretch")
 
                 # 연금 상세보기 (_std_pen 은 위에서 사용자 맞춤 계산 완료)
                 with st.expander("📋 연금 상세보기", expanded=False):
@@ -2664,22 +2767,16 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                         return row
 
                     st.markdown("**적립금 현황** (현가평가연금액)")
-                    st.dataframe(
-                        pd.DataFrame(
-                            [_det_row(_g, '적립금', _fw) for _g in _det_grps],
-                            columns=_det_hdr,
-                        ),
-                        hide_index=True, width='stretch',
-                    )
+                    st.markdown(_rtbl(pd.DataFrame(
+                        [_det_row(_g, '적립금', _fw) for _g in _det_grps],
+                        columns=_det_hdr,
+                    )), unsafe_allow_html=True)
 
                     st.markdown("**예상 월수령액** (은퇴 후 수령액)")
-                    st.dataframe(
-                        pd.DataFrame(
-                            [_det_row(_g, '월수령액', _fw) for _g in _det_grps],
-                            columns=_det_hdr,
-                        ),
-                        hide_index=True, width='stretch',
-                    )
+                    st.markdown(_rtbl(pd.DataFrame(
+                        [_det_row(_g, '월수령액', _fw) for _g in _det_grps],
+                        columns=_det_hdr,
+                    )), unsafe_allow_html=True)
 
                     st.markdown("**연 수익률**")
                     _det_hdr_rt = ['연금 종류', '나 (현재)', '🇰🇷 우리나라 평균']
@@ -2692,8 +2789,8 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                         if 'GOOD' in _snap_map: _row_rt.append(_fr(_good_det_raw, _g))
                         if 'BEST' in _snap_map: _row_rt.append(_fr(_best_det_raw, _g))
                         _rows_rt.append(_row_rt)
-                    st.dataframe(pd.DataFrame(_rows_rt, columns=_det_hdr_rt),
-                                 hide_index=True, width='stretch')
+                    st.markdown(_rtbl(pd.DataFrame(_rows_rt, columns=_det_hdr_rt)),
+                                unsafe_allow_html=True)
 
                 if st.session_state.get('is_admin'):
                     with st.expander("🗑️ 시나리오 삭제", expanded=False):
@@ -2733,13 +2830,14 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 _ret_yrs   = max(1, _lifespan - _ret_age)
                 _base_exp  = _ccf.get('월지출_합계', 0)
 
-                # 은퇴 후 연령별 월 부족액 합산 (명목 총액)
-                _total_shortage = 0
+                # 은퇴 후 연령별 순현금흐름 합산 (잉여는 부족분과 상계)
+                _net_cf = 0
                 for _ca in range(_ret_age, _lifespan + 1):
                     _crow = _cage_map.get(_ca, {})
                     _cincome = max(0, _crow.get('월수입', 0) - _crow.get('월세금', 0))
-                    _cexp    = _base_exp * ((1 + _cinf) ** (_ca - _ret_age))
-                    _total_shortage += max(0, _cexp - _cincome) * 12
+                    _cexp    = _base_exp * _age_spend_rate(_ca) * ((1 + _cinf) ** (_ca - _ret_age))
+                    _net_cf += (_cincome - _cexp) * 12   # 잉여(+) / 부족(-)
+                _total_shortage = max(0, -_net_cf)       # 부족이면 양수
 
                 # 현재 투자 가능 자산
                 _fa_list   = _ss.get('financial_assets', [])
@@ -2776,11 +2874,11 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 st.markdown("#### 📋 은퇴 재원 진단")
                 _d1, _d2, _d3 = st.columns(3)
                 with _d1:
-                    st.metric("은퇴까지 남은 기간", f"{_yrs_to_ret}년")
+                    _metric_card("은퇴까지 남은 기간", f"{_yrs_to_ret}년")
                 with _d2:
-                    st.metric("은퇴 후 생활 기간", f"{_ret_yrs}년")
+                    _metric_card("은퇴 후 생활 기간", f"{_ret_yrs}년")
                 with _d3:
-                    st.metric("현재 금융자산", fmt_won(_total_fa))
+                    _metric_card("현재 금융자산", fmt_won(_total_fa))
 
                 _ret_row0  = _cage_map.get(_ret_age, {})
                 _ret_inc0  = max(0, _ret_row0.get('월수입', 0) - _ret_row0.get('월세금', 0))
@@ -2850,7 +2948,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
 **핵심 원칙:** 개별 종목보다 ETF로 분산, 장기 보유
 
 | 상품 | 기대수익률 | 특징 |
-|------|-----------|------|
+|:---:|:---:|:---:|
 | S&P500 ETF (VOO·IVV·TIGER 미국S&P500) | 연 7~10% | 미국 대형주 500개 분산, 50년 평균 연 10% |
 | KOSPI200 ETF | 연 5~8% | 국내 대형주 분산 |
 | 배당 ETF (SCHD·KODEX고배당) | 연 4~6% + 배당 | 배당 재투자로 복리 효과 |
@@ -2873,7 +2971,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 **부동산 투자 전략:**
 
 | 전략 | 내용 | 적합 시기 |
-|------|------|-----------|
+|:---:|:---:|:---:|
 | **주택연금** | 집을 담보로 사망 시까지 월 수령 | 은퇴 후 (55세↑) |
 | **소형 아파트·오피스텔** | 임대수익 월 50~100만원 | 은퇴 전 적립기 |
 | **리츠(REITs)** | 부동산 간접투자, 소액 가능 | 지금 당장 가능 |
@@ -2894,7 +2992,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 **기타 대체투자:**
 
 | 유형 | 기대수익 | 위험도 | 비고 |
-|------|---------|--------|------|
+|:---:|:---:|:---:|:---:|
 | 비트코인 | 연 20~50% (변동폭 큼) | ★★★★★ | 소액·분산 |
 | 금·원자재 ETF | 연 3~5% | ★★☆☆☆ | 인플레이션 헤지 |
 | 사모펀드·VC | 연 10~15% | ★★★★☆ | 고액·장기 락업 |
@@ -2908,7 +3006,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 **절세 계좌 우선 활용 (세금 혜택이 가장 확실한 수익):**
 
 | 계좌 | 연 납입한도 | 혜택 |
-|------|-----------|------|
+|:---:|:---:|:---:|
 | **IRP** | 900만원 | 납입액의 13.2~16.5% 세액공제 |
 | **연금저축** | 600만원 (IRP 합산 900만원) | 동일 세액공제, 투자 자유도 높음 |
 | **ISA** | 2,000만원 | 수익 200~400만원 비과세 + 저율과세 |
@@ -3149,7 +3247,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                     "순자산":      fmt_won(_s['total_assets']),
                                 })
                         if _sc_rows:
-                            st.dataframe(pd.DataFrame(_sc_rows), hide_index=True, width='stretch')
+                            st.markdown(_rtbl(pd.DataFrame(_sc_rows)), unsafe_allow_html=True)
 
                         # 삭제 버튼
                         with st.expander("🗑️ 시나리오 삭제", expanded=False):
@@ -3199,7 +3297,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
             with st.expander("ℹ️ 적용된 우리나라 평균 데이터 (클릭하여 확인)", expanded=False):
                 st.markdown("""
 | 항목 | 적용 평균값 | 비고 |
-|---|---|---|
+|:---:|:---:|:---:|
 | 연봉 | **5,000만원** | 50대 직장인 평균 (통계청 2024) |
 | 국민연금 | **65세부터 90만원/월** | 평균 수령액 기준 |
 | 퇴직연금(DC) | **적립금 8,000만원** | 50대 중간값 기준 |
@@ -3218,17 +3316,17 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
         cf = result.get('현금흐름', {})
         c1, c2 = st.columns(2)
         with c1:
-            st.metric("월 수입", fmt_won(cf.get('월수입', 0)))
+            _metric_card("월 수입", fmt_won(cf.get('월수입', 0)))
         with c2:
-            st.metric("월 지출", fmt_won(cf.get('월지출_합계', 0)))
+            _metric_card("월 지출", fmt_won(cf.get('월지출_합계', 0)))
         surplus = cf.get('월잉여(부족)', 0)
-        st.metric(
+        _metric_card(
             "월 잉여/부족", fmt_won(surplus),
             delta=fmt_won(surplus * 12) + " (연환산)" if surplus else None,
             delta_color="normal" if surplus >= 0 else "inverse",
         )
         assets = result.get('자산현황', {})
-        st.metric("순자산", fmt_won(assets.get('순자산', 0)))
+        _metric_card("순자산", fmt_won(assets.get('순자산', 0)))
 
         # ── 기초연금 ─────────────────────────────────────────
         _bp = result.get('기초연금', {})
@@ -3261,16 +3359,26 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                 _age_map = {r['나이']: r for r in _age_rows}
                 _retire_age = result.get('사용자정보', {}).get('희망은퇴연령', 60)
 
+                # 차트 은퇴연령 동기화: 클릭 임시키 → 위젯키 이관 (위젯 렌더 전에만 수정 가능)
+                if '_click_retire_age' in st.session_state:
+                    st.session_state['_chart_retire_age'] = st.session_state.pop('_click_retire_age')
+                # 프로필 은퇴연령이 바뀌면 차트 파라미터도 동기화
+                if st.session_state.get('_profile_retire_age') != _retire_age:
+                    st.session_state['_chart_retire_age'] = _retire_age
+                    st.session_state['_profile_retire_age'] = _retire_age
+
                 # ── 나이별 지출 체감률 설정 ──────────────────────
                 with st.expander("💸 나이별 지출 체감률 설정", expanded=False):
                     st.caption("은퇴 시점 지출을 100%로 볼 때 나이별 지출 비율 | 물가 반영은 별도 슬라이더로")
                     _sr_cols = st.columns(5)
+                    _sr_cols = st.columns(6)
                     _sr_cfg = [
-                        ('은퇴~69세', 'sr_under70',  100),
-                        ('70~74세',   'sr_70_74',    90),
-                        ('75~79세',   'sr_75_79',    80),
-                        ('80~84세',   'sr_80_84',    70),
-                        ('85세+',     'sr_85plus',   60),
+                        ('은퇴~64세', 'sr_under65',  100),
+                        ('65~69세',   'sr_65_69',     95),
+                        ('70~74세',   'sr_70_74',     85),
+                        ('75~79세',   'sr_75_79',     75),
+                        ('80~84세',   'sr_80_84',     65),
+                        ('85세+',     'sr_85plus',    55),
                     ]
                     _spending_rates = {}
                     for _col, (_lbl, _key, _def) in zip(_sr_cols, _sr_cfg):
@@ -3283,11 +3391,12 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                             ) / 100.0
 
                 def _exp_mult(age):
-                    if age < 70:   return _spending_rates.get('은퇴~69세', 1.0)
-                    elif age < 75: return _spending_rates.get('70~74세', 0.9)
-                    elif age < 80: return _spending_rates.get('75~79세', 0.8)
-                    elif age < 85: return _spending_rates.get('80~84세', 0.7)
-                    else:          return _spending_rates.get('85세+', 0.6)
+                    if age < 65:   return _spending_rates.get('은퇴~64세', 1.0)
+                    elif age < 70: return _spending_rates.get('65~69세', 0.95)
+                    elif age < 75: return _spending_rates.get('70~74세', 0.85)
+                    elif age < 80: return _spending_rates.get('75~79세', 0.75)
+                    elif age < 85: return _spending_rates.get('80~84세', 0.65)
+                    else:          return _spending_rates.get('85세+', 0.55)
 
                 # ── 시각화 차트 ──────────────────────────────────
                 # 현재 나이부터 5세 간격 눈금
@@ -3336,13 +3445,63 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                 for _r in _age_map.values():
                     _all_sources.update(_r['항목별'].keys())
 
+                # 은퇴 전 근로소득(월급여) 추출 — 차트에서 은퇴선 이동 시 연장 표시용
+                _salary_man = 0.0
+                for _age in sorted(_age_map.keys()):
+                    _gs = _age_map[_age].get('항목별', {}).get('근로소득', 0) or 0
+                    if _gs > 0:
+                        _salary_man = round(_gs / 10000, 1)
+                        break
+
+                # 은퇴연령에 맞춰 시작하는 연금 식별 (은퇴선 이동 시 함께 지연)
+                _ret_dep_pensions = set()
+                for _pp in st.session_state.get('pensions', []):
+                    if int(_pp.get('expected_start_age', 0)) == int(_retire_age):
+                        _ret_dep_pensions.add(_pp.get('name', ''))
+
+                # 물가 연동 연금 식별 (국민연금 계열: 법정 CPI 연동)
+                _inf_linked_pensions = {'배우자 국민연금'}
+                for _pp in st.session_state.get('pensions', []):
+                    if _pp.get('pension_type', '') == '국민연금':
+                        _inf_linked_pensions.add(_pp.get('name', ''))
+
+                # 각 수입원의 개시 나이·기준금액(인플레 미적용) 추출
+                _src_start_info = {}  # {source: (start_age, base_man)}
+                for _src in _all_sources:
+                    for _age in sorted(_age_map.keys()):
+                        _v = _age_map[_age].get('항목별', {}).get(_src, 0) or 0
+                        if _v > 0:
+                            _src_start_info[_src] = (_age, round(_v / 10000, 1))
+                            break
+
+                # 근로소득은 별도 처리 (전 나이 범위에 걸쳐 고정 월급여 값 사용)
+                _all_sources_no_sal = _all_sources - {'근로소득'}
                 _records = []
                 for _age in sorted(_age_map.keys()):
                     _row = _age_map[_age]
-                    for _src in _all_sources:
+                    for _src in _all_sources_no_sal:
                         _amt = _row['항목별'].get(_src, 0) or 0
                         _safe_amt = _amt if isinstance(_amt, (int, float)) and math.isfinite(_amt) else 0
-                        _records.append({'나이': _age, '항목': _src, '색상키': _src, '월수입(만원)': round(_safe_amt / 10000, 1)})
+                        _is_inf = _src in _inf_linked_pensions
+                        _s_age, _b_man = _src_start_info.get(_src, (_age, 0.0))
+                        _records.append({
+                            '나이': _age, '항목': _src, '색상키': _src,
+                            '월수입(만원)': round(_safe_amt / 10000, 1),
+                            'is_ret_dep':    _src in _ret_dep_pensions,
+                            'is_inf_linked': _is_inf,
+                            'start_age':     float(_s_age),
+                            'base_man':      float(_b_man) if _is_inf else 0.0,
+                        })
+
+                # 근로소득: 모든 나이에 월급여액으로 행 추가
+                # → Altair 표현식이 retire_age 이후만 0으로 처리 (은퇴선 이동 시 자동 연장)
+                if _salary_man > 0:
+                    for _age in sorted(_age_map.keys()):
+                        _records.append({
+                            '나이': _age, '항목': '근로소득', '색상키': '근로소득',
+                            '월수입(만원)': _salary_man, 'is_ret_dep': False,
+                            'is_inf_linked': False, 'start_age': 0.0, 'base_man': 0.0,
+                        })
 
                 # 음수 데이터: 납입금 + 소득세 + 건보료 (모든 연령, 연속 area)
                 _contrib_records = []
@@ -3407,20 +3566,53 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     _df['_rank'] = _df['색상키'].map(lambda k: _rank_map.get(k, 99))
                     _df_contrib['_rank'] = _df_contrib['색상키'].map(lambda k: _rank_map.get(k, 99))
 
-                    # ── 차트 조정 컨트롤 ─────────────────────────────
-                    _chart_retire_age = int(st.session_state.get('_chart_retire_age', _retire_age))
+                    # ── 차트 조정 컨트롤 (은퇴연령 + 물가상승률) ────────
+                    _ctrl_c1, _ctrl_c2, _ctrl_c3 = st.columns([2, 2, 3])
+                    with _ctrl_c1:
+                        _chart_retire_age = st.number_input(
+                            "은퇴연령 조정",
+                            min_value=int(_min_age),
+                            max_value=int(_max_age),
+                            value=int(st.session_state.get('_chart_retire_age', _retire_age)),
+                            step=1,
+                            key='_chart_retire_age',
+                            help="은퇴선·근로소득·연금 개시가 함께 이동합니다",
+                        )
+                    with _ctrl_c2:
+                        # 프로필 물가상승률과 독립적인 차트용 키 사용 (키 중복 방지)
+                        if '_chart_inf_rate' not in st.session_state:
+                            st.session_state['_chart_inf_rate'] = float(st.session_state.get('inp_inflation', 2.5))
+                        _inf_fixed = st.number_input(
+                            "물가상승률 (%)",
+                            min_value=0.0,
+                            max_value=10.0,
+                            step=0.1,
+                            key='_chart_inf_rate',
+                            help="지출선의 물가 반영률을 조정합니다",
+                        )
+                    with _ctrl_c3:
+                        st.caption("은퇴연령을 바꾸거나 차트 막대를 클릭하면 은퇴선이 이동합니다.")
 
                     # ── Altair 파라미터 ──────────────────────────────
                     _p_retire = alt.param(name='retire_age', value=float(_chart_retire_age))
-                    _inf_fixed = float(st.session_state.get('inp_inflation', 2.5))
-                    _p_inf = alt.param(name='inf_rate', value=_inf_fixed)
+                    _p_inf = alt.param(name='inf_rate', value=float(_inf_fixed))
                     # 클릭 셀렉션 (나이 필드 캡처)
                     _sel_click = alt.selection_point(
                         name='age_click', fields=['나이'],
                         on='click', nearest=True, clear=False,
                     )
 
-                    _adj_expr = "datum['항목'] == '근로소득' && datum['나이'] >= retire_age ? 0 : datum['월수입(만원)']"
+                    # 수입 조정 표현식 (우선순위 순):
+                    # 1) 근로소득: retire_age 이후 0
+                    # 2) 은퇴의존 연금(is_ret_dep): retire_age 이전 0
+                    # 3) 물가연동 연금(is_inf_linked): 기준금액 × (1+inf_rate/100)^(나이-개시나이)
+                    # 4) 나머지: 사전 계산값 그대로
+                    _adj_expr = (
+                        "datum['항목'] == '근로소득' ? (datum['나이'] >= retire_age ? 0 : datum['월수입(만원)']) : "
+                        "datum.is_ret_dep && datum['나이'] < retire_age ? 0 : "
+                        "datum.is_inf_linked ? datum.base_man * pow(1 + inf_rate / 100, max(0, datum['나이'] - datum.start_age)) : "
+                        "datum['월수입(만원)']"
+                    )
                     _adj_cont_expr = "datum.is_dc_db && datum['나이'] >= retire_age ? 0 : datum['월수입(만원)']"
 
                     # 수입 영역
@@ -3516,7 +3708,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     )
                     st.caption("🟠 은퇴선 / 🔴 지출선 / 🔵 수입합계 / 0선 아래: 납입·세금")
 
-                    # 클릭 이벤트 → 은퇴연령 갱신
+                    # 클릭 이벤트 → 은퇴연령 갱신 (임시 키 사용 → 다음 렌더에서 위젯키로 이관)
                     if _chart_event and _chart_event.selection:
                         _click_data = _chart_event.selection.get('age_click', [])
                         if _click_data and isinstance(_click_data, list) and len(_click_data) > 0:
@@ -3525,7 +3717,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                             if _clicked_age is not None:
                                 _new_retire = max(55, int(round(float(_clicked_age))))
                                 if _new_retire != st.session_state.get('_chart_retire_age'):
-                                    st.session_state['_chart_retire_age'] = _new_retire
+                                    st.session_state['_click_retire_age'] = _new_retire
                                     st.rerun()
 
                     # ── 상세 인터랙티브 차트 열기 버튼 ─────────────────
@@ -3548,7 +3740,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                 },
                                 'contrib_items': _contrib_items,
                                 'retire_age': _chart_retire_age,
-                                'inflation': float(st.session_state.get('inp_inflation', 2.5)),
+                                'inflation': float(st.session_state.get('_chart_inf_rate', st.session_state.get('inp_inflation', 2.5))),
                                 'base_expense_man': round(cf.get('월지출_합계', 0) / 10000, 2),
                                 'spending_rates': {
                                     'under65': float(st.session_state.get('sr_under65', 100)) / 100,
@@ -3567,6 +3759,15 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                 },
                                 'colors': dict(zip(_all_keys, _clr_range)),
                                 'income_sources': _income_keys,
+                                'salary_man': float(_salary_man),
+                                'ret_dep_pensions': list(_ret_dep_pensions),
+                                'inf_linked_pensions': {
+                                    src: {'start_age': int(sa), 'base_man': float(bm)}
+                                    for src, (sa, bm) in _src_start_info.items()
+                                    if src in _inf_linked_pensions
+                                },
+                                'min_age': int(_min_age),
+                                'max_age': int(_max_age),
                             }
 
                             _html_content = generate_detail_html(_detail_data)
@@ -3586,6 +3787,142 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                             st.iframe(_open_script, height=1)
                         except Exception as _e:
                             st.error(f"차트 생성 오류: {_e}")
+
+            # ── 퇴직 전 직장가입자 준비 현황 ──────────────────────────────
+            _is_emp_pre   = st.session_state.get('inp_is_employee', True)
+            _cur_age_pre  = _date.today().year - st.session_state.get('inp_birth_year', 1971)
+            if _is_emp_pre and _cur_age_pre < _retire_age:
+                with st.expander("💼 퇴직 전 준비 현황 — 국민연금 · 퇴직연금 · 실업급여", expanded=True):
+                    _pa        = result.get('연금분석', {})
+                    _ann_sal   = st.session_state.get('inp_salary', 0) * 10_000  # 원
+                    _mon_sal   = _ann_sal / 12
+                    _yrs_left  = max(0, _retire_age - _cur_age_pre)
+
+                    # ── 1. 국민연금 ─────────────────────────────────────────
+                    st.markdown("##### 🏛️ 국민연금")
+                    _nps_items = {n: i for n, i in _pa.items() if i.get('종류') == '국민연금'}
+                    if _nps_items:
+                        for _nn, _ni in _nps_items.items():
+                            _sal_std   = max(430_000, min(int(_mon_sal), 6_370_000))
+                            _nps_cont  = round(_sal_std * 0.045)   # 본인 4.5%
+                            _nps_start = _ni.get('실제수급연령', _ni.get('수령시작_연령', 65))
+                            _nps_pay   = _ni.get('월수령액_조정', 0)
+                            _nps_norm  = _ni.get('정상수급연령', 65)
+                            _nc1, _nc2, _nc3, _nc4 = st.columns(4)
+                            with _nc1:
+                                _metric_card("월 납부액 (본인 4.5%)", fmt_won(_nps_cont),
+                                             f"회사 4.5% 별도 · 기준소득 {_sal_std//10000:,}만원")
+                            with _nc2:
+                                _metric_card("은퇴까지 추가 납부", f"{_yrs_left}년",
+                                             f"{_yrs_left * 12}개월 · 추가 납부 예정")
+                            with _nc3:
+                                _metric_card("정상 수급 개시", f"{_nps_norm}세",
+                                             f"실제 수령 예정 {_nps_start}세")
+                            with _nc4:
+                                _metric_card("예상 월 수령액", fmt_won(_nps_pay),
+                                             "매년 CPI 연동 인상 (국민연금법 §51)")
+                            _td = _ni.get('조정_차이', 0)
+                            _de = _ni.get('재직자_감액', 0)
+                            _notes = []
+                            if _td != 0:
+                                _sign = "+" if _td > 0 else ""
+                                _notes.append(
+                                    f"조기/연기 조정: 기준액 {fmt_won(_ni.get('월수령액_원래',0))} "
+                                    f"→ {_sign}{fmt_won(_td)} ({_ni.get('조정_사유','')})"
+                                )
+                            if _de > 0:
+                                _notes.append(f"재직자 노령연금 감액: -{fmt_won(_de)} (수급 후 최대 5년 적용)")
+                            for _note in _notes:
+                                st.caption(f"⚠️ {_note}")
+                    else:
+                        st.info("국민연금 정보 없음 — 연금 탭에서 국민연금을 추가해 주세요.")
+
+                    st.divider()
+
+                    # ── 2. 퇴직연금 / IRP ────────────────────────────────────
+                    st.markdown("##### 📦 퇴직연금 · IRP")
+                    _ret_types = {'퇴직연금DC', '퇴직연금DB', 'IRP', '연금저축'}
+                    _ret_items = {n: i for n, i in _pa.items() if i.get('종류') in _ret_types}
+                    if _ret_items:
+                        for _rn, _ri in _ret_items.items():
+                            _r_type   = _ri.get('종류', '')
+                            _pdata    = next(
+                                (p for p in st.session_state.get('pensions', []) if p.get('name') == _rn),
+                                {}
+                            )
+                            _r_bal_now  = _pdata.get('current_balance', 0)
+                            _r_monthly  = _pdata.get('monthly_contribution', 0)
+                            _r_ret_bal  = _ri.get('수령시점_적립금', _ri.get('납입완료시_예상금액', 0))
+                            _r_monthly_pay = _ri.get('세후월수령액', _ri.get('월수령액', 0))
+                            _r_start    = _ri.get('수령시작_연령', _retire_age)
+                            _r_tax      = _ri.get('과세방식', '')
+                            st.markdown(f"**{_rn}** ({_r_type})")
+                            _rc1, _rc2, _rc3, _rc4 = st.columns(4)
+                            with _rc1:
+                                _metric_card("현재 적립금", fmt_won(_r_bal_now))
+                            with _rc2:
+                                _metric_card("월 납입액", fmt_won(_r_monthly))
+                            with _rc3:
+                                _metric_card("은퇴 시 예상 적립금", fmt_won(_r_ret_bal),
+                                             f"수령 개시 {_r_start}세 기준")
+                            with _rc4:
+                                _metric_card("예상 세후 월수령액", fmt_won(_r_monthly_pay),
+                                             _r_tax[:20] if _r_tax else "")
+                    else:
+                        st.info("퇴직연금·IRP 정보 없음 — 연금 탭에서 추가해 주세요.")
+
+                    st.divider()
+
+                    # ── 3. 실업급여 (고용보험) ────────────────────────────────
+                    st.markdown("##### 📋 실업급여 (고용보험 — 퇴직 시 예상)")
+                    if _mon_sal > 0:
+                        # 피보험 기간 추정: 22세 첫 취업 가정 → 퇴직 연령 기준
+                        _EMP_START = 22
+                        _insure_yrs = max(1, _retire_age - _EMP_START)
+                        _daily_wage = _mon_sal / 30
+                        _daily_ui   = min(66_000, max(64_192, _daily_wage * 0.6))
+
+                        # 수급 기간 (고용보험법 시행령 §23, 2024)
+                        if _retire_age >= 50:
+                            _ui_days = (120 if _insure_yrs <  1 else
+                                        180 if _insure_yrs <  3 else
+                                        210 if _insure_yrs <  5 else
+                                        240 if _insure_yrs < 10 else 270)
+                        else:
+                            _ui_days = (120 if _insure_yrs <  1 else
+                                        150 if _insure_yrs <  3 else
+                                        180 if _insure_yrs <  5 else
+                                        210 if _insure_yrs < 10 else 240)
+
+                        _ui_total   = round(_daily_ui * _ui_days)
+                        _ui_monthly = round(_ui_total / (_ui_days / 30))
+
+                        _uc1, _uc2, _uc3, _uc4 = st.columns(4)
+                        with _uc1:
+                            _metric_card("수급 기간", f"{_ui_days}일",
+                                         f"{_ui_days // 30}개월 · 퇴직 연령 {_retire_age}세 기준")
+                        with _uc2:
+                            _metric_card("일 수급액", fmt_won(round(_daily_ui)),
+                                         f"일 평균임금 {fmt_won(round(_daily_wage))}의 60%")
+                        with _uc3:
+                            _metric_card("총 예상 수령액", fmt_won(_ui_total))
+                        with _uc4:
+                            _metric_card("월 환산 수령액", fmt_won(_ui_monthly),
+                                         "비과세 소득")
+                        st.caption(
+                            f"⚠️ 추정값 (피보험 기간 {_insure_yrs}년 가정 / 22세 취업 기준).  "
+                            f"권고사직·계약만료·정년퇴직 등 **비자발적 퇴직**에 한해 수급 가능."
+                        )
+                        with st.expander("└ 실업급여 수급 기간 기준표 (고용보험법 시행령 §23)", expanded=False):
+                            st.markdown(
+                                "| 나이 \\ 피보험기간 | 1년 미만 | 1~3년 | 3~5년 | 5~10년 | 10년 이상 |\n"
+                                "|:---:|:---:|:---:|:---:|:---:|:---:|\n"
+                                "| **50세 미만** | 120일 | 150일 | 180일 | 210일 | 240일 |\n"
+                                "| **50세 이상·장애인** | 120일 | 180일 | 210일 | 240일 | 270일 |\n\n"
+                                "> **상한액** 66,000원/일 · **하한액** 최저시급 × 8h × 80% ≈ 64,192원/일 (2025 기준)"
+                            )
+                    else:
+                        st.info("소득 정보가 없어 실업급여 계산이 어렵습니다.")
 
             with st.expander("📋 구간별 수입/지출 세부 내역", expanded=False):
                 _inf_rate = st.session_state.get('inp_inflation', 2.5) / 100
@@ -3631,9 +3968,9 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                         with st.expander(_hdr, expanded=False):
                             col_inc, col_exp = st.columns(2)
                             with col_inc:
-                                st.metric("수입 합계", fmt_won(_total))
+                                _metric_card("수입 합계", fmt_won(_total))
                             with col_exp:
-                                st.metric("지출 합계", fmt_won(_exp_total))
+                                _metric_card("지출 합계", fmt_won(_exp_total))
 
                             _sur_color = "🟢" if _surplus >= 0 else "🔴"
                             st.markdown(
@@ -3674,7 +4011,11 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                     st.markdown(f"- 회원권 연회비: **{fmt_won(_exp_member)}**")
                                 if _exp_vehicle:
                                     st.markdown(f"- 차량 유지비: **{fmt_won(_exp_vehicle)}**")
-                                if _tax_total:
+                                if _itax:
+                                    st.markdown(f"- 소득세: **{fmt_won(_itax)}**")
+                                if _hi:
+                                    st.markdown(f"- 건강보험료: **{fmt_won(_hi)}**")
+                                if _tax_total and not _itax and not _hi:
                                     st.markdown(f"- 세금·건보료: **{fmt_won(_tax_total)}**")
 
                             _td = _row.get('세금계산기준', {})
@@ -3756,13 +4097,13 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                 c1, c2, c3 = st.columns(3)
                 with c1:
                     if '월수령액_조정' in info:
-                        st.metric("월 수령액", fmt_won(info['월수령액_조정']))
+                        _metric_card("월 수령액", fmt_won(info['월수령액_조정']))
                     else:
-                        st.metric("세후 월수령액", fmt_won(info.get('세후월수령액', 0)))
+                        _metric_card("세후 월수령액", fmt_won(info.get('세후월수령액', 0)))
                 with c2:
-                    st.metric("수령 개시 연령", f"{start_age}세" if start_age else "-")
+                    _metric_card("수령 개시 연령", f"{start_age}세" if start_age else "-")
                 with c3:
-                    st.metric("개시 년도", f"{start_year}년" if start_year else "-")
+                    _metric_card("개시 년도", f"{start_year}년" if start_year else "-")
 
                 # 국민연금: 조정 사항이 있는 경우에만 상세 표시
                 if info.get('종류') == '국민연금':
@@ -3815,10 +4156,12 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
             _ann_tax = tax_info.get('종합소득세', {}).get('total', 0)
             _ann_hi  = tax_info.get('건강보험료', {}).get('annual_total', 0)
             _c1, _c2 = st.columns(2)
-            _c1.metric("월 종합소득세", fmt_won(round(_ann_tax / 12)),
-                       delta=f"연 {fmt_won(_ann_tax)}", delta_color="off")
-            _c2.metric("월 건강보험료", fmt_won(round(_ann_hi / 12)),
-                       delta=f"연 {fmt_won(_ann_hi)}", delta_color="off")
+            with _c1:
+                _metric_card("월 종합소득세", fmt_won(round(_ann_tax / 12)),
+                             delta=f"연 {fmt_won(_ann_tax)}")
+            with _c2:
+                _metric_card("월 건강보험료", fmt_won(round(_ann_hi / 12)),
+                             delta=f"연 {fmt_won(_ann_hi)}")
             # ── 피부양자 자격 분석 ──────────────────────────────
             dep = tax_info.get('피부양자_가능여부', {})
             st.divider()
@@ -3846,7 +4189,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 
             st.markdown(f"""
 | 조건 | 현황 | 기준 |
-|------|------|------|
+|:---:|:---:|:---:|
 | {_chk1} **소득 기준** | 연 **{fmt_won(_dep_inc)}** | 2,000만원 이하 (국민연금+금융소득¹+임대소득) |
 | {_chk2} **재산세과표 기준** | **{fmt_won(_dep_prop)}**{_mid_note} | 5.4억 이하 (주택 공시가×60%) |
 | {_chk3} **임대·사업소득** | {'없음' if _dep_no_rent else '⚠️ 임대소득 있음'} | 임대사업 소득 있으면 자격 제한 가능 |
@@ -3909,7 +4252,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     ("직장 임의계속가입",   f"월 **{fmt_won(_vol_monthly)}**", "최대 36개월", "퇴직 전 급여 기준, 퇴직일로부터 2개월 내 신청"),
                     ("지역가입자 (기본)",   f"월 **{fmt_won(_loc_monthly)}**",  "은퇴 후 계속", "소득·재산 점수 합산, 재산 많을수록 보험료 높음"),
                 ]
-                _tbl = "| 옵션 | 월 보험료 | 기간/자격 | 비고 |\n|------|----------|----------|------|\n"
+                _tbl = "| 옵션 | 월 보험료 | 기간/자격 | 비고 |\n|:---:|:---:|:---:|:---:|\n"
                 for _r in _opt_rows:
                     _tbl += f"| {_r[0]} | {_r[1]} | {_r[2]} | {_r[3]} |\n"
                 st.markdown(_tbl)
@@ -3959,7 +4302,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
             st.divider()
             st.markdown("**🔗 현행 기준 확인**")
             st.markdown(
-                "| 항목 | 공식 링크 |\n|------|----------|\n"
+                "| 항목 | 공식 링크 |\n|:---:|:---:|\n"
                 "| 종합소득세 세율표 (현행) | [국세청 세율 안내](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6527&cntntsId=7667) |\n"
                 "| 연금소득 세액공제·과세 기준 | [국세청 연금소득](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6655&cntntsId=7751) |\n"
                 "| 홈택스 모의계산 (종합소득세) | [홈택스 세금계산기](https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/pp/index_pp.xml&menuCd=ST) |\n"
@@ -3972,9 +4315,12 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
         if tax_opt:
             with st.expander("💡 IRP/연금저축 세액공제 최적화", expanded=False):
                 col_t1, col_t2, col_t3 = st.columns(3)
-                col_t1.metric("현재 연간 납입액", fmt_won(tax_opt.get('연간_납입액', 0)))
-                col_t2.metric("현재 환급 예상액", fmt_won(tax_opt.get('현재_환급액', 0)))
-                col_t3.metric("최대 추가 환급 가능", fmt_won(tax_opt.get('추가_환급가능액', 0)))
+                with col_t1:
+                    _metric_card("현재 연간 납입액", fmt_won(tax_opt.get('연간_납입액', 0)))
+                with col_t2:
+                    _metric_card("현재 환급 예상액", fmt_won(tax_opt.get('현재_환급액', 0)))
+                with col_t3:
+                    _metric_card("최대 추가 환급 가능", fmt_won(tax_opt.get('추가_환급가능액', 0)))
                 rate_pct = round(tax_opt.get('적용세율', 0.132) * 100, 1)
                 if tax_opt.get('한도도달여부'):
                     st.success(f"✅ 세액공제 한도(900만원)를 모두 활용하고 있습니다! (적용세율 {rate_pct}%)")
@@ -4010,26 +4356,32 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     _prin_m = max(0, _pay - _int_m)
                     _payoff = round(_bal / _pay) if _pay > _int_m else None
                     dc1, dc2, dc3 = st.columns(3)
-                    dc1.metric(f"**{d['name']}** ({d.get('debt_type','')})",
-                               fmt_won(_bal), delta=f"이율 {_rate*100:.1f}%", delta_color="off")
-                    dc2.metric("월 상환액", fmt_won(_pay),
-                               delta=f"이자 {fmt_won(_int_m)} / 원금 {fmt_won(_prin_m)}",
-                               delta_color="off")
-                    if _payoff:
-                        _payoff_yr = _payoff // 12
-                        _payoff_mo = _payoff % 12
-                        dc3.metric("완납 예상",
-                                   f"{_payoff_yr}년 {_payoff_mo}개월" if _payoff_yr else f"{_payoff_mo}개월")
-                    else:
-                        dc3.metric("완납 예상", "이자만 납부 중")
+                    with dc1:
+                        _metric_card(f"{d['name']} ({d.get('debt_type','')})",
+                                     fmt_won(_bal), delta=f"이율 {_rate*100:.1f}%")
+                    with dc2:
+                        _metric_card("월 상환액", fmt_won(_pay),
+                                     delta=f"이자 {fmt_won(_int_m)} / 원금 {fmt_won(_prin_m)}")
+                    with dc3:
+                        if _payoff:
+                            _payoff_yr = _payoff // 12
+                            _payoff_mo = _payoff % 12
+                            _metric_card("완납 예상",
+                                         f"{_payoff_yr}년 {_payoff_mo}개월" if _payoff_yr else f"{_payoff_mo}개월")
+                        else:
+                            _metric_card("완납 예상", "이자만 납부 중")
                     st.divider()
                 _sc1, _sc2, _sc3 = st.columns(3)
-                _sc1.metric("대출 총 잔액", fmt_won(_total_balance))
-                _sc2.metric("월 총 상환액", fmt_won(round(_total_monthly)),
-                            delta=f"월 이자 {fmt_won(round(_total_interest))}", delta_color="off")
+                with _sc1:
+                    _metric_card("대출 총 잔액", fmt_won(_total_balance))
+                with _sc2:
+                    _metric_card("월 총 상환액", fmt_won(round(_total_monthly)),
+                                 delta=f"월 이자 {fmt_won(round(_total_interest))}")
                 _dti = (_total_monthly * 12 / (cf.get('월수입', 1) * 12) * 100) if cf.get('월수입') else 0
-                _sc3.metric("DTI (연소득 대비 상환비율)", f"{_dti:.1f}%",
-                            delta="양호" if _dti < 40 else "주의", delta_color="normal" if _dti < 40 else "inverse")
+                with _sc3:
+                    _metric_card("DTI (연소득 대비 상환비율)", f"{_dti:.1f}%",
+                                 delta="양호" if _dti < 40 else "주의",
+                                 delta_color="normal" if _dti < 40 else "inverse")
                 if _total_balance > 0:
                     st.caption(
                         f"💡 은퇴 전까지 대출 상환 시 월 지출 **{fmt_won(round(_total_monthly))}** 절감 가능 — "
@@ -4039,7 +4391,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
         hp = result.get('주택연금', {})
         if hp.get('eligible'):
             with st.expander("🏠 주택연금 (비과세)", expanded=False):
-                st.metric("예상 월 수령액", fmt_won(hp.get('monthly_payout', 0)))
+                _metric_card("예상 월 수령액", fmt_won(hp.get('monthly_payout', 0)))
                 st.caption(f"공시가격 {fmt_won(hp.get('house_value_used', 0))} 기준, {hp.get('age_at_start')}세 가입시")
                 st.markdown(
                     "🔗 [주택금융공사 — 주택연금 예상수령액 계산](https://www.hf.go.kr/hf/sub03/sub01.do)  \n"
@@ -4125,12 +4477,12 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                 _tag = "정상수급" if sel_nps_age == _normal_age else (
                     f"조기수급 ({_normal_age - sel_nps_age}년 앞당김)" if sel_nps_age < _normal_age
                     else f"연기수급 ({sel_nps_age - _normal_age}년 연기)")
-                st.metric("수급 유형", _tag)
+                _metric_card("수급 유형", _tag)
             with cn2:
-                st.metric("월 수령액", fmt_won(_sel['monthly_amount']),
-                          delta=fmt_won(_delta_nps) if _delta_nps else None)
+                _metric_card("월 수령액", fmt_won(_sel['monthly_amount']),
+                             delta=fmt_won(_delta_nps) if _delta_nps else None)
             with cn3:
-                st.metric("기대수명까지 총수령", fmt_won(_sel['total_payout']))
+                _metric_card("기대수명까지 총수령", fmt_won(_sel['total_payout']))
 
             if st.button("✅ 이 수급연령 국민연금에 적용", width='stretch'):
                 for i, p in enumerate(st.session_state.pensions):
@@ -4298,26 +4650,26 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                    if sel_years > 0 else "종신")
                     c1, c2 = st.columns(2)
                     with c1:
-                        st.metric("수령시점 적립금", fmt_won(round(adj_balance)))
+                        _metric_card("수령시점 적립금", fmt_won(round(adj_balance)))
                     with c2:
-                        st.metric("조정 후 월수령", fmt_won(adj_monthly),
-                                  delta=fmt_won(delta_m) if delta_m else None)
+                        _metric_card("조정 후 월수령", fmt_won(adj_monthly),
+                                     delta=fmt_won(delta_m) if delta_m else None)
                     c3, c4 = st.columns(2)
                     with c3:
-                        st.metric("수령 종료 연령", end_age_str)
+                        _metric_card("수령 종료 연령", end_age_str)
                     with c4:
-                        st.metric("현재 설정",
-                                  f"{orig_start_age}세 / {cur_y}년 / {rate*100:.1f}%",
-                                  delta=f"월 {fmt_won(cur_m)}", delta_color="off")
+                        _metric_card("현재 설정",
+                                     f"{orig_start_age}세 / {cur_y}년 / {rate*100:.1f}%",
+                                     delta=f"월 {fmt_won(cur_m)}")
 
             # 조정 후 현금흐름 요약
             adj_surplus = surplus + adj_total_delta
             st.markdown("---")
             c1, c2 = st.columns(2)
             with c1:
-                st.metric("조정 후 월 잉여/부족", fmt_won(adj_surplus),
-                          delta=fmt_won(adj_total_delta) if adj_total_delta else None,
-                          delta_color="normal" if adj_surplus >= 0 else "inverse")
+                _metric_card("조정 후 월 잉여/부족", fmt_won(adj_surplus),
+                             delta=fmt_won(adj_total_delta) if adj_total_delta else None,
+                             delta_color="normal" if adj_surplus >= 0 else "inverse")
             with c2:
                 if adj_surplus >= 0:
                     st.success("✅ 기간 조정으로 부족분 해소 가능")
@@ -4380,6 +4732,9 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 # 라우팅
 # ============================================================
 if not st.session_state.token:
+    if st.session_state.get('_account_deleted'):
+        st.success("탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.")
+        del st.session_state['_account_deleted']
     show_auth_screen()
 elif st.session_state.page == 'account':
     show_account_page()

@@ -368,8 +368,11 @@ let spendRates = [
 ];
 let hiddenKeys = new Set();
 
-// ─── 슬라이더 초기화 ───
-document.getElementById('retireSlider').value = retireAge;
+// ─── 슬라이더 초기화 (범위는 데이터 나이 범위 그대로) ───
+const _rs = document.getElementById('retireSlider');
+_rs.min   = RAW.min_age ?? 50;
+_rs.max   = RAW.max_age ?? 95;
+_rs.value = retireAge;
 document.getElementById('retireVal').textContent = retireAge;
 document.getElementById('inflSlider').value = inflRate;
 document.getElementById('inflVal').textContent = inflRate.toFixed(1);
@@ -397,12 +400,32 @@ function computeData() {{
   const hi  = RAW.health_ins;
   const baseExp = RAW.base_expense_man;
 
+  const salaryMan    = RAW.salary_man || 0;
+  const retDepSet    = new Set(RAW.ret_dep_pensions || []);
+  const infLinked    = RAW.inf_linked_pensions || {{}};
+
   return ages.map(age => {{
     const aNum = +age;
     const srcMap = {{}};   // 스택용: 항상 실제 값 (위치 고정)
     const srcRaw = income[age] || {{}};
     for (const [k, v] of Object.entries(srcRaw)) {{
-      srcMap[k] = (k === '근로소득' && aNum >= retireAge) ? 0 : (v || 0);
+      if (k === '근로소득') {{
+        // 전 나이 범위에 월급여 고정, retireAge 이후 0
+        srcMap[k] = aNum >= retireAge ? 0 : salaryMan;
+      }} else if (retDepSet.has(k) && aNum < retireAge) {{
+        // 은퇴연령 의존 연금: retireAge 이전 미개시
+        srcMap[k] = 0;
+      }} else if (infLinked[k]) {{
+        // 물가 연동 연금(국민연금 등): 기준금액 × (1+inflRate/100)^(나이-개시나이)
+        const {{start_age, base_man}} = infLinked[k];
+        srcMap[k] = base_man * Math.pow(1 + inflRate / 100, Math.max(0, aNum - start_age));
+      }} else {{
+        srcMap[k] = v || 0;
+      }}
+    }}
+    // 근로소득이 income[age]에 없는 나이(원래 은퇴 후)에도 표시
+    if (salaryMan > 0 && !('근로소득' in srcRaw)) {{
+      srcMap['근로소득'] = aNum >= retireAge ? 0 : salaryMan;
     }}
     // stackTotal: 스케일 고정용 (항상 전체)
     const stackTotal = Object.values(srcMap).reduce((a, b) => a + b, 0);
@@ -623,7 +646,7 @@ function draw() {{
     .call(d3.drag()
       .on('drag', function(event) {{
         const clampedX = Math.max(0, Math.min(W, event.x));
-        const newAge = Math.max(55, Math.round(xScale.invert(clampedX)));
+        const newAge = Math.max(RAW.min_age ?? 50, Math.min(RAW.max_age ?? 95, Math.round(xScale.invert(clampedX))));
         if (newAge !== retireAge) {{
           retireAge = newAge;
           document.getElementById('retireSlider').value = retireAge;

@@ -10,15 +10,20 @@ import secrets
 import hashlib
 import time
 import requests as http_client
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'))
 from datetime import date, datetime, timedelta
 from typing import List, Optional
 from urllib.parse import urlencode, quote
 
 from fastapi import FastAPI, HTTPException, Depends, status, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -47,15 +52,50 @@ app = FastAPI(
     title="은퇴설계 API",
     description="은퇴설계 종합분석 백엔드 API",
     version="0.2.0",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
 )
+
+# ── 보안 헤더 미들웨어 ──────────────────────────────────────────
+class _SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
+
+# ── 로그인 브루트포스 방어 (IP당 1분에 5회) ────────────────────
+_login_attempts: dict[str, list[float]] = {}
+
+def _check_login_rate(ip: str) -> None:
+    now = time.time()
+    hits = [t for t in _login_attempts.get(ip, []) if now - t < 60]
+    if len(hits) >= 5:
+        raise HTTPException(status_code=429, detail="로그인 시도가 너무 많습니다. 1분 후 다시 시도하세요.")
+    hits.append(now)
+    _login_attempts[ip] = hits
+
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "")
+_ALLOWED_ORIGINS = (
+    [o.strip() for o in _raw_origins.split(",") if o.strip()]
+    if _raw_origins
+    else ["http://localhost:8443", "http://127.0.0.1:8443"]
+)
+
+_allowed_hosts = ["kairang.pe.kr", "localhost", "127.0.0.1"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
+app.add_middleware(_SecurityHeadersMiddleware)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=_allowed_hosts)
 
 _static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")
@@ -91,7 +131,8 @@ _OAUTH_CONFIG = {
     },
 }
 
-_oauth_states: dict[str, tuple[str, float]] = {}  # state -> (provider, timestamp)
+_oauth_states: dict[str, tuple[str, float]] = {}        # state -> (provider, timestamp)
+_delete_pending: dict[str, tuple[int, str, float]] = {}  # state -> (user_id, provider, timestamp)
 
 
 @app.on_event("startup")
@@ -411,7 +452,8 @@ def register(data: RegisterIn, db: Session = Depends(get_db)):
 
 
 @app.post("/auth/login", response_model=TokenOut)
-def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login(request: Request, form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    _check_login_rate(request.client.host)
     user = auth_utils.get_user_by_email(db, form.username)
     if not user:
         raise HTTPException(status_code=401, detail="등록되지 않은 이메일입니다.")
@@ -814,8 +856,21 @@ def get_me(current_user=Depends(get_current_user)):
         "email": current_user.email,
         "name": current_user.name,
         "is_admin": bool(getattr(current_user, 'is_admin', False)),
+        "oauth_provider": getattr(current_user, 'oauth_provider', None) or "",
         "created_at": str(current_user.created_at),
     }
+
+
+def _revoke_token(token: str, db) -> None:
+    """JWT 토큰을 블랙리스트에 등록"""
+    payload = auth_utils.decode_token(token)
+    if payload:
+        token_hash = hashlib.sha256(token.encode()).hexdigest()
+        if not db.query(RevokedToken).filter(RevokedToken.token_hash == token_hash).first():
+            exp = datetime.utcfromtimestamp(payload.get("exp", 0))
+            db.add(RevokedToken(token_hash=token_hash, expires_at=exp))
+            db.query(RevokedToken).filter(RevokedToken.expires_at < datetime.utcnow()).delete()
+            db.commit()
 
 
 @app.post("/auth/logout", status_code=200)
@@ -823,18 +878,22 @@ def logout(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ):
-    """토큰을 블랙리스트에 등록해 즉시 무효화. 만료 토큰은 주기적으로 정리."""
-    payload = auth_utils.decode_token(token)
-    if payload:
-        token_hash = hashlib.sha256(token.encode()).hexdigest()
-        # 중복 등록 방지
-        if not db.query(RevokedToken).filter(RevokedToken.token_hash == token_hash).first():
-            exp = datetime.utcfromtimestamp(payload.get("exp", 0))
-            db.add(RevokedToken(token_hash=token_hash, expires_at=exp))
-            # 만료된 블랙리스트 항목 정리 (로그아웃마다 한 번씩)
-            db.query(RevokedToken).filter(RevokedToken.expires_at < datetime.utcnow()).delete()
-            db.commit()
+    _revoke_token(token, db)
     return {"message": "로그아웃되었습니다."}
+
+
+@app.get("/auth/logout-page")
+def logout_page(request: Request, deleted: bool = False, db: Session = Depends(get_db)):
+    """브라우저 리다이렉트 방식 로그아웃 — HTTP Set-Cookie로 쿠키 삭제 후 앱으로 이동"""
+    cookie_token = request.cookies.get("ret_token")
+    if cookie_token:
+        _revoke_token(cookie_token, db)
+
+    dest = f"{STREAMLIT_URL}?account_deleted=true" if deleted else STREAMLIT_URL
+    response = RedirectResponse(dest, status_code=302)
+    for name in ["ret_token", "ret_uid", "ret_name", "ret_email"]:
+        response.delete_cookie(key=name, path="/", samesite="lax")
+    return response
 
 
 class UpdateMeIn(BaseModel):
@@ -930,8 +989,42 @@ def oauth_start(provider: str):
         params["scope"] = cfg["scope"]
     if provider == "kakao":
         params["prompt"] = "login"
+    elif provider == "naver":
+        params["auth_type"] = "reauthenticate"
 
     return RedirectResponse(cfg["auth_url"] + "?" + urlencode(params))
+
+
+def _exchange_oauth_token(provider: str, code: str) -> tuple[dict, str | None]:
+    """OAuth 코드 → 사용자 정보. 성공 시 (user_data, None), 실패 시 ({}, 오류메시지)"""
+    cfg = _OAUTH_CONFIG[provider]
+    token_data = {
+        "grant_type": "authorization_code",
+        "client_id": cfg["client_id"],
+        "code": code,
+        "redirect_uri": _callback_uri(provider),
+    }
+    if cfg.get("client_secret"):
+        token_data["client_secret"] = cfg["client_secret"]
+    try:
+        token_resp = http_client.post(
+            cfg["token_url"],
+            data=token_data,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=10,
+        )
+        if not token_resp.ok:
+            return {}, f"token_error({token_resp.status_code}): {token_resp.text[:200]}"
+        access_token = token_resp.json().get("access_token")
+        user_resp = http_client.get(
+            cfg["user_url"],
+            headers={"Authorization": f"Bearer {access_token}"},
+            timeout=10,
+        )
+        user_resp.raise_for_status()
+        return user_resp.json(), None
+    except Exception as exc:
+        return {}, str(exc)
 
 
 @app.get("/auth/callback/{provider}")
@@ -947,33 +1040,39 @@ def oauth_callback(
     if error or not code:
         return RedirectResponse(fail_url + quote(error or "cancelled"))
 
+    # ── 탈퇴용 재인증 흐름 ──────────────────────────────────────
+    if state and state.startswith("del:"):
+        del_state = state[4:]
+        pending = _delete_pending.pop(del_state, None)
+        if not pending or pending[1] != provider or time.time() - pending[2] > 300:
+            return RedirectResponse(fail_url + quote("탈퇴 인증이 만료되었습니다. 다시 시도하세요."))
+
+        user_id, _, _ = pending
+        user_data, err = _exchange_oauth_token(provider, code)
+        if err:
+            return RedirectResponse(fail_url + quote(err))
+
+        oauth_id, _, _ = _parse_oauth_user(provider, user_data)
+        if not oauth_id:
+            return RedirectResponse(fail_url + quote("소셜 계정 정보를 가져올 수 없습니다."))
+
+        # 재인증한 소셜 계정이 탈퇴 요청한 계정과 동일한지 확인
+        verified = auth_utils.get_user_by_oauth(db, provider, oauth_id)
+        if not verified or verified.id != user_id:
+            return RedirectResponse(fail_url + quote("본인 확인 실패: 다른 계정으로 로그인하셨습니다."))
+
+        db.delete(verified)
+        db.commit()
+        return RedirectResponse("/auth/logout-page?deleted=true")
+
+    # ── 일반 로그인 흐름 ────────────────────────────────────────
     stored = _oauth_states.pop(state, None)
     if not stored or stored[0] != provider or time.time() - stored[1] > 300:
         return RedirectResponse(fail_url + "invalid_state")
 
-    cfg = _OAUTH_CONFIG[provider]
-    try:
-        # 코드 → 액세스 토큰 교환
-        token_resp = http_client.post(cfg["token_url"], data={
-            "grant_type": "authorization_code",
-            "client_id": cfg["client_id"],
-            "client_secret": cfg["client_secret"],
-            "code": code,
-            "redirect_uri": _callback_uri(provider),
-        }, timeout=10)
-        token_resp.raise_for_status()
-        access_token = token_resp.json().get("access_token")
-
-        # 사용자 정보 조회
-        user_resp = http_client.get(
-            cfg["user_url"],
-            headers={"Authorization": f"Bearer {access_token}"},
-            timeout=10,
-        )
-        user_resp.raise_for_status()
-        user_data = user_resp.json()
-    except Exception as exc:
-        return RedirectResponse(fail_url + quote(str(exc)))
+    user_data, err = _exchange_oauth_token(provider, code)
+    if err:
+        return RedirectResponse(fail_url + quote(err))
 
     oauth_id, name, email = _parse_oauth_user(provider, user_data)
     if not oauth_id:
@@ -981,28 +1080,79 @@ def oauth_callback(
     if not email:
         email = f"{provider}_{oauth_id}@oauth.local"
 
-    # 기존 OAuth 계정 조회
+    # 기존 OAuth 계정 조회 (provider + oauth_id)
     user = auth_utils.get_user_by_oauth(db, provider, oauth_id)
     if not user:
         existing = auth_utils.get_user_by_email(db, email)
-        if existing:
-            # 이메일 계정이 있으면 OAuth 연동
+        if existing and not existing.oauth_provider:
+            # 이메일/비밀번호 계정에 소셜 연동 (ex. 이메일 가입 후 카카오로 로그인)
             existing.oauth_provider = provider
             existing.oauth_id = oauth_id
             db.commit()
             user = existing
+        elif existing and existing.oauth_provider:
+            # 다른 소셜 계정이 이미 같은 이메일 사용 중 → 별도 계정 생성
+            user = auth_utils.create_oauth_user(
+                db, f"{provider}_{oauth_id}@oauth.local", name, provider, oauth_id)
         else:
             user = auth_utils.create_oauth_user(db, email, name, provider, oauth_id)
 
     jwt_token = auth_utils.create_access_token(user.id, user.email)
     _is_admin = int(bool(getattr(user, 'is_admin', False)))
+    _oauth_prov = getattr(user, 'oauth_provider', '') or ''
     return RedirectResponse(
         f"{STREAMLIT_URL}?token={jwt_token}"
         f"&user_id={user.id}"
         f"&name={quote(user.name)}"
         f"&email={quote(user.email)}"
         f"&is_admin={_is_admin}"
+        f"&oauth_provider={_oauth_prov}"
     )
+
+
+_delete_tokens: dict[str, tuple[int, str, float]] = {}  # dt -> (user_id, provider, timestamp)
+
+
+@app.post("/auth/delete-request", status_code=200)
+def delete_request(current_user=Depends(get_current_user)):
+    """소셜 계정 탈퇴용 임시 토큰 발급 (5분 유효)"""
+    provider = getattr(current_user, 'oauth_provider', None)
+    if not provider:
+        raise HTTPException(400, "소셜 로그인 계정이 아닙니다.")
+    dt = secrets.token_urlsafe(24)
+    _delete_tokens[dt] = (current_user.id, provider, time.time())
+    return {"dt": dt}
+
+
+@app.get("/auth/delete-start")
+def delete_start(dt: str):
+    """임시 토큰으로 OAuth 재인증 시작 (브라우저 리다이렉트)"""
+    pending = _delete_tokens.pop(dt, None)
+    if not pending or time.time() - pending[2] > 300:
+        return RedirectResponse(f"{STREAMLIT_URL}?oauth_error=" + quote("탈퇴 요청이 만료되었습니다. 다시 시도하세요."))
+
+    user_id, provider, _ = pending
+    cfg = _OAUTH_CONFIG.get(provider)
+    if not cfg or not cfg["client_id"]:
+        return RedirectResponse(f"{STREAMLIT_URL}?oauth_error=" + quote("소셜 로그인 설정 오류"))
+
+    state = secrets.token_urlsafe(16)
+    _delete_pending[state] = (user_id, provider, time.time())
+
+    params: dict = {
+        "client_id": cfg["client_id"],
+        "redirect_uri": _callback_uri(provider),
+        "response_type": "code",
+        "state": f"del:{state}",
+    }
+    if cfg["scope"]:
+        params["scope"] = cfg["scope"]
+    if provider == "kakao":
+        params["prompt"] = "login"
+    elif provider == "naver":
+        params["auth_type"] = "reauthenticate"
+
+    return RedirectResponse(cfg["auth_url"] + "?" + urlencode(params))
 
 
 # ============================================================

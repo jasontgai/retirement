@@ -1,0 +1,155 @@
+INFO:     Started server process [9936]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [16392]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [17728]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [15272]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [9588]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [21888]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [11544]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [22540]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [22440]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [3976]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [17096]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [23380]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [22920]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [18300]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [12676]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50601 - "GET /health HTTP/1.1" 200 OK
+INFO:     112.223.35.142:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/callback/naver?code=6CuO7T8MA5y57EmFV7&state=-HtzNC0Yf_1_HRlbN7kKQg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     112.223.35.142:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     112.223.35.142:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/callback/naver?code=rZVXKZiJRC4tvQFi7Z&state=5L2O8z6HAkHYW6x9kMC64Q HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/callback/naver?code=sl2T4nJu0okMkNaOaR&state=3CM9xNe8gAroZptU3J-ieA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.206.126:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/callback/kakao?code=jhO_SSO7rU7fI1ExN95VGoNtsiTYJXfpSa4z2CPnlcl3bNd25IR34AAAAAQKFwvXAAABn5If24mSBpCp5rpDbg&state=x_YUJLPz0qFSWdC0cHUesw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.206.126:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/callback/naver?code=aVtmxyCUJm132n8ohB&state=MGXSbMYoJsF9RjMxKahVwQ HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.206.126:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/callback/naver?code=voMAOz7kE4X3PBHOqe&state=XGais5Wt-TovUwhWcM3fHw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     Started server process [15808]
+INFO:     WaitingINFO:     112.223.35.142:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/callback/naver?code=m7MuOPwGeReKDQF1N4&state=5Ydd0ZKT5lJsM0fdpF-Cow HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     Started server process [596]
+INFO:     Waiting fINFO:     112.223.35.142:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/callback/naver?code=C07ZriwoEA1wSUUgc5&state=W7KxifScsttCmT7MXLWB2w HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     112.223.35.142:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     112.223.35.142:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/callback/naver?code=iXba3BbGfAJkKZ58v6&state=6gPxnGIeoeA4SzP3jvcsrw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     112.223.35.142:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     112.223.35.142:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/callback/kakao?code=MimVdzrwUSSIIDVAyW6DaNMjHNf2pg2VjWUR3vDsGgU-_Fg0cycmLwAAAAQKDSBaAAABn5Nj0TNSGUcvaFb1Eg&state=Ki3RIe7LI0jzA1U_SIYQuw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     112.223.35.142:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     112.223.35.142:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     112.223.35.142:0 - "GET /auth/callback/kakao?code=fkBNfBUoUUiQYeSTNe-3dYLajsXBnWbh1r89fP_iVycsg0IbXc6vDwAAAAQKDSBaAAABn5NkF-1-jFVpBnvzXw&state=1Bg5aWk37CvLatIab8CsaA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/callback/kakao?code=37HZrc6LYt8zocApH7Yr462nUSwbm_ZNYpnL0brmhDP2S9_Qb-BsiQAAAAQKDR-XAAABn5QXSzDMISgqRbFCUQ&state=OyHw543ppjW7fQh56-Fz8A HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/callback/naver?code=wHrzsYow61E9FJ8CIb&state=k6x3XhaO9H_mFWzn2GuAWw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/logout-page HTTP/1.1" 302 Found

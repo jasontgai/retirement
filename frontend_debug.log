@@ -2931,3 +2931,2956 @@
 11:09:06 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
 11:09:06 Starting new HTTP connection (1): localhost:9080
 11:09:08 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:09:48 [render] token=False invalidated=None
+12:09:48 [cookie] ret_token=있음
+12:09:48 Starting new HTTP connection (1): localhost:9080
+12:09:50 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:09:50 [auth/me] status=200
+12:09:51 [render] token=True invalidated=None
+12:09:51 [qp] {}
+12:09:51 Starting new HTTP connection (1): localhost:9080
+12:09:53 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:09:53 [render] token=True invalidated=None
+12:09:53 [qp] {}
+12:09:53 Starting new HTTP connection (1): localhost:9080
+12:09:55 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:09:55 [render] token=True invalidated=None
+12:09:55 [qp] {}
+12:09:55 Starting new HTTP connection (1): localhost:9080
+12:09:57 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:09:57 Starting new HTTP connection (1): localhost:9080
+12:09:59 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:09:59 Starting new HTTP connection (1): localhost:9080
+12:10:02 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:10:26 [render] token=True invalidated=None
+12:10:26 [qp] {}
+12:10:26 [render] token=True invalidated=None
+12:10:26 [qp] {}
+12:10:43 [render] token=False invalidated=None
+12:10:43 [cookie] ret_token=있음
+12:10:43 Starting new HTTP connection (1): localhost:9080
+12:10:45 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:10:45 [auth/me] status=200
+12:10:45 [render] token=True invalidated=None
+12:10:45 [qp] {}
+12:10:45 Starting new HTTP connection (1): localhost:9080
+12:10:48 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:10:48 [render] token=True invalidated=None
+12:10:48 [qp] {}
+12:10:48 Starting new HTTP connection (1): localhost:9080
+12:10:50 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:10:50 [render] token=True invalidated=None
+12:10:50 [qp] {}
+12:10:50 Starting new HTTP connection (1): localhost:9080
+12:10:52 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:10:52 Starting new HTTP connection (1): localhost:9080
+12:10:54 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:10:54 Starting new HTTP connection (1): localhost:9080
+12:10:56 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:20:25 [render] token=True invalidated=None
+12:20:25 [qp] {}
+12:20:25 [render] token=True invalidated=None
+12:20:25 [qp] {}
+12:20:38 [render] token=True invalidated=None
+12:20:38 [qp] {}
+12:20:38 [render] token=True invalidated=None
+12:20:38 [qp] {}
+12:21:27 [render] token=True invalidated=None
+12:21:27 [qp] {}
+12:21:27 [render] token=True invalidated=None
+12:21:27 [qp] {}
+12:21:33 [render] token=True invalidated=None
+12:21:33 [qp] {}
+12:21:33 [render] token=True invalidated=None
+12:21:33 [qp] {}
+12:21:48 [render] token=True invalidated=None
+12:21:48 [qp] {}
+12:21:48 Starting new HTTP connection (1): localhost:9080
+12:21:50 http://localhost:9080 "PUT /profiles/374 HTTP/1.1" 200 69
+12:21:50 Starting new HTTP connection (1): localhost:9080
+12:21:52 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:21:52 [render] token=True invalidated=None
+12:21:52 [qp] {}
+12:26:29 [render] token=False invalidated=None
+12:26:29 [cookie] ret_token=있음
+12:26:29 Starting new HTTP connection (1): localhost:9080
+12:26:31 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:26:31 [auth/me] status=200
+12:26:31 [render] token=True invalidated=None
+12:26:31 [qp] {}
+12:26:31 Starting new HTTP connection (1): localhost:9080
+12:26:33 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:26:33 [render] token=True invalidated=None
+12:26:33 [qp] {}
+12:26:33 Starting new HTTP connection (1): localhost:9080
+12:26:35 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:26:35 [render] token=True invalidated=None
+12:26:35 [qp] {}
+12:26:35 Starting new HTTP connection (1): localhost:9080
+12:26:37 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:26:37 Starting new HTTP connection (1): localhost:9080
+12:26:39 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:26:40 Starting new HTTP connection (1): localhost:9080
+12:26:42 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:29:11 [render] token=False invalidated=None
+12:29:11 [cookie] ret_token=있음
+12:29:11 Starting new HTTP connection (1): localhost:9080
+12:29:13 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:29:13 [auth/me] status=200
+12:29:13 [render] token=True invalidated=None
+12:29:13 [qp] {}
+12:29:13 Starting new HTTP connection (1): localhost:9080
+12:29:15 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:29:15 [render] token=True invalidated=None
+12:29:15 [qp] {}
+12:29:15 Starting new HTTP connection (1): localhost:9080
+12:29:17 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:29:17 [render] token=True invalidated=None
+12:29:17 [qp] {}
+12:29:17 Starting new HTTP connection (1): localhost:9080
+12:29:19 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:29:19 Starting new HTTP connection (1): localhost:9080
+12:29:21 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:29:22 Starting new HTTP connection (1): localhost:9080
+12:29:24 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:34:05 [render] token=False invalidated=None
+12:34:05 [cookie] ret_token=있음
+12:34:05 Starting new HTTP connection (1): localhost:9080
+12:34:08 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:34:08 [auth/me] status=200
+12:34:08 [render] token=True invalidated=None
+12:34:08 [qp] {}
+12:34:08 Starting new HTTP connection (1): localhost:9080
+12:34:10 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:34:10 [render] token=True invalidated=None
+12:34:10 [qp] {}
+12:34:10 Starting new HTTP connection (1): localhost:9080
+12:34:12 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:34:12 [render] token=True invalidated=None
+12:34:12 [qp] {}
+12:34:12 Starting new HTTP connection (1): localhost:9080
+12:34:14 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:34:14 Starting new HTTP connection (1): localhost:9080
+12:34:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:34:16 Starting new HTTP connection (1): localhost:9080
+12:34:18 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:38:48 [render] token=False invalidated=None
+12:38:48 [cookie] ret_token=있음
+12:38:48 Starting new HTTP connection (1): localhost:9080
+12:38:50 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:38:50 [auth/me] status=200
+12:38:50 [render] token=True invalidated=None
+12:38:50 [qp] {}
+12:38:50 Starting new HTTP connection (1): localhost:9080
+12:38:52 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:38:52 [render] token=True invalidated=None
+12:38:52 [qp] {}
+12:38:52 Starting new HTTP connection (1): localhost:9080
+12:38:54 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:38:54 [render] token=True invalidated=None
+12:38:54 [qp] {}
+12:38:54 Starting new HTTP connection (1): localhost:9080
+12:38:56 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:38:56 Starting new HTTP connection (1): localhost:9080
+12:38:59 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:38:59 Starting new HTTP connection (1): localhost:9080
+12:39:01 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:40:11 [render] token=False invalidated=None
+12:40:11 [cookie] ret_token=있음
+12:40:11 Starting new HTTP connection (1): localhost:9080
+12:40:13 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:40:13 [auth/me] status=200
+12:40:13 [render] token=True invalidated=None
+12:40:13 [qp] {}
+12:40:13 Starting new HTTP connection (1): localhost:9080
+12:40:15 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:40:15 [render] token=True invalidated=None
+12:40:15 [qp] {}
+12:40:15 Starting new HTTP connection (1): localhost:9080
+12:40:17 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:40:17 [render] token=True invalidated=None
+12:40:17 [qp] {}
+12:40:17 Starting new HTTP connection (1): localhost:9080
+12:40:19 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:40:19 Starting new HTTP connection (1): localhost:9080
+12:40:21 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:40:21 Starting new HTTP connection (1): localhost:9080
+12:40:23 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:40:44 [render] token=False invalidated=None
+12:40:44 [cookie] ret_token=있음
+12:40:44 Starting new HTTP connection (1): localhost:9080
+12:40:46 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:40:46 [auth/me] status=200
+12:40:46 [render] token=True invalidated=None
+12:40:46 [qp] {}
+12:40:46 Starting new HTTP connection (1): localhost:9080
+12:40:48 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:40:48 [render] token=True invalidated=None
+12:40:48 [qp] {}
+12:40:48 Starting new HTTP connection (1): localhost:9080
+12:40:50 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:40:51 [render] token=True invalidated=None
+12:40:51 [qp] {}
+12:40:51 Starting new HTTP connection (1): localhost:9080
+12:40:53 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:40:53 Starting new HTTP connection (1): localhost:9080
+12:40:55 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:40:55 Starting new HTTP connection (1): localhost:9080
+12:40:57 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:43:34 [render] token=False invalidated=None
+12:43:34 [cookie] ret_token=있음
+12:43:34 Starting new HTTP connection (1): localhost:9080
+12:43:36 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:43:36 [auth/me] status=200
+12:43:36 [render] token=True invalidated=None
+12:43:36 [qp] {}
+12:43:36 Starting new HTTP connection (1): localhost:9080
+12:43:38 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:43:38 [render] token=True invalidated=None
+12:43:38 [qp] {}
+12:43:38 Starting new HTTP connection (1): localhost:9080
+12:43:40 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:43:40 [render] token=True invalidated=None
+12:43:40 [qp] {}
+12:43:40 Starting new HTTP connection (1): localhost:9080
+12:43:42 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:43:42 Starting new HTTP connection (1): localhost:9080
+12:43:45 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:43:45 Starting new HTTP connection (1): localhost:9080
+12:43:47 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:45:22 [render] token=False invalidated=None
+12:45:22 [cookie] ret_token=있음
+12:45:22 Starting new HTTP connection (1): localhost:9080
+12:45:24 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:45:24 [auth/me] status=200
+12:45:24 [render] token=True invalidated=None
+12:45:24 [qp] {}
+12:45:24 Starting new HTTP connection (1): localhost:9080
+12:45:26 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:45:26 [render] token=True invalidated=None
+12:45:26 [qp] {}
+12:45:26 Starting new HTTP connection (1): localhost:9080
+12:45:29 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:45:29 [render] token=True invalidated=None
+12:45:29 [qp] {}
+12:45:29 Starting new HTTP connection (1): localhost:9080
+12:45:31 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:45:31 Starting new HTTP connection (1): localhost:9080
+12:45:33 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:45:33 Starting new HTTP connection (1): localhost:9080
+12:45:35 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:49:23 [render] token=False invalidated=None
+12:49:23 [cookie] ret_token=있음
+12:49:23 Starting new HTTP connection (1): localhost:9080
+12:49:25 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:49:25 [auth/me] status=200
+12:49:25 [render] token=True invalidated=None
+12:49:25 [qp] {}
+12:49:25 Starting new HTTP connection (1): localhost:9080
+12:49:27 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:49:27 [render] token=True invalidated=None
+12:49:27 [qp] {}
+12:49:27 Starting new HTTP connection (1): localhost:9080
+12:49:29 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:49:29 [render] token=True invalidated=None
+12:49:29 [qp] {}
+12:49:29 Starting new HTTP connection (1): localhost:9080
+12:49:31 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:49:31 Starting new HTTP connection (1): localhost:9080
+12:49:34 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:49:34 Starting new HTTP connection (1): localhost:9080
+12:49:36 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:52:06 [render] token=False invalidated=None
+12:52:06 [cookie] ret_token=있음
+12:52:06 Starting new HTTP connection (1): localhost:9080
+12:52:08 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:52:08 [auth/me] status=200
+12:52:08 [render] token=True invalidated=None
+12:52:08 [qp] {}
+12:52:08 Starting new HTTP connection (1): localhost:9080
+12:52:11 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:52:11 [render] token=True invalidated=None
+12:52:11 [qp] {}
+12:52:11 Starting new HTTP connection (1): localhost:9080
+12:52:13 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:52:13 [render] token=True invalidated=None
+12:52:13 [qp] {}
+12:52:13 Starting new HTTP connection (1): localhost:9080
+12:52:15 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:52:15 Starting new HTTP connection (1): localhost:9080
+12:52:17 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:52:17 Starting new HTTP connection (1): localhost:9080
+12:52:19 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:55:04 [render] token=False invalidated=None
+12:55:04 [cookie] ret_token=있음
+12:55:04 Starting new HTTP connection (1): localhost:9080
+12:55:06 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:55:06 [auth/me] status=200
+12:55:06 [render] token=True invalidated=None
+12:55:06 [qp] {}
+12:55:06 Starting new HTTP connection (1): localhost:9080
+12:55:08 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:55:08 [render] token=True invalidated=None
+12:55:08 [qp] {}
+12:55:08 Starting new HTTP connection (1): localhost:9080
+12:55:10 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:55:11 [render] token=True invalidated=None
+12:55:11 [qp] {}
+12:55:11 Starting new HTTP connection (1): localhost:9080
+12:55:13 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:55:13 Starting new HTTP connection (1): localhost:9080
+12:55:15 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:55:15 Starting new HTTP connection (1): localhost:9080
+12:55:17 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:57:38 [render] token=False invalidated=None
+12:57:38 [cookie] ret_token=있음
+12:57:38 Starting new HTTP connection (1): localhost:9080
+12:57:40 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:57:40 [auth/me] status=200
+12:57:40 [render] token=True invalidated=None
+12:57:40 [qp] {}
+12:57:40 Starting new HTTP connection (1): localhost:9080
+12:57:42 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:57:43 [render] token=True invalidated=None
+12:57:43 [qp] {}
+12:57:43 Starting new HTTP connection (1): localhost:9080
+12:57:45 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:57:45 [render] token=True invalidated=None
+12:57:45 [qp] {}
+12:57:45 Starting new HTTP connection (1): localhost:9080
+12:57:47 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:57:47 Starting new HTTP connection (1): localhost:9080
+12:57:49 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:57:49 Starting new HTTP connection (1): localhost:9080
+12:57:51 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:04:33 [render] token=False invalidated=None
+13:04:33 [cookie] ret_token=있음
+13:04:33 Starting new HTTP connection (1): localhost:9080
+13:04:35 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:04:35 [auth/me] status=200
+13:04:35 [render] token=True invalidated=None
+13:04:35 [qp] {}
+13:04:35 Starting new HTTP connection (1): localhost:9080
+13:04:37 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:04:37 [render] token=True invalidated=None
+13:04:37 [qp] {}
+13:04:37 Starting new HTTP connection (1): localhost:9080
+13:04:39 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:04:39 [render] token=True invalidated=None
+13:04:39 [qp] {}
+13:04:39 Starting new HTTP connection (1): localhost:9080
+13:04:41 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:04:41 Starting new HTTP connection (1): localhost:9080
+13:04:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:04:43 Starting new HTTP connection (1): localhost:9080
+13:04:45 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:07:07 [render] token=False invalidated=None
+13:07:07 [cookie] ret_token=있음
+13:07:07 Starting new HTTP connection (1): localhost:9080
+13:07:09 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:07:09 [auth/me] status=200
+13:07:09 [render] token=True invalidated=None
+13:07:09 [qp] {}
+13:07:09 Starting new HTTP connection (1): localhost:9080
+13:07:11 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:07:11 [render] token=True invalidated=None
+13:07:11 [qp] {}
+13:07:12 Starting new HTTP connection (1): localhost:9080
+13:07:14 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:07:14 [render] token=True invalidated=None
+13:07:14 [qp] {}
+13:07:14 Starting new HTTP connection (1): localhost:9080
+13:07:16 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:07:16 Starting new HTTP connection (1): localhost:9080
+13:07:18 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:07:18 Starting new HTTP connection (1): localhost:9080
+13:07:20 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:12:22 [render] token=False invalidated=None
+13:12:22 [cookie] ret_token=있음
+13:12:22 Starting new HTTP connection (1): localhost:9080
+13:12:24 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:12:24 [auth/me] status=200
+13:12:24 [render] token=True invalidated=None
+13:12:24 [qp] {}
+13:12:24 Starting new HTTP connection (1): localhost:9080
+13:12:26 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:12:26 [render] token=True invalidated=None
+13:12:26 [qp] {}
+13:12:26 Starting new HTTP connection (1): localhost:9080
+13:12:28 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:12:28 [render] token=True invalidated=None
+13:12:28 [qp] {}
+13:12:28 Starting new HTTP connection (1): localhost:9080
+13:12:30 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:12:30 Starting new HTTP connection (1): localhost:9080
+13:12:32 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:12:33 Starting new HTTP connection (1): localhost:9080
+13:12:35 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:15:39 [render] token=False invalidated=None
+13:15:39 [cookie] ret_token=있음
+13:15:39 Starting new HTTP connection (1): localhost:9080
+13:15:41 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:15:41 [auth/me] status=200
+13:15:41 [render] token=True invalidated=None
+13:15:41 [qp] {}
+13:15:41 Starting new HTTP connection (1): localhost:9080
+13:15:43 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:15:43 [render] token=True invalidated=None
+13:15:43 [qp] {}
+13:15:43 Starting new HTTP connection (1): localhost:9080
+13:15:45 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:15:45 [render] token=True invalidated=None
+13:15:45 [qp] {}
+13:15:45 Starting new HTTP connection (1): localhost:9080
+13:15:47 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:15:47 Starting new HTTP connection (1): localhost:9080
+13:15:50 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:15:50 Starting new HTTP connection (1): localhost:9080
+13:15:52 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:16:25 [render] token=True invalidated=None
+13:16:25 [qp] {}
+13:16:26 [render] token=True invalidated=None
+13:16:26 [qp] {}
+13:16:26 Starting new HTTP connection (1): localhost:9080
+13:16:28 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:16:28 [render] token=True invalidated=None
+13:16:28 [qp] {}
+13:19:27 [render] token=False invalidated=None
+13:19:27 [cookie] ret_token=있음
+13:19:27 Starting new HTTP connection (1): localhost:9080
+13:19:30 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:19:30 [auth/me] status=200
+13:19:30 [render] token=True invalidated=None
+13:19:30 [qp] {}
+13:19:30 Starting new HTTP connection (1): localhost:9080
+13:19:32 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:19:32 [render] token=True invalidated=None
+13:19:32 [qp] {}
+13:19:32 Starting new HTTP connection (1): localhost:9080
+13:19:34 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:19:34 [render] token=True invalidated=None
+13:19:34 [qp] {}
+13:19:34 Starting new HTTP connection (1): localhost:9080
+13:19:36 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:19:36 Starting new HTTP connection (1): localhost:9080
+13:19:38 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:19:38 Starting new HTTP connection (1): localhost:9080
+13:19:40 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:22:30 [render] token=False invalidated=None
+13:22:30 [cookie] ret_token=있음
+13:22:30 Starting new HTTP connection (1): localhost:9080
+13:22:32 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:22:32 [auth/me] status=200
+13:22:32 [render] token=True invalidated=None
+13:22:32 [qp] {}
+13:22:32 Starting new HTTP connection (1): localhost:9080
+13:22:34 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:22:34 [render] token=True invalidated=None
+13:22:34 [qp] {}
+13:22:34 Starting new HTTP connection (1): localhost:9080
+13:22:36 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:22:36 [render] token=True invalidated=None
+13:22:36 [qp] {}
+13:22:36 Starting new HTTP connection (1): localhost:9080
+13:22:38 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:22:38 Starting new HTTP connection (1): localhost:9080
+13:22:40 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:22:40 Starting new HTTP connection (1): localhost:9080
+13:22:43 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:25:38 [render] token=True invalidated=None
+13:25:38 [qp] {}
+13:25:40 [render] token=True invalidated=None
+13:25:40 [qp] {}
+13:25:50 [render] token=True invalidated=None
+13:25:50 [qp] {}
+13:25:53 [render] token=True invalidated=None
+13:25:53 [qp] {}
+13:25:57 [render] token=True invalidated=None
+13:25:57 [qp] {}
+13:29:26 [render] token=True invalidated=None
+13:29:26 [qp] {}
+13:32:46 [render] token=False invalidated=None
+13:32:46 [cookie] ret_token=있음
+13:32:46 Starting new HTTP connection (1): localhost:9080
+13:32:48 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:32:48 [auth/me] status=200
+13:32:48 [render] token=True invalidated=None
+13:32:48 [qp] {}
+13:32:48 Starting new HTTP connection (1): localhost:9080
+13:32:51 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:32:51 [render] token=True invalidated=None
+13:32:51 [qp] {}
+13:32:51 Starting new HTTP connection (1): localhost:9080
+13:32:53 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:32:54 [render] token=True invalidated=None
+13:32:54 [qp] {}
+13:32:54 Starting new HTTP connection (1): localhost:9080
+13:32:56 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:32:56 Starting new HTTP connection (1): localhost:9080
+13:32:58 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:32:58 Starting new HTTP connection (1): localhost:9080
+13:33:00 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:35:50 [render] token=False invalidated=None
+13:35:50 [cookie] ret_token=있음
+13:35:50 Starting new HTTP connection (1): localhost:9080
+13:35:53 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:35:53 [auth/me] status=200
+13:35:53 [render] token=True invalidated=None
+13:35:53 [qp] {}
+13:35:53 Starting new HTTP connection (1): localhost:9080
+13:35:55 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+13:35:55 [render] token=True invalidated=None
+13:35:55 [qp] {}
+13:35:55 Starting new HTTP connection (1): localhost:9080
+13:35:57 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+13:35:57 [render] token=True invalidated=None
+13:35:57 [qp] {}
+13:35:57 Starting new HTTP connection (1): localhost:9080
+13:35:59 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+13:35:59 Starting new HTTP connection (1): localhost:9080
+13:36:01 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+13:36:01 Starting new HTTP connection (1): localhost:9080
+13:36:03 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+13:40:13 [render] token=True invalidated=None
+13:40:13 [qp] {}
+14:32:44 [render] token=False invalidated=None
+14:32:44 [cookie] ret_token=있음
+14:32:44 Starting new HTTP connection (1): localhost:9080
+14:32:46 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:32:46 [auth/me] status=200
+14:32:46 [render] token=True invalidated=None
+14:32:46 [qp] {}
+14:32:46 Starting new HTTP connection (1): localhost:9080
+14:32:48 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+14:32:49 [render] token=True invalidated=None
+14:32:49 [qp] {}
+14:32:49 Starting new HTTP connection (1): localhost:9080
+14:32:51 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+14:32:51 [render] token=True invalidated=None
+14:32:51 [qp] {}
+14:32:51 Starting new HTTP connection (1): localhost:9080
+14:32:53 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:32:53 Starting new HTTP connection (1): localhost:9080
+14:32:55 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+14:32:55 Starting new HTTP connection (1): localhost:9080
+14:32:57 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+15:20:06 [render] token=False invalidated=None
+15:20:06 [cookie] ret_token=있음
+15:20:06 Starting new HTTP connection (1): localhost:9080
+15:20:08 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:20:08 [auth/me] status=200
+15:20:08 [render] token=True invalidated=None
+15:20:08 [qp] {}
+15:20:08 Starting new HTTP connection (1): localhost:9080
+15:20:10 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+15:20:10 [render] token=True invalidated=None
+15:20:10 [qp] {}
+15:20:10 Starting new HTTP connection (1): localhost:9080
+15:20:12 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+15:20:12 [render] token=True invalidated=None
+15:20:12 [qp] {}
+15:20:12 Starting new HTTP connection (1): localhost:9080
+15:20:14 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+15:20:14 Starting new HTTP connection (1): localhost:9080
+15:20:16 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:20:16 Starting new HTTP connection (1): localhost:9080
+15:20:18 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:13:59 [render] token=False invalidated=None
+12:13:59 [cookie] ret_token=있음
+12:13:59 Starting new HTTP connection (1): localhost:9080
+12:14:02 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+12:14:02 [auth/me] status=401
+12:14:02 [cookie] 토큰 만료 → 쿠키 삭제
+12:14:02 [qp] {}
+12:14:06 [flush_cookie] action=delete
+12:14:06 [flush_cookie] st.html 호출 전
+12:14:06 [flush_cookie] st.html 호출 후
+12:14:06 [render] token=False invalidated=True
+12:14:06 [qp] {}
+12:14:09 [render] token=False invalidated=True
+12:14:09 [qp] {}
+12:14:13 [render] token=False invalidated=True
+12:14:13 [qp] {}
+12:14:13 Starting new HTTP connection (1): localhost:9080
+12:14:16 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+12:14:16 [flush_cookie] action=set
+12:14:16 [flush_cookie] st.html 호출 전
+12:14:16 [flush_cookie] st.html 호출 후
+12:14:16 [render] token=True invalidated=None
+12:14:16 [qp] {}
+12:14:16 Starting new HTTP connection (1): localhost:9080
+12:14:18 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:14:18 [render] token=True invalidated=None
+12:14:18 [qp] {}
+12:14:18 Starting new HTTP connection (1): localhost:9080
+12:14:20 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37184
+12:14:20 [render] token=True invalidated=None
+12:14:20 [qp] {}
+12:14:20 Starting new HTTP connection (1): localhost:9080
+12:14:22 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:14:22 Starting new HTTP connection (1): localhost:9080
+12:14:24 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:14:25 Starting new HTTP connection (1): localhost:9080
+12:14:27 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:15:19 [render] token=True invalidated=None
+12:15:19 [qp] {}
+12:15:20 [render] token=True invalidated=None
+12:15:20 [qp] {}
+12:15:20 [render] token=True invalidated=None
+12:15:20 [qp] {}
+12:15:21 [render] token=True invalidated=None
+12:15:21 [qp] {}
+12:15:21 [render] token=True invalidated=None
+12:15:21 [qp] {}
+12:15:21 [render] token=True invalidated=None
+12:15:21 [qp] {}
+12:15:22 [render] token=True invalidated=None
+12:15:22 [qp] {}
+12:15:23 [render] token=True invalidated=None
+12:15:23 [qp] {}
+12:15:29 [render] token=True invalidated=None
+12:15:29 [qp] {}
+12:16:18 [render] token=True invalidated=None
+12:16:18 [qp] {}
+12:16:19 [render] token=True invalidated=None
+12:16:19 [qp] {}
+12:16:19 Starting new HTTP connection (1): localhost:9080
+12:16:21 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37063
+12:16:21 [render] token=True invalidated=None
+12:16:21 [qp] {}
+12:16:45 [render] token=True invalidated=None
+12:16:45 [qp] {}
+12:16:58 [render] token=True invalidated=None
+12:16:58 [qp] {}
+12:16:59 [render] token=True invalidated=None
+12:16:59 [qp] {}
+12:16:59 Starting new HTTP connection (1): localhost:9080
+12:17:01 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37108
+12:17:01 [render] token=True invalidated=None
+12:17:01 [qp] {}
+12:18:21 [render] token=True invalidated=None
+12:18:21 [qp] {}
+12:21:09 [render] token=True invalidated=None
+12:21:09 [qp] {}
+12:21:11 [render] token=True invalidated=None
+12:21:11 [qp] {}
+12:21:12 [render] token=True invalidated=None
+12:21:12 [qp] {}
+12:21:53 [render] token=True invalidated=None
+12:21:53 [qp] {}
+12:21:53 [render] token=True invalidated=None
+12:21:53 [qp] {}
+12:21:54 [render] token=True invalidated=None
+12:21:54 [qp] {}
+12:21:54 [render] token=True invalidated=None
+12:21:54 [qp] {}
+12:21:55 [render] token=True invalidated=None
+12:21:55 [qp] {}
+12:21:56 [render] token=True invalidated=None
+12:21:56 [qp] {}
+12:22:04 [render] token=True invalidated=None
+12:22:04 [qp] {}
+12:22:05 [render] token=True invalidated=None
+12:22:05 [qp] {}
+12:22:05 Starting new HTTP connection (1): localhost:9080
+12:22:07 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+12:22:07 [render] token=True invalidated=None
+12:22:07 [qp] {}
+12:22:25 [render] token=True invalidated=None
+12:22:25 [qp] {}
+12:23:15 [render] token=True invalidated=None
+12:23:15 [qp] {}
+12:23:27 [render] token=True invalidated=None
+12:23:27 [qp] {}
+12:23:27 Starting new HTTP connection (1): localhost:9080
+12:23:29 [render] token=True invalidated=None
+12:23:29 [qp] {}
+12:23:29 Starting new HTTP connection (1): localhost:9080
+12:23:29 http://localhost:9080 "PUT /profiles/375 HTTP/1.1" 200 69
+12:23:31 http://localhost:9080 "PUT /profiles/375 HTTP/1.1" 200 69
+12:23:31 Starting new HTTP connection (1): localhost:9080
+12:23:33 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+12:23:33 [render] token=True invalidated=None
+12:23:33 [qp] {}
+12:24:10 [render] token=True invalidated=None
+12:24:10 [qp] {}
+12:24:14 [render] token=True invalidated=None
+12:24:14 [qp] {}
+12:24:19 [render] token=True invalidated=None
+12:24:19 [qp] {}
+12:24:20 [render] token=True invalidated=None
+12:24:20 [qp] {}
+12:24:20 Starting new HTTP connection (1): localhost:9080
+12:24:22 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37868
+12:24:22 [render] token=True invalidated=None
+12:24:22 [qp] {}
+12:27:43 [render] token=True invalidated=None
+12:27:43 [qp] {}
+12:31:22 [render] token=False invalidated=None
+12:31:22 [cookie] ret_token=있음
+12:31:22 Starting new HTTP connection (1): localhost:9080
+12:31:24 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:31:24 [auth/me] status=200
+12:31:24 [render] token=True invalidated=None
+12:31:24 [qp] {}
+12:31:24 Starting new HTTP connection (1): localhost:9080
+12:31:26 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+12:31:26 [render] token=True invalidated=None
+12:31:26 [qp] {}
+12:31:26 Starting new HTTP connection (1): localhost:9080
+12:31:28 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+12:31:28 [render] token=True invalidated=None
+12:31:28 [qp] {}
+12:31:28 Starting new HTTP connection (1): localhost:9080
+12:31:31 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+12:31:31 Starting new HTTP connection (1): localhost:9080
+12:31:33 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:31:33 Starting new HTTP connection (1): localhost:9080
+12:31:35 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+14:22:31 [render] token=False invalidated=None
+14:22:31 [cookie] ret_token=있음
+14:22:31 Starting new HTTP connection (1): localhost:9080
+14:22:33 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:22:33 [auth/me] status=200
+14:22:34 [render] token=True invalidated=None
+14:22:34 [qp] {}
+14:22:34 Starting new HTTP connection (1): localhost:9080
+14:22:36 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+14:22:36 [render] token=True invalidated=None
+14:22:36 [qp] {}
+14:22:36 Starting new HTTP connection (1): localhost:9080
+14:22:38 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+14:22:38 [render] token=True invalidated=None
+14:22:38 [qp] {}
+14:22:38 Starting new HTTP connection (1): localhost:9080
+14:22:40 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+14:22:40 Starting new HTTP connection (1): localhost:9080
+14:22:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+14:22:42 Starting new HTTP connection (1): localhost:9080
+14:22:44 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+14:23:21 [render] token=True invalidated=None
+14:23:21 [qp] {}
+14:23:22 [render] token=True invalidated=None
+14:23:22 [qp] {}
+14:23:23 [render] token=True invalidated=None
+14:23:23 [qp] {}
+14:23:23 Starting new HTTP connection (1): localhost:9080
+14:23:25 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+14:23:25 [render] token=False invalidated=True
+14:23:25 [qp] {}
+14:23:34 [render] token=False invalidated=True
+14:23:34 [qp] {}
+14:23:37 [render] token=False invalidated=True
+14:23:37 [qp] {}
+14:23:40 [render] token=False invalidated=True
+14:23:40 [qp] {}
+14:23:40 Starting new HTTP connection (1): localhost:9080
+14:23:42 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 243
+14:23:42 [flush_cookie] action=set
+14:23:42 [flush_cookie] st.html 호출 전
+14:23:42 [flush_cookie] st.html 호출 후
+14:23:42 [render] token=True invalidated=None
+14:23:42 [qp] {}
+14:23:42 Starting new HTTP connection (1): localhost:9080
+14:23:44 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1775
+14:23:44 [render] token=True invalidated=None
+14:23:44 [qp] {}
+14:23:44 Starting new HTTP connection (1): localhost:9080
+14:23:46 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37669
+14:23:46 [render] token=True invalidated=None
+14:23:46 [qp] {}
+14:23:46 Starting new HTTP connection (1): localhost:9080
+14:23:48 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+14:23:48 Starting new HTTP connection (1): localhost:9080
+14:23:50 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+14:26:38 [render] token=True invalidated=None
+14:26:38 [qp] {}
+14:34:18 [render] token=True invalidated=None
+14:34:18 [qp] {}
+14:34:41 [render] token=True invalidated=None
+14:34:41 [qp] {}
+14:34:43 [render] token=True invalidated=None
+14:34:43 [qp] {}
+14:34:45 [render] token=True invalidated=None
+14:34:45 [qp] {}
+14:34:49 [render] token=True invalidated=None
+14:34:49 [qp] {}
+14:34:50 [render] token=True invalidated=None
+14:34:50 [qp] {}
+14:34:50 Starting new HTTP connection (1): localhost:9080
+14:34:52 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37668
+14:34:52 [render] token=True invalidated=None
+14:34:52 [qp] {}
+14:34:59 [render] token=True invalidated=None
+14:34:59 [qp] {}
+14:34:59 [render] token=True invalidated=None
+14:34:59 [qp] {}
+14:35:01 [render] token=True invalidated=None
+14:35:01 [qp] {}
+14:35:02 [render] token=True invalidated=None
+14:35:02 [qp] {}
+14:35:02 Starting new HTTP connection (1): localhost:9080
+14:35:04 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37492
+14:35:04 [render] token=True invalidated=None
+14:35:04 [qp] {}
+14:35:23 [render] token=True invalidated=None
+14:35:23 [qp] {}
+14:35:26 [render] token=True invalidated=None
+14:35:26 [qp] {}
+14:35:27 [render] token=True invalidated=None
+14:35:27 [qp] {}
+14:35:33 [render] token=True invalidated=None
+14:35:33 [qp] {}
+14:35:52 [render] token=True invalidated=None
+14:35:52 [qp] {}
+14:35:53 [render] token=True invalidated=None
+14:35:53 [qp] {}
+14:35:53 [render] token=True invalidated=None
+14:35:53 [qp] {}
+14:35:53 [render] token=True invalidated=None
+14:35:53 [qp] {}
+14:35:53 [render] token=True invalidated=None
+14:35:53 [qp] {}
+14:35:54 [render] token=True invalidated=None
+14:35:54 [qp] {}
+14:35:54 [render] token=True invalidated=None
+14:35:54 [qp] {}
+14:35:57 [render] token=True invalidated=None
+14:35:57 [qp] {}
+14:35:58 [render] token=True invalidated=None
+14:35:58 [qp] {}
+14:35:58 Starting new HTTP connection (1): localhost:9080
+14:36:00 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36490
+14:36:00 [render] token=True invalidated=None
+14:36:00 [qp] {}
+14:36:45 [render] token=True invalidated=None
+14:36:45 [qp] {}
+14:36:54 [render] token=True invalidated=None
+14:36:54 [qp] {}
+14:36:54 Starting new HTTP connection (1): localhost:9080
+14:36:56 http://localhost:9080 "PUT /profiles/325 HTTP/1.1" 200 69
+14:36:56 Starting new HTTP connection (1): localhost:9080
+14:36:58 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+14:36:58 [render] token=True invalidated=None
+14:36:58 [qp] {}
+15:50:31 [render] token=False invalidated=None
+15:50:31 [cookie] ret_token=있음
+15:50:31 Starting new HTTP connection (1): localhost:9080
+15:50:33 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:50:33 [auth/me] status=200
+15:50:33 [render] token=True invalidated=None
+15:50:33 [qp] {}
+15:50:33 Starting new HTTP connection (1): localhost:9080
+15:50:35 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1772
+15:50:35 [render] token=True invalidated=None
+15:50:35 [qp] {}
+15:50:35 Starting new HTTP connection (1): localhost:9080
+15:50:38 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+15:50:38 [render] token=True invalidated=None
+15:50:38 [qp] {}
+15:50:38 Starting new HTTP connection (1): localhost:9080
+15:50:40 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:50:40 Starting new HTTP connection (1): localhost:9080
+15:50:42 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:50:54 [render] token=True invalidated=None
+15:50:54 [qp] {}
+15:51:32 [render] token=False invalidated=None
+15:51:32 [cookie] ret_token=있음
+15:51:32 Starting new HTTP connection (1): localhost:9080
+15:51:34 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:51:34 [auth/me] status=200
+15:51:34 [render] token=True invalidated=None
+15:51:34 [qp] {}
+15:51:34 Starting new HTTP connection (1): localhost:9080
+15:51:36 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1772
+15:51:36 [render] token=True invalidated=None
+15:51:36 [qp] {}
+15:51:36 Starting new HTTP connection (1): localhost:9080
+15:51:38 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+15:51:38 [render] token=True invalidated=None
+15:51:38 [qp] {}
+15:51:38 Starting new HTTP connection (1): localhost:9080
+15:51:41 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+15:51:41 Starting new HTTP connection (1): localhost:9080
+15:51:43 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+15:51:51 [render] token=True invalidated=None
+15:51:51 [qp] {}
+16:02:44 [render] token=False invalidated=None
+16:02:44 [cookie] ret_token=있음
+16:02:44 Starting new HTTP connection (1): localhost:9080
+16:02:46 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:02:46 [auth/me] status=200
+16:02:46 [render] token=True invalidated=None
+16:02:46 [qp] {}
+16:02:46 Starting new HTTP connection (1): localhost:9080
+16:02:48 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1772
+16:02:48 [render] token=True invalidated=None
+16:02:48 [qp] {}
+16:02:48 Starting new HTTP connection (1): localhost:9080
+16:02:50 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+16:02:50 [render] token=True invalidated=None
+16:02:50 [qp] {}
+16:02:51 Starting new HTTP connection (1): localhost:9080
+16:02:53 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:02:53 Starting new HTTP connection (1): localhost:9080
+16:02:55 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:03:04 [render] token=True invalidated=None
+16:03:04 [qp] {}
+16:07:49 [render] token=False invalidated=None
+16:07:49 [cookie] ret_token=있음
+16:07:49 Starting new HTTP connection (1): localhost:9080
+16:07:51 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:07:51 [auth/me] status=200
+16:07:51 [render] token=True invalidated=None
+16:07:51 [qp] {}
+16:07:51 Starting new HTTP connection (1): localhost:9080
+16:07:53 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1772
+16:07:53 [render] token=True invalidated=None
+16:07:53 [qp] {}
+16:07:53 Starting new HTTP connection (1): localhost:9080
+16:07:56 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+16:07:56 [render] token=True invalidated=None
+16:07:56 [qp] {}
+16:07:56 Starting new HTTP connection (1): localhost:9080
+16:07:58 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:07:58 Starting new HTTP connection (1): localhost:9080
+16:08:00 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:08:29 [render] token=True invalidated=None
+16:08:29 [qp] {}
+16:11:24 [render] token=True invalidated=None
+16:11:24 [qp] {}
+16:11:25 [render] token=True invalidated=None
+16:11:25 [qp] {}
+16:11:25 [render] token=True invalidated=None
+16:11:25 [qp] {}
+16:11:26 [render] token=True invalidated=None
+16:11:26 [qp] {}
+16:11:26 [render] token=True invalidated=None
+16:11:26 [qp] {}
+16:11:26 [render] token=True invalidated=None
+16:11:26 [qp] {}
+16:11:26 [render] token=True invalidated=None
+16:11:26 [qp] {}
+16:11:28 [render] token=True invalidated=None
+16:11:28 [qp] {}
+16:11:29 [render] token=True invalidated=None
+16:11:29 [qp] {}
+16:11:30 [render] token=True invalidated=None
+16:11:30 [qp] {}
+16:11:32 [render] token=True invalidated=None
+16:11:32 [qp] {}
+16:11:33 [render] token=True invalidated=None
+16:11:33 [qp] {}
+16:11:34 [render] token=True invalidated=None
+16:11:34 [qp] {}
+16:11:35 [render] token=True invalidated=None
+16:11:35 [qp] {}
+16:11:35 [render] token=True invalidated=None
+16:11:35 [qp] {}
+16:11:36 [render] token=True invalidated=None
+16:11:36 [qp] {}
+16:11:36 [render] token=True invalidated=None
+16:11:36 [qp] {}
+16:11:36 [render] token=True invalidated=None
+16:11:36 [qp] {}
+16:11:37 [render] token=True invalidated=None
+16:11:37 [qp] {}
+16:11:37 [render] token=True invalidated=None
+16:11:37 [qp] {}
+16:11:39 [render] token=True invalidated=None
+16:11:39 [qp] {}
+16:11:40 [render] token=True invalidated=None
+16:11:40 [qp] {}
+16:11:41 [render] token=True invalidated=None
+16:11:41 [qp] {}
+16:11:46 [render] token=True invalidated=None
+16:11:46 [qp] {}
+16:13:37 [render] token=False invalidated=None
+16:13:37 [cookie] ret_token=있음
+16:13:37 Starting new HTTP connection (1): localhost:9080
+16:13:39 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:13:39 [auth/me] status=200
+16:13:39 [render] token=True invalidated=None
+16:13:39 [qp] {}
+16:13:39 Starting new HTTP connection (1): localhost:9080
+16:13:41 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1772
+16:13:41 [render] token=True invalidated=None
+16:13:41 [qp] {}
+16:13:41 Starting new HTTP connection (1): localhost:9080
+16:13:43 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+16:13:43 [render] token=True invalidated=None
+16:13:43 [qp] {}
+16:13:43 Starting new HTTP connection (1): localhost:9080
+16:13:45 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:13:45 Starting new HTTP connection (1): localhost:9080
+16:13:47 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:15:25 [render] token=True invalidated=None
+16:15:25 [qp] {}
+16:18:24 [render] token=False invalidated=None
+16:18:24 [cookie] ret_token=있음
+16:18:24 Starting new HTTP connection (1): localhost:9080
+16:18:26 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:18:26 [auth/me] status=200
+16:18:26 [render] token=True invalidated=None
+16:18:26 [qp] {}
+16:18:26 Starting new HTTP connection (1): localhost:9080
+16:18:28 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1772
+16:18:28 [render] token=True invalidated=None
+16:18:28 [qp] {}
+16:18:28 Starting new HTTP connection (1): localhost:9080
+16:18:31 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+16:18:31 [render] token=True invalidated=None
+16:18:31 [qp] {}
+16:18:31 Starting new HTTP connection (1): localhost:9080
+16:18:33 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:18:33 Starting new HTTP connection (1): localhost:9080
+16:18:35 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:20:17 [render] token=True invalidated=None
+16:20:17 [qp] {}
+16:20:19 [render] token=True invalidated=None
+16:20:19 [qp] {}
+16:20:21 [render] token=True invalidated=None
+16:20:21 [qp] {}
+16:20:23 [render] token=True invalidated=None
+16:20:23 [qp] {}
+16:20:24 [render] token=True invalidated=None
+16:20:24 [qp] {}
+16:20:26 [render] token=True invalidated=None
+16:20:26 [qp] {}
+16:29:25 [render] token=False invalidated=None
+16:29:25 [cookie] ret_token=있음
+16:29:25 Starting new HTTP connection (1): localhost:9080
+16:29:27 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:29:27 [auth/me] status=200
+16:29:27 [render] token=True invalidated=None
+16:29:27 [qp] {}
+16:29:27 Starting new HTTP connection (1): localhost:9080
+16:29:29 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1772
+16:29:29 [render] token=True invalidated=None
+16:29:29 [qp] {}
+16:29:29 Starting new HTTP connection (1): localhost:9080
+16:29:31 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36450
+16:29:31 [render] token=True invalidated=None
+16:29:31 [qp] {}
+16:29:32 Starting new HTTP connection (1): localhost:9080
+16:29:34 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+16:29:34 Starting new HTTP connection (1): localhost:9080
+16:29:36 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+16:29:41 [render] token=True invalidated=None
+16:29:41 [qp] {}
+16:29:42 [render] token=True invalidated=None
+16:29:42 [qp] {}
+16:29:44 [render] token=True invalidated=None
+16:29:44 [qp] {}
+16:29:45 [render] token=True invalidated=None
+16:29:45 [qp] {}
+16:29:46 [render] token=True invalidated=None
+16:29:46 [qp] {}
+16:29:47 [render] token=True invalidated=None
+16:29:47 [qp] {}
+16:29:48 [render] token=True invalidated=None
+16:29:48 [qp] {}
+16:29:48 [render] token=True invalidated=None
+16:29:48 [qp] {}
+16:29:48 [render] token=True invalidated=None
+16:29:48 [qp] {}
+16:29:48 [render] token=True invalidated=None
+16:29:48 [qp] {}
+16:29:49 [render] token=True invalidated=None
+16:29:49 [qp] {}
+16:29:52 [render] token=True invalidated=None
+16:29:52 [qp] {}
+17:10:31 [render] token=True invalidated=None
+17:10:31 [qp] {}
+17:10:31 [render] token=True invalidated=None
+17:10:31 [qp] {}
+17:16:27 [render] token=True invalidated=None
+17:16:27 [qp] {}
+17:16:28 [render] token=True invalidated=None
+17:16:28 [qp] {}
+17:16:40 [render] token=True invalidated=None
+17:16:40 [qp] {}
+17:16:40 Starting new HTTP connection (1): localhost:9080
+17:16:42 http://localhost:9080 "PUT /profiles/378 HTTP/1.1" 200 69
+17:16:42 Starting new HTTP connection (1): localhost:9080
+17:16:44 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36466
+17:16:44 [render] token=True invalidated=None
+17:16:44 [qp] {}
+00:51:01 [render] token=False invalidated=None
+00:51:01 [cookie] ret_token=있음
+00:51:01 Starting new HTTP connection (1): localhost:9080
+00:51:03 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+00:51:03 [auth/me] status=401
+00:51:03 [cookie] 토큰 만료 → 쿠키 삭제
+00:51:03 [qp] {}
+00:51:14 [flush_cookie] action=delete
+00:51:14 [flush_cookie] st.html 호출 전
+00:51:14 [flush_cookie] st.html 호출 후
+00:51:14 [render] token=False invalidated=True
+00:51:14 [qp] {}
+00:51:30 [render] token=False invalidated=True
+00:51:30 [qp] {}
+00:51:30 Starting new HTTP connection (1): localhost:9080
+00:51:32 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+00:51:32 [flush_cookie] action=set
+00:51:32 [flush_cookie] st.html 호출 전
+00:51:32 [flush_cookie] st.html 호출 후
+00:51:32 [render] token=True invalidated=None
+00:51:32 [qp] {}
+00:51:32 Starting new HTTP connection (1): localhost:9080
+00:51:32 [render] token=True invalidated=None
+00:51:32 [qp] {}
+00:51:32 Starting new HTTP connection (1): localhost:9080
+00:51:34 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+00:51:35 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+00:51:35 [render] token=True invalidated=None
+00:51:35 [qp] {}
+00:51:35 Starting new HTTP connection (1): localhost:9080
+00:51:37 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+00:51:37 [render] token=True invalidated=None
+00:51:37 [qp] {}
+00:51:37 Starting new HTTP connection (1): localhost:9080
+00:51:39 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+00:51:39 Starting new HTTP connection (1): localhost:9080
+00:51:41 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+00:51:41 Starting new HTTP connection (1): localhost:9080
+00:51:43 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+00:51:50 [render] token=False invalidated=None
+00:51:50 [cookie] ret_token=있음
+00:51:50 Starting new HTTP connection (1): localhost:9080
+00:51:52 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+00:51:52 [auth/me] status=200
+00:51:52 [render] token=True invalidated=None
+00:51:52 [qp] {}
+00:51:52 Starting new HTTP connection (1): localhost:9080
+00:51:54 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+00:51:54 [render] token=True invalidated=None
+00:51:54 [qp] {}
+00:51:54 Starting new HTTP connection (1): localhost:9080
+00:51:56 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+00:51:56 [render] token=True invalidated=None
+00:51:56 [qp] {}
+00:51:56 Starting new HTTP connection (1): localhost:9080
+00:51:58 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+00:51:58 Starting new HTTP connection (1): localhost:9080
+00:52:01 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+00:52:01 Starting new HTTP connection (1): localhost:9080
+00:52:03 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+12:55:49 [render] token=False invalidated=None
+12:55:49 [cookie] ret_token=있음
+12:55:49 Starting new HTTP connection (1): localhost:9080
+12:55:51 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+12:55:51 [auth/me] status=200
+12:55:51 [render] token=True invalidated=None
+12:55:51 [qp] {}
+12:55:51 Starting new HTTP connection (1): localhost:9080
+12:55:53 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1791
+12:55:54 [render] token=True invalidated=None
+12:55:54 [qp] {}
+12:55:54 Starting new HTTP connection (1): localhost:9080
+12:55:56 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36466
+12:55:56 [render] token=True invalidated=None
+12:55:56 [qp] {}
+12:55:56 Starting new HTTP connection (1): localhost:9080
+12:55:58 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+12:55:58 Starting new HTTP connection (1): localhost:9080
+12:56:00 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:57:41 [render] token=True invalidated=None
+12:57:41 [qp] {}
+12:58:02 [render] token=True invalidated=None
+12:58:02 [qp] {}
+12:58:02 [render] token=True invalidated=None
+12:58:02 [qp] {}
+12:58:10 [render] token=True invalidated=None
+12:58:10 [qp] {}
+12:58:10 [render] token=True invalidated=None
+12:58:10 [qp] {}
+11:27:32 [render] token=False invalidated=None
+11:27:32 [cookie] ret_token=있음
+11:27:32 Starting new HTTP connection (1): localhost:9080
+11:27:34 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+11:27:34 [auth/me] status=401
+11:27:34 [cookie] 토큰 만료 → 쿠키 삭제
+11:27:34 [qp] {}
+11:27:44 [flush_cookie] action=delete
+11:27:44 [flush_cookie] st.html 호출 전
+11:27:44 [flush_cookie] st.html 호출 후
+11:27:44 [render] token=False invalidated=True
+11:27:44 [qp] {}
+11:27:52 [render] token=False invalidated=True
+11:27:52 [qp] {}
+11:27:52 Starting new HTTP connection (1): localhost:9080
+11:27:54 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+11:27:54 [flush_cookie] action=set
+11:27:54 [flush_cookie] st.html 호출 전
+11:27:54 [flush_cookie] st.html 호출 후
+11:27:54 [render] token=True invalidated=None
+11:27:54 [qp] {}
+11:27:54 Starting new HTTP connection (1): localhost:9080
+11:27:56 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+11:27:56 [render] token=True invalidated=None
+11:27:56 [qp] {}
+11:27:56 Starting new HTTP connection (1): localhost:9080
+11:27:58 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+11:27:58 [render] token=True invalidated=None
+11:27:58 [qp] {}
+11:27:58 Starting new HTTP connection (1): localhost:9080
+11:28:01 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+11:28:01 Starting new HTTP connection (1): localhost:9080
+11:28:03 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+11:28:03 Starting new HTTP connection (1): localhost:9080
+11:28:05 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+11:28:16 [render] token=True invalidated=None
+11:28:16 [qp] {}
+11:28:16 [render] token=True invalidated=None
+11:28:16 [qp] {}
+11:28:17 [render] token=True invalidated=None
+11:28:17 [qp] {}
+11:28:17 Starting new HTTP connection (1): localhost:9080
+11:28:19 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+11:28:20 [render] token=False invalidated=True
+11:28:20 [qp] {}
+11:28:47 [render] token=False invalidated=True
+11:28:47 [qp] {}
+11:28:51 [render] token=False invalidated=True
+11:28:51 [qp] {}
+11:28:51 Starting new HTTP connection (1): localhost:9080
+11:28:54 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 243
+11:28:54 [flush_cookie] action=set
+11:28:54 [flush_cookie] st.html 호출 전
+11:28:54 [flush_cookie] st.html 호출 후
+11:28:54 [render] token=True invalidated=None
+11:28:54 [qp] {}
+11:28:54 Starting new HTTP connection (1): localhost:9080
+11:28:56 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1791
+11:28:56 [render] token=True invalidated=None
+11:28:56 [qp] {}
+11:28:56 Starting new HTTP connection (1): localhost:9080
+11:28:58 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36466
+11:28:58 [render] token=True invalidated=None
+11:28:58 [qp] {}
+11:28:58 Starting new HTTP connection (1): localhost:9080
+11:29:00 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+11:29:00 Starting new HTTP connection (1): localhost:9080
+11:29:02 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+12:07:21 [render] token=False invalidated=None
+12:07:21 [cookie] ret_token=있음
+12:07:21 Starting new HTTP connection (1): localhost:9080
+12:07:23 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+12:07:23 [auth/me] status=200
+12:07:24 [render] token=True invalidated=None
+12:07:24 [qp] {}
+12:07:24 Starting new HTTP connection (1): localhost:9080
+12:07:26 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1791
+12:07:26 [render] token=True invalidated=None
+12:07:26 [qp] {}
+12:07:26 Starting new HTTP connection (1): localhost:9080
+12:07:28 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36466
+12:07:28 [render] token=True invalidated=None
+12:07:28 [qp] {}
+12:07:28 Starting new HTTP connection (1): localhost:9080
+12:07:30 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+12:07:30 Starting new HTTP connection (1): localhost:9080
+12:07:33 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+22:24:17 [render] token=False invalidated=None
+22:24:17 [cookie] ret_token=있음
+22:24:17 Starting new HTTP connection (1): localhost:9080
+22:24:19 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+22:24:19 [auth/me] status=200
+22:24:20 [render] token=True invalidated=None
+22:24:20 [qp] {}
+22:24:20 Starting new HTTP connection (1): localhost:9080
+22:24:22 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1791
+22:24:22 [render] token=True invalidated=None
+22:24:22 [qp] {}
+22:24:22 Starting new HTTP connection (1): localhost:9080
+22:24:24 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36466
+22:24:24 [render] token=True invalidated=None
+22:24:24 [qp] {}
+22:24:24 Starting new HTTP connection (1): localhost:9080
+22:24:26 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+22:24:26 Starting new HTTP connection (1): localhost:9080
+22:24:28 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+22:24:47 [render] token=False invalidated=None
+22:24:47 [cookie] ret_token=있음
+22:24:47 Starting new HTTP connection (1): localhost:9080
+22:24:49 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+22:24:49 [auth/me] status=200
+22:24:49 [render] token=True invalidated=None
+22:24:49 [qp] {}
+22:24:49 Starting new HTTP connection (1): localhost:9080
+22:24:51 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1791
+22:24:51 [render] token=True invalidated=None
+22:24:51 [qp] {}
+22:24:51 Starting new HTTP connection (1): localhost:9080
+22:24:53 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36466
+22:24:53 [render] token=True invalidated=None
+22:24:53 [qp] {}
+22:24:53 Starting new HTTP connection (1): localhost:9080
+22:24:55 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+22:24:55 Starting new HTTP connection (1): localhost:9080
+22:24:57 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+22:25:20 [render] token=True invalidated=None
+22:25:20 [qp] {}
+22:25:20 [render] token=True invalidated=None
+22:25:20 [qp] {}
+22:25:21 [render] token=True invalidated=None
+22:25:21 [qp] {}
+22:25:21 Starting new HTTP connection (1): localhost:9080
+22:25:23 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+22:25:23 [render] token=False invalidated=True
+22:25:23 [qp] {}
+22:25:31 [render] token=False invalidated=True
+22:25:31 [qp] {}
+22:25:33 [render] token=False invalidated=True
+22:25:33 [qp] {}
+22:25:35 [render] token=False invalidated=True
+22:25:35 [qp] {}
+22:25:39 [render] token=False invalidated=True
+22:25:39 [qp] {}
+22:25:39 Starting new HTTP connection (1): localhost:9080
+22:25:40 [render] token=False invalidated=True
+22:25:40 [qp] {}
+22:25:40 Starting new HTTP connection (1): localhost:9080
+22:25:41 [render] token=False invalidated=True
+22:25:41 [qp] {}
+22:25:41 Starting new HTTP connection (1): localhost:9080
+22:25:41 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+22:25:42 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+22:25:43 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+22:25:43 [flush_cookie] action=set
+22:25:43 [flush_cookie] st.html 호출 전
+22:25:43 [flush_cookie] st.html 호출 후
+22:25:43 [render] token=True invalidated=None
+22:25:43 [qp] {}
+22:25:43 Starting new HTTP connection (1): localhost:9080
+22:25:45 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+22:25:45 [render] token=True invalidated=None
+22:25:45 [qp] {}
+22:25:45 Starting new HTTP connection (1): localhost:9080
+22:25:47 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+22:25:47 [render] token=True invalidated=None
+22:25:47 [qp] {}
+22:25:47 Starting new HTTP connection (1): localhost:9080
+22:25:50 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+22:25:50 Starting new HTTP connection (1): localhost:9080
+22:25:52 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+22:25:52 Starting new HTTP connection (1): localhost:9080
+22:25:54 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+22:29:39 [render] token=True invalidated=None
+22:29:39 [qp] {}
+10:24:00 [render] token=False invalidated=None
+10:24:00 [cookie] ret_token=있음
+10:24:00 Starting new HTTP connection (1): localhost:9080
+10:24:03 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+10:24:03 [auth/me] status=401
+10:24:03 [cookie] 토큰 만료 → 쿠키 삭제
+10:24:03 [qp] {}
+10:33:18 [flush_cookie] action=delete
+10:33:18 [flush_cookie] st.html 호출 전
+10:33:18 [flush_cookie] st.html 호출 후
+10:33:18 [render] token=False invalidated=True
+10:33:18 [qp] {}
+10:33:22 [render] token=False invalidated=True
+10:33:22 [qp] {}
+10:33:34 [render] token=False invalidated=True
+10:33:34 [qp] {}
+10:33:37 [render] token=False invalidated=True
+10:33:37 [qp] {}
+10:33:37 Starting new HTTP connection (1): localhost:9080
+10:33:39 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 243
+10:33:39 [flush_cookie] action=set
+10:33:39 [flush_cookie] st.html 호출 전
+10:33:39 [flush_cookie] st.html 호출 후
+10:33:39 [render] token=True invalidated=None
+10:33:39 [qp] {}
+10:33:39 Starting new HTTP connection (1): localhost:9080
+10:33:42 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1791
+10:33:42 [render] token=True invalidated=None
+10:33:42 [qp] {}
+10:33:42 Starting new HTTP connection (1): localhost:9080
+10:33:44 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36466
+10:33:44 [render] token=True invalidated=None
+10:33:44 [qp] {}
+10:33:44 Starting new HTTP connection (1): localhost:9080
+10:33:46 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+10:33:46 Starting new HTTP connection (1): localhost:9080
+10:33:48 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+10:35:13 [render] token=True invalidated=None
+10:35:13 [qp] {}
+10:35:13 [render] token=True invalidated=None
+10:35:13 [qp] {}
+10:35:25 [render] token=True invalidated=None
+10:35:25 [qp] {}
+10:35:25 [render] token=True invalidated=None
+10:35:25 [qp] {}
+10:35:36 [render] token=True invalidated=None
+10:35:36 [qp] {}
+10:35:36 [render] token=True invalidated=None
+10:35:36 [qp] {}
+10:35:43 [render] token=True invalidated=None
+10:35:43 [qp] {}
+10:35:43 [render] token=True invalidated=None
+10:35:43 [qp] {}
+08:58:22 [render] token=False invalidated=None
+08:58:22 [cookie] ret_token=있음
+08:58:22 Starting new HTTP connection (1): localhost:9080
+08:58:25 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+08:58:25 [auth/me] status=401
+08:58:25 [cookie] 토큰 만료 → 쿠키 삭제
+08:58:25 [qp] {}
+08:58:35 [flush_cookie] action=delete
+08:58:35 [flush_cookie] st.html 호출 전
+08:58:35 [flush_cookie] st.html 호출 후
+08:58:35 [render] token=False invalidated=True
+08:58:35 [qp] {}
+08:58:43 [render] token=False invalidated=True
+08:58:43 [qp] {}
+08:58:43 Starting new HTTP connection (1): localhost:9080
+08:58:45 [render] token=False invalidated=True
+08:58:45 [qp] {}
+08:58:45 Starting new HTTP connection (1): localhost:9080
+08:58:46 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+08:58:48 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+08:58:48 [flush_cookie] action=set
+08:58:48 [flush_cookie] st.html 호출 전
+08:58:48 [flush_cookie] st.html 호출 후
+08:58:48 [render] token=True invalidated=None
+08:58:48 [qp] {}
+08:58:48 Starting new HTTP connection (1): localhost:9080
+08:58:50 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+08:58:50 [render] token=True invalidated=None
+08:58:50 [qp] {}
+08:58:50 Starting new HTTP connection (1): localhost:9080
+08:58:52 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+08:58:52 [render] token=True invalidated=None
+08:58:52 [qp] {}
+08:58:52 Starting new HTTP connection (1): localhost:9080
+08:58:54 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+08:58:54 Starting new HTTP connection (1): localhost:9080
+08:58:56 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+08:58:57 Starting new HTTP connection (1): localhost:9080
+08:58:59 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+09:54:45 [render] token=False invalidated=None
+09:54:45 [cookie] ret_token=있음
+09:54:45 Starting new HTTP connection (1): localhost:9080
+09:54:47 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+09:54:47 [auth/me] status=401
+09:54:47 [cookie] 토큰 만료 → 쿠키 삭제
+09:54:47 [qp] {}
+09:54:53 [flush_cookie] action=delete
+09:54:53 [flush_cookie] st.html 호출 전
+09:54:53 [flush_cookie] st.html 호출 후
+09:54:53 [render] token=False invalidated=True
+09:54:53 [qp] {}
+09:54:56 [render] token=False invalidated=True
+09:54:56 [qp] {}
+09:54:58 [render] token=False invalidated=True
+09:54:58 [qp] {}
+09:54:58 Starting new HTTP connection (1): localhost:9080
+09:55:00 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+09:55:00 [flush_cookie] action=set
+09:55:00 [flush_cookie] st.html 호출 전
+09:55:00 [flush_cookie] st.html 호출 후
+09:55:00 [render] token=True invalidated=None
+09:55:00 [qp] {}
+09:55:00 Starting new HTTP connection (1): localhost:9080
+09:55:03 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+09:55:03 [render] token=True invalidated=None
+09:55:03 [qp] {}
+09:55:03 Starting new HTTP connection (1): localhost:9080
+09:55:05 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+09:55:05 [render] token=True invalidated=None
+09:55:05 [qp] {}
+09:55:05 Starting new HTTP connection (1): localhost:9080
+09:55:07 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+09:55:07 Starting new HTTP connection (1): localhost:9080
+09:55:09 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+09:55:09 Starting new HTTP connection (1): localhost:9080
+09:55:11 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+09:56:14 [render] token=False invalidated=None
+09:56:14 [cookie] ret_token=있음
+09:56:14 Starting new HTTP connection (1): localhost:9080
+09:56:16 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+09:56:16 [auth/me] status=200
+09:56:16 [render] token=True invalidated=None
+09:56:16 [qp] {}
+09:56:16 Starting new HTTP connection (1): localhost:9080
+09:56:18 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+09:56:18 [render] token=True invalidated=None
+09:56:18 [qp] {}
+09:56:18 Starting new HTTP connection (1): localhost:9080
+09:56:20 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37277
+09:56:20 [render] token=True invalidated=None
+09:56:20 [qp] {}
+09:56:20 Starting new HTTP connection (1): localhost:9080
+09:56:22 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+09:56:22 Starting new HTTP connection (1): localhost:9080
+09:56:24 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+09:56:25 Starting new HTTP connection (1): localhost:9080
+09:56:27 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+10:08:48 [render] token=True invalidated=None
+10:08:48 [qp] {}
+10:24:13 [render] token=False invalidated=None
+10:24:13 [cookie] ret_token=있음
+10:24:13 Starting new HTTP connection (1): localhost:9080
+10:24:15 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+10:24:15 [auth/me] status=200
+10:24:15 [render] token=True invalidated=None
+10:24:15 [qp] {}
+10:24:15 Starting new HTTP connection (1): localhost:9080
+10:24:17 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+10:24:17 [render] token=True invalidated=None
+10:24:17 [qp] {}
+10:24:17 Starting new HTTP connection (1): localhost:9080
+10:24:19 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37183
+10:24:19 [render] token=True invalidated=None
+10:24:19 [qp] {}
+10:24:19 Starting new HTTP connection (1): localhost:9080
+10:24:21 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+10:24:21 Starting new HTTP connection (1): localhost:9080
+10:24:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+10:24:23 Starting new HTTP connection (1): localhost:9080
+10:24:26 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+10:30:11 [render] token=True invalidated=None
+10:30:11 [qp] {}
+10:45:01 [render] token=False invalidated=None
+10:45:01 [cookie] ret_token=있음
+10:45:01 Starting new HTTP connection (1): localhost:9080
+10:45:04 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+10:45:04 [auth/me] status=200
+10:45:04 [render] token=True invalidated=None
+10:45:04 [qp] {}
+10:45:04 Starting new HTTP connection (1): localhost:9080
+10:45:06 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+10:45:06 [render] token=True invalidated=None
+10:45:06 [qp] {}
+10:45:06 Starting new HTTP connection (1): localhost:9080
+10:45:08 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37183
+10:45:08 [render] token=True invalidated=None
+10:45:08 [qp] {}
+10:45:08 Starting new HTTP connection (1): localhost:9080
+10:45:10 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+10:45:10 Starting new HTTP connection (1): localhost:9080
+10:45:12 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+10:45:12 Starting new HTTP connection (1): localhost:9080
+10:45:14 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+10:59:23 [render] token=False invalidated=None
+10:59:23 [cookie] ret_token=있음
+10:59:23 Starting new HTTP connection (1): localhost:9080
+10:59:26 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+10:59:26 [auth/me] status=200
+10:59:26 [render] token=True invalidated=None
+10:59:26 [qp] {}
+10:59:26 Starting new HTTP connection (1): localhost:9080
+10:59:28 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+10:59:28 [render] token=True invalidated=None
+10:59:28 [qp] {}
+10:59:28 Starting new HTTP connection (1): localhost:9080
+10:59:30 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37183
+10:59:30 [render] token=True invalidated=None
+10:59:30 [qp] {}
+10:59:30 Starting new HTTP connection (1): localhost:9080
+10:59:32 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+10:59:32 Starting new HTTP connection (1): localhost:9080
+10:59:34 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+10:59:34 Starting new HTTP connection (1): localhost:9080
+10:59:36 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+18:41:39 [render] token=False invalidated=None
+18:41:39 [cookie] ret_token=있음
+18:41:39 Starting new HTTP connection (1): localhost:9080
+18:41:42 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+18:41:42 [auth/me] status=401
+18:41:42 [cookie] 토큰 만료 → 쿠키 삭제
+18:41:42 [qp] {}
+18:41:51 [flush_cookie] action=delete
+18:41:51 [flush_cookie] st.html 호출 전
+18:41:51 [flush_cookie] st.html 호출 후
+18:41:51 [render] token=False invalidated=True
+18:41:51 [qp] {}
+18:41:58 [render] token=False invalidated=True
+18:41:58 [qp] {}
+18:42:00 [render] token=False invalidated=True
+18:42:00 [qp] {}
+18:42:00 Starting new HTTP connection (1): localhost:9080
+18:42:03 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 243
+18:42:03 [flush_cookie] action=set
+18:42:03 [flush_cookie] st.html 호출 전
+18:42:03 [flush_cookie] st.html 호출 후
+18:42:03 [render] token=True invalidated=None
+18:42:03 [qp] {}
+18:42:03 Starting new HTTP connection (1): localhost:9080
+18:42:05 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 1791
+18:42:05 [render] token=True invalidated=None
+18:42:05 [qp] {}
+18:42:05 Starting new HTTP connection (1): localhost:9080
+18:42:07 http://localhost:9080 "POST /analyze HTTP/1.1" 200 36524
+18:42:07 [render] token=True invalidated=None
+18:42:07 [qp] {}
+18:42:07 Starting new HTTP connection (1): localhost:9080
+18:42:09 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 104
+18:42:09 Starting new HTTP connection (1): localhost:9080
+18:42:11 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+18:42:59 [render] token=True invalidated=None
+18:42:59 [qp] {}
+18:42:59 [render] token=True invalidated=None
+18:42:59 [qp] {}
+18:43:02 [render] token=True invalidated=None
+18:43:02 [qp] {}
+18:43:02 Starting new HTTP connection (1): localhost:9080
+18:43:05 [render] token=True invalidated=None
+18:43:05 [qp] {}
+18:43:05 Starting new HTTP connection (1): localhost:9080
+18:43:05 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:43:05 [render] token=True invalidated=None
+18:43:05 [qp] {}
+18:43:05 Starting new HTTP connection (1): localhost:9080
+18:43:06 [render] token=True invalidated=None
+18:43:06 [qp] {}
+18:43:06 Starting new HTTP connection (1): localhost:9080
+18:43:07 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:43:07 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:43:08 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:43:08 [render] token=False invalidated=True
+18:43:08 [qp] {}
+18:43:14 [render] token=False invalidated=True
+18:43:14 [qp] {}
+18:43:22 [render] token=False invalidated=True
+18:43:22 [qp] {}
+18:43:25 [render] token=False invalidated=True
+18:43:25 [qp] {}
+18:43:25 Starting new HTTP connection (1): localhost:9080
+18:43:26 [render] token=False invalidated=True
+18:43:26 [qp] {}
+18:43:26 Starting new HTTP connection (1): localhost:9080
+18:43:28 http://localhost:9080 "POST /auth/login HTTP/1.1" 401 55
+18:43:28 http://localhost:9080 "POST /auth/login HTTP/1.1" 401 55
+18:44:06 [render] token=False invalidated=True
+18:44:06 [qp] {}
+18:44:09 [render] token=False invalidated=True
+18:44:09 [qp] {}
+18:44:09 Starting new HTTP connection (1): localhost:9080
+18:44:12 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+18:44:12 [flush_cookie] action=set
+18:44:12 [flush_cookie] st.html 호출 전
+18:44:12 [flush_cookie] st.html 호출 후
+18:44:12 [render] token=True invalidated=None
+18:44:12 [qp] {}
+18:44:12 Starting new HTTP connection (1): localhost:9080
+18:44:14 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+18:44:14 [render] token=True invalidated=None
+18:44:14 [qp] {}
+18:44:14 Starting new HTTP connection (1): localhost:9080
+18:44:16 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37183
+18:44:16 [render] token=True invalidated=None
+18:44:16 [qp] {}
+18:44:16 Starting new HTTP connection (1): localhost:9080
+18:44:18 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+18:44:18 Starting new HTTP connection (1): localhost:9080
+18:44:20 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+18:44:20 Starting new HTTP connection (1): localhost:9080
+18:44:22 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+08:29:18 [render] token=False invalidated=None
+08:29:18 [cookie] ret_token=없음
+08:29:18 [qp] {}
+15:57:20 [render] token=False invalidated=None
+15:57:20 [cookie] ret_token=있음
+15:57:20 Starting new HTTP connection (1): localhost:9080
+15:57:22 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+15:57:22 [auth/me] status=401
+15:57:22 [cookie] 토큰 만료 → 쿠키 삭제
+15:57:22 [qp] {}
+10:55:53 [render] token=False invalidated=None
+10:55:53 [cookie] ret_token=있음
+10:55:53 Starting new HTTP connection (1): localhost:9080
+10:55:56 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+10:55:56 [auth/me] status=401
+10:55:56 [cookie] 토큰 만료 → 쿠키 삭제
+10:55:56 [qp] {}
+10:56:00 [flush_cookie] action=delete
+10:56:00 [flush_cookie] st.html 호출 전
+10:56:00 [flush_cookie] st.html 호출 후
+10:56:00 [render] token=False invalidated=True
+10:56:00 [qp] {}
+10:56:07 [render] token=False invalidated=True
+10:56:07 [qp] {}
+10:56:12 [render] token=False invalidated=True
+10:56:12 [qp] {}
+10:56:12 Starting new HTTP connection (1): localhost:9080
+10:56:14 http://localhost:9080 "POST /auth/login HTTP/1.1" 200 245
+10:56:14 [flush_cookie] action=set
+10:56:14 [flush_cookie] st.html 호출 전
+10:56:14 [flush_cookie] st.html 호출 후
+10:56:14 [render] token=True invalidated=None
+10:56:14 [qp] {}
+10:56:14 Starting new HTTP connection (1): localhost:9080
+10:56:16 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+10:56:16 [render] token=True invalidated=None
+10:56:16 [qp] {}
+10:56:16 Starting new HTTP connection (1): localhost:9080
+10:56:18 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37183
+10:56:19 [render] token=True invalidated=None
+10:56:19 [qp] {}
+10:56:19 Starting new HTTP connection (1): localhost:9080
+10:56:21 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+10:56:21 Starting new HTTP connection (1): localhost:9080
+10:56:23 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+10:56:23 Starting new HTTP connection (1): localhost:9080
+10:56:25 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+11:00:36 [render] token=False invalidated=None
+11:00:36 [cookie] ret_token=있음
+11:00:36 Starting new HTTP connection (1): localhost:9080
+11:00:38 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+11:00:38 [auth/me] status=200
+11:00:38 [render] token=True invalidated=None
+11:00:38 [qp] {}
+11:00:38 Starting new HTTP connection (1): localhost:9080
+11:00:41 http://localhost:9080 "GET /profiles/latest HTTP/1.1" 200 2582
+11:00:41 [render] token=True invalidated=None
+11:00:41 [qp] {}
+11:00:41 Starting new HTTP connection (1): localhost:9080
+11:00:42 [render] token=True invalidated=None
+11:00:42 [qp] {}
+11:00:42 Starting new HTTP connection (1): localhost:9080
+11:00:43 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37183
+11:00:44 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37183
+11:00:44 [render] token=True invalidated=None
+11:00:44 [qp] {}
+11:00:45 Starting new HTTP connection (1): localhost:9080
+11:00:47 http://localhost:9080 "GET /auth/me HTTP/1.1" 200 105
+11:00:47 Starting new HTTP connection (1): localhost:9080
+11:00:49 http://localhost:9080 "GET /scenarios HTTP/1.1" 200 2260
+11:00:49 Starting new HTTP connection (1): localhost:9080
+11:00:51 http://localhost:9080 "GET /admin/users HTTP/1.1" 200 1306
+11:01:01 [render] token=True invalidated=None
+11:01:01 [qp] {}
+11:01:01 [render] token=True invalidated=None
+11:01:01 [qp] {}
+11:01:28 [render] token=True invalidated=None
+11:01:28 [qp] {}
+11:01:28 [render] token=True invalidated=None
+11:01:28 [qp] {}
+11:01:43 [render] token=True invalidated=None
+11:01:43 [qp] {}
+11:01:43 Starting new HTTP connection (1): localhost:9080
+11:01:46 http://localhost:9080 "PUT /profiles/377 HTTP/1.1" 200 69
+11:01:46 Starting new HTTP connection (1): localhost:9080
+11:01:48 http://localhost:9080 "POST /analyze HTTP/1.1" 200 37178
+11:01:48 [render] token=True invalidated=None
+11:01:48 [qp] {}
+14:54:45 [render] token=False invalidated=None
+14:54:45 [cookie] ret_token=있음
+14:54:45 Starting new HTTP connection (1): localhost:9080
+14:54:47 http://localhost:9080 "GET /auth/me HTTP/1.1" 401 49
+14:54:47 [auth/me] status=401
+14:54:47 [cookie] 토큰 만료 → 쿠키 삭제
+14:54:47 [qp] {}
+15:02:36 [render] token=False invalidated=None
+15:02:36 [cookie] ret_token=있음
+15:02:36 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:02:36 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+15:02:36 [auth/me] status=401
+15:02:36 [cookie] 토큰 만료 → 쿠키 삭제
+15:02:36 [qp] {}
+15:12:19 [render] token=False invalidated=None
+15:12:19 [cookie] ret_token=있음
+15:12:19 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:12:20 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+15:12:20 [auth/me] status=401
+15:12:20 [cookie] 토큰 만료 → 쿠키 삭제
+15:12:20 [qp] {}
+15:40:18 [render] token=False invalidated=None
+15:40:18 [cookie] ret_token=있음
+15:40:18 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:40:19 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+15:40:19 [auth/me] status=401
+15:40:19 [cookie] 토큰 만료 → 쿠키 삭제
+15:40:19 [qp] {}
+15:47:58 [render] token=False invalidated=None
+15:47:58 [cookie] ret_token=있음
+15:47:58 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:47:59 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+15:47:59 [auth/me] status=401
+15:47:59 [cookie] 토큰 만료 → 쿠키 삭제
+15:47:59 [qp] {}
+15:59:40 [render] token=False invalidated=None
+15:59:40 [cookie] ret_token=있음
+15:59:40 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:59:41 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+15:59:41 [auth/me] status=401
+15:59:41 [cookie] 토큰 만료 → 쿠키 삭제
+15:59:41 [qp] {}
+15:59:55 [render] token=False invalidated=None
+15:59:55 [cookie] ret_token=있음
+15:59:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:59:56 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+15:59:56 [auth/me] status=401
+15:59:56 [cookie] 토큰 만료 → 쿠키 삭제
+15:59:56 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg3NjM5NX0.tp0oYYntueGoXnClAIfKSavE05N-s6R4RK9gvDjvkGo', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+15:59:56 [flush_cookie] action=set
+15:59:56 [flush_cookie] st.html 호출 전
+15:59:56 [flush_cookie] st.html 호출 후
+15:59:56 [render] token=True invalidated=True
+15:59:56 [qp] {}
+15:59:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:59:57 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1608
+15:59:57 [render] token=True invalidated=True
+15:59:57 [qp] {}
+15:59:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+15:59:57 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 405 18
+16:04:45 [render] token=False invalidated=None
+16:04:45 [cookie] ret_token=있음
+16:04:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:04:45 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+16:04:45 [auth/me] status=401
+16:04:45 [cookie] 토큰 만료 → 쿠키 삭제
+16:04:45 [qp] {}
+16:10:10 [render] token=False invalidated=None
+16:10:10 [cookie] ret_token=있음
+16:10:10 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:10:10 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+16:10:10 [auth/me] status=401
+16:10:10 [cookie] 토큰 만료 → 쿠키 삭제
+16:10:10 [qp] {}
+16:10:20 [render] token=False invalidated=None
+16:10:20 [cookie] ret_token=있음
+16:10:20 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:10:21 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+16:10:21 [auth/me] status=401
+16:10:21 [cookie] 토큰 만료 → 쿠키 삭제
+16:10:21 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg3NzAyMH0.WLARi69Wbe7UJYcxIFFo3NyDBj49m7GC_LgzPNiPf9Y', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+16:10:21 [flush_cookie] action=set
+16:10:21 [flush_cookie] st.html 호출 전
+16:10:21 [flush_cookie] st.html 호출 후
+16:10:21 [render] token=True invalidated=True
+16:10:21 [qp] {}
+16:10:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:10:22 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1608
+16:10:22 [render] token=True invalidated=True
+16:10:22 [qp] {}
+16:10:22 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:10:22 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 405 18
+16:11:00 [render] token=False invalidated=None
+16:11:00 [cookie] ret_token=없음
+16:11:00 [qp] {}
+16:11:09 [render] token=False invalidated=None
+16:11:09 [cookie] ret_token=없음
+16:11:09 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg3NzA2OX0.16l4TUZ1ccMMDP0opEuI24lM3uOv7IzYpB7tQTW7Vc0', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+16:11:09 [flush_cookie] action=set
+16:11:09 [flush_cookie] st.html 호출 전
+16:11:09 [flush_cookie] st.html 호출 후
+16:11:09 [render] token=True invalidated=None
+16:11:09 [qp] {}
+16:11:09 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:11:11 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1608
+16:11:11 [render] token=True invalidated=None
+16:11:11 [qp] {}
+16:11:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:11:11 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 405 18
+16:12:30 [render] token=False invalidated=None
+16:12:30 [cookie] ret_token=없음
+16:12:30 [qp] {}
+16:12:38 [render] token=False invalidated=None
+16:12:38 [cookie] ret_token=없음
+16:12:38 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg3NzE1OH0.OWewYoUqKJ99fF1Npeo9C317R8agQrpbn_1XGjNELnY', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+16:12:38 [flush_cookie] action=set
+16:12:38 [flush_cookie] st.html 호출 전
+16:12:38 [flush_cookie] st.html 호출 후
+16:12:38 [render] token=True invalidated=None
+16:12:38 [qp] {}
+16:12:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:12:39 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1608
+16:12:39 [render] token=True invalidated=None
+16:12:39 [qp] {}
+16:12:39 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:12:40 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 405 18
+16:18:57 [render] token=False invalidated=None
+16:18:57 [cookie] ret_token=있음
+16:18:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:18:57 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+16:18:57 [auth/me] status=200
+16:18:57 [render] token=True invalidated=None
+16:18:57 [qp] {}
+16:18:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:18:59 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1608
+16:18:59 [render] token=True invalidated=None
+16:18:59 [qp] {}
+16:18:59 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:18:59 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 405 18
+16:19:37 [render] token=False invalidated=None
+16:19:37 [cookie] ret_token=있음
+16:19:37 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:19:38 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+16:19:38 [auth/me] status=200
+16:19:38 [render] token=True invalidated=None
+16:19:38 [qp] {}
+16:19:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:19:39 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1608
+16:19:39 [render] token=True invalidated=None
+16:19:39 [qp] {}
+16:19:39 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:19:39 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 405 18
+16:25:49 [render] token=True invalidated=None
+16:25:49 [qp] {}
+16:25:49 [render] token=True invalidated=None
+16:25:49 [qp] {}
+16:25:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:25:49 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+16:25:49 [render] token=True invalidated=None
+16:25:49 [qp] {}
+16:25:54 [render] token=True invalidated=None
+16:25:54 [qp] {}
+16:25:54 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:25:54 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+16:25:54 [render] token=False invalidated=True
+16:25:54 [qp] {}
+16:26:04 [render] token=False invalidated=None
+16:26:04 [cookie] ret_token=있음
+16:26:04 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:26:04 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+16:26:04 [auth/me] status=401
+16:26:04 [cookie] 토큰 만료 → 쿠키 삭제
+16:26:04 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg3Nzk2M30.v3a2Qk6JwjVruvhBdL6YtPZ9bNKxsoDM3vprymcQJCQ', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+16:26:04 [flush_cookie] action=set
+16:26:04 [flush_cookie] st.html 호출 전
+16:26:04 [flush_cookie] st.html 호출 후
+16:26:04 [render] token=True invalidated=True
+16:26:04 [qp] {}
+16:26:04 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:26:04 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+16:26:05 [render] token=True invalidated=True
+16:26:05 [qp] {}
+16:26:05 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:26:05 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+16:26:05 [render] token=True invalidated=True
+16:26:05 [qp] {}
+16:27:14 [render] token=True invalidated=True
+16:27:14 [qp] {}
+16:27:14 [render] token=True invalidated=True
+16:27:14 [qp] {}
+16:27:16 [render] token=True invalidated=True
+16:27:16 [qp] {}
+16:27:16 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:27:17 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+16:27:17 [render] token=False invalidated=True
+16:27:17 [qp] {}
+16:35:31 [render] token=False invalidated=None
+16:35:31 [cookie] ret_token=있음
+16:35:31 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:35:31 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+16:35:31 [auth/me] status=401
+16:35:31 [cookie] 토큰 만료 → 쿠키 삭제
+16:35:31 [qp] {}
+16:36:51 [render] token=False invalidated=None
+16:36:51 [cookie] ret_token=있음
+16:36:51 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:36:51 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+16:36:51 [auth/me] status=401
+16:36:51 [cookie] 토큰 만료 → 쿠키 삭제
+16:36:51 [qp] {}
+16:38:35 [render] token=False invalidated=None
+16:38:35 [cookie] ret_token=있음
+16:38:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:38:36 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+16:38:36 [auth/me] status=401
+16:38:36 [cookie] 토큰 만료 → 쿠키 삭제
+16:38:36 [qp] {}
+16:49:14 [render] token=False invalidated=None
+16:49:14 [cookie] ret_token=있음
+16:49:14 Starting new HTTPS connection (1): kairang.pe.kr:8443
+16:49:15 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+16:49:15 [auth/me] status=401
+16:49:15 [cookie] 토큰 만료 → 쿠키 삭제
+16:49:15 [qp] {}
+17:12:24 [render] token=False invalidated=None
+17:12:24 [cookie] ret_token=있음
+17:12:24 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:12:25 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:12:25 [auth/me] status=401
+17:12:25 [cookie] 토큰 만료 → 쿠키 삭제
+17:12:25 [qp] {}
+17:12:57 [render] token=False invalidated=None
+17:12:57 [cookie] ret_token=있음
+17:12:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:12:57 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:12:57 [auth/me] status=401
+17:12:57 [cookie] 토큰 만료 → 쿠키 삭제
+17:12:57 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MDc3Nn0.1Bh77_yBbks46qUhVGipEYcx3WAqr7fQ7x9xIQwRJKY', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+17:12:57 [flush_cookie] action=set
+17:12:57 [flush_cookie] st.html 호출 전
+17:12:57 [flush_cookie] st.html 호출 후
+17:12:57 [render] token=True invalidated=True
+17:12:57 [qp] {}
+17:12:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:12:58 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:12:58 [render] token=True invalidated=True
+17:12:58 [qp] {}
+17:12:58 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:12:58 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:12:58 [render] token=True invalidated=True
+17:12:58 [qp] {}
+17:13:40 [render] token=True invalidated=True
+17:13:40 [qp] {}
+17:13:40 [render] token=True invalidated=True
+17:13:40 [qp] {}
+17:13:41 [render] token=True invalidated=True
+17:13:41 [qp] {}
+17:13:41 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:13:41 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:13:42 [render] token=False invalidated=True
+17:13:42 [qp] {}
+17:13:48 [render] token=False invalidated=None
+17:13:48 [cookie] ret_token=있음
+17:13:48 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:13:48 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:13:48 [auth/me] status=401
+17:13:48 [cookie] 토큰 만료 → 쿠키 삭제
+17:13:48 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MDgyOH0.-XbaU52HU0FZUHOgDtNHC1yaGCVqy3OImaKzuLS5s9s', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+17:13:48 [flush_cookie] action=set
+17:13:48 [flush_cookie] st.html 호출 전
+17:13:48 [flush_cookie] st.html 호출 후
+17:13:48 [render] token=True invalidated=True
+17:13:48 [qp] {}
+17:13:48 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:13:49 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:13:49 [render] token=True invalidated=True
+17:13:49 [qp] {}
+17:13:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:13:49 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:13:49 [render] token=True invalidated=True
+17:13:49 [qp] {}
+17:13:59 [render] token=True invalidated=True
+17:13:59 [qp] {}
+17:13:59 [render] token=True invalidated=True
+17:13:59 [qp] {}
+17:14:00 [render] token=True invalidated=True
+17:14:00 [qp] {}
+17:14:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:14:00 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:14:00 [render] token=False invalidated=True
+17:14:00 [qp] {}
+17:14:43 [render] token=False invalidated=None
+17:14:43 [cookie] ret_token=있음
+17:14:43 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:14:43 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:14:43 [auth/me] status=401
+17:14:43 [cookie] 토큰 만료 → 쿠키 삭제
+17:14:43 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MDg4Mn0.L2TCrDIgMk2Hcty3FFdeIJtiSjoNZGnyAbSlxoGJNbk', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0'}
+17:14:43 [flush_cookie] action=set
+17:14:43 [flush_cookie] st.html 호출 전
+17:14:43 [flush_cookie] st.html 호출 후
+17:14:43 [render] token=True invalidated=True
+17:14:43 [qp] {}
+17:14:43 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:14:44 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:14:44 [render] token=True invalidated=True
+17:14:44 [qp] {}
+17:14:44 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:14:44 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:14:44 [render] token=True invalidated=True
+17:14:44 [qp] {}
+17:17:35 [render] token=True invalidated=True
+17:17:35 [qp] {}
+17:17:35 [render] token=True invalidated=True
+17:17:35 [qp] {}
+17:17:37 [render] token=True invalidated=True
+17:17:37 [qp] {}
+17:17:37 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:17:37 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:17:37 [render] token=False invalidated=True
+17:17:37 [qp] {}
+17:18:07 [render] token=False invalidated=None
+17:18:07 [cookie] ret_token=있음
+17:18:07 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:18:07 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:18:07 [auth/me] status=401
+17:18:07 [cookie] 토큰 만료 → 쿠키 삭제
+17:18:07 [qp] {}
+17:19:00 [render] token=False invalidated=None
+17:19:00 [cookie] ret_token=있음
+17:19:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:19:00 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:19:00 [auth/me] status=401
+17:19:00 [cookie] 토큰 만료 → 쿠키 삭제
+17:19:00 [qp] {}
+17:22:10 [render] token=False invalidated=None
+17:22:10 [cookie] ret_token=있음
+17:22:10 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:22:10 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:22:10 [auth/me] status=401
+17:22:10 [cookie] 토큰 만료 → 쿠키 삭제
+17:22:10 [qp] {}
+17:22:52 [render] token=False invalidated=None
+17:22:52 [cookie] ret_token=있음
+17:22:52 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:22:53 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:22:53 [auth/me] status=401
+17:22:53 [cookie] 토큰 만료 → 쿠키 삭제
+17:22:53 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNyIsImVtYWlsIjoibmF2ZXJfcF9vdjZaWFVSWW55RUhZREhZVzRsZnoyNHhNM2I4YTE4WEVUeTZITmk1b0BvYXV0aC5sb2NhbCIsImV4cCI6MTc4NDg4MTM3Mn0._fcx8fMGticheKmlmtz_E4wdkxYgg66uVocNsym7tTc', 'user_id': '27', 'name': '인찬호', 'email': 'naver_p_ov6ZXURYnyEHYDHYW4lfz24xM3b8a18XETy6HNi5o@oauth.local', 'is_admin': '0'}
+17:22:53 [flush_cookie] action=set
+17:22:53 [flush_cookie] st.html 호출 전
+17:22:53 [flush_cookie] st.html 호출 후
+17:22:53 [render] token=True invalidated=True
+17:22:53 [qp] {}
+17:22:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:22:53 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:22:53 [render] token=True invalidated=True
+17:22:53 [qp] {}
+17:22:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:22:54 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+17:22:54 [render] token=True invalidated=True
+17:22:54 [qp] {}
+17:25:41 [render] token=True invalidated=True
+17:25:41 [qp] {}
+17:25:41 [render] token=True invalidated=True
+17:25:41 [qp] {}
+17:25:52 [render] token=True invalidated=True
+17:25:52 [qp] {}
+17:31:42 [render] token=True invalidated=True
+17:31:42 [qp] {}
+17:31:42 [render] token=True invalidated=True
+17:31:42 [qp] {}
+17:31:48 [render] token=True invalidated=True
+17:31:48 [qp] {}
+17:31:48 [render] token=True invalidated=True
+17:31:48 [qp] {}
+17:31:49 [render] token=True invalidated=True
+17:31:49 [qp] {}
+17:31:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:31:49 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:31:49 [render] token=False invalidated=True
+17:31:49 [qp] {}
+17:31:53 [render] token=False invalidated=None
+17:31:53 [cookie] ret_token=있음
+17:31:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:31:53 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:31:53 [auth/me] status=401
+17:31:53 [cookie] 토큰 만료 → 쿠키 삭제
+17:31:53 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNyIsImVtYWlsIjoibmF2ZXJfcF9vdjZaWFVSWW55RUhZREhZVzRsZnoyNHhNM2I4YTE4WEVUeTZITmk1b0BvYXV0aC5sb2NhbCIsImV4cCI6MTc4NDg4MTkxMn0.VYiTPfpSQ35dQH-7SySI8z2zXXn8e-t0lAI3mA2Vcqs', 'user_id': '27', 'name': '인찬호', 'email': 'naver_p_ov6ZXURYnyEHYDHYW4lfz24xM3b8a18XETy6HNi5o@oauth.local', 'is_admin': '0', 'oauth_provider': 'naver'}
+17:31:53 [flush_cookie] action=set
+17:31:53 [flush_cookie] st.html 호출 전
+17:31:53 [flush_cookie] st.html 호출 후
+17:31:53 [render] token=True invalidated=True
+17:31:53 [qp] {}
+17:31:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:31:53 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:31:53 [render] token=True invalidated=True
+17:31:53 [qp] {}
+17:31:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:31:54 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+17:31:54 [render] token=True invalidated=True
+17:31:54 [qp] {}
+17:32:09 [render] token=True invalidated=True
+17:32:09 [qp] {}
+17:32:09 [render] token=True invalidated=True
+17:32:09 [qp] {}
+17:32:14 [render] token=True invalidated=True
+17:32:14 [qp] {}
+17:32:15 [render] token=True invalidated=True
+17:32:15 [qp] {}
+17:32:15 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:32:16 https://kairang.pe.kr:8443 "POST /auth/delete-request HTTP/1.1" 200 41
+17:32:17 [render] token=False invalidated=None
+17:32:17 [cookie] ret_token=있음
+17:32:17 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:32:18 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:32:18 [auth/me] status=401
+17:32:18 [cookie] 토큰 만료 → 쿠키 삭제
+17:32:18 [qp] {'account_deleted': 'true'}
+17:32:28 [render] token=False invalidated=None
+17:32:28 [cookie] ret_token=있음
+17:32:28 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:32:28 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:32:28 [auth/me] status=401
+17:32:28 [cookie] 토큰 만료 → 쿠키 삭제
+17:32:28 [qp] {}
+17:33:33 [render] token=False invalidated=None
+17:33:33 [cookie] ret_token=있음
+17:33:33 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:33:33 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:33:33 [auth/me] status=401
+17:33:33 [cookie] 토큰 만료 → 쿠키 삭제
+17:33:33 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOCIsImVtYWlsIjoibmF2ZXJfcF9vdjZaWFVSWW55RUhZREhZVzRsZnoyNHhNM2I4YTE4WEVUeTZITmk1b0BvYXV0aC5sb2NhbCIsImV4cCI6MTc4NDg4MjAxMn0._LcTRmJcUJ03yNG98dAwcQ2Do7nyYfqHep1zKJVV5eY', 'user_id': '28', 'name': '인찬호', 'email': 'naver_p_ov6ZXURYnyEHYDHYW4lfz24xM3b8a18XETy6HNi5o@oauth.local', 'is_admin': '0', 'oauth_provider': 'naver'}
+17:33:33 [flush_cookie] action=set
+17:33:33 [flush_cookie] st.html 호출 전
+17:33:33 [flush_cookie] st.html 호출 후
+17:33:33 [render] token=True invalidated=True
+17:33:33 [qp] {}
+17:33:33 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:33:33 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:33:34 [render] token=True invalidated=True
+17:33:34 [qp] {}
+17:33:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:33:34 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+17:33:34 [render] token=True invalidated=True
+17:33:34 [qp] {}
+17:33:39 [render] token=True invalidated=True
+17:33:39 [qp] {}
+17:33:39 [render] token=True invalidated=True
+17:33:39 [qp] {}
+17:33:42 [render] token=True invalidated=True
+17:33:42 [qp] {}
+17:33:43 [render] token=True invalidated=True
+17:33:43 [qp] {}
+17:33:43 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:33:43 https://kairang.pe.kr:8443 "POST /auth/delete-request HTTP/1.1" 200 41
+17:33:45 [render] token=False invalidated=None
+17:33:45 [cookie] ret_token=있음
+17:33:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:33:45 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:33:45 [auth/me] status=401
+17:33:45 [cookie] 토큰 만료 → 쿠키 삭제
+17:33:45 [qp] {'account_deleted': 'true'}
+17:36:00 [render] token=False invalidated=None
+17:36:00 [cookie] ret_token=있음
+17:36:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:36:00 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:36:00 [auth/me] status=401
+17:36:00 [cookie] 토큰 만료 → 쿠키 삭제
+17:36:00 [qp] {}
+17:36:08 [render] token=False invalidated=None
+17:36:08 [cookie] ret_token=있음
+17:36:08 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:36:08 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:36:08 [auth/me] status=401
+17:36:08 [cookie] 토큰 만료 → 쿠키 삭제
+17:36:08 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MjE2N30.tocIHZgFAF5E5H0RP4IVFu71a3Fp5trOU07GjIpgdLk', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+17:36:08 [flush_cookie] action=set
+17:36:08 [flush_cookie] st.html 호출 전
+17:36:08 [flush_cookie] st.html 호출 후
+17:36:08 [render] token=True invalidated=True
+17:36:08 [qp] {}
+17:36:08 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:36:08 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:36:08 [render] token=True invalidated=True
+17:36:08 [qp] {}
+17:36:09 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:36:09 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:36:09 [render] token=True invalidated=True
+17:36:09 [qp] {}
+17:36:43 [render] token=True invalidated=True
+17:36:43 [qp] {}
+17:36:43 [render] token=True invalidated=True
+17:36:43 [qp] {}
+17:36:44 [render] token=True invalidated=True
+17:36:44 [qp] {}
+17:36:44 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:36:45 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:36:45 [render] token=False invalidated=True
+17:36:45 [qp] {}
+17:40:01 [render] token=False invalidated=None
+17:40:01 [cookie] ret_token=있음
+17:40:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:40:01 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 45
+17:40:01 [auth/me] status=401
+17:40:01 [cookie] 토큰 만료 → 쿠키 삭제
+17:40:01 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MjQwMH0.4twUw1zTiSIQYKhXqadmy2QJ_zU3gL_05byrHbxMEHU', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+17:40:01 [flush_cookie] action=set
+17:40:01 [flush_cookie] st.html 호출 전
+17:40:01 [flush_cookie] st.html 호출 후
+17:40:01 [render] token=True invalidated=True
+17:40:01 [qp] {}
+17:40:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:40:01 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:40:01 [render] token=True invalidated=True
+17:40:01 [qp] {}
+17:40:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:40:02 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:40:02 [render] token=True invalidated=True
+17:40:02 [qp] {}
+17:40:13 [render] token=True invalidated=True
+17:40:13 [qp] {}
+17:40:13 [render] token=True invalidated=True
+17:40:13 [qp] {}
+17:40:15 [render] token=True invalidated=True
+17:40:15 [qp] {}
+17:40:15 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:40:15 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:40:15 [flush_cookie] action=delete
+17:40:15 [flush_cookie] st.html 호출 전
+17:40:15 [flush_cookie] st.html 호출 후
+17:40:15 [render] token=False invalidated=True
+17:40:15 [qp] {}
+17:40:23 [render] token=False invalidated=None
+17:40:23 [cookie] ret_token=없음
+17:40:23 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MjQyM30.po56pzpIPVSGU6d7s9-V2g2rKssSRk0wCzHQYnKdY-U', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+17:40:23 [flush_cookie] action=set
+17:40:23 [flush_cookie] st.html 호출 전
+17:40:23 [flush_cookie] st.html 호출 후
+17:40:23 [render] token=True invalidated=None
+17:40:23 [qp] {}
+17:40:23 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:40:24 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:40:24 [render] token=True invalidated=None
+17:40:24 [qp] {}
+17:40:24 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:40:24 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:40:24 [render] token=True invalidated=None
+17:40:24 [qp] {}
+17:40:28 [render] token=True invalidated=None
+17:40:28 [qp] {}
+17:40:28 [render] token=True invalidated=None
+17:40:28 [qp] {}
+17:40:30 [render] token=True invalidated=None
+17:40:30 [qp] {}
+17:40:30 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:40:30 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:40:30 [flush_cookie] action=delete
+17:40:30 [flush_cookie] st.html 호출 전
+17:40:30 [flush_cookie] st.html 호출 후
+17:40:30 [render] token=False invalidated=True
+17:40:30 [qp] {}
+17:43:10 [render] token=False invalidated=None
+17:43:10 [cookie] ret_token=없음
+17:43:10 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MjU4OX0.NnN1LbBttetLKquPDuqwF3KDgXx3emoo3bCEBddvbw4', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+17:43:10 [flush_cookie] action=set
+17:43:10 [flush_cookie] st.html 호출 전
+17:43:10 [flush_cookie] st.html 호출 후
+17:43:10 [render] token=True invalidated=None
+17:43:10 [qp] {}
+17:43:10 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:43:10 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:43:10 [render] token=True invalidated=None
+17:43:10 [qp] {}
+17:43:10 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:43:10 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:43:10 [render] token=True invalidated=None
+17:43:10 [qp] {}
+17:43:14 [render] token=True invalidated=None
+17:43:14 [qp] {}
+17:43:14 [render] token=True invalidated=None
+17:43:14 [qp] {}
+17:43:15 [render] token=True invalidated=None
+17:43:15 [qp] {}
+17:43:15 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:43:15 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:43:15 [flush_cookie] action=delete
+17:43:15 [flush_cookie] st.html 호출 전
+17:43:15 [flush_cookie] st.html 호출 후
+17:43:15 [render] token=False invalidated=True
+17:43:15 [qp] {}
+17:43:21 [render] token=False invalidated=None
+17:43:21 [cookie] ret_token=없음
+17:43:21 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4MjYwMX0.p1i6MCrlW5J0GA-W0qka7E2s_7uINcKouQk38THylbo', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+17:43:21 [flush_cookie] action=set
+17:43:21 [flush_cookie] st.html 호출 전
+17:43:21 [flush_cookie] st.html 호출 후
+17:43:21 [render] token=True invalidated=None
+17:43:21 [qp] {}
+17:43:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:43:22 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:43:22 [render] token=True invalidated=None
+17:43:22 [qp] {}
+17:43:22 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:43:22 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+17:43:22 [render] token=True invalidated=None
+17:43:22 [qp] {}
+17:55:28 [render] token=True invalidated=None
+17:55:28 [qp] {}
+17:55:28 [render] token=True invalidated=None
+17:55:28 [qp] {}
+17:55:29 [render] token=True invalidated=None
+17:55:29 [qp] {}
+17:55:29 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:55:30 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:55:30 [flush_cookie] action=delete
+17:55:30 [flush_cookie] st.html 호출 전
+17:55:30 [flush_cookie] st.html 호출 후
+17:55:30 [render] token=False invalidated=True
+17:55:30 [qp] {}
+17:55:35 [render] token=False invalidated=None
+17:55:35 [cookie] ret_token=없음
+17:55:35 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODMzMzR9.bouPuoeZ6lSXoZHunt44NxpxfdtW1jlTl5B7nkFPWTo', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+17:55:35 [flush_cookie] action=set
+17:55:35 [flush_cookie] st.html 호출 전
+17:55:35 [flush_cookie] st.html 호출 후
+17:55:35 [render] token=True invalidated=None
+17:55:35 [qp] {}
+17:55:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:55:35 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:55:35 [render] token=True invalidated=None
+17:55:35 [qp] {}
+17:55:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:55:35 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+17:55:36 [render] token=True invalidated=None
+17:55:36 [qp] {}
+17:55:44 [render] token=True invalidated=None
+17:55:44 [qp] {}
+17:55:44 [render] token=True invalidated=None
+17:55:44 [qp] {}
+17:55:45 [render] token=True invalidated=None
+17:55:45 [qp] {}
+17:55:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:55:46 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:55:46 [flush_cookie] action=delete
+17:55:46 [flush_cookie] st.html 호출 전
+17:55:46 [flush_cookie] st.html 호출 후
+17:55:46 [render] token=False invalidated=True
+17:55:46 [qp] {}
+17:55:50 [render] token=False invalidated=None
+17:55:50 [cookie] ret_token=없음
+17:55:50 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODMzNDl9.ApW_65jtzfbpxvuyRp7sHFdmXdvs6pzSOGOeWE77-vw', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+17:55:50 [flush_cookie] action=set
+17:55:50 [flush_cookie] st.html 호출 전
+17:55:50 [flush_cookie] st.html 호출 후
+17:55:50 [render] token=True invalidated=None
+17:55:50 [qp] {}
+17:55:50 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:55:50 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+17:55:51 [render] token=True invalidated=None
+17:55:51 [qp] {}
+17:55:51 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:55:51 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+17:55:51 [render] token=True invalidated=None
+17:55:51 [qp] {}
+17:55:56 [render] token=True invalidated=None
+17:55:56 [qp] {}
+17:55:56 [render] token=True invalidated=None
+17:55:56 [qp] {}
+17:55:57 [render] token=True invalidated=None
+17:55:57 [qp] {}
+17:55:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+17:55:57 https://kairang.pe.kr:8443 "POST /auth/logout HTTP/1.1" 200 42
+17:55:57 [flush_cookie] action=delete
+17:55:57 [flush_cookie] st.html 호출 전
+17:55:57 [flush_cookie] st.html 호출 후
+17:55:57 [render] token=False invalidated=True
+17:55:57 [qp] {}
+18:00:36 [render] token=False invalidated=None
+18:00:36 [cookie] ret_token=없음
+18:00:36 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODM2MzV9.-eTdYoReWRY28W0YP-nDUa4B5-5Hl9ce1WV1LahO4rw', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:00:36 [flush_cookie] action=set
+18:00:36 [flush_cookie] st.html 호출 전
+18:00:36 [flush_cookie] st.html 호출 후
+18:00:36 [render] token=True invalidated=None
+18:00:36 [qp] {}
+18:00:36 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:00:37 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:00:37 [render] token=True invalidated=None
+18:00:37 [qp] {}
+18:00:37 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:00:37 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:00:37 [render] token=True invalidated=None
+18:00:37 [qp] {}
+18:00:41 [render] token=True invalidated=None
+18:00:41 [qp] {}
+18:00:41 [render] token=True invalidated=None
+18:00:41 [qp] {}
+18:00:42 [render] token=True invalidated=None
+18:00:42 [qp] {}
+18:00:42 Starting new HTTP connection (1): localhost:9080
+18:00:44 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:00:44 [flush_cookie] action=delete
+18:00:44 [flush_cookie] st.html 호출 전
+18:00:44 [flush_cookie] st.html 호출 후
+18:00:44 [render] token=False invalidated=True
+18:00:44 [qp] {}
+18:01:38 [render] token=False invalidated=None
+18:01:38 [cookie] ret_token=없음
+18:01:38 [qp] {}
+18:01:43 [render] token=False invalidated=None
+18:01:43 [cookie] ret_token=없음
+18:01:43 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODM3MDN9.P5WLDwhDo_IsNFBL7CSV2aL5wGBOSGq6fkmB9Dw08_Q', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:01:43 [flush_cookie] action=set
+18:01:43 [flush_cookie] st.html 호출 전
+18:01:43 [flush_cookie] st.html 호출 후
+18:01:43 [render] token=True invalidated=None
+18:01:43 [qp] {}
+18:01:43 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:01:44 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:01:44 [render] token=True invalidated=None
+18:01:44 [qp] {}
+18:01:44 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:01:44 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:01:44 [render] token=True invalidated=None
+18:01:44 [qp] {}
+18:01:48 [render] token=True invalidated=None
+18:01:48 [qp] {}
+18:01:48 [render] token=True invalidated=None
+18:01:48 [qp] {}
+18:01:50 [render] token=True invalidated=None
+18:01:50 [qp] {}
+18:01:50 Starting new HTTP connection (1): localhost:9080
+18:01:52 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:01:52 [flush_cookie] action=delete
+18:01:52 [flush_cookie] st.html 호출 전
+18:01:52 [flush_cookie] st.html 호출 후
+18:01:52 [render] token=False invalidated=True
+18:01:52 [qp] {}
+18:01:56 [render] token=False invalidated=None
+18:01:56 [cookie] ret_token=없음
+18:01:56 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODM3MTV9._E-SR3930zTidopUSpEt4-ACqtA6X50f3uWHPBa8Bb4', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:01:56 [flush_cookie] action=set
+18:01:56 [flush_cookie] st.html 호출 전
+18:01:56 [flush_cookie] st.html 호출 후
+18:01:56 [render] token=True invalidated=None
+18:01:56 [qp] {}
+18:01:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:01:57 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:01:57 [render] token=True invalidated=None
+18:01:57 [qp] {}
+18:01:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:01:57 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:01:57 [render] token=True invalidated=None
+18:01:57 [qp] {}
+18:02:12 [render] token=True invalidated=None
+18:02:12 [qp] {}
+18:02:12 [render] token=True invalidated=None
+18:02:12 [qp] {}
+18:02:13 [render] token=True invalidated=None
+18:02:13 [qp] {}
+18:02:13 Starting new HTTP connection (1): localhost:9080
+18:02:15 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:02:15 [flush_cookie] action=delete
+18:02:15 [flush_cookie] st.html 호출 전
+18:02:15 [flush_cookie] st.html 호출 후
+18:02:15 [render] token=False invalidated=True
+18:02:15 [qp] {}
+18:02:43 [render] token=False invalidated=None
+18:02:43 [cookie] ret_token=없음
+18:02:43 [qp] {}
+18:03:18 [render] token=False invalidated=None
+18:03:18 [cookie] ret_token=없음
+18:03:18 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODM3OTd9.afeyMtsgywkSP6APUmTxjUg81O42TY7Yg_LAtsfTIYs', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:03:18 [flush_cookie] action=set
+18:03:18 [flush_cookie] st.html 호출 전
+18:03:18 [flush_cookie] st.html 호출 후
+18:03:18 [render] token=True invalidated=None
+18:03:18 [qp] {}
+18:03:18 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:03:18 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:03:18 [render] token=True invalidated=None
+18:03:18 [qp] {}
+18:03:18 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:03:19 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:03:19 [render] token=True invalidated=None
+18:03:19 [qp] {}
+18:03:26 [render] token=True invalidated=None
+18:03:26 [qp] {}
+18:03:26 [render] token=True invalidated=None
+18:03:26 [qp] {}
+18:03:28 [render] token=True invalidated=None
+18:03:28 [qp] {}
+18:03:28 Starting new HTTP connection (1): localhost:9080
+18:03:30 http://localhost:9080 "POST /auth/logout HTTP/1.1" 200 42
+18:03:30 [flush_cookie] action=delete
+18:03:30 [flush_cookie] st.html 호출 전
+18:03:30 [flush_cookie] st.html 호출 후
+18:03:30 [render] token=False invalidated=True
+18:03:30 [qp] {}
+18:03:35 [render] token=False invalidated=None
+18:03:35 [cookie] ret_token=없음
+18:03:35 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODM4MTR9.HEVlTracw17gbUe3IMaEq_wyEctvyaQFH5qsiqmobas', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:03:35 [flush_cookie] action=set
+18:03:35 [flush_cookie] st.html 호출 전
+18:03:35 [flush_cookie] st.html 호출 후
+18:03:35 [render] token=True invalidated=None
+18:03:35 [qp] {}
+18:03:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:03:35 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:03:35 [render] token=True invalidated=None
+18:03:35 [qp] {}
+18:03:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:03:36 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:03:36 [render] token=True invalidated=None
+18:03:36 [qp] {}
+19:30:31 [render] token=False invalidated=None
+19:30:31 [cookie] ret_token=있음
+19:30:31 Starting new HTTPS connection (1): kairang.pe.kr:8443
+19:30:31 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+19:30:31 [auth/me] status=401
+19:30:31 [cookie] 토큰 만료 → 쿠키 삭제 후 rerun
+19:30:31 [flush_cookie] action=delete
+19:30:31 [flush_cookie] st.html 호출 전
+19:30:31 [flush_cookie] st.html 호출 후
+19:30:31 [render] token=False invalidated=True
+19:30:31 [qp] {}
+19:30:46 [render] token=False invalidated=None
+19:30:46 [cookie] ret_token=없음
+19:30:46 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4OTA0NX0.fSZqJJrpsm0CfuDsxwqpcMcdLqgHx7NScMq9V3ut3Nk', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+19:30:46 [flush_cookie] action=set
+19:30:46 [flush_cookie] st.html 호출 전
+19:30:46 [flush_cookie] st.html 호출 후
+19:30:46 [render] token=True invalidated=None
+19:30:46 [qp] {}
+19:30:46 Starting new HTTPS connection (1): kairang.pe.kr:8443
+19:30:47 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+19:30:47 [render] token=True invalidated=None
+19:30:47 [qp] {}
+19:30:47 Starting new HTTPS connection (1): kairang.pe.kr:8443
+19:30:47 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+19:30:47 [render] token=True invalidated=None
+19:30:47 [qp] {}
+19:31:01 [render] token=False invalidated=None
+19:31:01 [cookie] ret_token=없음
+19:31:01 [qp] {'oauth_error': 'invalid_state'}
+19:31:01 [oauth_error] invalid_state
+19:31:08 [render] token=False invalidated=None
+19:31:08 [cookie] ret_token=없음
+19:31:08 [qp] {}
+19:31:57 [render] token=False invalidated=None
+19:31:57 [cookie] ret_token=없음
+19:31:57 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDg4OTExNn0.fUSB61fDKvPl-GiN9BQIds7Xsu9fQJglxH6KVmj7kr4', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+19:31:57 [flush_cookie] action=set
+19:31:57 [flush_cookie] st.html 호출 전
+19:31:57 [flush_cookie] st.html 호출 후
+19:31:57 [render] token=True invalidated=None
+19:31:57 [qp] {}
+19:31:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+19:31:58 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+19:31:58 [render] token=True invalidated=None
+19:31:58 [qp] {}
+19:31:58 Starting new HTTPS connection (1): kairang.pe.kr:8443
+19:31:58 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+19:31:58 [render] token=True invalidated=None
+19:31:58 [qp] {}
+19:32:12 [render] token=False invalidated=None
+19:32:12 [cookie] ret_token=없음
+19:32:12 [qp] {}
+19:32:29 [render] token=False invalidated=None
+19:32:29 [cookie] ret_token=없음
+19:32:29 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODkxNDh9.DNA8D3XIESKZJ2DgUaAvuc9-OZM3AlFq5YUrSMuMcJs', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+19:32:29 [flush_cookie] action=set
+19:32:29 [flush_cookie] st.html 호출 전
+19:32:29 [flush_cookie] st.html 호출 후
+19:32:29 [render] token=True invalidated=None
+19:32:29 [qp] {}
+19:32:29 Starting new HTTPS connection (1): kairang.pe.kr:8443
+19:32:30 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+19:32:30 [render] token=True invalidated=None
+19:32:30 [qp] {}
+19:32:30 Starting new HTTPS connection (1): kairang.pe.kr:8443
+19:32:30 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+19:32:30 [render] token=True invalidated=None
+19:32:30 [qp] {}
+19:32:39 [render] token=True invalidated=None
+19:32:39 [qp] {}
+19:32:39 [render] token=True invalidated=None
+19:32:39 [qp] {}
+19:32:40 [render] token=True invalidated=None
+19:32:40 [qp] {}
+19:32:43 [render] token=True invalidated=None
+19:32:43 [qp] {}
+19:32:44 [render] token=True invalidated=None
+19:32:44 [qp] {}
+19:32:46 [render] token=True invalidated=None
+19:32:46 [qp] {}
+19:32:49 [render] token=True invalidated=None
+19:32:49 [qp] {}
+19:32:51 [render] token=True invalidated=None
+19:32:51 [qp] {}
+19:32:52 [render] token=True invalidated=None
+19:32:52 [qp] {}
+19:32:53 [render] token=True invalidated=None
+19:32:53 [qp] {}
+20:37:53 [render] token=False invalidated=None
+20:37:53 [cookie] ret_token=없음
+20:37:53 [qp] {}
+20:37:54 [render] token=False invalidated=None
+20:37:54 [cookie] ret_token=없음
+20:37:54 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ4ODkxNDh9.DNA8D3XIESKZJ2DgUaAvuc9-OZM3AlFq5YUrSMuMcJs', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+20:37:54 [flush_cookie] action=set
+20:37:54 [flush_cookie] st.html 호출 전
+20:37:54 [flush_cookie] st.html 호출 후
+20:37:54 [render] token=True invalidated=None
+20:37:54 [qp] {}
+20:37:54 Starting new HTTPS connection (1): kairang.pe.kr:8443
+20:37:55 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+20:37:55 [render] token=True invalidated=None
+20:37:55 [qp] {}
+20:37:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+20:37:55 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+20:37:55 [render] token=True invalidated=None
+20:37:55 [qp] {}
+20:38:00 [render] token=False invalidated=None
+20:38:00 [cookie] ret_token=없음
+20:38:00 [qp] {}
+08:49:09 [render] token=False invalidated=None
+08:49:09 [cookie] ret_token=없음
+08:49:09 [qp] {}
+08:49:30 [render] token=False invalidated=None
+08:49:30 [cookie] ret_token=없음
+08:49:30 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5MzY5Njl9.gp93ILMO8vCdTl-4kChTClIM8RZhIKQgaP-ABB4a6Rw', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+08:49:30 [flush_cookie] action=set
+08:49:30 [flush_cookie] st.html 호출 전
+08:49:30 [flush_cookie] st.html 호출 후
+08:49:30 [render] token=True invalidated=None
+08:49:30 [qp] {}
+08:49:30 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:49:30 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+08:49:30 [render] token=True invalidated=None
+08:49:30 [qp] {}
+08:49:30 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:49:31 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+08:49:31 [render] token=True invalidated=None
+08:49:31 [qp] {}
+08:49:41 [render] token=True invalidated=None
+08:49:41 [qp] {}
+08:49:41 [render] token=True invalidated=None
+08:49:41 [qp] {}
+08:49:43 [render] token=True invalidated=None
+08:49:43 [qp] {}
+08:49:50 [render] token=True invalidated=None
+08:49:50 [qp] {}
+08:49:53 [render] token=True invalidated=None
+08:49:53 [qp] {}
+08:49:57 [render] token=True invalidated=None
+08:49:57 [qp] {}
+09:19:56 [render] token=False invalidated=None
+09:19:56 [cookie] ret_token=없음
+09:19:56 [qp] {}
+09:20:02 [render] token=False invalidated=None
+09:20:02 [cookie] ret_token=없음
+09:20:02 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5Mzg4MDF9.654orZ6FN7TAjhny6Mmf-7B4V_Vz0-Djjyyxk_vWEx8', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+09:20:02 [flush_cookie] action=set
+09:20:02 [flush_cookie] st.html 호출 전
+09:20:02 [flush_cookie] st.html 호출 후
+09:20:02 [render] token=True invalidated=None
+09:20:02 [qp] {}
+09:20:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:20:03 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+09:20:03 [render] token=True invalidated=None
+09:20:03 [qp] {}
+09:20:03 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:20:04 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+09:20:04 [render] token=True invalidated=None
+09:20:04 [qp] {}
+09:20:11 [render] token=True invalidated=None
+09:20:11 [qp] {}
+09:20:11 [render] token=True invalidated=None
+09:20:11 [qp] {}
+09:20:13 [render] token=True invalidated=None
+09:20:13 [qp] {}
+09:20:13 [render] token=False invalidated=None
+09:20:13 [cookie] ret_token=없음
+09:20:13 [qp] {}
+09:20:21 [render] token=False invalidated=None
+09:20:21 [cookie] ret_token=없음
+09:20:21 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5Mzg4MjF9.z7nuD-xzw58-lXxQuA5o_tHKy3RBrvhlQDf8Hh2f3UE', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+09:20:21 [flush_cookie] action=set
+09:20:21 [flush_cookie] st.html 호출 전
+09:20:21 [flush_cookie] st.html 호출 후
+09:20:21 [render] token=True invalidated=None
+09:20:21 [qp] {}
+09:20:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:20:22 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+09:20:22 [render] token=True invalidated=None
+09:20:22 [qp] {}
+09:20:22 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:20:23 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+09:20:23 [render] token=True invalidated=None
+09:20:23 [qp] {}
+12:16:02 [render] token=False invalidated=None
+12:16:02 [cookie] ret_token=없음
+12:16:02 [qp] {}
+12:16:11 [render] token=False invalidated=None
+12:16:11 [cookie] ret_token=없음
+12:16:11 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5NDkzNzF9.oywRxQqP6nGJbKfF_YnZSFHlIkT6AI0o398zMcjcnCY', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+12:16:11 [flush_cookie] action=set
+12:16:11 [flush_cookie] st.html 호출 전
+12:16:11 [flush_cookie] st.html 호출 후
+12:16:11 [render] token=True invalidated=None
+12:16:11 [qp] {}
+12:16:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:16:12 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+12:16:12 [render] token=True invalidated=None
+12:16:12 [qp] {}
+12:16:12 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:16:12 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+12:16:12 [render] token=True invalidated=None
+12:16:12 [qp] {}
+12:16:16 [render] token=True invalidated=None
+12:16:16 [qp] {}
+12:16:16 [render] token=True invalidated=None
+12:16:16 [qp] {}
+12:16:20 [render] token=True invalidated=None
+12:16:20 [qp] {}
+12:16:20 [render] token=False invalidated=None
+12:16:20 [cookie] ret_token=없음
+12:16:20 [qp] {}
+12:16:29 [render] token=False invalidated=None
+12:16:29 [cookie] ret_token=없음
+12:16:29 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDk0OTM4OH0.KLcxMSXx5Aw_VRnDwuZNrOYogKcXL9YzBDm5ELFysoA', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+12:16:29 [flush_cookie] action=set
+12:16:29 [flush_cookie] st.html 호출 전
+12:16:29 [flush_cookie] st.html 호출 후
+12:16:29 [render] token=True invalidated=None
+12:16:29 [qp] {}
+12:16:29 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:16:29 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+12:16:29 [render] token=True invalidated=None
+12:16:29 [qp] {}
+12:16:29 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:16:30 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+12:16:30 [render] token=True invalidated=None
+12:16:30 [qp] {}
+12:16:33 [render] token=True invalidated=None
+12:16:33 [qp] {}
+12:16:33 [render] token=True invalidated=None
+12:16:33 [qp] {}
+12:16:35 [render] token=True invalidated=None
+12:16:35 [qp] {}
+12:16:35 [render] token=False invalidated=None
+12:16:35 [cookie] ret_token=없음
+12:16:35 [qp] {}
+12:16:41 [render] token=False invalidated=None
+12:16:41 [cookie] ret_token=없음
+12:16:41 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5NDk0MDF9.vvnky4A5H2l6daj1qJ6R6MBtQdNXeO0p_OykwRGMCwY', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+12:16:41 [flush_cookie] action=set
+12:16:41 [flush_cookie] st.html 호출 전
+12:16:41 [flush_cookie] st.html 호출 후
+12:16:41 [render] token=True invalidated=None
+12:16:41 [qp] {}
+12:16:41 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:16:41 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+12:16:42 [render] token=True invalidated=None
+12:16:42 [qp] {}
+12:16:42 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:16:42 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+12:16:42 [render] token=True invalidated=None
+12:16:42 [qp] {}
+12:16:46 [render] token=True invalidated=None
+12:16:46 [qp] {}
+12:16:46 [render] token=True invalidated=None
+12:16:46 [qp] {}
+12:16:48 [render] token=True invalidated=None
+12:16:48 [qp] {}
+12:16:48 [render] token=False invalidated=None
+12:16:48 [cookie] ret_token=없음
+12:16:48 [qp] {}
+12:21:33 [render] token=False invalidated=None
+12:21:33 [cookie] ret_token=없음
+12:21:33 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5NDk2OTN9.d_ziNQfZuVdDwELDdhmn-EX0ccXSi63iXSOz3NFILOU', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+12:21:33 [flush_cookie] action=set
+12:21:33 [flush_cookie] st.html 호출 전
+12:21:33 [flush_cookie] st.html 호출 후
+12:21:33 [render] token=True invalidated=None
+12:21:33 [qp] {}
+12:21:33 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:21:34 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+12:21:34 [render] token=True invalidated=None
+12:21:34 [qp] {}
+12:21:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+12:21:34 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+12:21:34 [render] token=True invalidated=None
+12:21:34 [qp] {}
+12:21:39 [render] token=True invalidated=None
+12:21:39 [qp] {}
+12:21:39 [render] token=True invalidated=None
+12:21:39 [qp] {}
+18:03:20 [render] token=False invalidated=None
+18:03:20 [cookie] ret_token=없음
+18:03:20 [qp] {}
+18:03:34 [render] token=False invalidated=None
+18:03:34 [cookie] ret_token=없음
+18:03:34 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5NzAyMTN9.FUsGxj4lZAHtXgzRsbWNMQWnje5W57uNR135s4UxP7E', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:03:34 [flush_cookie] action=set
+18:03:34 [flush_cookie] st.html 호출 전
+18:03:34 [flush_cookie] st.html 호출 후
+18:03:34 [render] token=True invalidated=None
+18:03:34 [qp] {}
+18:03:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:03:35 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:03:35 [render] token=True invalidated=None
+18:03:35 [qp] {}
+18:03:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:03:35 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:03:35 [render] token=True invalidated=None
+18:03:35 [qp] {}
+18:05:18 [render] token=False invalidated=None
+18:05:18 [cookie] ret_token=없음
+18:05:18 [qp] {}
+18:05:34 [render] token=False invalidated=None
+18:05:34 [cookie] ret_token=없음
+18:05:34 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5NzAzMzR9.IEJWqNfLM_lBnWyGFRG9NCrZuV2QHont8sypqh2x8i4', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:05:34 [flush_cookie] action=set
+18:05:34 [flush_cookie] st.html 호출 전
+18:05:34 [flush_cookie] st.html 호출 후
+18:05:34 [render] token=True invalidated=None
+18:05:34 [qp] {}
+18:05:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:05:35 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:05:35 [render] token=True invalidated=None
+18:05:35 [qp] {}
+18:05:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:05:35 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:05:35 [render] token=True invalidated=None
+18:05:35 [qp] {}
+18:05:45 [render] token=True invalidated=None
+18:05:45 [qp] {}
+18:05:45 [render] token=True invalidated=None
+18:05:45 [qp] {}
+18:05:47 [render] token=True invalidated=None
+18:05:47 [qp] {}
+18:05:47 [render] token=False invalidated=None
+18:05:47 [cookie] ret_token=없음
+18:05:47 [qp] {}
+18:05:52 [render] token=False invalidated=None
+18:05:52 [cookie] ret_token=없음
+18:05:52 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5NzAzNTF9.qGcSB8axpYzwpQMBrZiepU8P_lCVjL7Uwg2UgdTPeqw', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+18:05:52 [flush_cookie] action=set
+18:05:52 [flush_cookie] st.html 호출 전
+18:05:52 [flush_cookie] st.html 호출 후
+18:05:52 [render] token=True invalidated=None
+18:05:52 [qp] {}
+18:05:52 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:05:52 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:05:52 [render] token=True invalidated=None
+18:05:52 [qp] {}
+18:05:52 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:05:53 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+18:05:53 [render] token=True invalidated=None
+18:05:53 [qp] {}
+18:10:05 [render] token=True invalidated=None
+18:10:05 [qp] {}
+18:10:05 [render] token=True invalidated=None
+18:10:05 [qp] {}
+18:10:07 [render] token=True invalidated=None
+18:10:07 [qp] {}
+18:10:08 [render] token=False invalidated=None
+18:10:08 [cookie] ret_token=없음
+18:10:08 [qp] {}
+18:10:20 [render] token=False invalidated=None
+18:10:20 [cookie] ret_token=없음
+18:10:20 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDk3MDYxOX0.LHBBWoWZN9NZVhxOaaBbDwb5SWi9WShH36SXs_4Y5mw', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+18:10:20 [flush_cookie] action=set
+18:10:20 [flush_cookie] st.html 호출 전
+18:10:20 [flush_cookie] st.html 호출 후
+18:10:20 [render] token=True invalidated=None
+18:10:20 [qp] {}
+18:10:20 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:10:20 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:10:20 [render] token=True invalidated=None
+18:10:20 [qp] {}
+18:10:20 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:10:20 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+18:10:21 [render] token=True invalidated=None
+18:10:21 [qp] {}
+18:10:26 [render] token=True invalidated=None
+18:10:26 [qp] {}
+18:10:26 [render] token=True invalidated=None
+18:10:26 [qp] {}
+18:10:28 [render] token=True invalidated=None
+18:10:28 [qp] {}
+18:10:28 [render] token=False invalidated=None
+18:10:28 [cookie] ret_token=없음
+18:10:28 [qp] {}
+18:10:38 [render] token=False invalidated=None
+18:10:38 [cookie] ret_token=없음
+18:10:38 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDk3MDYzN30.drVNkByE4tagyj3UckYiq7JXzJGctzWslfhxJcVTDRs', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+18:10:38 [flush_cookie] action=set
+18:10:38 [flush_cookie] st.html 호출 전
+18:10:38 [flush_cookie] st.html 호출 후
+18:10:38 [render] token=True invalidated=None
+18:10:38 [qp] {}
+18:10:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:10:38 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+18:10:38 [render] token=True invalidated=None
+18:10:38 [qp] {}
+18:10:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:10:39 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+18:10:39 [render] token=True invalidated=None
+18:10:39 [qp] {}
+18:13:01 [render] token=False invalidated=None
+18:13:01 [cookie] ret_token=없음
+18:13:01 [qp] {}

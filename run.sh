@@ -1,19 +1,41 @@
 #!/bin/bash
-# 은퇴설계 어플 실행 스크립트
-# 사용법: chmod +x run.sh && ./run.sh
+# 은퇴설계 앱 실행 스크립트 (nginx 리버스프록시 환경)
+# nginx 설정: nginx/retirement.conf 참고
+# SSL 발급: sudo certbot --nginx -d kairang.pe.kr
 
-# 백엔드 백그라운드 실행
-echo "백엔드 API 서버 시작 (포트 8000)..."
-uvicorn backend.api:app --host 0.0.0.0 --port 8000 --reload &
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# .venv 활성화 (있는 경우)
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+fi
+
+echo "================================================"
+echo "  은퇴설계 서버 시작 (보안 모드)"
+echo "================================================"
+
+# 백엔드: 127.0.0.1만 바인딩 (외부 직접 접근 차단)
+echo "백엔드 API 시작 (127.0.0.1:9080)..."
+uvicorn backend.api:app \
+    --host 127.0.0.1 \
+    --port 9080 \
+    --workers 2 \
+    --no-access-log &
 BACKEND_PID=$!
 
-# 종료 처리
+# 종료 시 프로세스 정리
 trap "echo '종료 중...'; kill $BACKEND_PID 2>/dev/null; exit" INT TERM EXIT
 
+# 백엔드 기동 대기
 sleep 3
 
-# 프론트엔드 실행
-echo "Streamlit 프론트엔드 시작 (포트 8501)..."
-echo "PC 브라우저: http://localhost:8501"
-echo "휴대폰 접속: http://<PC IP>:8501 (같은 WiFi)"
-streamlit run frontend/app.py --server.address=0.0.0.0 --server.port=8501
+# 프론트엔드: .streamlit/config.toml에서 127.0.0.1:8443 바인딩
+echo "Streamlit 프론트엔드 시작 (127.0.0.1:8443)..."
+echo "  공개 접속: https://kairang.pe.kr  (nginx HTTPS)"
+streamlit run frontend/app.py \
+    --server.headless true \
+    --server.address 127.0.0.1 \
+    --server.port 8443
