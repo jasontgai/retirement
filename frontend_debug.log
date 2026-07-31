@@ -5884,3 +5884,53 @@
 18:13:01 [render] token=False invalidated=None
 18:13:01 [cookie] ret_token=없음
 18:13:01 [qp] {}
+21:25:29 [render] token=False invalidated=None
+21:25:29 [cookie] ret_token=없음
+21:25:29 [qp] {}
+21:26:23 [render] token=False invalidated=None
+21:26:23 [cookie] ret_token=없음
+21:26:23 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NDk4MjM4MX0.MLB8jMQYFJFIfuRyr8PG7q-FiNW2UBJ1hiokdEpJFz0', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+21:26:23 [flush_cookie] action=set
+21:26:23 [flush_cookie] st.html 호출 전
+21:26:23 [flush_cookie] st.html 호출 후
+21:26:23 [render] token=True invalidated=None
+21:26:23 [qp] {}
+21:26:23 Starting new HTTPS connection (1): kairang.pe.kr:8443
+21:26:23 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+21:26:23 [render] token=True invalidated=None
+21:26:23 [qp] {}
+21:26:23 Starting new HTTPS connection (1): kairang.pe.kr:8443
+21:26:24 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+21:26:24 [render] token=True invalidated=None
+21:26:24 [qp] {}
+21:26:40 [render] token=False invalidated=None
+21:26:40 [cookie] ret_token=없음
+21:26:40 [qp] {}
+21:26:53 [render] token=False invalidated=None
+21:26:53 [cookie] ret_token=없음
+21:26:53 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODQ5ODI0MTJ9.DphIMRoe4H4WMB4GBpviwo-4GOqrS_JgCxzFEXZlGfY', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver'}
+21:26:53 [flush_cookie] action=set
+21:26:53 [flush_cookie] st.html 호출 전
+21:26:53 [flush_cookie] st.html 호출 후
+21:26:53 [render] token=True invalidated=None
+21:26:53 [qp] {}
+21:26:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+21:26:53 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+21:26:53 [render] token=True invalidated=None
+21:26:53 [qp] {}
+21:26:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+21:26:54 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23588
+21:26:54 [render] token=True invalidated=None
+21:26:54 [qp] {}
+21:30:11 [render] token=True invalidated=None
+21:30:11 [qp] {}
+21:30:11 [render] token=True invalidated=None
+21:30:11 [qp] {}
+21:30:12 [render] token=True invalidated=None
+21:30:12 [qp] {}
+21:30:14 [render] token=False invalidated=None
+21:30:14 [cookie] ret_token=없음
+21:30:14 [qp] {}
+21:44:11 [render] token=False invalidated=None
+21:44:11 [cookie] ret_token=없음
+21:44:11 [qp] {}
