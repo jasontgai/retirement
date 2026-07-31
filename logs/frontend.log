@@ -364,3 +364,734 @@ If cross origin resource sharing is required, please disable server.enableXsrfPr
 
   URL: http://kairang.pe.kr:8443
 
+2026-07-25 10:23:46.346 
+Warning: the config option 'server.enableCORS=false' is not compatible with
+'server.enableXsrfProtection=true'.
+As a result, 'server.enableCORS' is being overridden to 'true'.
+
+More information:
+In order to protect against CSRF attacks, we send a cookie with each request.
+To do so, we must specify allowable origins, which places a restriction on
+cross-origin resource sharing.
+
+If cross origin resource sharing is required, please disable server.enableXsrfProtection.
+            
+2026-07-25 10:23:47.468 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-25 10:27:47.091 
+Warning: the config option 'server.enableCORS=false' is not compatible with
+'server.enableXsrfProtection=true'.
+As a result, 'server.enableCORS' is being overridden to 'true'.
+
+More information:
+In order to protect against CSRF attacks, we send a cookie with each request.
+To do so, we must specify allowable origins, which places a restriction on
+cross-origin resource sharing.
+
+If cross origin resource sharing is required, please disable server.enableXsrfProtection.
+            
+2026-07-25 10:27:47.754 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-25 10:28:28.922 
+Warning: the config option 'server.enableCORS=false' is not compatible with
+'server.enableXsrfProtection=true'.
+As a result, 'server.enableCORS' is being overridden to 'true'.
+
+More information:
+In order to protect against CSRF attacks, we send a cookie with each request.
+To do so, we must specify allowable origins, which places a restriction on
+cross-origin resource sharing.
+
+If cross origin resource sharing is required, please disable server.enableXsrfProtection.
+            
+2026-07-25 10:28:29.585 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-25 10:29:16.894 The widget with key "inp_birth_day" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4761, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 1384, in show_main_app
+    birth_day = st.selectbox("免积老", list(range(1, 32)),
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 553, in selectbox
+    return self._selectbox(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 596, in _selectbox
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-25 14:51:00.052 Session with id 0948b59e-204f-455c-840b-be509a5af552 is already connected! Connecting to a new session.
+2026-07-29 20:33:02.241 
+Warning: the config option 'server.enableCORS=false' is not compatible with
+'server.enableXsrfProtection=true'.
+As a result, 'server.enableCORS' is being overridden to 'true'.
+
+More information:
+In order to protect against CSRF attacks, we send a cookie with each request.
+To do so, we must specify allowable origins, which places a restriction on
+cross-origin resource sharing.
+
+If cross origin resource sharing is required, please disable server.enableXsrfProtection.
+            
+2026-07-29 20:33:04.728 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+  Stopping...
+2026-07-29 20:35:09.278 
+Warning: the config option 'server.enableCORS=false' is not compatible with
+'server.enableXsrfProtection=true'.
+As a result, 'server.enableCORS' is being overridden to 'true'.
+
+More information:
+In order to protect against CSRF attacks, we send a cookie with each request.
+To do so, we must specify allowable origins, which places a restriction on
+cross-origin resource sharing.
+
+If cross origin resource sharing is required, please disable server.enableXsrfProtection.
+            
+2026-07-29 20:36:37.825 
+Warning: the config option 'server.enableCORS=false' is not compatible with
+'server.enableXsrfProtection=true'.
+As a result, 'server.enableCORS' is being overridden to 'true'.
+
+More information:
+In order to protect against CSRF attacks, we send a cookie with each request.
+To do so, we must specify allowable origins, which places a restriction on
+cross-origin resource sharing.
+
+If cross origin resource sharing is required, please disable server.enableXsrfProtection.
+            
+2026-07-29 20:36:39.032 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-30 07:21:20.096 The widget with key "inp_birth_day" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4868, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 1491, in show_main_app
+    birth_day = st.selectbox("免积老", list(range(1, 32)),
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 553, in selectbox
+    return self._selectbox(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 596, in _selectbox
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-30 11:23:43.254 An update to the [server] config option section was detected. To have these changes be reflected, please restart streamlit.
+2026-07-30 11:33:43.358 connection closed
+2026-07-30 11:33:46.747 192.168.0.1:0 - "GET / HTTP/1.1" 200
+2026-07-30 11:33:46.841 192.168.0.1:0 - "GET /static/js/index.D2ZqaFuW.js HTTP/1.1" 200
+2026-07-30 11:33:46.848 192.168.0.1:0 - "GET /static/js/chunk.DuxOD-Sk.js HTTP/1.1" 200
+2026-07-30 11:33:46.848 192.168.0.1:0 - "GET /static/media/SourceSansVF-Upright.ttf.BsWL4Kly.woff2 HTTP/1.1" 200
+2026-07-30 11:33:46.911 192.168.0.1:0 - "GET /static/css/katex.DB-ngbxj.css HTTP/1.1" 200
+2026-07-30 11:33:46.932 192.168.0.1:0 - "GET /static/css/index.CSzAT3_b.css HTTP/1.1" 200
+2026-07-30 11:33:46.947 192.168.0.1:0 - "GET /static/js/preload-helper.CAj27AsG.js HTTP/1.1" 200
+2026-07-30 11:33:46.951 192.168.0.1:0 - "GET /static/js/emotion-is-prop-valid.esm.DV_OErv-.js HTTP/1.1" 200
+2026-07-30 11:33:46.958 192.168.0.1:0 - "GET /static/js/emotion-styled.browser.esm.BPUx6WuE.js HTTP/1.1" 200
+2026-07-30 11:33:47.058 192.168.0.1:0 - "GET /static/js/protobuf.DyZGXwGk.js HTTP/1.1" 200
+2026-07-30 11:33:47.061 192.168.0.1:0 - "GET /static/js/assertNever.B_SfJlM1.js HTTP/1.1" 200
+2026-07-30 11:33:47.062 192.168.0.1:0 - "GET /static/js/getColors.DUygtxH4.js HTTP/1.1" 200
+2026-07-30 11:33:47.078 192.168.0.1:0 - "GET /static/js/isSymbol.CDgzX1Rm.js HTTP/1.1" 200
+2026-07-30 11:33:47.092 192.168.0.1:0 - "GET /static/js/toString.BkSzPhlJ.js HTTP/1.1" 200
+2026-07-30 11:33:47.096 192.168.0.1:0 - "GET /static/js/eq.BGqw_fW_.js HTTP/1.1" 200
+2026-07-30 11:33:47.108 192.168.0.1:0 - "GET /static/js/_toKey.C0ohEqce.js HTTP/1.1" 200
+2026-07-30 11:33:47.119 192.168.0.1:0 - "GET /static/js/isArguments.CEs-JkNn.js HTTP/1.1" 200
+2026-07-30 11:33:47.120 192.168.0.1:0 - "GET /static/js/utils.B9mvrYZE.js HTTP/1.1" 200
+2026-07-30 11:33:47.127 192.168.0.1:0 - "GET /static/js/isLength.DwwZub7z.js HTTP/1.1" 200
+2026-07-30 11:33:47.133 192.168.0.1:0 - "GET /static/js/_isIterateeCall.DYlLOvxr.js HTTP/1.1" 200
+2026-07-30 11:33:47.136 192.168.0.1:0 - "GET /static/js/loglevel.H4SN4KQm.js HTTP/1.1" 200
+2026-07-30 11:33:47.142 192.168.0.1:0 - "GET /static/js/utils.CuRWPZ_O.js HTTP/1.1" 200
+2026-07-30 11:33:47.145 192.168.0.1:0 - "GET /static/js/utils.D9m7Ykmm.js HTTP/1.1" 200
+2026-07-30 11:33:47.148 192.168.0.1:0 - "GET /static/js/UriUtil.B2jDpauP.js HTTP/1.1" 200
+2026-07-30 11:33:47.161 192.168.0.1:0 - "GET /static/js/useWindowDimensionsContext.gRLzw0wB.js HTTP/1.1" 200
+2026-07-30 11:33:47.163 192.168.0.1:0 - "GET /static/js/PortalContext.BL8o-V2m.js HTTP/1.1" 200
+2026-07-30 11:33:47.164 192.168.0.1:0 - "GET /static/js/useRequiredContext.DPvSYqB2.js HTTP/1.1" 200
+2026-07-30 11:33:47.174 192.168.0.1:0 - "GET /static/js/ErrorElement.BPchO-rz.js HTTP/1.1" 200
+2026-07-30 11:33:47.177 192.168.0.1:0 - "GET /static/js/useEmotionTheme.61kSPILX.js HTTP/1.1" 200
+2026-07-30 11:33:47.177 192.168.0.1:0 - "GET /static/js/DynamicIcon.CdUbRvnw.js HTTP/1.1" 200
+2026-07-30 11:33:47.189 192.168.0.1:0 - "GET /static/js/useTimeout.DBBq-Pb3.js HTTP/1.1" 200
+2026-07-30 11:33:47.192 192.168.0.1:0 - "GET /static/js/FormClearHelper.DblyIMUS.js HTTP/1.1" 200
+2026-07-30 11:33:47.192 192.168.0.1:0 - "GET /static/js/useCopyToClipboard.D6zHcWPd.js HTTP/1.1" 200
+2026-07-30 11:33:47.205 192.168.0.1:0 - "GET /static/js/lib.Bp2YInuy.js HTTP/1.1" 200
+2026-07-30 11:33:47.206 192.168.0.1:0 - "GET /static/js/lib.C6qHMNlQ.js HTTP/1.1" 200
+2026-07-30 11:33:47.207 192.168.0.1:0 - "GET /static/js/useCrossOriginAttribute.wOZu23rZ.js HTTP/1.1" 200
+2026-07-30 11:33:47.219 192.168.0.1:0 - "GET /static/js/v4.D-g8Wqsd.js HTTP/1.1" 200
+2026-07-30 11:33:47.219 192.168.0.1:0 - "GET /static/js/space-separated-tokens.DeggmezP.js HTTP/1.1" 200
+2026-07-30 11:33:47.220 192.168.0.1:0 - "GET /static/js/katex.min.mf1jZfsG.js HTTP/1.1" 200
+2026-07-30 11:33:47.231 192.168.0.1:0 - "GET /static/js/_hasPath.w5yP9zye.js HTTP/1.1" 200
+2026-07-30 11:33:47.234 192.168.0.1:0 - "GET /static/js/lib.BSsNtqqO.js HTTP/1.1" 200
+2026-07-30 11:33:47.241 192.168.0.1:0 - "GET /static/js/possibleConstructorReturn.DKlO5zKF.js HTTP/1.1" 200
+2026-07-30 11:33:47.242 192.168.0.1:0 - "GET /static/js/src.D9MArGZj.js HTTP/1.1" 200
+2026-07-30 11:33:47.243 192.168.0.1:0 - "GET /static/js/slicedToArray.DMaxrggJ.js HTTP/1.1" 200
+2026-07-30 11:33:47.258 192.168.0.1:0 - "GET /static/js/createSuper.Da188CdT.js HTTP/1.1" 200
+2026-07-30 11:33:47.263 192.168.0.1:0 - "GET /static/js/lib.Ck2gXDna.js HTTP/1.1" 200
+2026-07-30 11:33:47.275 192.168.0.1:0 - "GET /static/js/toaster.B_KSvIoz.js HTTP/1.1" 200
+2026-07-30 11:33:47.277 192.168.0.1:0 - "GET /static/js/pick.CL94X30U.js HTTP/1.1" 200
+2026-07-30 11:33:47.295 192.168.0.1:0 - "GET /static/js/ResizeObserver.es.DtpUvxB0.js HTTP/1.1" 200
+2026-07-30 11:33:47.392 192.168.0.1:0 - "GET /_stcore/health HTTP/1.1" 200
+2026-07-30 11:33:47.394 192.168.0.1:0 - "GET /_stcore/host-config HTTP/1.1" 200
+2026-07-30 11:33:47.646 192.168.0.1:0 - "GET /favicon.png HTTP/1.1" 200
+2026-07-30 11:33:47.654 192.168.0.1:0 - "WebSocket /_stcore/stream" [accepted]
+2026-07-30 11:33:47.663 connection open
+2026-07-30 11:33:49.378 192.168.0.1:0 - "GET /static/js/hastscript.D23cXY9u.js HTTP/1.1" 200
+2026-07-30 11:33:49.378 192.168.0.1:0 - "GET /static/js/rehype-raw.DycST9n0.js HTTP/1.1" 200
+2026-07-30 11:33:49.378 192.168.0.1:0 - "GET /static/js/web-namespaces.CPTLFhKH.js HTTP/1.1" 200
+2026-07-30 11:33:49.416 192.168.0.1:0 - "GET /static/js/TextInput.D3Tz_H2g.js HTTP/1.1" 200
+2026-07-30 11:33:49.417 192.168.0.1:0 - "GET /static/js/useBasicWidgetState.DAZ7WsXN.js HTTP/1.1" 200
+2026-07-30 11:33:49.417 192.168.0.1:0 - "GET /static/js/InputInstructions.PgD3jd3r.js HTTP/1.1" 200
+2026-07-30 11:33:49.425 192.168.0.1:0 - "GET /static/js/input.u1KH_YID.js HTTP/1.1" 200
+2026-07-30 11:33:49.425 192.168.0.1:0 - "GET /static/js/useUpdateUiValue.D01djDVK.js HTTP/1.1" 200
+2026-07-30 11:33:49.426 192.168.0.1:0 - "GET /static/js/inputUtils.BdAxEjXK.js HTTP/1.1" 200
+2026-07-30 11:33:49.428 192.168.0.1:0 - "GET /static/js/Button.hZAV5uJM.js HTTP/1.1" 200
+2026-07-30 11:33:49.430 192.168.0.1:0 - "GET /static/js/base-input.DwcYxu9p.js HTTP/1.1" 200
+2026-07-30 11:33:49.430 192.168.0.1:0 - "GET /static/js/NumberInput.D_-y4tTv.js HTTP/1.1" 200
+2026-07-30 11:33:49.431 192.168.0.1:0 - "GET /static/js/iconPosition.CAyE8Pjc.js HTTP/1.1" 200
+2026-07-30 11:33:49.432 192.168.0.1:0 - "GET /static/js/sprintfjs.Cs3OAHuL.js HTTP/1.1" 200
+2026-07-30 11:34:08.967 192.168.0.1:0 - "GET /?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODU0NjUyNDh9.xR57KsOtASrMITTjto083FP70UMYsWmSy646gYexCbU&user_id=29&name=%EC%9D%B8%EC%B0%AC%ED%98%B8&email=kairang%40naver.com&is_admin=0&oauth_provider=naver HTTP/1.1" 200
+2026-07-30 11:34:09.479 192.168.0.1:0 - "GET /_stcore/health HTTP/1.1" 200
+2026-07-30 11:34:09.480 192.168.0.1:0 - "GET /_stcore/host-config HTTP/1.1" 200
+2026-07-30 11:34:09.584 192.168.0.1:0 - "WebSocket /_stcore/stream" [accepted]
+2026-07-30 11:34:09.587 connection open
+2026-07-30 11:34:29.897 connection closed
+2026-07-30 11:34:33.096 connection closed
+2026-07-30 11:34:59.067 Uvicorn server started on 127.0.0.1:85012026-07-30 11:35:17.122 192.168.0.1:0 - "GET / HTTP/1.1" 200
+2026-07-30 11:35:17.290 192.168.0.1:0 - "GET /static/media/SourceSansVF-Upright.ttf.BsWL4Kly.woff2 HTTP/1.1" 200
+2026-07-30 11:35:17.296 192.168.0.1:0 - "GET /static/js/index.D2ZqaFuW.js HTTP/1.1" 200
+2026-07-30 11:35:17.300 192.168.0.1:0 - "GET /static/js/chunk.DuxOD-Sk.js HTTP/1.1" 200
+2026-07-30 11:35:17.361 192.168.0.1:0 - "GET /static/css/katex.DB-ngbxj.css HTTP/1.1" 200
+2026-07-30 11:35:17.366 192.168.0.1:0 - "GET /static/css/index.CSzAT3_b.css HTTP/1.1" 200
+2026-07-30 11:35:17.400 192.168.0.1:0 - "GET /static/js/preload-helper.CAj27AsG.js HTTP/1.1" 200
+2026-07-30 11:35:17.411 192.168.0.1:0 - "GET /static/js/emotion-styled.browser.esm.BPUx6WuE.js HTTP/1.1" 200
+2026-07-30 11:35:17.412 192.168.0.1:0 - "GET /static/js/emotion-is-prop-valid.esm.DV_OErv-.js HTTP/1.1" 200
+2026-07-30 11:35:17.420 192.168.0.1:0 - "GET /static/js/getColors.DUygtxH4.js HTTP/1.1" 200
+2026-07-30 11:35:17.581 192.168.0.1:0 - "GET /static/js/assertNever.B_SfJlM1.js HTTP/1.1" 200
+2026-07-30 11:35:17.584 192.168.0.1:0 - "GET /static/js/protobuf.DyZGXwGk.js HTTP/1.1" 200
+2026-07-30 11:35:17.584 192.168.0.1:0 - "GET /static/js/isSymbol.CDgzX1Rm.js HTTP/1.1" 200
+2026-07-30 11:35:17.604 192.168.0.1:0 - "GET /static/js/toString.BkSzPhlJ.js HTTP/1.1" 200
+2026-07-30 11:35:17.614 192.168.0.1:0 - "GET /static/js/eq.BGqw_fW_.js HTTP/1.1" 200
+2026-07-30 11:35:17.617 192.168.0.1:0 - "GET /static/js/_toKey.C0ohEqce.js HTTP/1.1" 200
+2026-07-30 11:35:17.623 192.168.0.1:0 - "GET /static/js/utils.B9mvrYZE.js HTTP/1.1" 200
+2026-07-30 11:35:17.624 192.168.0.1:0 - "GET /static/js/isArguments.CEs-JkNn.js HTTP/1.1" 200
+2026-07-30 11:35:17.629 192.168.0.1:0 - "GET /static/js/isLength.DwwZub7z.js HTTP/1.1" 200
+2026-07-30 11:35:17.639 192.168.0.1:0 - "GET /static/js/_isIterateeCall.DYlLOvxr.js HTTP/1.1" 200
+2026-07-30 11:35:17.641 192.168.0.1:0 - "GET /static/js/loglevel.H4SN4KQm.js HTTP/1.1" 200
+2026-07-30 11:35:17.648 192.168.0.1:0 - "GET /static/js/utils.CuRWPZ_O.js HTTP/1.1" 200
+2026-07-30 11:35:17.650 192.168.0.1:0 - "GET /static/js/utils.D9m7Ykmm.js HTTP/1.1" 200
+2026-07-30 11:35:17.654 192.168.0.1:0 - "GET /static/js/UriUtil.B2jDpauP.js HTTP/1.1" 200
+2026-07-30 11:35:17.664 192.168.0.1:0 - "GET /static/js/PortalContext.BL8o-V2m.js HTTP/1.1" 200
+2026-07-30 11:35:17.668 192.168.0.1:0 - "GET /static/js/useRequiredContext.DPvSYqB2.js HTTP/1.1" 200
+2026-07-30 11:35:17.669 192.168.0.1:0 - "GET /static/js/useWindowDimensionsContext.gRLzw0wB.js HTTP/1.1" 200
+2026-07-30 11:35:17.680 192.168.0.1:0 - "GET /static/js/ErrorElement.BPchO-rz.js HTTP/1.1" 200
+2026-07-30 11:35:17.682 192.168.0.1:0 - "GET /static/js/useEmotionTheme.61kSPILX.js HTTP/1.1" 200
+2026-07-30 11:35:17.682 192.168.0.1:0 - "GET /static/js/DynamicIcon.CdUbRvnw.js HTTP/1.1" 200
+2026-07-30 11:35:17.694 192.168.0.1:0 - "GET /static/js/FormClearHelper.DblyIMUS.js HTTP/1.1" 200
+2026-07-30 11:35:17.695 192.168.0.1:0 - "GET /static/js/useTimeout.DBBq-Pb3.js HTTP/1.1" 200
+2026-07-30 11:35:17.698 192.168.0.1:0 - "GET /static/js/useCopyToClipboard.D6zHcWPd.js HTTP/1.1" 200
+2026-07-30 11:35:17.713 192.168.0.1:0 - "GET /static/js/useCrossOriginAttribute.wOZu23rZ.js HTTP/1.1" 200
+2026-07-30 11:35:17.713 192.168.0.1:0 - "GET /static/js/lib.Bp2YInuy.js HTTP/1.1" 200
+2026-07-30 11:35:17.714 192.168.0.1:0 - "GET /static/js/lib.C6qHMNlQ.js HTTP/1.1" 200
+2026-07-30 11:35:17.728 192.168.0.1:0 - "GET /static/js/v4.D-g8Wqsd.js HTTP/1.1" 200
+2026-07-30 11:35:17.732 192.168.0.1:0 - "GET /static/js/space-separated-tokens.DeggmezP.js HTTP/1.1" 200
+2026-07-30 11:35:17.738 192.168.0.1:0 - "GET /static/js/katex.min.mf1jZfsG.js HTTP/1.1" 200
+2026-07-30 11:35:17.751 192.168.0.1:0 - "GET /static/js/src.D9MArGZj.js HTTP/1.1" 200
+2026-07-30 11:35:17.754 192.168.0.1:0 - "GET /static/js/_hasPath.w5yP9zye.js HTTP/1.1" 200
+2026-07-30 11:35:17.754 192.168.0.1:0 - "GET /static/js/lib.BSsNtqqO.js HTTP/1.1" 200
+2026-07-30 11:35:17.769 192.168.0.1:0 - "GET /static/js/possibleConstructorReturn.DKlO5zKF.js HTTP/1.1" 200
+2026-07-30 11:35:17.772 192.168.0.1:0 - "GET /static/js/slicedToArray.DMaxrggJ.js HTTP/1.1" 200
+2026-07-30 11:35:17.790 192.168.0.1:0 - "GET /static/js/createSuper.Da188CdT.js HTTP/1.1" 200
+2026-07-30 11:35:17.793 192.168.0.1:0 - "GET /static/js/lib.Ck2gXDna.js HTTP/1.1" 200
+2026-07-30 11:35:17.807 192.168.0.1:0 - "GET /static/js/toaster.B_KSvIoz.js HTTP/1.1" 200
+2026-07-30 11:35:17.807 192.168.0.1:0 - "GET /static/js/pick.CL94X30U.js HTTP/1.1" 200
+2026-07-30 11:35:17.817 192.168.0.1:0 - "GET /static/js/ResizeObserver.es.DtpUvxB0.js HTTP/1.1" 200
+2026-07-30 11:35:17.949 192.168.0.1:0 - "GET /_stcore/health HTTP/1.1" 200
+2026-07-30 11:35:17.952 192.168.0.1:0 - "GET /_stcore/host-config HTTP/1.1" 200
+2026-07-30 11:35:18.247 192.168.0.1:0 - "GET /favicon.png HTTP/1.1" 200
+2026-07-30 11:35:18.251 192.168.0.1:0 - "WebSocket /_stcore/stream" [accepted]
+2026-07-30 11:35:18.255 connection open
+2026-07-30 11:35:19.923 192.168.0.1:0 - "GET /static/js/web-namespaces.CPTLFhKH.js HTTP/1.1" 200
+2026-07-30 11:35:19.923 192.168.0.1:0 - "GET /static/js/hastscript.D23cXY9u.js HTTP/1.1" 200
+2026-07-30 11:35:19.924 192.168.0.1:0 - "GET /static/js/rehype-raw.DycST9n0.js HTTP/1.1" 200
+2026-07-30 11:35:19.997 192.168.0.1:0 - "GET /static/js/TextInput.D3Tz_H2g.js HTTP/1.1" 200
+2026-07-30 11:35:20.000 192.168.0.1:0 - "GET /static/js/InputInstructions.PgD3jd3r.js HTTP/1.1" 200
+2026-07-30 11:35:20.002 192.168.0.1:0 - "GET /static/js/useBasicWidgetState.DAZ7WsXN.js HTTP/1.1" 200
+2026-07-30 11:35:20.008 192.168.0.1:0 - "GET /static/js/input.u1KH_YID.js HTTP/1.1" 200
+2026-07-30 11:35:20.010 192.168.0.1:0 - "GET /static/js/useUpdateUiValue.D01djDVK.js HTTP/1.1" 200
+2026-07-30 11:35:20.011 192.168.0.1:0 - "GET /static/js/Button.hZAV5uJM.js HTTP/1.1" 200
+2026-07-30 11:35:20.011 192.168.0.1:0 - "GET /static/js/base-input.DwcYxu9p.js HTTP/1.1" 200
+2026-07-30 11:35:20.012 192.168.0.1:0 - "GET /static/js/inputUtils.BdAxEjXK.js HTTP/1.1" 200
+2026-07-30 11:35:20.013 192.168.0.1:0 - "GET /static/js/iconPosition.CAyE8Pjc.js HTTP/1.1" 200
+2026-07-30 11:35:20.019 192.168.0.1:0 - "GET /static/js/NumberInput.D_-y4tTv.js HTTP/1.1" 200
+2026-07-30 11:35:20.019 192.168.0.1:0 - "GET /static/js/sprintfjs.Cs3OAHuL.js HTTP/1.1" 200
+2026-07-30 11:35:32.840 192.168.0.1:0 - "GET /?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODU0NjUzMzJ9.oSckRT8iWKbr5_qbTSovsXwUjkml42nH30copeul4OI&user_id=29&name=%EC%9D%B8%EC%B0%AC%ED%98%B8&email=kairang%40naver.com&is_admin=0&oauth_provider=naver HTTP/1.1" 200
+2026-07-30 11:35:33.323 192.168.0.1:0 - "GET /_stcore/health HTTP/1.1" 200
+2026-07-30 11:35:33.324 192.168.0.1:0 - "GET /_stcore/host-config HTTP/1.1" 200
+2026-07-30 11:35:33.396 192.168.0.1:0 - "WebSocket /_stcore/stream" [accepted]
+2026-07-30 11:35:33.396 connection open
+2026-07-30 11:35:50.395 192.168.0.1:0 - "GET /?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NTQ2NTM1MH0.PIFiruKEJ_UTrXCTL-s5SStb1UD16OM7VEbnminXms8&user_id=21&name=%EC%B9%B4%EC%9D%B4%EB%9E%91%28%EC%9D%B8%EC%B0%AC%ED%98%B8_%EC%9D%B8%EA%B2%BD%EC%A3%BC%29&email=kairang%40hanmail.net&is_admin=0&oauth_provider=kakao HTTP/1.1" 200
+2026-07-30 11:35:50.797 192.168.0.1:0 - "GET /_stcore/host-config HTTP/1.1" 200
+2026-07-30 11:35:50.800 192.168.0.1:0 - "GET /_stcore/health HTTP/1.1" 200
+2026-07-30 11:35:50.934 192.168.0.1:0 - "WebSocket /_stcore/stream" [accepted]
+2026-07-30 11:35:50.939 connection open
+2026-07-30 11:37:34.571 connection closed
+2026-07-30 11:37:34.579 connection closed
+2026-07-30 11:38:15.282 192.168.0.1:0 - "GET /static/media/MaterialSymbols-Rounded.VqUtTjSV.woff2 HTTP/1.1" 200
+2026-07-30 11:39:36.688 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-30 11:43:37.140 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4871, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3681, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-30 12:34:48.814 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-30 12:35:21.361 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4862, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3593, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-30 14:29:15.032 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-30 14:29:50.701 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4862, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3593, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-30 17:55:14.147 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-30 17:55:53.085 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4868, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3605, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-30 18:08:02.849 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-30 18:08:12.705 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4730, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3597, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-31 07:01:32.211 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-31 07:01:51.316 The widget with key "inp_birth_day" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4773, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 1396, in show_main_app
+    birth_day = st.selectbox("免积老", list(range(1, 32)),
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 553, in selectbox
+    return self._selectbox(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 596, in _selectbox
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-31 07:03:31.949 Session with id f58091e6-882b-429a-b7e4-d84960bc35a0 is already connected! Connecting to a new session.
+2026-07-31 07:37:40.526 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-31 07:38:07.223 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4776, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3556, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-31 23:22:33.890 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-31 23:34:36.481 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4845, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3625, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-31 23:35:31.921 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-31 23:37:00.218 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4845, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3625, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-07-31 23:51:50.005 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-31 23:52:42.821 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-31 23:55:09.222 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-07-31 23:55:48.103 The widget with key "_chart_retire_age" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4844, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 3624, in show_main_app
+    _chart_retire_age = st.number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 446, in number_input
+    return self._number_input(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\number_input.py", line 491, in _number_input
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(
+2026-08-01 00:08:05.775 Uvicorn server started on 127.0.0.1:8501
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://kairang.pe.kr:8443
+
+2026-08-01 00:08:36.506 The widget with key "inp_birth_day" was created with a default value but also had its value set via the Session State API.
+Stack (most recent call last):
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1032, in _bootstrap
+    self._bootstrap_inner()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _run_script_thread
+    self._run_script(request.rerun_data)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 705, in _run_script
+    ) = exec_func_with_error_handling(code_to_exec, ctx)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 4843, in <module>
+    show_main_app()
+  File "C:\Users\jason004\retirement_app\frontend\app.py", line 1473, in show_main_app
+    birth_day = st.selectbox("免积老", list(range(1, 32)),
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 698, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 553, in selectbox
+    return self._selectbox(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\widgets\selectbox.py", line 596, in _selectbox
+    check_widget_policies(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 180, in check_widget_policies
+    check_session_state_rules(
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\streamlit\elements\lib\policies.py", line 91, in check_session_state_rules
+    _LOGGER.warning(

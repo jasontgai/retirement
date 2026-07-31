@@ -119,7 +119,7 @@ _OAUTH_CONFIG = {
         "auth_url":  "https://nid.naver.com/oauth2.0/authorize",
         "token_url": "https://nid.naver.com/oauth2.0/token",
         "user_url":  "https://openapi.naver.com/v1/nid/me",
-        "scope":     "",
+        "scope":     "name email birthyear birthday gender",
     },
     "google": {
         "client_id":     os.getenv("GOOGLE_CLIENT_ID", ""),
@@ -882,6 +882,30 @@ def logout(
     return {"message": "로그아웃되었습니다."}
 
 
+_COOKIE_MAX_AGE_S = 30 * 24 * 60 * 60  # 30일
+
+
+def _apply_session_cookies(resp: RedirectResponse, token: str,
+                            user_id: int, name: str, email: str) -> None:
+    for key, val in [
+        ("ret_token", token),
+        ("ret_uid",   str(user_id)),
+        ("ret_name",  quote((name  or "")[:80],  safe='')),
+        ("ret_email", quote((email or "")[:120], safe='')),
+    ]:
+        resp.set_cookie(key=key, value=val, max_age=_COOKIE_MAX_AGE_S,
+                        path="/", samesite="lax", httponly=False)
+
+
+@app.get("/auth/set-session")
+def set_session_endpoint(token: str, user_id: int = 0,
+                         name: str = "", email: str = ""):
+    """이메일 로그인 후 브라우저가 호출 → 서버에서 Set-Cookie 후 앱으로 리다이렉트"""
+    resp = RedirectResponse(STREAMLIT_URL, status_code=302)
+    _apply_session_cookies(resp, token, user_id, name, email)
+    return resp
+
+
 @app.get("/auth/logout-page")
 def logout_page(request: Request, deleted: bool = False, db: Session = Depends(get_db)):
     """브라우저 리다이렉트 방식 로그아웃 — HTTP Set-Cookie로 쿠키 삭제 후 앱으로 이동"""
@@ -948,23 +972,58 @@ def _callback_uri(provider: str) -> str:
     return f"{base}/auth/callback/{provider}"
 
 
-def _parse_oauth_user(provider: str, data: dict) -> tuple[str, str, str]:
-    """(oauth_id, name, email) 파싱"""
+def _parse_oauth_user(provider: str, data: dict) -> tuple:
+    """(oauth_id, name, email, birth_year, birth_month, birth_day, gender) 파싱
+    birth_year/month/day = 0, gender = '' 이면 제공 안 됨
+    """
+    birth_year = birth_month = birth_day = 0
+    gender = ""
+
     if provider == "kakao":
         oauth_id = str(data.get("id", ""))
         account = data.get("kakao_account", {})
         name = account.get("profile", {}).get("nickname", "카카오사용자")
         email = account.get("email", "")
+        # # 생년 (birthyear 스코프)
+        # _by = str(account.get("birthyear", "") or "")
+        # if _by.isdigit() and len(_by) == 4:
+        #     birth_year = int(_by)
+        # # 생일 MMDD (birthday 스코프)
+        # _bd = str(account.get("birthday", "") or "")
+        # if len(_bd) == 4 and _bd.isdigit():
+        #     birth_month = int(_bd[:2])
+        #     birth_day   = int(_bd[2:])
+        # # 성별 (gender 스코프)
+        # _gd = str(account.get("gender", "") or "")
+        # gender = "남" if _gd == "male" else "여" if _gd == "female" else ""
+
     elif provider == "naver":
         r = data.get("response", {})
         oauth_id = str(r.get("id", ""))
         name = r.get("name") or r.get("nickname", "네이버사용자")
         email = r.get("email", "")
-    else:  # google
+        # 생년 (birthyear 스코프)
+        _by = str(r.get("birthyear", "") or "")
+        if _by.isdigit() and len(_by) == 4:
+            birth_year = int(_by)
+        # 생일 MM-DD (birthday 스코프)
+        _bd = str(r.get("birthday", "") or "")
+        if len(_bd) == 5 and _bd[2] == "-":
+            try:
+                birth_month = int(_bd[:2])
+                birth_day   = int(_bd[3:])
+            except ValueError:
+                pass
+        # 성별 M/F/U (gender 스코프)
+        _gd = str(r.get("gender", "") or "")
+        gender = "남" if _gd == "M" else "여" if _gd == "F" else ""
+
+    else:  # google — 기본 프로필에 생년월일 없음
         oauth_id = data.get("sub", "")
         name = data.get("name", "구글사용자")
         email = data.get("email", "")
-    return oauth_id, name, email
+
+    return oauth_id, name, email, birth_year, birth_month, birth_day, gender
 
 
 @app.get("/auth/oauth/{provider}")
@@ -1052,7 +1111,7 @@ def oauth_callback(
         if err:
             return RedirectResponse(fail_url + quote(err))
 
-        oauth_id, _, _ = _parse_oauth_user(provider, user_data)
+        oauth_id, *_ = _parse_oauth_user(provider, user_data)
         if not oauth_id:
             return RedirectResponse(fail_url + quote("소셜 계정 정보를 가져올 수 없습니다."))
 
@@ -1074,7 +1133,7 @@ def oauth_callback(
     if err:
         return RedirectResponse(fail_url + quote(err))
 
-    oauth_id, name, email = _parse_oauth_user(provider, user_data)
+    oauth_id, name, email, birth_year, birth_month, birth_day, gender = _parse_oauth_user(provider, user_data)
     if not oauth_id:
         return RedirectResponse(fail_url + "user_info_failed")
     if not email:
@@ -1100,7 +1159,7 @@ def oauth_callback(
     jwt_token = auth_utils.create_access_token(user.id, user.email)
     _is_admin = int(bool(getattr(user, 'is_admin', False)))
     _oauth_prov = getattr(user, 'oauth_provider', '') or ''
-    return RedirectResponse(
+    _redirect = (
         f"{STREAMLIT_URL}?token={jwt_token}"
         f"&user_id={user.id}"
         f"&name={quote(user.name)}"
@@ -1108,6 +1167,13 @@ def oauth_callback(
         f"&is_admin={_is_admin}"
         f"&oauth_provider={_oauth_prov}"
     )
+    if birth_year:  _redirect += f"&social_birth_year={birth_year}"
+    if birth_month: _redirect += f"&social_birth_month={birth_month}"
+    if birth_day:   _redirect += f"&social_birth_day={birth_day}"
+    if gender:      _redirect += f"&social_gender={quote(gender)}"
+    _resp = RedirectResponse(_redirect, status_code=302)
+    _apply_session_cookies(_resp, jwt_token, user.id, user.name, user.email)
+    return _resp
 
 
 _delete_tokens: dict[str, tuple[int, str, float]] = {}  # dt -> (user_id, provider, timestamp)

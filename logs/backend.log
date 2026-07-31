@@ -153,3 +153,843 @@ INFO:     211.234.206.126:0 - "GET /auth/callback/naver?code=wHrzsYow61E9FJ8CIb&
 INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
 INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
 INFO:     211.234.206.126:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.58.119.92:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/kakao?code=rOGxeOksGg_0McnkR3m_InQiToijqJvFdv1DUb7BGA1hUAYQr2bImQAAAAQKDRlTAAABn5RLKaotjdRiIM79qQ&state=snKXYfWL36hwXlqZ0AWZAg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/kakao?code=Nz840fv5atpMb1Ke1X4RLtQEISg8xGRH88DvTs2d62inYk4YfxxeNgAAAAQKFxTuAAABn5RLyLmQgW3aWXatGQ&state=MAeGNNPN-_Sc-7HDKpaKNg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/kakao?code=bxjO-qcsmhCrt-7vZTreZgI6Au8_FleJ_TLXGqljyhi8bM23N4PfqQAAAAQKDRWbAAABn5RMwrNb9Pmr5eg_ZA&state=L7kb5fAo-c5uLRtG7nNNCg HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/kakao?code=LkO2O4Mim7ktxeyUtKiBzQXy7MrOM15n3hYOu9UZkBjA1E4EIHFAgQAAAAQKFzVXAAABn5RM6pUtjdRiIM79qQ&state=zg-sKOrkdTJVbSN9lsdjRA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.206.126:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.206.126:0 - "GET /auth/callback/kakao?code=jb4yTDn5mJmhuiq2DfSvXCg1MfqOf0i6de1Mkhekp_ksbpZohgUkoQAAAAQKFzVXAAABn5ROqL7SDh85zpcCzQ&state=S4Be4E6NpQQiAMmhB_y3Yg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     Started server process [11792]
+INFO:     WaitingINFO:     211.58.119.92:0 - "GET /auth/oauth/google HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:50651 - "GET /health HTTP/1.1" 200 OK
+7.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [22236]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('127.0.0.1', 9080): [winerror 10048] 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Started server process [11084]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50665 - "GET /health HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/google?state=yvknwiKVYuTQyoS68bme7w&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIBMR2TThioibmR3XSshsU3l3KrMfZPVpcLICL9Wg8FeSLJEjRUKJkZoW6RqKaxR6Q&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=consent HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.58.119.92:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/google?state=1KvHTXYmuywm6xgdjAl5qQ&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIC2k3c1yaSwEMz4ulJjZnNNOESkLkJrzG_ow3w-Jzn8yqQSrXk7XxdVjXsQvvAZSQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.58.119.92:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/google?state=FnbR_90AohLf5s0VohYgMg&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIAoYtPANmEZqSrzy5mRiW9Sz3aeneaOBRVj1SaTEa3DKyiqMghVRV23CePu5cCzNg&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/google?state=yzM9crWXRJQcWr9PN96n2Q&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIAKBBoHzmxw1rZ4KS8pTcpdmPI2fVYOHaiCCy_tAIz8L0BOumKQ8vCSrRRbngOPlw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     Started server process [12260]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:65308 - "GET /health HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [12260]
+INFO:     Started server process [6936]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49391 - "GET /health HTTP/1.1" 200 OK
+INFO:     Started server process [9544]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54877 - "GET /health HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.200.158:0 - "GET /auth/callback/google?state=LIMH1M1BVDq37zhC2M57EA&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIDxJKo2C917f6-bKFIHWMXRtyQHIbsJ1PtP4P6mc7u3L6oekOPFtdRK8pdTtBT7wA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/google?state=KKKDBAhEn0LkoB_aqgVErA&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIABRfxzLtSIlaFthR-5B_jWV01tqHyMcvoDyMs0RZtDQf7_Pk9_r1WnQxRiozD_5g&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=Kbg9jW0H3qkbHVZsWc&state=-k24nGC-4v3xKuHyr4ZO5A HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=V6Yj3AZiej5hl0OqeQ&state=1KB-cSMfemWkGuD-n_UHFA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=a3e7cE1450pivXL9LI&state=IuILEb4fPf3cpVvQCJTWCw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=MsBjpu64HtBsIAuuyb&state=ffchVYqkGccewGpbWVPLaA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=nqhgIIKBc59tPzEFaa&state=Q-uu5qpBoshL23uEgaU7qg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=Mc-D_z2eikN2s7L1fOvBgCmXpD7fDKOKzW6CVjzYQUaw1cWHMMTM1gAAAAQKDRmQAAABn7C_2FxV7imzm104lw&state=wWZYiBQFFdSPuNNUsZdGvg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=hYjZ3xdduHZlRTS9RoqcNLIqj6DR6mVZMbSQ1oYzlkTFWlmB3tfv7QAAAAQKFwvXAAABn7DCtCW37mS5Kc-sjw&state=mImhReEWqWnu5RC4nl1l0Q HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     Started server process [12296]
+INFO:     WaitingINFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=FYmvBifx9QVeiW8DrQhAjpDBPF3US9KH9xKXZovaCLJYv7JYorVxrQAAAAQKDSBaAAABn7DEWZv6Fwx8Dt1GgQ&state=iyMGGqCFJnE4qL_rldN_CQ HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=br-b1L2Z2773VidZSoRP62F91zbzxST1Ve-7EPTDDakFJgzLhoV-7wAAAAQKDQxeAAABn7DGrcdb9Pmr5eg_ZA&state=XMcjSnJR3UnCXzZ5kFegOA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=0xQYV-0GtgVEBCPzLFtgoZScT2ouIxEgTWDFed1-KhRA-12-YMBWGAAAAAQKFwtrAAABn7DJV1Gxu3fh8M0xkQ&state=WIplkzwEl8c1OZBFPIL3Pg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=RR07ODESC4of-fS05Ar4TBGyAkMOtPMfBmQx8GoaRBtbGFBmxM0BiQAAAAQKFxJVAAABn7DNhLyQgW3aWXatGQ&state=U5bavXeklCaZ9_2r1_CVLA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     Started server process [20000]
+INFO:     WaitingINFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=_KdkKZRnExYI4NUOlLgzAg8hyNxrYAu8q2GWieX6Isql3GWOYESajgAAAAQKDSBaAAABn7DPEUS2W8wW6V7rJg&state=ciYwXd0dT3Y7sL8vN0wbHw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=PSnFry7S8xNw2DqZf9&state=sIXupgQOLrdZhr4TkPhY5w HTTP/1.1" 307 Temporary Redirect
+INFO:     Started server process [2404]
+INFO:     Waiting INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=nr4xrsYG1FZ6jTQyD1&state=Anx0LYPl7GrXlgoyE6QNEw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=uFOi6a_WG-6nGuxXWfo8fwnZXDsqbs__N5WngtLmjbLUXCJi2yg4agAAAAQKDRWbAAABn7DgynSi-KZYUq23DA&state=1WKq2z-Iob3FeAPdiTG2_Q HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/set-cookie?token=invalid HTTP/1.1" 404 Not Found
+INFO:     Started server process [19092]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56826 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=_POhA2J9fHj4vNT8F8G95bB-MjEmjDWQqYu1Y5ocCzSgRSaN2ACfUQAAAAQKFxZiAAABn7Dk5S5ONYg--5I0Sw&state=6xdWdBNezOfoK8XS3NFhjQ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 421, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 56, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\applications.py", line 1159, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\trustedhost.py", line 51, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 63, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 330, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 1128, in oauth_callback
+    _set_session_cookies(response, jwt_token, user)
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 892, in _set_session_cookies
+    response.set_cookie("ret_name",  user.name or "", **opts)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\responses.py", line 132, in set_cookie
+    self.raw_headers.append((b"set-cookie", cookie_val.encode("latin-1")))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 10-12: ordinal not in range(256)
+INFO:     Started server process [14384]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58827 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.200.158:0 - "GET /auth/callback/google?state=1dDyHQrGIp48E3tqFyncBQ&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIBGFFtw4I9QpaFRpC0-ATEIfK8sm7oDJctbKyvHg07GEMG8G-Kd9MAg8vXiXcAU6Q&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=none HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/callback/google?state=1dDyHQrGIp48E3tqFyncBQ&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIB53k8JwmonJ-F02q-_KObfdHOGtiSt8K57GP50xP5f2HHrGf5699b66chk8JSe-A&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     Started server process [14488]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52562 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/naver?code=UYd63OZOKWeUCqG6xI&state=gC17QfDCSRPmZV5BPoxV3g HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=0YInwTGeHz5kb57hv19stjt7bGfW6Pky3hX1_ZiBY7XttIhCJOTG9QAAAAQKFwYuAAABn7GSPFqIenTzhLqDRQ&state=DjY4Xt--ZF4u3QwZEBC7fA HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.200.158:0 - "GET /auth/callback/google?state=tds80nH3mWok8wO_4E2RfQ&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIAAP0kXvDALP4pLTqofUnIjX3-T8E3koqeQShZfo0TwUocPDasz6pwyyY-v8q8pvw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=none HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.200.158:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.200.158:0 - "GET /auth/callback/naver?code=zXc7mJt5VYKAmAMXUD&state=gmMfeRdh0rgkpukM_D-6AQ HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /profiles HTTP/1.1" 201 Created
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/381 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/callback/kakao?code=7ztpFe9aRe0o9t0FlgaJ_c7dkZd54Q54QK5zVvpu9B9X0R6UfmnVKgAAAAQKFwYuAAABn7IBNbBDz1szkZmFRA&state=8y222pA-86eKPCS_FYP76g HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.200.158:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.200.158:0 - "GET /auth/callback/google?state=Jbp9jBGO-PC3_ttNRxwo2A&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxICdXIo0gNTYZ-k9tM0X8ZykTkqUb8kcmflXbtpTPXlGRQFU-miux7bL9AggC08-zA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=none HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.200.158:0 - "GET /auth/callback/google?state=Jbp9jBGO-PC3_ttNRxwo2A&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIDjOvoEZ341eS2U5jRdeFYAEdlZmLiyPuPdSXtV9tbsYOpUmB8CUyL0CuZUBTpkyQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     Started server process [21800]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53984 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /chart/temp HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /chart/55db1219acd04b44b21094fab980d9de HTTP/1.1" 200 OK
+INFO:     Started server process [10096]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:61551 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /chart/temp HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /chart/temp HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /chart/temp HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     Started server process [11372]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51308 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     Started server process [22488]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:61616 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     211.234.202.185:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.202.185:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.202.116:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/google?state=jj5P-a12xYSpRbyRZMNIuA&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxICS1sacCxhFkrodveT7g8BYH8zQQQaXCiH2hE_wf14T4B1NMPdC9NOWIyBJR1FtiQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/google?state=BlK34NksnBGWFTogmSCzgw&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIA7nDfZfbsLoys3O8pY0fubMPUKIK_OpCWjnCPB2aZqaesd_-vA9KYz_ZYj4SnpkA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/google?state=M5xYoC-YkuTguqbBykSY3A&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIBWGsZCkqaCnIhzkYfb30_Tya0xlgiUS5hnMwJkm7vWwEuOapRkYGLrebY3qYAVCQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/kakao?error_description=Invalid%20scope%3A%20account_birth_year&state=Z1UvHteH9oiLd2gqA3CyCw&error=invalid_scope HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /pension/start-age/1970 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /profiles HTTP/1.1" 201 Created
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/383 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/384 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/385 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/386 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/387 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/388 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/389 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/390 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "PUT /profiles/391 HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/google?state=WHHZcQ9EUU7PvUyPWDzwQg&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIDV0Wx9r9ga65MHAxdUSkRTZNPNXM-Y4CipAGytsHm2mcKpGD2390Lbm83Yjr38sw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/kakao?error_description=Invalid%20scope%3A%20account_birth_year&state=PBVkGpoF5CCZkZlFzau-sg&error=invalid_scope HTTP/1.1" 307 Temporary Redirect
+INFO:     Started server process [6644]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51567 - "GET /health HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/naver?code=5n9iRLD0uA4zsldpm3&state=p7yokc8QCjwcCaGjXCdQiA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.202.116:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/google?state=Od-USgAdh961Bh0TiTQegg&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxICG1TYgsrexDKe2I9kJHrdTQNDjjUztSPt8pISOHe-CnjwR0b1mUWMBaqy9KudO7A&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&authuser=0&prompt=none HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     Started server process [23240]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58565 - "GET /health HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/kakao?code=rzJpt1IrbCQ5R2VV3EX8FyqpQvlVBNPHY8AHOzb0nWOuPzFdUnnseQAAAAQKFwYuAAABn7ibXvrGDcCf5rkkeA&state=85THRQZeqsVPK-efSeZGPg HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/kakao?code=QRlhTRemJ0mLqPfKkmbjrjMYLiE2kcIWSMUqVw8sQrA-lmIkLd9o3QAAAAQKFwYuAAABn7ibpR7OkqTnJF629A&state=NbYbXC_zfuHlrXNpJjdwXA HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.234.202.116:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.234.202.116:0 - "GET /auth/callback/kakao?code=yBt_BzeLIKoVzXfkxDztHXDxdTxWKuMrp05wACK4XMlqC3t3b-ejPwAAAAQKDRlTAAABn7ieft0q17LwdM8QAg&state=XuMwD_F3PnagvEw6ie2dzQ HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/kakao?code=NeTBphqhmM212v2Vv2MPxSXN0RLJOJVPEW0g6gF_NWUIIfB9TPjR3wAAAAQKDSCbAAABn7if3uxUdd9ffL_GXA&state=vFeHQ6gci0FUrQe5ky_Ayw HTTP/1.1" 307 Temporary Redirect
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     Started server process [17880]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53851 - "GET /health HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/kakao HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/kakao?code=Mrt-zLt_DyuHLB0yQ001u0MrX_z7Q8UEao9guKIt8hWK3-hBbot_ugAAAAQKDSKZAAABn7ipR70Bl6J2VXah6g&state=de2rHuBbyxEeYX6E0j-RTw HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 421, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 56, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\applications.py", line 1159, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\trustedhost.py", line 51, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 63, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 330, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 1175, in oauth_callback
+    _apply_session_cookies(_resp, jwt_token, user.id, user.name, user.email)
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 896, in _apply_session_cookies
+    resp.set_cookie(key=key, value=val, max_age=_COOKIE_MAX_AGE_S,
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\responses.py", line 132, in set_cookie
+    self.raw_headers.append((b"set-cookie", cookie_val.encode("latin-1")))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 10-12: ordinal not in range(256)
+INFO:     Started server process [12436]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53883 - "GET /health HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/naver?code=iADuKXYW6tyR3tjFmH&state=aVVJYvkK7zfYpPBh-1mhMw HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 421, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 56, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\applications.py", line 1159, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\trustedhost.py", line 51, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 63, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\fastapi\routing.py", line 330, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 1175, in oauth_callback
+    _apply_session_cookies(_resp, jwt_token, user.id, user.name, user.email)
+  File "C:\Users\jason004\retirement_app\backend\api.py", line 896, in _apply_session_cookies
+    resp.set_cookie(key=key, value=val, max_age=_COOKIE_MAX_AGE_S,
+  File "C:\Users\jason004\retirement_app\.venv\Lib\site-packages\starlette\responses.py", line 132, in set_cookie
+    self.raw_headers.append((b"set-cookie", cookie_val.encode("latin-1")))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'latin-1' codec can't encode characters in position 10-12: ordinal not in range(256)
+INFO:     Started server process [20764]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54746 - "GET /health HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/callback/naver?code=iADuKXYW6tyR3tjFmH&state=aVVJYvkK7zfYpPBh-1mhMw HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/oauth/naver HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/naver?code=u9hHCBd3qzvCu0niIq&state=kduDVFxT-6RI1zP98-wxFw HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     211.58.119.92:0 - "GET /auth/logout-page HTTP/1.1" 302 Found
+INFO:     211.58.119.92:0 - "GET /auth/oauth/google HTTP/1.1" 307 Temporary Redirect
+INFO:     211.58.119.92:0 - "GET /auth/callback/google?state=4rp8pJshUj_C2adQvKvyeA&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AXEQxIBxqZklbWhL8-PgbudMUCcm4UNGbMSg36ULAH9dnAp1DdQiCQsMPNe_ILVOwJv9Hw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&authuser=0&prompt=none HTTP/1.1" 302 Found
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
+INFO:     Started server process [10468]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:64470 - "GET /health HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /profiles/latest HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "POST /analyze HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /scenarios HTTP/1.1" 200 OK
+INFO:     192.168.0.1:0 - "GET /admin/users HTTP/1.1" 200 OK
