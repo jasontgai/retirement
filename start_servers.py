@@ -122,7 +122,7 @@ if os.path.exists(CADDY):
         cwd=APPDIR,
         stdout=caddy_log, stderr=caddy_log,
         creationflags=NO_WINDOW,
-        env={**os.environ, 'TZ': 'Asia/Seoul'},
+        env=os.environ.copy(),
     )
     print('      Caddy 시작됨')
 else:

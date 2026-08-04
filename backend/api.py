@@ -20,7 +20,7 @@ from urllib.parse import urlencode, quote
 from fastapi import FastAPI, HTTPException, Depends, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -1355,6 +1355,24 @@ def delete_scenario(
     if row:
         db.delete(row)
         db.commit()
+
+
+import pathlib, tempfile as _tempfile
+
+_DETAIL_CHART_PATH = pathlib.Path(_tempfile.gettempdir()) / "retirement_detail_chart.html"
+
+
+@app.get("/detail-chart", response_class=HTMLResponse)
+def serve_detail_chart():
+    """프론트엔드가 생성해 저장한 상세 차트 HTML을 그대로 반환"""
+    if _DETAIL_CHART_PATH.exists():
+        return _DETAIL_CHART_PATH.read_text(encoding='utf-8')
+    return (
+        "<html><body style='font-family:sans-serif;padding:40px'>"
+        "<h2>차트 없음</h2>"
+        "<p>앱에서 '상세 인터랙티브 차트 열기'를 먼저 클릭해 주세요.</p>"
+        "</body></html>"
+    )
 
 
 if __name__ == "__main__":

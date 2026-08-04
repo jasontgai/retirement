@@ -52,6 +52,8 @@ kairang.pe.kr:8443 {
             roll_size 10mb
             roll_keep 7
         }
-        format console
+        format console {
+            time_local
+        }
     }
 }

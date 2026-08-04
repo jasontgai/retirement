@@ -8933,3 +8933,1073 @@
 00:19:22 [qp] {}
 00:19:32 [render] token=True invalidated=None
 00:19:32 [qp] {}
+00:28:10 [render] token=False invalidated=None
+00:28:10 [cookie] ret_token=있음
+00:28:10 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:28:11 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:28:11 [auth/me] status=200
+00:28:11 [render] token=True invalidated=None
+00:28:11 [qp] {}
+00:28:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:28:11 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+00:28:11 [render] token=True invalidated=None
+00:28:11 [qp] {}
+00:28:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:28:12 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+00:28:12 [render] token=True invalidated=None
+00:28:12 [qp] {}
+00:28:12 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:28:12 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:28:12 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:28:12 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:28:13 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:28:13 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+00:28:18 [render] token=True invalidated=None
+00:28:18 [qp] {}
+00:28:18 [render] token=True invalidated=None
+00:28:18 [qp] {}
+00:28:30 [render] token=True invalidated=None
+00:28:30 [qp] {}
+00:28:31 [render] token=True invalidated=None
+00:28:31 [qp] {}
+00:28:50 [render] token=True invalidated=None
+00:28:50 [qp] {}
+00:28:50 [render] token=True invalidated=None
+00:28:50 [qp] {}
+00:29:11 [render] token=True invalidated=None
+00:29:11 [qp] {}
+00:29:11 [render] token=True invalidated=None
+00:29:11 [qp] {}
+00:29:14 [render] token=True invalidated=None
+00:29:14 [qp] {}
+00:29:14 [render] token=True invalidated=None
+00:29:14 [qp] {}
+00:37:45 [render] token=True invalidated=None
+00:37:45 [qp] {}
+00:40:53 [render] token=False invalidated=None
+00:40:53 [cookie] ret_token=있음
+00:40:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:40:53 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:40:53 [auth/me] status=200
+00:40:53 [render] token=True invalidated=None
+00:40:53 [qp] {}
+00:40:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:40:54 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+00:40:54 [render] token=True invalidated=None
+00:40:54 [qp] {}
+00:40:54 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:40:54 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+00:40:54 [render] token=True invalidated=None
+00:40:54 [qp] {}
+00:40:54 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:40:55 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:40:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:40:55 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:40:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:40:56 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+00:41:12 [render] token=True invalidated=None
+00:41:12 [qp] {}
+00:41:12 [render] token=True invalidated=None
+00:41:12 [qp] {}
+00:43:57 [render] token=True invalidated=None
+00:43:57 [qp] {}
+00:46:31 [render] token=True invalidated=None
+00:46:31 [qp] {}
+00:47:29 [render] token=False invalidated=None
+00:47:29 [cookie] ret_token=있음
+00:47:29 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:47:30 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:47:30 [auth/me] status=200
+00:47:30 [render] token=True invalidated=None
+00:47:30 [qp] {}
+00:47:30 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:47:30 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+00:47:30 [render] token=True invalidated=None
+00:47:30 [qp] {}
+00:47:30 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:47:30 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+00:47:30 [render] token=True invalidated=None
+00:47:30 [qp] {}
+00:47:30 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:47:31 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:47:31 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:47:31 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:47:31 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:47:32 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+00:47:41 [render] token=True invalidated=None
+00:47:41 [qp] {}
+00:47:41 [render] token=True invalidated=None
+00:47:41 [qp] {}
+00:53:07 [render] token=False invalidated=None
+00:53:07 [cookie] ret_token=있음
+00:53:07 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:53:07 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:53:07 [auth/me] status=200
+00:53:07 [render] token=True invalidated=None
+00:53:07 [qp] {}
+00:53:07 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:53:08 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+00:53:08 [render] token=True invalidated=None
+00:53:08 [qp] {}
+00:53:08 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:53:08 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+00:53:08 [render] token=True invalidated=None
+00:53:08 [qp] {}
+00:53:08 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:53:09 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:53:09 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:53:09 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:53:09 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:53:09 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+00:53:19 [render] token=True invalidated=None
+00:53:19 [qp] {}
+00:53:19 [render] token=True invalidated=None
+00:53:19 [qp] {}
+00:56:01 [render] token=False invalidated=None
+00:56:01 [cookie] ret_token=있음
+00:56:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:56:01 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:56:01 [auth/me] status=200
+00:56:02 [render] token=True invalidated=None
+00:56:02 [qp] {}
+00:56:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:56:02 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+00:56:02 [render] token=True invalidated=None
+00:56:02 [qp] {}
+00:56:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:56:02 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+00:56:03 [render] token=True invalidated=None
+00:56:03 [qp] {}
+00:56:03 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:56:03 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:56:03 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:56:03 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:56:03 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:56:04 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+00:56:11 [render] token=True invalidated=None
+00:56:11 [qp] {}
+00:56:11 [render] token=True invalidated=None
+00:56:11 [qp] {}
+00:57:17 [render] token=False invalidated=None
+00:57:17 [cookie] ret_token=있음
+00:57:17 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:57:18 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:57:18 [auth/me] status=200
+00:57:18 [render] token=True invalidated=None
+00:57:18 [qp] {}
+00:57:18 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:57:18 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+00:57:18 [render] token=True invalidated=None
+00:57:18 [qp] {}
+00:57:18 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:57:19 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+00:57:19 [render] token=True invalidated=None
+00:57:19 [qp] {}
+00:57:19 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:57:19 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:57:19 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:57:20 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:57:20 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:57:20 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+00:57:47 [render] token=True invalidated=None
+00:57:47 [qp] {}
+00:57:48 [render] token=True invalidated=None
+00:57:48 [qp] {}
+00:58:34 [render] token=False invalidated=None
+00:58:34 [cookie] ret_token=없음
+00:58:34 [qp] {}
+00:58:54 [render] token=False invalidated=None
+00:58:54 [cookie] ret_token=있음
+00:58:54 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:58:54 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:58:54 [auth/me] status=200
+00:58:54 [render] token=True invalidated=None
+00:58:54 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNCIsImVtYWlsIjoia2FpcmFuZzdAZ21haWwuY29tIiwiZXhwIjoxNzg1NTk5OTMzfQ.sefJEvTz2eCLVklJv5JFS6wIQgNd3crWracq77_WBs0', 'user_id': '14', 'name': '차노', 'email': 'kairang7@gmail.com', 'is_admin': '1', 'oauth_provider': 'google'}
+00:58:54 [flush_cookie] action=delete
+00:58:54 [flush_cookie] st.html 호출 전
+00:58:54 [flush_cookie] st.html 호출 후
+00:58:54 [render] token=True invalidated=None
+00:58:54 [qp] {}
+00:58:54 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:58:55 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+00:58:55 [render] token=True invalidated=None
+00:58:55 [qp] {}
+00:58:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:58:55 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+00:58:55 [render] token=True invalidated=None
+00:58:55 [qp] {}
+00:58:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:58:56 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+00:58:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:58:56 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:58:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:58:57 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+00:59:02 [render] token=True invalidated=None
+00:59:02 [qp] {}
+00:59:02 [render] token=True invalidated=None
+00:59:02 [qp] {}
+01:05:50 [render] token=True invalidated=None
+01:05:50 [qp] {}
+01:07:21 [render] token=False invalidated=None
+01:07:21 [cookie] ret_token=있음
+01:07:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:07:21 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:07:21 [auth/me] status=200
+01:07:21 [render] token=True invalidated=None
+01:07:21 [qp] {}
+01:07:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:07:22 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:07:22 [render] token=True invalidated=None
+01:07:22 [qp] {}
+01:07:22 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:07:22 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:07:22 [render] token=True invalidated=None
+01:07:22 [qp] {}
+01:07:22 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:07:22 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:07:22 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:07:23 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:07:23 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:07:23 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:07:38 [render] token=True invalidated=None
+01:07:38 [qp] {}
+01:07:38 [render] token=True invalidated=None
+01:07:38 [qp] {}
+01:10:41 [render] token=False invalidated=None
+01:10:41 [cookie] ret_token=있음
+01:10:41 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:10:41 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:10:41 [auth/me] status=200
+01:10:41 [render] token=True invalidated=None
+01:10:41 [qp] {}
+01:10:41 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:10:42 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:10:42 [render] token=True invalidated=None
+01:10:42 [qp] {}
+01:10:42 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:10:42 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:10:42 [render] token=True invalidated=None
+01:10:42 [qp] {}
+01:10:42 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:10:43 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:10:43 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:10:43 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:10:43 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:10:44 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:10:53 [render] token=True invalidated=None
+01:10:53 [qp] {}
+01:10:53 [render] token=True invalidated=None
+01:10:53 [qp] {}
+01:11:31 [render] token=False invalidated=None
+01:11:31 [cookie] ret_token=있음
+01:11:31 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:11:31 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:11:31 [auth/me] status=200
+01:11:31 [render] token=True invalidated=None
+01:11:31 [qp] {}
+01:11:31 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:11:31 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:11:32 [render] token=True invalidated=None
+01:11:32 [qp] {}
+01:11:32 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:11:32 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:11:32 [render] token=True invalidated=None
+01:11:32 [qp] {}
+01:11:32 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:11:32 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:11:32 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:11:33 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:11:33 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:11:33 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:11:40 [render] token=True invalidated=None
+01:11:40 [qp] {}
+01:11:40 [render] token=True invalidated=None
+01:11:40 [qp] {}
+01:13:33 [render] token=True invalidated=None
+01:13:33 [qp] {}
+01:13:33 [render] token=True invalidated=None
+01:13:33 [qp] {}
+01:16:48 [render] token=False invalidated=None
+01:16:48 [cookie] ret_token=있음
+01:16:48 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:16:48 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:16:48 [auth/me] status=200
+01:16:48 [render] token=True invalidated=None
+01:16:48 [qp] {}
+01:16:48 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:16:49 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:16:49 [render] token=True invalidated=None
+01:16:49 [qp] {}
+01:16:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:16:49 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:16:49 [render] token=True invalidated=None
+01:16:49 [qp] {}
+01:16:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:16:50 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:16:50 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:16:50 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:16:50 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:16:50 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:18:55 [render] token=False invalidated=None
+01:18:55 [cookie] ret_token=있음
+01:18:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:18:55 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:18:55 [auth/me] status=200
+01:18:55 [render] token=True invalidated=None
+01:18:55 [qp] {}
+01:18:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:18:56 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:18:56 [render] token=True invalidated=None
+01:18:56 [qp] {}
+01:18:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:18:56 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:18:56 [render] token=True invalidated=None
+01:18:56 [qp] {}
+01:18:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:18:56 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:18:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:18:57 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:18:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:18:57 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:22:11 [render] token=False invalidated=None
+01:22:11 [cookie] ret_token=없음
+01:22:11 [qp] {}
+01:23:00 [render] token=False invalidated=None
+01:23:00 [cookie] ret_token=있음
+01:23:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:23:01 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+01:23:01 [auth/me] status=200
+01:23:01 [render] token=True invalidated=None
+01:23:01 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NTYwMTM4MH0.uuha04ubM15BcrbLMaqNVNlXFGNNfKQZcwaLgXM199Q', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+01:23:01 [flush_cookie] action=delete
+01:23:01 [flush_cookie] st.html 호출 전
+01:23:01 [flush_cookie] st.html 호출 후
+01:23:01 [render] token=True invalidated=None
+01:23:01 [qp] {}
+01:23:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:23:01 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+01:23:01 [render] token=True invalidated=None
+01:23:01 [qp] {}
+01:23:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:23:02 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+01:23:02 [render] token=True invalidated=None
+01:23:02 [qp] {}
+01:33:10 [render] token=False invalidated=None
+01:33:10 [cookie] ret_token=있음
+01:33:10 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:33:11 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:33:11 [auth/me] status=200
+01:33:11 [render] token=True invalidated=None
+01:33:11 [qp] {}
+01:33:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:33:11 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:33:11 [render] token=True invalidated=None
+01:33:11 [qp] {}
+01:33:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:33:12 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:33:12 [render] token=True invalidated=None
+01:33:12 [qp] {}
+01:33:12 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:33:12 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:33:12 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:33:12 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:33:13 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:33:13 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:34:59 [render] token=False invalidated=None
+01:34:59 [cookie] ret_token=있음
+01:34:59 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:00 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:35:00 [auth/me] status=200
+01:35:00 [render] token=True invalidated=None
+01:35:00 [qp] {}
+01:35:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:00 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:35:00 [render] token=True invalidated=None
+01:35:00 [qp] {}
+01:35:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:01 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:35:01 [render] token=True invalidated=None
+01:35:01 [qp] {}
+01:35:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:01 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:35:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:02 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:35:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:02 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:35:25 [render] token=False invalidated=None
+01:35:25 [cookie] ret_token=있음
+01:35:25 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:26 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:35:26 [auth/me] status=200
+01:35:26 [render] token=True invalidated=None
+01:35:26 [qp] {}
+01:35:26 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:26 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:35:26 [render] token=True invalidated=None
+01:35:26 [qp] {}
+01:35:26 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:27 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:35:27 [render] token=True invalidated=None
+01:35:27 [qp] {}
+01:35:27 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:27 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:35:27 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:27 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:35:28 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:35:28 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:38:59 [render] token=False invalidated=None
+01:38:59 [cookie] ret_token=있음
+01:38:59 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:39:00 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:39:00 [auth/me] status=200
+01:39:00 [render] token=True invalidated=None
+01:39:00 [qp] {}
+01:39:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:39:00 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:39:00 [render] token=True invalidated=None
+01:39:00 [qp] {}
+01:39:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:39:01 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:39:01 [render] token=True invalidated=None
+01:39:01 [qp] {}
+01:39:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:39:01 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:39:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:39:02 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:39:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:39:02 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:42:00 [render] token=True invalidated=None
+01:42:00 [qp] {}
+01:58:34 [render] token=False invalidated=None
+01:58:34 [cookie] ret_token=있음
+01:58:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:58:34 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:58:34 [auth/me] status=200
+01:58:34 [render] token=True invalidated=None
+01:58:34 [qp] {}
+01:58:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:58:35 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+01:58:35 [render] token=True invalidated=None
+01:58:35 [qp] {}
+01:58:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:58:35 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+01:58:35 [render] token=True invalidated=None
+01:58:35 [qp] {}
+01:58:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:58:36 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+01:58:36 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:58:36 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+01:58:36 Starting new HTTPS connection (1): kairang.pe.kr:8443
+01:58:37 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+01:58:53 [render] token=True invalidated=None
+01:58:53 [qp] {}
+01:58:57 [render] token=True invalidated=None
+01:58:57 [qp] {}
+01:59:08 [render] token=True invalidated=None
+01:59:08 [qp] {}
+02:03:00 [render] token=True invalidated=None
+02:03:00 [qp] {}
+02:03:26 [render] token=True invalidated=None
+02:03:26 [qp] {}
+02:03:28 [render] token=True invalidated=None
+02:03:28 [qp] {}
+02:03:58 [render] token=True invalidated=None
+02:03:58 [qp] {}
+02:03:58 [render] token=True invalidated=None
+02:03:58 [qp] {}
+02:04:00 [render] token=True invalidated=None
+02:04:00 [qp] {}
+02:04:01 [render] token=False invalidated=None
+02:04:01 [cookie] ret_token=없음
+02:04:01 [qp] {}
+02:04:25 [render] token=False invalidated=None
+02:04:25 [cookie] ret_token=있음
+02:04:25 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:04:25 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 133
+02:04:25 [auth/me] status=200
+02:04:25 [render] token=True invalidated=None
+02:04:25 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODU2MDM4NjR9.Gk0rh4VW87ZJ_L_SArk7lA1Jm6ROom_pJdT-ee3Wcp4', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver', 'social_birth_year': '1974', 'social_birth_month': '1', 'social_birth_day': '15', 'social_gender': '남'}
+02:04:25 [flush_cookie] action=delete
+02:04:25 [flush_cookie] st.html 호출 전
+02:04:25 [flush_cookie] st.html 호출 후
+02:04:25 [render] token=True invalidated=None
+02:04:25 [qp] {}
+02:04:25 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:04:25 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1848
+02:04:26 [render] token=True invalidated=None
+02:04:26 [qp] {}
+02:04:26 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:04:26 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 21072
+02:04:26 [render] token=True invalidated=None
+02:04:26 [qp] {}
+02:04:26 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:04:26 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 133
+02:04:26 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:04:27 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+02:05:33 [render] token=True invalidated=None
+02:05:33 [qp] {}
+02:05:33 [render] token=True invalidated=None
+02:05:33 [qp] {}
+02:05:36 [render] token=True invalidated=None
+02:05:36 [qp] {}
+02:05:37 [render] token=False invalidated=None
+02:05:37 [cookie] ret_token=없음
+02:05:37 [qp] {}
+02:05:48 [render] token=False invalidated=None
+02:05:48 [cookie] ret_token=있음
+02:05:48 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:05:48 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+02:05:48 [auth/me] status=200
+02:05:48 [render] token=True invalidated=None
+02:05:48 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNCIsImVtYWlsIjoia2FpcmFuZzdAZ21haWwuY29tIiwiZXhwIjoxNzg1NjAzOTQ4fQ.ZSe6j0QX827YgYx5yJVo8IudZoBEzUlkO5RWFeYl-us', 'user_id': '14', 'name': '차노', 'email': 'kairang7@gmail.com', 'is_admin': '1', 'oauth_provider': 'google'}
+02:05:48 [flush_cookie] action=delete
+02:05:48 [flush_cookie] st.html 호출 전
+02:05:48 [flush_cookie] st.html 호출 후
+02:05:48 [render] token=True invalidated=None
+02:05:48 [qp] {}
+02:05:48 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:05:49 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+02:05:49 [render] token=True invalidated=None
+02:05:49 [qp] {}
+02:05:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:05:49 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+02:05:49 [render] token=True invalidated=None
+02:05:49 [qp] {}
+02:05:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:05:50 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+02:05:50 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:05:50 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+02:05:50 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:05:51 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+02:12:00 [render] token=False invalidated=None
+02:12:00 [cookie] ret_token=있음
+02:12:00 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:12:01 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+02:12:01 [auth/me] status=200
+02:12:01 [render] token=True invalidated=None
+02:12:01 [qp] {}
+02:12:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:12:01 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+02:12:01 [render] token=True invalidated=None
+02:12:01 [qp] {}
+02:12:01 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:12:02 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+02:12:02 [render] token=True invalidated=None
+02:12:02 [qp] {}
+02:12:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:12:02 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+02:12:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:12:03 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+02:12:03 Starting new HTTPS connection (1): kairang.pe.kr:8443
+02:12:03 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+02:13:22 [render] token=True invalidated=None
+02:13:22 [qp] {}
+06:56:55 [render] token=False invalidated=None
+06:56:55 [cookie] ret_token=있음
+06:56:55 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:56:56 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+06:56:56 [auth/me] status=200
+06:56:56 [render] token=True invalidated=None
+06:56:56 [qp] {}
+06:56:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:56:56 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+06:56:56 [render] token=True invalidated=None
+06:56:56 [qp] {}
+06:56:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:56:57 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+06:56:57 [render] token=True invalidated=None
+06:56:57 [qp] {}
+06:56:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:56:57 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+06:56:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:56:57 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+06:56:58 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:56:58 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+06:57:13 [render] token=True invalidated=None
+06:57:13 [qp] {}
+06:57:13 [render] token=True invalidated=None
+06:57:13 [qp] {}
+06:57:44 [render] token=False invalidated=None
+06:57:44 [cookie] ret_token=있음
+06:57:44 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:57:44 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+06:57:44 [auth/me] status=200
+06:57:44 [render] token=True invalidated=None
+06:57:44 [qp] {}
+06:57:44 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:57:45 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2582
+06:57:45 [render] token=True invalidated=None
+06:57:45 [qp] {}
+06:57:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:57:45 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 37178
+06:57:45 [render] token=True invalidated=None
+06:57:45 [qp] {}
+06:57:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:57:46 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 131
+06:57:46 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:57:46 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+06:57:46 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:57:47 https://kairang.pe.kr:8443 "GET /admin/users HTTP/1.1" 200 1759
+06:57:53 [render] token=True invalidated=None
+06:57:53 [qp] {}
+06:57:53 [render] token=True invalidated=None
+06:57:53 [qp] {}
+06:57:55 [render] token=True invalidated=None
+06:57:55 [qp] {}
+06:57:56 [render] token=False invalidated=None
+06:57:56 [cookie] ret_token=없음
+06:57:56 [qp] {}
+06:58:06 [render] token=False invalidated=None
+06:58:06 [cookie] ret_token=있음
+06:58:06 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:58:07 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+06:58:07 [auth/me] status=200
+06:58:07 [render] token=True invalidated=None
+06:58:07 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NTYyMTQ4Nn0.9ifPzRyW4cvjcTZMV4Jn2WX5Z85PbN16YFfGK-mEmjA', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+06:58:07 [flush_cookie] action=delete
+06:58:07 [flush_cookie] st.html 호출 전
+06:58:07 [flush_cookie] st.html 호출 후
+06:58:07 [render] token=True invalidated=None
+06:58:07 [qp] {}
+06:58:07 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:58:07 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+06:58:07 [render] token=True invalidated=None
+06:58:07 [qp] {}
+06:58:07 Starting new HTTPS connection (1): kairang.pe.kr:8443
+06:58:07 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+06:58:08 [render] token=True invalidated=None
+06:58:08 [qp] {}
+07:09:20 [render] token=False invalidated=None
+07:09:20 [cookie] ret_token=있음
+07:09:20 Starting new HTTPS connection (1): kairang.pe.kr:8443
+07:09:21 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+07:09:21 [auth/me] status=200
+07:09:21 [render] token=True invalidated=None
+07:09:21 [qp] {}
+07:09:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+07:09:21 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+07:09:21 [render] token=True invalidated=None
+07:09:21 [qp] {}
+07:09:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+07:09:22 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23609
+07:09:22 [render] token=True invalidated=None
+07:09:22 [qp] {}
+09:41:15 [render] token=False invalidated=None
+09:41:15 [cookie] ret_token=있음
+09:41:15 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:41:16 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:41:16 [auth/me] status=200
+09:41:16 [render] token=True invalidated=None
+09:41:16 [qp] {}
+09:41:16 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:41:16 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+09:41:16 [render] token=True invalidated=None
+09:41:16 [qp] {}
+09:41:16 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:41:17 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23599
+09:41:17 [render] token=True invalidated=None
+09:41:17 [qp] {}
+09:45:28 [render] token=True invalidated=None
+09:45:28 [qp] {}
+09:45:28 [render] token=True invalidated=None
+09:45:28 [qp] {}
+09:45:28 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:45:28 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23599
+09:45:28 [render] token=True invalidated=None
+09:45:28 [qp] {}
+09:45:28 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:45:29 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:45:29 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:45:29 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+09:51:44 [render] token=False invalidated=None
+09:51:44 [cookie] ret_token=있음
+09:51:44 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:51:45 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:51:45 [auth/me] status=200
+09:51:45 [render] token=True invalidated=None
+09:51:45 [qp] {}
+09:51:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:51:45 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+09:51:45 [render] token=True invalidated=None
+09:51:45 [qp] {}
+09:51:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:51:45 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23599
+09:51:46 [render] token=True invalidated=None
+09:51:46 [qp] {}
+09:51:51 [render] token=True invalidated=None
+09:51:51 [qp] {}
+09:51:51 [render] token=True invalidated=None
+09:51:51 [qp] {}
+09:51:51 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:51:51 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:54:45 [render] token=False invalidated=None
+09:54:45 [cookie] ret_token=있음
+09:54:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:54:45 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:54:45 [auth/me] status=200
+09:54:45 [render] token=True invalidated=None
+09:54:45 [qp] {}
+09:54:45 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:54:45 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+09:54:46 [render] token=True invalidated=None
+09:54:46 [qp] {}
+09:54:46 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:54:46 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 23599
+09:54:46 [render] token=True invalidated=None
+09:54:46 [qp] {}
+09:54:57 [render] token=True invalidated=None
+09:54:57 [qp] {}
+09:54:57 [render] token=True invalidated=None
+09:54:57 [qp] {}
+09:54:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:54:57 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+10:02:49 [render] token=False invalidated=None
+10:02:49 [cookie] ret_token=있음
+10:02:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:02:49 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+10:02:49 [auth/me] status=200
+10:02:49 [render] token=True invalidated=None
+10:02:49 [qp] {}
+10:02:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:02:49 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+10:02:49 [render] token=True invalidated=None
+10:02:49 [qp] {}
+10:02:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:02:50 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+10:02:50 [render] token=True invalidated=None
+10:02:50 [qp] {}
+18:30:41 [render] token=False invalidated=None
+18:30:41 [cookie] ret_token=없음
+18:30:41 [qp] {}
+18:31:22 [render] token=False invalidated=None
+18:31:22 [cookie] ret_token=있음
+18:31:22 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:31:22 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 133
+18:31:22 [auth/me] status=200
+18:31:22 [render] token=True invalidated=None
+18:31:22 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyOSIsImVtYWlsIjoia2FpcmFuZ0BuYXZlci5jb20iLCJleHAiOjE3ODU3NDk0ODF9.dCmVY3M2WpSQ72WjAt0ojzpVS1Ep198PylKvl6biOqs', 'user_id': '29', 'name': '인찬호', 'email': 'kairang@naver.com', 'is_admin': '0', 'oauth_provider': 'naver', 'social_birth_year': '1974', 'social_birth_month': '1', 'social_birth_day': '15', 'social_gender': '남'}
+18:31:23 [flush_cookie] action=delete
+18:31:23 [flush_cookie] st.html 호출 전
+18:31:23 [flush_cookie] st.html 호출 후
+18:31:23 [render] token=True invalidated=None
+18:31:23 [qp] {}
+18:31:23 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:31:23 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 1848
+18:31:23 [render] token=True invalidated=None
+18:31:23 [qp] {}
+18:31:23 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:31:24 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 21069
+18:31:24 [render] token=True invalidated=None
+18:31:24 [qp] {}
+18:31:24 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:31:24 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 133
+18:31:24 Starting new HTTPS connection (1): kairang.pe.kr:8443
+18:31:24 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+08:30:38 [render] token=False invalidated=None
+08:30:38 [cookie] ret_token=있음
+08:30:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:30:38 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 401 49
+08:30:38 [auth/me] status=401
+08:30:38 [cookie] 토큰 만료 → logout-page로 이동
+08:30:40 [render] token=False invalidated=None
+08:30:40 [cookie] ret_token=없음
+08:30:40 [qp] {}
+08:31:03 [render] token=False invalidated=None
+08:31:03 [cookie] ret_token=없음
+08:31:03 [qp] {}
+08:31:10 [render] token=False invalidated=None
+08:31:10 [cookie] ret_token=있음
+08:31:10 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:31:11 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+08:31:11 [auth/me] status=200
+08:31:11 [render] token=True invalidated=None
+08:31:11 [qp] {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMSIsImVtYWlsIjoia2FpcmFuZ0BoYW5tYWlsLm5ldCIsImV4cCI6MTc4NTg4NjI3MH0.pdyIKkwhkYrQinSKpjCBWqA6gWHZ4aMFLmfNSl0CZoA', 'user_id': '21', 'name': '카이랑(인찬호_인경주)', 'email': 'kairang@hanmail.net', 'is_admin': '0', 'oauth_provider': 'kakao'}
+08:31:11 [flush_cookie] action=delete
+08:31:11 [flush_cookie] st.html 호출 전
+08:31:11 [flush_cookie] st.html 호출 후
+08:31:11 [render] token=True invalidated=None
+08:31:11 [qp] {}
+08:31:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:31:11 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+08:31:11 [render] token=True invalidated=None
+08:31:11 [qp] {}
+08:31:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:31:12 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+08:31:12 [render] token=True invalidated=None
+08:31:12 [qp] {}
+08:31:34 [render] token=True invalidated=None
+08:31:34 [qp] {}
+08:31:34 [render] token=True invalidated=None
+08:31:34 [qp] {}
+08:31:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:31:35 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+08:59:15 [render] token=False invalidated=None
+08:59:15 [cookie] ret_token=있음
+08:59:15 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:59:15 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+08:59:15 [auth/me] status=200
+08:59:15 [render] token=True invalidated=None
+08:59:15 [qp] {'oauth_error': 'invalid_state'}
+08:59:15 [oauth_error] invalid_state
+08:59:15 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:59:16 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+08:59:16 [render] token=True invalidated=None
+08:59:16 [qp] {}
+08:59:16 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:59:16 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 25954
+08:59:16 [render] token=True invalidated=None
+08:59:16 [qp] {}
+08:59:35 [render] token=True invalidated=None
+08:59:35 [qp] {}
+08:59:35 [render] token=True invalidated=None
+08:59:35 [qp] {}
+08:59:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:59:36 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+08:59:57 [render] token=False invalidated=None
+08:59:57 [cookie] ret_token=있음
+08:59:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:59:57 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+08:59:57 [auth/me] status=200
+08:59:57 [render] token=True invalidated=None
+08:59:57 [qp] {}
+08:59:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:59:58 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+08:59:58 [render] token=True invalidated=None
+08:59:58 [qp] {}
+08:59:58 Starting new HTTPS connection (1): kairang.pe.kr:8443
+08:59:58 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 25954
+08:59:58 [render] token=True invalidated=None
+08:59:58 [qp] {}
+09:18:16 [render] token=False invalidated=None
+09:18:16 [cookie] ret_token=있음
+09:18:16 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:18:16 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:18:16 [auth/me] status=200
+09:18:16 [render] token=True invalidated=None
+09:18:16 [qp] {}
+09:18:16 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:18:17 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+09:18:17 [render] token=True invalidated=None
+09:18:17 [qp] {}
+09:18:17 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:18:17 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+09:18:17 [render] token=True invalidated=None
+09:18:17 [qp] {}
+09:18:27 [render] token=True invalidated=None
+09:18:27 [qp] {}
+09:18:27 [render] token=True invalidated=None
+09:18:27 [qp] {}
+09:18:27 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:18:28 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:36:34 [render] token=False invalidated=None
+09:36:34 [cookie] ret_token=있음
+09:36:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:36:35 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+09:36:35 [auth/me] status=200
+09:36:35 [render] token=True invalidated=None
+09:36:35 [qp] {}
+09:36:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:36:35 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+09:36:35 [render] token=True invalidated=None
+09:36:35 [qp] {}
+09:36:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:36:35 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+09:36:36 [render] token=True invalidated=None
+09:36:36 [qp] {}
+09:36:39 [render] token=True invalidated=None
+09:36:39 [qp] {}
+09:36:39 [render] token=True invalidated=None
+09:36:39 [qp] {}
+09:36:39 Starting new HTTPS connection (1): kairang.pe.kr:8443
+09:36:40 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+10:01:34 [render] token=False invalidated=None
+10:01:34 [cookie] ret_token=있음
+10:01:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:34 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+10:01:34 [auth/me] status=200
+10:01:34 [render] token=True invalidated=None
+10:01:34 [qp] {}
+10:01:34 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:35 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+10:01:35 [render] token=True invalidated=None
+10:01:35 [qp] {}
+10:01:35 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:35 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+10:01:35 [render] token=True invalidated=None
+10:01:35 [qp] {}
+10:01:48 [render] token=False invalidated=None
+10:01:48 [cookie] ret_token=있음
+10:01:48 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:49 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+10:01:49 [auth/me] status=200
+10:01:49 [render] token=True invalidated=None
+10:01:49 [qp] {}
+10:01:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:49 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+10:01:49 [render] token=True invalidated=None
+10:01:49 [qp] {}
+10:01:49 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:50 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+10:01:50 [render] token=True invalidated=None
+10:01:50 [qp] {}
+10:01:56 [render] token=False invalidated=None
+10:01:56 [cookie] ret_token=있음
+10:01:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:56 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+10:01:56 [auth/me] status=200
+10:01:56 [render] token=True invalidated=None
+10:01:56 [qp] {}
+10:01:56 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:57 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+10:01:57 [render] token=True invalidated=None
+10:01:57 [qp] {}
+10:01:57 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:01:57 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+10:01:57 [render] token=True invalidated=None
+10:01:57 [qp] {}
+10:02:02 [render] token=True invalidated=None
+10:02:02 [qp] {}
+10:02:02 [render] token=True invalidated=None
+10:02:02 [qp] {}
+10:02:02 Starting new HTTPS connection (1): kairang.pe.kr:8443
+10:02:02 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+13:15:53 [render] token=False invalidated=None
+13:15:53 [cookie] ret_token=있음
+13:15:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+13:15:53 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+13:15:53 [auth/me] status=200
+13:15:53 [render] token=True invalidated=None
+13:15:53 [qp] {}
+13:15:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+13:15:53 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+13:15:53 [render] token=True invalidated=None
+13:15:53 [qp] {}
+13:15:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+13:15:54 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+13:15:54 [render] token=True invalidated=None
+13:15:54 [qp] {}
+13:16:21 [render] token=True invalidated=None
+13:16:21 [qp] {}
+13:16:21 [render] token=True invalidated=None
+13:16:21 [qp] {}
+13:16:21 Starting new HTTPS connection (1): kairang.pe.kr:8443
+13:16:21 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:10:24 [render] token=False invalidated=None
+00:10:24 [cookie] ret_token=있음
+00:10:24 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:10:24 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:10:24 [auth/me] status=200
+00:10:25 [render] token=True invalidated=None
+00:10:25 [qp] {}
+00:10:25 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:10:25 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+00:10:25 [render] token=True invalidated=None
+00:10:25 [qp] {}
+00:10:25 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:10:25 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+00:10:25 [render] token=True invalidated=None
+00:10:25 [qp] {}
+00:10:31 [render] token=True invalidated=None
+00:10:31 [qp] {}
+00:10:31 [render] token=True invalidated=None
+00:10:31 [qp] {}
+00:10:31 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:10:32 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:16:18 [render] token=False invalidated=None
+00:16:18 [cookie] ret_token=있음
+00:16:18 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:16:18 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:16:18 [auth/me] status=200
+00:16:18 [render] token=True invalidated=None
+00:16:18 [qp] {}
+00:16:18 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:16:19 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+00:16:19 [render] token=True invalidated=None
+00:16:19 [qp] {}
+00:16:19 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:16:19 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+00:16:19 [render] token=True invalidated=None
+00:16:19 [qp] {}
+00:16:23 [render] token=True invalidated=None
+00:16:23 [qp] {}
+00:16:23 [render] token=True invalidated=None
+00:16:23 [qp] {}
+00:16:23 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:16:23 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:16:52 [render] token=False invalidated=None
+00:16:52 [cookie] ret_token=있음
+00:16:52 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:16:52 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:16:52 [auth/me] status=200
+00:16:52 [render] token=True invalidated=None
+00:16:52 [qp] {}
+00:16:52 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:16:53 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+00:16:53 [render] token=True invalidated=None
+00:16:53 [qp] {}
+00:16:53 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:16:53 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+00:16:53 [render] token=True invalidated=None
+00:16:53 [qp] {}
+00:18:10 [render] token=True invalidated=None
+00:18:10 [qp] {}
+00:18:10 [render] token=True invalidated=None
+00:18:10 [qp] {}
+00:18:11 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:18:11 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:24:50 [render] token=False invalidated=None
+00:24:50 [cookie] ret_token=있음
+00:24:50 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:24:50 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:24:50 [auth/me] status=200
+00:24:50 [render] token=True invalidated=None
+00:24:50 [qp] {}
+00:24:50 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:24:51 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+00:24:51 [render] token=True invalidated=None
+00:24:51 [qp] {}
+00:24:51 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:24:51 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+00:24:51 [render] token=True invalidated=None
+00:24:51 [qp] {}
+00:25:25 [render] token=True invalidated=None
+00:25:25 [qp] {}
+00:25:26 [render] token=True invalidated=None
+00:25:26 [qp] {}
+00:25:26 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:25:26 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:26:08 [render] token=True invalidated=None
+00:26:08 [qp] {}
+00:26:08 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:26:08 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 25954
+00:26:08 [render] token=True invalidated=None
+00:26:08 [qp] {}
+00:26:08 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:26:09 https://kairang.pe.kr:8443 "GET /scenarios HTTP/1.1" 200 2260
+00:26:20 [render] token=True invalidated=None
+00:26:20 [qp] {}
+00:26:24 [render] token=True invalidated=None
+00:26:24 [qp] {}
+00:26:26 [render] token=True invalidated=None
+00:26:26 [qp] {}
+00:26:29 [render] token=True invalidated=None
+00:26:29 [qp] {}
+00:26:30 [render] token=True invalidated=None
+00:26:30 [qp] {}
+00:26:32 [render] token=True invalidated=None
+00:26:32 [qp] {}
+00:27:38 [render] token=False invalidated=None
+00:27:38 [cookie] ret_token=있음
+00:27:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:27:38 https://kairang.pe.kr:8443 "GET /auth/me HTTP/1.1" 200 156
+00:27:38 [auth/me] status=200
+00:27:38 [render] token=True invalidated=None
+00:27:38 [qp] {}
+00:27:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:27:38 https://kairang.pe.kr:8443 "GET /profiles/latest HTTP/1.1" 200 2
+00:27:38 [render] token=True invalidated=None
+00:27:38 [qp] {}
+00:27:38 Starting new HTTPS connection (1): kairang.pe.kr:8443
+00:27:39 https://kairang.pe.kr:8443 "POST /analyze HTTP/1.1" 200 24474
+00:27:39 [render] token=True invalidated=None
+00:27:39 [qp] {}

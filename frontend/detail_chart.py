@@ -5,9 +5,17 @@ D3.js v7 기반 standalone HTML 반환
 import json
 
 
-def generate_detail_html(data: dict) -> str:
-    """data dict → 완전한 standalone HTML string"""
+def generate_detail_html(data: dict, compact: bool = False) -> str:
+    """data dict → 완전한 standalone HTML string.
+    compact=True: iframe 삽입용 (차트 높이 고정). compact=False: 새 창 전체화면용.
+    """
     data_json = json.dumps(data, ensure_ascii=False, default=str)
+    _get_height_js = (
+        "function getHeight() { return 190; }"
+        if compact else
+        "function getHeight() { return Math.max(400, window.innerHeight - 280); }"
+    )
+    _resize_report_js = ""
 
     return f"""<!DOCTYPE html>
 <html lang="ko">
@@ -465,7 +473,7 @@ const margin = {{ top: 30, right: 30, bottom: 60, left: 60 }};
 function getWidth() {{
   return document.getElementById('chart-container').clientWidth - 40;
 }}
-function getHeight() {{ return 380; }}
+{_get_height_js}
 
 const svg = d3.select('#main-svg');
 let g;
@@ -779,6 +787,7 @@ window.addEventListener('resize', () => {{
 initSvg();
 buildLegend();
 draw();
+{_resize_report_js}
 </script>
 </body>
 </html>"""
