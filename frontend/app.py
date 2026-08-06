@@ -3734,7 +3734,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                         st.info("프로필이 없습니다.")
 
 
-    if not _is_onboarding and not st.session_state.get('is_admin'):
+    if not _is_onboarding:
         _save_col, _status_col = st.columns([2, 5])
         with _save_col:
             if st.button("💾 내 정보 저장", width='stretch'):
@@ -3753,7 +3753,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     _run_analysis()
                     st.rerun()
 
-    if st.session_state.analysis_result and not st.session_state.get('is_admin'):
+    if st.session_state.analysis_result:
         result = st.session_state.analysis_result
         cf = result.get('현금흐름', {})
         _retire_age = result.get('사용자정보', {}).get('희망은퇴연령', 60)
