@@ -5,10 +5,13 @@
 """
 import sys
 import os
+import re
 import json
 import secrets
 import hashlib
 import time
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import requests as http_client
 from dotenv import load_dotenv
 
@@ -41,7 +44,7 @@ from modules.tax_calculator import (
     calculate_income_tax, calculate_health_insurance_local,
     check_dependent_eligibility,
 )
-from database.connection import get_db, create_all_tables
+from database.connection import get_db, create_all_tables, SessionLocal
 from database import auth as auth_utils
 from database import repository as repo
 from database.orm_models import PasswordResetToken, RevokedToken
@@ -66,6 +69,65 @@ class _SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         return response
+
+# ── 활동 로그 미들웨어 ────────────────────────────────────────
+import threading as _threading
+
+class _ActivityLogMiddleware(BaseHTTPMiddleware):
+    _SKIP = ("/health", "/static/", "/detail-chart", "/favicon")
+    # 내부(Streamlit→FastAPI) GET은 로그 불필요 — 페이지 렌더마다 반복되는 조회성 호출
+    _INTERNAL = ('127.0.0.1', '::1')
+
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        path = request.url.path
+        if any(path.startswith(s) for s in self._SKIP):
+            return response
+        client_ip = request.client.host if request.client else ""
+        # 내부 GET 요청은 기록 생략 (auth/me, profiles/latest 등 렌더마다 호출)
+        if client_ip in self._INTERNAL and request.method == "GET":
+            return response
+        log_data = self._extract(request, response.status_code)
+        _threading.Thread(target=self._write, args=(log_data,), daemon=True).start()
+        return response
+
+    @staticmethod
+    def _extract(request: Request, status_code: int) -> dict:
+        x_client_ip = request.headers.get("X-Client-IP", "").split(",")[0].strip()
+        xff = request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        ip = x_client_ip or xff or (request.client.host if request.client else "")
+        ua = request.headers.get("User-Agent", "")
+        norm_path = re.sub(r'/\d+', '/{id}', request.url.path)
+        action = f"{request.method} {norm_path}"
+        user_id = user_email = None
+        auth = request.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            try:
+                payload = auth_utils.decode_token(auth[7:])
+                if payload:
+                    user_id = int(payload.get("sub", 0)) or None
+                    user_email = payload.get("email")
+            except Exception:
+                pass
+        return dict(action=action, user_id=user_id, user_email=user_email,
+                    status_code=status_code, ip=ip, ua=ua)
+
+    @staticmethod
+    def _write(data: dict):
+        try:
+            db = SessionLocal()
+            try:
+                repo.log_activity(
+                    db, action=data["action"],
+                    user_id=data["user_id"], user_email=data["user_email"],
+                    detail={"status": data["status_code"]},
+                    ip_address=data["ip"], user_agent=data["ua"],
+                )
+            finally:
+                db.close()
+        except Exception:
+            pass
+
 
 # ── 로그인 브루트포스 방어 (IP당 1분에 5회) ────────────────────
 _login_attempts: dict[str, list[float]] = {}
@@ -95,6 +157,7 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 app.add_middleware(_SecurityHeadersMiddleware)
+app.add_middleware(_ActivityLogMiddleware)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=_allowed_hosts)
 
 _static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
@@ -968,7 +1031,9 @@ def delete_me(
 # ============================================================
 
 def _callback_uri(provider: str) -> str:
-    base = os.getenv("BACKEND_URL", "http://localhost:9080")
+    # OAuth 콜백은 외부(소셜 서버)가 브라우저를 리다이렉트하는 URL이므로
+    # 공개 도메인(STREAMLIT_URL)을 사용해야 함. BACKEND_URL(localhost)은 외부에서 접근 불가.
+    base = os.getenv("STREAMLIT_URL", os.getenv("BACKEND_URL", "http://localhost:9080"))
     return f"{base}/auth/callback/{provider}"
 
 
@@ -1288,6 +1353,171 @@ def admin_toggle_admin(
     u.is_admin = not bool(u.is_admin)
     db.commit()
     return {"id": u.id, "email": u.email, "is_admin": bool(u.is_admin)}
+
+
+@app.get("/admin/stats")
+def admin_stats(
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """관리자 통계 요약"""
+    from database.orm_models import UserActivity, Profile
+    from sqlalchemy import func
+
+    UserModel = auth_utils.User
+    user_count     = db.query(UserModel).count()
+    profile_count  = db.query(Profile).count()
+    activity_count = db.query(UserActivity).count()
+
+    # 오늘 활동 수
+    today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    today_count = db.query(UserActivity).filter(UserActivity.created_at >= today_start).count()
+
+    # 최근 7일 일별 활동
+    from sqlalchemy import cast, Date as SaDate
+    daily_rows = (
+        db.query(cast(UserActivity.created_at, SaDate).label("day"),
+                 func.count(UserActivity.id).label("cnt"))
+        .filter(UserActivity.created_at >= datetime.utcnow() - timedelta(days=7))
+        .group_by("day")
+        .order_by("day")
+        .all()
+    )
+
+    # 액션별 빈도 (상위 15개)
+    action_rows = (
+        db.query(UserActivity.action, func.count(UserActivity.id).label("cnt"))
+        .group_by(UserActivity.action)
+        .order_by(func.count(UserActivity.id).desc())
+        .limit(15).all()
+    )
+
+    # 브라우저 분포
+    browser_rows = (
+        db.query(UserActivity.browser, func.count(UserActivity.id).label("cnt"))
+        .group_by(UserActivity.browser)
+        .order_by(func.count(UserActivity.id).desc()).all()
+    )
+
+    # OS 분포
+    os_rows = (
+        db.query(UserActivity.os_name, func.count(UserActivity.id).label("cnt"))
+        .group_by(UserActivity.os_name)
+        .order_by(func.count(UserActivity.id).desc()).all()
+    )
+
+    # 디바이스 분포
+    device_rows = (
+        db.query(UserActivity.device_type, func.count(UserActivity.id).label("cnt"))
+        .group_by(UserActivity.device_type).all()
+    )
+
+    # 최근 접속 IP 목록 (유니크, 최근 접속 순)
+    ip_rows = (
+        db.query(
+            UserActivity.ip_address,
+            func.count(UserActivity.id).label("cnt"),
+            func.max(UserActivity.created_at).label("last_seen"),
+            UserActivity.user_email,
+        )
+        .filter(UserActivity.ip_address.isnot(None))
+        .group_by(UserActivity.ip_address, UserActivity.user_email)
+        .order_by(func.max(UserActivity.created_at).desc())
+        .limit(30).all()
+    )
+
+    return {
+        "user_count":     user_count,
+        "profile_count":  profile_count,
+        "activity_count": activity_count,
+        "today_count":    today_count,
+        "daily": [{"day": str(r.day), "count": r.cnt} for r in daily_rows],
+        "actions":  [{"action": r.action, "count": r.cnt} for r in action_rows],
+        "browsers": [{"browser": r.browser or "알 수 없음", "count": r.cnt} for r in browser_rows],
+        "os":       [{"os": r.os_name or "알 수 없음", "count": r.cnt} for r in os_rows],
+        "devices":  [{"device": r.device_type or "알 수 없음", "count": r.cnt} for r in device_rows],
+        "recent_ips": [
+            {
+                "ip":        r.ip_address,
+                "count":     r.cnt,
+                "email":     r.user_email or "-",
+                "last_seen": r.last_seen.isoformat() if r.last_seen else "",
+            }
+            for r in ip_rows
+        ],
+    }
+
+
+@app.get("/admin/profiles")
+def admin_list_profiles(
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """전체 사용자 프로필 목록 (관리자 전용)"""
+    from database.orm_models import Profile
+    UserModel = auth_utils.User
+    rows = (
+        db.query(Profile, UserModel.email, UserModel.name.label("uname"))
+        .join(UserModel, Profile.user_id == UserModel.id)
+        .order_by(Profile.updated_at.desc())
+        .limit(200)
+        .all()
+    )
+    result = []
+    for p, email, uname in rows:
+        bd = p.birth_date
+        result.append({
+            "profile_id":    p.id,
+            "user_email":    email,
+            "user_name":     uname,
+            "profile_name":  p.name,
+            "birth_year":    bd.year if bd else None,
+            "gender":        p.gender,
+            "retirement_age": p.retirement_age,
+            "annual_salary": p.annual_salary,
+            "created_at":    p.created_at.isoformat() if p.created_at else "",
+            "updated_at":    p.updated_at.isoformat() if p.updated_at else "",
+        })
+    return result
+
+
+@app.get("/admin/activity")
+def admin_activity_log(
+    limit: int = 50,
+    offset: int = 0,
+    user_id: Optional[int] = None,
+    action: Optional[str] = None,
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """사용자 활동 로그 조회 (관리자 전용) — total + items 반환"""
+    from database.orm_models import UserActivity
+    q = db.query(UserActivity)
+    if user_id is not None:
+        q = q.filter(UserActivity.user_id == user_id)
+    if action:
+        q = q.filter(UserActivity.action.like(f"%{action}%"))
+    total = q.count()
+    rows = q.order_by(UserActivity.created_at.desc()).offset(offset).limit(min(limit, 200)).all()
+    return {
+        "total": total,
+        "offset": offset,
+        "limit": min(limit, 200),
+        "items": [
+            {
+                "id":          r.id,
+                "user_email":  r.user_email,
+                "action":      r.action,
+                "detail":      json.loads(r.detail) if r.detail else None,
+                "ip_address":  r.ip_address,
+                "browser":     r.browser,
+                "os_name":     r.os_name,
+                "device_type": r.device_type,
+                "created_at":  r.created_at.isoformat() if r.created_at else None,
+            }
+            for r in rows
+        ],
+    }
 
 
 @app.post("/scenarios", status_code=201)

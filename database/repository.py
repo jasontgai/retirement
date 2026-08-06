@@ -1,7 +1,8 @@
 """
-DB CRUD 작업 - Profile / AnalysisResult
+DB CRUD 작업 - Profile / AnalysisResult / UserActivity
 """
 import json
+import re as _re
 from datetime import date
 from sqlalchemy.orm import Session
 from database.orm_models import Profile, PensionRow, RealEstateRow, FinancialAssetRow, MembershipRow, VehicleRow, DebtRow, InsuranceRow, AnalysisResult
@@ -195,4 +196,100 @@ def get_analysis(db: Session, analysis_id: int, profile_id: int) -> AnalysisResu
         AnalysisResult.id == analysis_id,
         AnalysisResult.profile_id == profile_id,
     ).first()
+
+
+# ============================================================
+# 사용자 활동 로그
+# ============================================================
+
+def _parse_ua(ua_str: str) -> tuple[str, str, str]:
+    """User-Agent → (browser, os_name, device_type)"""
+    ua = ua_str or ""
+    if _re.search(r'Mobile|iPhone', ua) and not _re.search(r'iPad', ua):
+        device_type = "mobile"
+    elif _re.search(r'iPad|Tablet', ua):
+        device_type = "tablet"
+    else:
+        device_type = "desktop"
+
+    if "Edg/" in ua or "Edge/" in ua:
+        browser = "Edge"
+    elif "OPR/" in ua or "Opera/" in ua:
+        browser = "Opera"
+    elif "Chrome/" in ua and "Safari/" in ua:
+        browser = "Chrome"
+    elif "Firefox/" in ua:
+        browser = "Firefox"
+    elif "Safari/" in ua:
+        browser = "Safari"
+    elif "MSIE" in ua or "Trident/" in ua:
+        browser = "IE"
+    else:
+        browser = "Other"
+
+    if "Windows" in ua:
+        os_name = "Windows"
+    elif "Android" in ua:
+        os_name = "Android"
+    elif "iPhone" in ua or "iPad" in ua:
+        os_name = "iOS"
+    elif "Mac OS X" in ua:
+        os_name = "macOS"
+    elif "Linux" in ua:
+        os_name = "Linux"
+    else:
+        os_name = "Other"
+
+    return browser, os_name, device_type
+
+
+def log_activity(
+    db: Session,
+    action: str,
+    *,
+    user_id: int | None = None,
+    user_email: str | None = None,
+    detail: dict | None = None,
+    ip_address: str | None = None,
+    user_agent: str | None = None,
+) -> None:
+    """활동 로그 기록 — 실패해도 예외를 전파하지 않음"""
+    try:
+        from database.orm_models import UserActivity
+        browser, os_name, device_type = _parse_ua(user_agent)
+        row = UserActivity(
+            user_id=user_id,
+            user_email=user_email,
+            action=action,
+            detail=json.dumps(detail, ensure_ascii=False) if detail else None,
+            ip_address=(ip_address or "")[:45] or None,
+            user_agent=(user_agent or "")[:500] or None,
+            device_type=device_type,
+            browser=browser,
+            os_name=os_name,
+        )
+        db.add(row)
+        db.commit()
+    except Exception:
+        try:
+            db.rollback()
+        except Exception:
+            pass
+
+
+def get_activities(
+    db: Session,
+    *,
+    limit: int = 100,
+    offset: int = 0,
+    user_id: int | None = None,
+    action: str | None = None,
+):
+    from database.orm_models import UserActivity
+    q = db.query(UserActivity)
+    if user_id is not None:
+        q = q.filter(UserActivity.user_id == user_id)
+    if action:
+        q = q.filter(UserActivity.action.like(f"%{action}%"))
+    return q.order_by(UserActivity.created_at.desc()).offset(offset).limit(limit).all()
 

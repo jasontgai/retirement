@@ -36,7 +36,10 @@ kairang.pe.kr:8443 {
 
     # 나머지는 Streamlit (프론트엔드 → localhost:8501)
     handle {
-        reverse_proxy localhost:8501
+        reverse_proxy localhost:8501 {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+        }
     }
 
     header {

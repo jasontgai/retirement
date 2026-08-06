@@ -238,3 +238,20 @@ class PasswordResetToken(Base):
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     used: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class UserActivity(Base):
+    """사용자 활동 로그 (접속 IP, 디바이스, 행동 이력)"""
+    __tablename__ = "user_activities"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    user_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    action: Mapped[str] = mapped_column(String(100), nullable=False)
+    detail: Mapped[str | None] = mapped_column(Text, nullable=True)       # JSON
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True)   # IPv6 max 45
+    user_agent: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    device_type: Mapped[str | None] = mapped_column(String(20), nullable=True)  # desktop/mobile/tablet
+    browser: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    os_name: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)

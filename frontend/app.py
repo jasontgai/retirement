@@ -27,14 +27,17 @@ _log = _logging.getLogger('ret')
 # ============================================================
 try:
     API_BASE = st.secrets.get("API_BASE", "http://localhost:9080")
+    PUBLIC_URL = st.secrets.get("PUBLIC_URL", API_BASE)
 except Exception:
     try:
         from dotenv import load_dotenv as _lde
         import os as _os
         _lde(dotenv_path=_os.path.join(_os.path.dirname(_os.path.dirname(__file__)), '.env'), override=True)
         API_BASE = _os.getenv("BACKEND_URL", "http://localhost:9080")
+        PUBLIC_URL = _os.getenv("STREAMLIT_URL", API_BASE)
     except Exception:
         API_BASE = "http://localhost:9080"
+        PUBLIC_URL = API_BASE
 
 st.set_page_config(
     page_title="은퇴설계",
@@ -279,10 +282,27 @@ def init_state():
         if k not in st.session_state:
             st.session_state[k] = v
 
+    # 실제 클라이언트 IP 캡처
+    # Caddyfile에서 header_up으로 X-Real-IP / X-Forwarded-For를 명시 설정함
+    # None이면 매 렌더마다 재시도 (OAuth 직후 첫 렌더에서 st.context 미준비 대응)
+    if not st.session_state.get('client_ip'):
+        try:
+            _hdrs = st.context.headers
+            _ctx_ip = (
+                _hdrs.get('X-Real-IP') or
+                _hdrs.get('X-Forwarded-For', '').split(',')[0].strip() or
+                ''
+            )
+            if not _ctx_ip or _ctx_ip in ('127.0.0.1', '::1', ''):
+                _ctx_ip = getattr(st.context, 'ip_address', None) or ''
+            if _ctx_ip and _ctx_ip not in ('127.0.0.1', '::1'):
+                st.session_state.client_ip = _ctx_ip
+        except Exception:
+            pass
+
 init_state()
 
 # ── 쿠키 기반 세션 유지 (st.context.cookies + st.html JS 방식) ──────────
-_COOKIE_MAX_AGE = 30 * 24 * 60 * 60  # 30일(초)
 
 def _save_session_to_cookie(token, user_id, user_name, user_email):
     """다음 렌더에서 JavaScript로 쿠키 저장"""
@@ -307,29 +327,28 @@ def _end_session():
     st.session_state['session_invalidated'] = True
 
 def _flush_cookie_js():
-    """보류 중인 쿠키 작업을 JavaScript로 실행 (렌더 초반에 호출)"""
+    """로그인 후 쿠키 설정: /auth/set-session 또는 /auth/logout-page로 브라우저 리다이렉트.
+    JS iframe 방식은 Streamlit 재렌더시 iframe이 제거되어 JS가 실행 안 될 수 있음.
+    HTTP Set-Cookie 헤더(서버 리다이렉트) 방식이 100% 신뢰성 있음."""
     _pc = st.session_state.pop('_pending_cookie', None)
+    _log.debug(f"[flush_cookie] 진입: _pending_cookie={'없음' if _pc is None else _pc.get('action')}")
     if _pc is None:
         return
     _log.debug(f"[flush_cookie] action={_pc['action']}")
-    _ma = _COOKIE_MAX_AGE
     if _pc['action'] == 'set':
-        _js = f"""<script>
-var a={_ma};
-document.cookie="ret_token={_pc['token']};max-age="+a+";path=/;SameSite=Lax";
-document.cookie="ret_uid={_pc['uid']};max-age="+a+";path=/;SameSite=Lax";
-document.cookie="ret_name={_pc['name']};max-age="+a+";path=/;SameSite=Lax";
-document.cookie="ret_email={_pc['email']};max-age="+a+";path=/;SameSite=Lax";
-</script>"""
+        from urllib.parse import quote as _q
+        _token = _pc['token']
+        _uid   = _pc.get('uid', 0)
+        _name  = _q(str(_pc.get('name', '')))
+        _email = _q(str(_pc.get('email', '')))
+        _url   = f"/auth/set-session?token={_token}&user_id={_uid}&name={_name}&email={_email}"
+        _log.debug(f"[flush_cookie] → /auth/set-session 리다이렉트")
+        st.html(f'<script>window.parent.location.href="{_url}";</script>', unsafe_allow_javascript=True)
+        st.stop()
     else:
-        _js = """<script>
-["ret_token","ret_uid","ret_name","ret_email"].forEach(function(n){
-    document.cookie=n+"=;max-age=0;path=/;SameSite=Lax";
-});
-</script>"""
-    _log.debug(f"[flush_cookie] st.html 호출 전")
-    st.html(f'<span style="display:none">{_js}</span>', unsafe_allow_javascript=True)
-    _log.debug(f"[flush_cookie] st.html 호출 후")
+        _log.debug(f"[flush_cookie] → /auth/logout-page 리다이렉트")
+        st.html('<script>window.parent.location.href="/auth/logout-page";</script>', unsafe_allow_javascript=True)
+        st.stop()
 
 # 보류 중인 쿠키 JS 실행 (로그인/로그아웃 직후 rerun 시 쿠키 기록)
 _flush_cookie_js()
@@ -346,9 +365,13 @@ if not st.session_state.token and not st.session_state.get('session_invalidated'
         _ck_email = unquote(_ck.get('ret_email', ''))
         _revoked = False
         try:
+            _me_headers = {"Authorization": f"Bearer {_ck_token}"}
+            _cip = st.session_state.get('client_ip')
+            if _cip:
+                _me_headers["X-Client-IP"] = _cip
             _verify_resp = requests.get(
                 f"{API_BASE}/auth/me",
-                headers={"Authorization": f"Bearer {_ck_token}"},
+                headers=_me_headers,
                 timeout=5,
             )
             _log.debug(f"[auth/me] status={_verify_resp.status_code}")
@@ -403,6 +426,10 @@ elif "token" in _qp:
     if _sm: st.session_state['inp_birth_month'] = _sm
     if _sd: st.session_state['inp_birth_day']   = _sd
     if _sg: st.session_state['inp_gender']       = _sg
+    # _end_session()이 _pending_cookie='delete'를 설정했으므로 'set'으로 덮어씀
+    _log.debug("[oauth] _save_session_to_cookie 호출")
+    _save_session_to_cookie(_qp["token"], int(_qp.get("user_id", 0)),
+                             unquote(_qp.get("name", "")), unquote(_qp.get("email", "")))
     st.query_params.clear()
     st.rerun()
 elif "oauth_error" in _qp:
@@ -423,6 +450,9 @@ def call_api(endpoint, payload=None, method="POST", form=False):
     headers = {}
     if st.session_state.token:
         headers["Authorization"] = f"Bearer {st.session_state.token}"
+    _cip = st.session_state.get('client_ip')
+    if _cip:
+        headers["X-Client-IP"] = _cip
     try:
         if method == "GET":
             resp = requests.get(url, headers=headers, timeout=30)
@@ -710,11 +740,11 @@ def show_auth_screen():
 
     st.markdown("#### 소셜 계정으로 시작하기")
     st.markdown(
-        _social_btn("카카오로 시작하기", f"{API_BASE}/auth/oauth/kakao",
+        _social_btn("카카오로 시작하기", f"{PUBLIC_URL}/auth/oauth/kakao",
                     "#FEE500", "#191919", _KAKAO_SVG) +
-        _social_btn("네이버로 시작하기", f"{API_BASE}/auth/oauth/naver",
+        _social_btn("네이버로 시작하기", f"{PUBLIC_URL}/auth/oauth/naver",
                     "#03C75A", "#FFFFFF", _NAVER_SVG) +
-        _social_btn("구글로 시작하기",   f"{API_BASE}/auth/oauth/google",
+        _social_btn("구글로 시작하기",   f"{PUBLIC_URL}/auth/oauth/google",
                     "#FFFFFF", "#3c4043", _GOOGLE_SVG, "#dadce0"),
         unsafe_allow_html=True,
     )
@@ -1265,7 +1295,7 @@ def show_account_page():
                     st.error(_dt_err)
                 elif _dt_resp and _dt_resp.get("dt"):
                     st.markdown(
-                        f'<meta http-equiv="refresh" content="0;url={API_BASE}/auth/delete-start?dt={_dt_resp["dt"]}">',
+                        f'<meta http-equiv="refresh" content="0;url={PUBLIC_URL}/auth/delete-start?dt={_dt_resp["dt"]}">',
                         unsafe_allow_html=True,
                     )
         else:
@@ -1474,9 +1504,10 @@ def show_main_app():
         return False
 
     # 분석 결과가 없으면 자동 실행 (온보딩 or 저장 후 재분석 트리거)
-    # _skip_auto_analysis: 내 정보 없을 때 직접입력 버튼 → 폼 먼저 보여주기 위해 1회 건너뜀
+    # 관리자는 개인 분석 자동 실행 불필요 — 분석 탭 직접 이동 시에만 실행
     if (st.session_state.analysis_result is None
             and st.session_state.get('profile_id') is not None
+            and not st.session_state.get('is_admin', False)
             and not st.session_state.pop('_skip_auto_analysis', False)):
         if _run_analysis():
             st.rerun()
@@ -1505,6 +1536,16 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
     box-shadow: 0 0 12px rgba(198,40,40,0.5) !important;
 }
 </style>""", unsafe_allow_html=True)
+            # 관리자 탭 활성 시 하단 섹션(내 정보 저장, 분석 내용) 자동 숨김 CSS 주입
+            st.html("""<script>
+(function(){
+  if(window.parent.__stAdmHide)return;
+  window.parent.__stAdmHide=true;
+  var s=window.parent.document.createElement('style');
+  s.textContent=':root:has([data-baseweb="tab"]:last-of-type[aria-selected="true"]) [data-testid="stTabs"]~[data-testid]{display:none!important}';
+  window.parent.document.head.appendChild(s);
+})();
+</script>""", unsafe_allow_javascript=True)
         # 내 정보가 없을 때 국가평균으로 채워진 폼 안내
         if st.session_state.get('profile_id', 0) == 0 and st.session_state.analysis_result is None:
             _fb_br = st.session_state.get('_avg_bracket', 55)
@@ -3320,7 +3361,10 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
             with tabs[6]:
                 st.subheader("🔧 관리자 패널")
 
-                _adm_tab1, _adm_tab2 = st.tabs(["👥 사용자 관리", "📊 시나리오 관리"])
+                _adm_tab1, _adm_tab2, _adm_tab3, _adm_tab4, _adm_tab5 = st.tabs([
+                    "👥 사용자 관리", "📊 시나리오 관리",
+                    "📋 활동 로그", "📈 통계", "🗂️ 프로필 현황",
+                ])
 
                 # ── 사용자 관리 ──────────────────────────────────────
                 with _adm_tab1:
@@ -3492,8 +3536,205 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                     st.session_state._sc_dirty = True
                                     st.rerun()
 
+                # ── 활동 로그 ─────────────────────────────────────────
+                with _adm_tab3:
+                    st.markdown("""<style>
+                    button[aria-label="📋 사용자 활동 로그 🔄"]{background:transparent!important;border:none!important;box-shadow:none!important;font-size:1.1rem!important;font-weight:700!important;padding:2px 4px!important;text-align:left!important;justify-content:flex-start!important;min-height:2rem!important;color:inherit!important;}
+                    button[aria-label="📋 사용자 활동 로그 🔄"]:hover{background:rgba(150,150,150,.1)!important;border-radius:4px!important;}
+                    </style>""", unsafe_allow_html=True)
+                    import streamlit.components.v1 as _scomp
+                    _scomp.html("""<script>
+                    (function(p){
+                      if(p.__stRowFix) return;
+                      p.__stRowFix = true;
+                      function fix(){
+                        p.document.querySelectorAll('[data-testid="stHorizontalBlock"]').forEach(function(b){
+                          b.style.setProperty('flex-direction','row','important');
+                          b.style.setProperty('flex-wrap','nowrap','important');
+                        });
+                        p.document.querySelectorAll('[data-testid="stColumn"]').forEach(function(c){
+                          c.style.setProperty('min-width','0','important');
+                          c.style.setProperty('flex-basis','auto','important');
+                        });
+                      }
+                      fix();
+                      var t;
+                      new p.MutationObserver(function(){clearTimeout(t);t=setTimeout(fix,80);})
+                        .observe(p.document.body,{childList:true,subtree:true});
+                    })(window.parent);
+                    </script>""", height=0)
+                    _al_refresh = st.button("📋 사용자 활동 로그 🔄", key="adm_al_refresh", use_container_width=True)
 
-    if not _is_onboarding:
+                    _al_c1, _al_c2 = st.columns([1, 1])
+                    with _al_c1:
+                        _al_email = st.text_input("이메일 필터", key="adm_al_email", placeholder="전체")
+                    with _al_c2:
+                        _al_action = st.text_input("액션 필터", key="adm_al_action", placeholder="login, analyze …")
+
+                    _AL_PAGE_SIZE = 50
+
+                    def _al_fetch(page=0):
+                        _offset = page * _AL_PAGE_SIZE
+                        _params = f"?limit={_AL_PAGE_SIZE}&offset={_offset}"
+                        if st.session_state.get('adm_al_action', '').strip():
+                            _params += f"&action={st.session_state['adm_al_action'].strip()}"
+                        _data, _err = call_api(f"/admin/activity{_params}", method="GET")
+                        st.session_state._adm_al_cache     = _data
+                        st.session_state._adm_al_cache_err = _err
+                        st.session_state._adm_al_page      = page
+
+                    # 탭 첫 진입 또는 새로고침 버튼
+                    if '_adm_al_cache' not in st.session_state or _al_refresh:
+                        _al_fetch(0)
+
+                    _adm_al     = st.session_state.get('_adm_al_cache')
+                    _adm_al_err = st.session_state.get('_adm_al_cache_err')
+                    _al_page    = st.session_state.get('_adm_al_page', 0)
+
+                    if _adm_al_err:
+                        st.error(f"조회 실패: {_adm_al_err}")
+                    elif _adm_al:
+                        _al_total = _adm_al.get('total', 0)
+                        _al_items = _adm_al.get('items', [])
+                        _al_total_pages = max(1, -(-_al_total // _AL_PAGE_SIZE))  # ceiling
+
+                        # 이메일 클라이언트 필터
+                        if _al_email.strip():
+                            _al_items = [r for r in _al_items if _al_email.strip().lower() in (r.get('user_email') or '').lower()]
+
+                        _al_df_data = []
+                        for _r in _al_items:
+                            _ts = (_r.get('created_at') or '')[:19].replace('T', ' ')
+                            _al_df_data.append({
+                                "시간":    _ts,
+                                "이메일":  _r.get('user_email') or '-',
+                                "IP":      _r.get('ip_address') or '-',
+                                "브라우저": _r.get('browser') or '-',
+                                "OS":      _r.get('os_name') or '-',
+                                "디바이스": _r.get('device_type') or '-',
+                                "액션":    _r.get('action') or '-',
+                                "상태":    str((_r.get('detail') or {}).get('status', '-')),
+                            })
+
+                        # 페이지 네비게이션: < 50 / 1234 >
+                        _end = min((_al_page + 1) * _AL_PAGE_SIZE, _al_total)
+                        _pg_prev, _pg_info, _pg_next = st.columns([1, 4, 1], vertical_alignment="center")
+                        with _pg_prev:
+                            if st.button("◀", key="adm_al_prev", disabled=(_al_page == 0), use_container_width=True):
+                                _al_fetch(_al_page - 1)
+                                st.rerun()
+                        with _pg_info:
+                            st.markdown(f'<p style="text-align:center;margin:0;font-size:0.9rem;">{_end:,} / {_al_total:,}</p>', unsafe_allow_html=True)
+                        with _pg_next:
+                            if st.button("▶", key="adm_al_next", disabled=(_al_page >= _al_total_pages - 1), use_container_width=True):
+                                _al_fetch(_al_page + 1)
+                                st.rerun()
+
+                        if _al_df_data:
+                            _al_df = pd.DataFrame(_al_df_data)
+                            st.markdown(_rtbl(_al_df), unsafe_allow_html=True)
+                        else:
+                            st.info("조건에 맞는 로그가 없습니다.")
+
+                # ── 통계 ─────────────────────────────────────────────
+                with _adm_tab4:
+                    _st_title_col, _st_btn_col = st.columns([9, 1], vertical_alignment="center")
+                    with _st_title_col:
+                        st.markdown('<p style="font-size:1.1rem;font-weight:700;margin:0;line-height:2rem;">📈 사용 통계</p>', unsafe_allow_html=True)
+                    with _st_btn_col:
+                        _st_refresh = st.button("🔄", key="adm_stats_refresh", use_container_width=True, help="새로고침")
+                    if _st_refresh or '_adm_stats_cache' not in st.session_state:
+                        _adm_st, _adm_st_err = call_api("/admin/stats", method="GET")
+                        st.session_state._adm_stats_cache     = _adm_st
+                        st.session_state._adm_stats_cache_err = _adm_st_err
+
+                    _adm_st     = st.session_state.get('_adm_stats_cache')
+                    _adm_st_err = st.session_state.get('_adm_stats_cache_err')
+
+                    if _adm_st_err:
+                        st.error(f"통계 조회 실패: {_adm_st_err}")
+                    elif _adm_st:
+                        # 요약 지표
+                        _s1, _s2, _s3, _s4 = st.columns(4)
+                        _s1.metric("총 회원", f"{_adm_st.get('user_count', 0):,}명")
+                        _s2.metric("총 프로필", f"{_adm_st.get('profile_count', 0):,}개")
+                        _s3.metric("총 활동", f"{_adm_st.get('activity_count', 0):,}건")
+                        _s4.metric("오늘 활동", f"{_adm_st.get('today_count', 0):,}건")
+
+                        st.divider()
+                        _st_c1, _st_c2 = st.columns(2)
+
+                        with _st_c1:
+                            st.markdown("**액션별 빈도**")
+                            _act_data = _adm_st.get('actions', [])
+                            if _act_data:
+                                _act_df = pd.DataFrame([{"액션": r['action'], "건수": r['count']} for r in _act_data])
+                                st.markdown(_rtbl(_act_df), unsafe_allow_html=True)
+
+                            st.markdown("**접속 IP 목록 (최근순)**")
+                            _ip_data = _adm_st.get('recent_ips', [])
+                            if _ip_data:
+                                _ip_df = pd.DataFrame([{
+                                    "IP": r['ip'], "이메일": r['email'],
+                                    "접속수": r['count'], "최근접속": (r['last_seen'] or '')[:16].replace('T', ' ')
+                                } for r in _ip_data])
+                                st.markdown(_rtbl(_ip_df), unsafe_allow_html=True)
+
+                        with _st_c2:
+                            st.markdown("**브라우저 분포**")
+                            _br_data = _adm_st.get('browsers', [])
+                            if _br_data:
+                                _br_df = pd.DataFrame([{"브라우저": r['browser'], "건수": r['count']} for r in _br_data])
+                                st.markdown(_rtbl(_br_df), unsafe_allow_html=True)
+
+                            st.markdown("**OS 분포**")
+                            _os_data = _adm_st.get('os', [])
+                            if _os_data:
+                                _os_df = pd.DataFrame([{"OS": r['os'], "건수": r['count']} for r in _os_data])
+                                st.markdown(_rtbl(_os_df), unsafe_allow_html=True)
+
+                            st.markdown("**디바이스 분포**")
+                            _dev_data = _adm_st.get('devices', [])
+                            if _dev_data:
+                                _dev_df = pd.DataFrame([{"디바이스": r['device'], "건수": r['count']} for r in _dev_data])
+                                st.markdown(_rtbl(_dev_df), unsafe_allow_html=True)
+
+                # ── 프로필 현황 ───────────────────────────────────────
+                with _adm_tab5:
+                    _pr_title_col, _pr_btn_col = st.columns([9, 1], vertical_alignment="center")
+                    with _pr_title_col:
+                        st.markdown('<p style="font-size:1.1rem;font-weight:700;margin:0;line-height:2rem;">🗂️ 전체 프로필 현황</p>', unsafe_allow_html=True)
+                    with _pr_btn_col:
+                        _pr_refresh = st.button("🔄", key="adm_prof_refresh", use_container_width=True, help="새로고침")
+                    if _pr_refresh or '_adm_prof_cache' not in st.session_state:
+                        _adm_prof, _adm_prof_err = call_api("/admin/profiles", method="GET")
+                        st.session_state._adm_prof_cache     = _adm_prof
+                        st.session_state._adm_prof_cache_err = _adm_prof_err
+
+                    _adm_prof     = st.session_state.get('_adm_prof_cache')
+                    _adm_prof_err = st.session_state.get('_adm_prof_cache_err')
+
+                    if _adm_prof_err:
+                        st.error(f"조회 실패: {_adm_prof_err}")
+                    elif _adm_prof:
+                        st.caption(f"총 {len(_adm_prof)}개 프로필")
+                        _pr_df = pd.DataFrame([{
+                            "#":       p.get('profile_id'),
+                            "회원이메일": p.get('user_email') or '-',
+                            "회원명":   p.get('user_name') or '-',
+                            "프로필명":  p.get('profile_name') or '-',
+                            "생년":     p.get('birth_year') or '-',
+                            "성별":     p.get('gender') or '-',
+                            "은퇴연령":  f"{p.get('retirement_age', '-')}세",
+                            "연봉(만)":  f"{int(p.get('annual_salary', 0)) // 10000:,}" if p.get('annual_salary') else '-',
+                            "최종수정":  (p.get('updated_at') or '')[:10],
+                        } for p in _adm_prof])
+                        st.markdown(_rtbl(_pr_df), unsafe_allow_html=True)
+                    else:
+                        st.info("프로필이 없습니다.")
+
+
+    if not _is_onboarding and not st.session_state.get('is_admin'):
         _save_col, _status_col = st.columns([2, 5])
         with _save_col:
             if st.button("💾 내 정보 저장", width='stretch'):
@@ -3512,7 +3753,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     _run_analysis()
                     st.rerun()
 
-    if st.session_state.analysis_result:
+    if st.session_state.analysis_result and not st.session_state.get('is_admin'):
         result = st.session_state.analysis_result
         cf = result.get('현금흐름', {})
         _retire_age = result.get('사용자정보', {}).get('희망은퇴연령', 60)
