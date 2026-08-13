@@ -1,0 +1,369 @@
+<title>차트 디자인 스타일 비교</title>
+<style>
+:root {
+  --bg:      #F5F7FA;
+  --surface: #FFFFFF;
+  --text:    #111827;
+  --muted:   #6B7280;
+  --border:  #E5E7EB;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0F1117; --surface:#1C2030; --text:#E0E4F0; --muted:#7888A0; --border:#272E3F; }
+}
+:root[data-theme="light"] { --bg:#F5F7FA; --surface:#FFFFFF; --text:#111827; --muted:#6B7280; --border:#E5E7EB; }
+:root[data-theme="dark"]  { --bg:#0F1117; --surface:#1C2030; --text:#E0E4F0; --muted:#7888A0; --border:#272E3F; }
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family: -apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px 14px 48px;
+  max-width: 580px;
+  margin: 0 auto;
+}
+h1 { font-size:1.15rem; font-weight:700; text-align:center; letter-spacing:-.3px; margin-bottom:3px; }
+.sub { text-align:center; color:var(--muted); font-size:0.76rem; margin-bottom:18px; }
+
+/* ── Tabs: 2행 3열 그리드 ── */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.tab-btn {
+  padding: 8px 4px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  font-family: inherit;
+  line-height: 1.2;
+  text-align: center;
+}
+.tab-btn.active { color:#fff; }
+
+/* ── Chart ── */
+.chart-wrap {
+  border-radius: 13px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  transition: background .2s, border-color .2s;
+}
+canvas { display:block; width:100%; }
+
+/* ── Legend ── */
+.legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.legend-item { display:flex; align-items:center; gap:6px; font-size:0.74rem; color:var(--muted); }
+.leg-line { width:22px; height:2.5px; border-radius:2px; flex-shrink:0; }
+
+/* ── Desc card ── */
+.desc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 16px 16px 14px;
+}
+.desc-head { display:flex; align-items:baseline; gap:8px; margin-bottom:9px; }
+.desc-name { font-size:.95rem; font-weight:700; }
+.desc-en   { font-size:.7rem; color:var(--muted); }
+.tags { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+.tag { font-size:.68rem; font-weight:600; padding:3px 9px; border-radius:99px; }
+.bullets { list-style:none; display:flex; flex-direction:column; gap:6px; }
+.bullets li {
+  font-size:.78rem; color:var(--muted); padding-left:11px;
+  position:relative; line-height:1.45;
+}
+.bullets li::before {
+  content:'·'; position:absolute; left:0;
+  font-weight:900; font-size:1rem; line-height:1.2;
+}
+</style>
+
+<h1>디자인 스타일 비교</h1>
+<p class="sub">탭을 눌러 각 스타일을 확인해 보세요</p>
+
+<div class="tabs" id="tabs">
+  <button class="tab-btn active" data-s="clean"   onclick="sw('clean')">클린 라인</button>
+  <button class="tab-btn"        data-s="dark"    onclick="sw('dark')">글로우 다크</button>
+  <button class="tab-btn"        data-s="soft"    onclick="sw('soft')">소프트</button>
+  <button class="tab-btn"        data-s="report"  onclick="sw('report')">리포트</button>
+  <button class="tab-btn"        data-s="vivid"   onclick="sw('vivid')">비비드</button>
+  <button class="tab-btn"        data-s="premium" onclick="sw('premium')">프리미엄</button>
+</div>
+
+<div class="chart-wrap" id="chartWrap">
+  <canvas id="cv"></canvas>
+</div>
+<div class="legend" id="legendRow"></div>
+<div class="desc-card" id="descCard"></div>
+
+<style id="bulletAccent"></style>
+
+<script>
+/* ── Data ── */
+const ages = Array.from({length:31},(_,i)=>55+i);
+const N = ages.length;
+const income  = ages.map(a => a<=64 ? 315+(64-a)*4 : Math.max(45, a<=67 ? 190-(a-65)*22 : 132-(a-67)*7));
+const expense = ages.map(a => Math.round(225*Math.pow(1.025,a-55)*(a<65?1:a<75?0.87:0.69)));
+const surplus = income.map((v,i)=>v-expense[i]);
+
+/* ── Style configs ── */
+const S = {
+  /* ① 클린 라인 */
+  clean: {
+    name:'클린 라인', en:'Clean Line', activeBg:'#1554E0',
+    bg:{l:'#F8FAFC',d:'#0D1117'}, grid:{l:'#EBF0F6',d:'#181E2C'},
+    zero:{l:'#C5CDD8',d:'#283040'}, text:{l:'#8A97A8',d:'#4A5870'},
+    income:'#1554E0', expense:'#DC1B1B', surplus:{l:'#111',d:'#EEE'},
+    retire:'#E06010', incFill:false, expFill:false, glow:false,
+    surplusDash:true, lw:{inc:2,exp:2,sur:3}, alwaysDark:false,
+    tags:[{t:'미니멀',c:'#1554E0'},{t:'신뢰감',c:'#374151'},{t:'핀테크',c:'#6B7280'}],
+    bullets:['핵심 3선에만 집중, 시선이 분산되지 않음','흰 배경의 높은 대비로 숫자·선이 가장 선명','토스·카카오페이 등 국내 핀테크 앱과 동일한 언어'],
+  },
+  /* ② 글로우 다크 */
+  dark: {
+    name:'글로우 다크', en:'Glow Dark', activeBg:'#00C8A8',
+    bg:{l:'#07101F',d:'#07101F'}, grid:{l:'#0E1828',d:'#0E1828'},
+    zero:{l:'#18273E',d:'#18273E'}, text:{l:'#304060',d:'#304060'},
+    income:'#00E5C3', expense:'#FF3D6A', surplus:{l:'#FFD21F',d:'#FFD21F'},
+    retire:'#FF9500', incFill:true, expFill:true, glow:true,
+    surplusDash:false, lw:{inc:2,exp:2,sur:2.5}, alwaysDark:true,
+    tags:[{t:'프로',c:'#00E5C3'},{t:'임팩트',c:'#FF3D6A'},{t:'다크전용',c:'#FFD21F'}],
+    bullets:['어두운 배경 위 형광 선이 데이터를 즉각적으로 전달','은퇴 시점 소득 절벽이 시각적으로 강하게 표현됨','프레젠테이션·공유 시 눈에 띄는 전문가 인상'],
+  },
+  /* ③ 소프트 */
+  soft: {
+    name:'소프트', en:'Soft Gradient', activeBg:'#1E7A3A',
+    bg:{l:'#ECF5EE',d:'#111C14'}, grid:{l:'#D4E8D6',d:'#1A2C1C'},
+    zero:{l:'#92B898',d:'#2A4030'}, text:{l:'#6A8870',d:'#4A6850'},
+    income:'#1B6E31', expense:'#B54800', surplus:{l:'#1450A0',d:'#4A88D8'},
+    retire:'#C85000', incFill:true, expFill:true, glow:false,
+    surplusDash:false, lw:{inc:2.5,exp:2.5,sur:3}, alwaysDark:false,
+    tags:[{t:'직관적',c:'#1B6E31'},{t:'친근함',c:'#B54800'},{t:'가독성',c:'#1450A0'}],
+    bullets:['그라디언트 면으로 수입·지출 관계가 한눈에 파악됨','녹색=수입, 주황=지출 — 학습 없이 직관적으로 이해','부드러운 색감이 재무 스트레스를 낮추고 접근성을 높임'],
+  },
+  /* ④ 리포트 */
+  report: {
+    name:'리포트', en:'Report Style', activeBg:'#1A3A6B',
+    bg:{l:'#FAFAF7',d:'#12120F'}, grid:{l:'#E4E0D6',d:'#1E1C18'},
+    zero:{l:'#A09880',d:'#3A3828'}, text:{l:'#7A7060',d:'#6A6050'},
+    income:'#1A3A6B', expense:'#7A1A1A', surplus:{l:'#1A4A1A',d:'#4A8A4A'},
+    retire:'#7A4010', incFill:false, expFill:false, glow:false,
+    surplusDash:false, lw:{inc:2.5,exp:2.5,sur:3}, alwaysDark:false,
+    tags:[{t:'보고서',c:'#1A3A6B'},{t:'인쇄친화',c:'#7A1A1A'},{t:'격식',c:'#555'}],
+    bullets:['증권사 PDF 리포트처럼 격식 있고 신뢰감 있는 톤','컬러가 절제되어 흑백 인쇄 시에도 명확하게 구분','데이터 수치 중심, 불필요한 시각 요소 없음'],
+  },
+  /* ⑤ 비비드 */
+  vivid: {
+    name:'비비드', en:'Vivid Pop', activeBg:'#7B2FFF',
+    bg:{l:'#FFFFFF',d:'#0A0A12'}, grid:{l:'#F0F0F8',d:'#12121E'},
+    zero:{l:'#DDDDEE',d:'#222230'}, text:{l:'#9090B0',d:'#5050780'},
+    income:'#00AAFF', expense:'#FF0077', surplus:{l:'#7B2FFF',d:'#9B5FFF'},
+    retire:'#FF6600', incFill:true, expFill:true, glow:false,
+    surplusDash:false, lw:{inc:2,exp:2,sur:3}, alwaysDark:false,
+    tags:[{t:'비비드',c:'#00AAFF'},{t:'에너지',c:'#FF0077'},{t:'MZ감성',c:'#7B2FFF'}],
+    bullets:['원색에 가까운 채도로 즉각적인 시각 반응 유도','수입·지출·잉여가 서로 완전히 다른 색으로 구분됨','밝은 배경에서 강렬한 그라디언트 채우기가 인상적'],
+  },
+  /* ⑥ 프리미엄 */
+  premium: {
+    name:'프리미엄', en:'Private Banking', activeBg:'#C8A030',
+    bg:{l:'#0D1B2A',d:'#0D1B2A'}, grid:{l:'#122030',d:'#122030'},
+    zero:{l:'#1E3048',d:'#1E3048'}, text:{l:'#385070',d:'#385070'},
+    income:'#C8A030', expense:'#E07878', surplus:{l:'#78AACC',d:'#78AACC'},
+    retire:'#D47820', incFill:true, expFill:false, glow:false,
+    surplusDash:false, lw:{inc:2,exp:2,sur:2.5}, alwaysDark:true,
+    tags:[{t:'프리미엄',c:'#C8A030'},{t:'PB',c:'#E07878'},{t:'고급',c:'#78AACC'}],
+    bullets:['딥 네이비 + 골드 조합으로 프라이빗뱅킹 느낌','수입(골드)이 자산을 상징하며 시선을 먼저 끌어당김','절제된 컬러와 넓은 여백이 신중한 인상을 줌'],
+  },
+};
+
+let cur = 'clean';
+let dark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',e=>{ dark=e.matches; render(); });
+const obs = new MutationObserver(()=>{
+  const t = document.documentElement.getAttribute('data-theme');
+  if(t==='dark') dark=true; else if(t==='light') dark=false;
+  render();
+});
+obs.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+function sw(k){
+  cur = k;
+  const s = S[k];
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    const on = b.dataset.s===k;
+    b.classList.toggle('active',on);
+    b.style.background  = on ? s.activeBg : '';
+    b.style.color       = on ? '#fff'     : '';
+    b.style.borderColor = on ? s.activeBg : '';
+  });
+  render();
+}
+
+function render(){
+  const s = S[cur];
+  const d = s.alwaysDark ? true : dark;
+  const cv = document.getElementById('cv');
+  const h  = Math.min(310,Math.max(210,Math.round(window.innerHeight*0.36)));
+  cv.style.height = h+'px';
+  const wrap = document.getElementById('chartWrap');
+  wrap.style.background  = s.bg[d?'d':'l'];
+  wrap.style.borderColor = s.alwaysDark ? '#1A2C40' : 'var(--border)';
+  requestAnimationFrame(()=>{ drawChart(cv,s,d); });
+  renderLegend(s,d);
+  renderDesc(s);
+}
+
+function renderLegend(s,d){
+  const sc = s.surplus[d?'d':'l'];
+  function mkl(color,dash){
+    return `<div class="leg-line" style="${dash
+      ?`background:repeating-linear-gradient(90deg,${color} 0,${color} 6px,transparent 6px,transparent 10px)`
+      :`background:${color}`}"></div>`;
+  }
+  document.getElementById('legendRow').innerHTML =
+    `<div class="legend-item">${mkl(s.income,false)}수입합계</div>`+
+    `<div class="legend-item">${mkl(s.expense,false)}지출합계</div>`+
+    `<div class="legend-item">${mkl(sc,s.surplusDash)}잉여/부족</div>`;
+}
+
+function renderDesc(s){
+  const tags = s.tags.map(t=>`<span class="tag" style="background:${t.c}22;color:${t.c}">${t.t}</span>`).join('');
+  const li   = s.bullets.map(b=>`<li>${b}</li>`).join('');
+  document.getElementById('descCard').innerHTML =
+    `<div class="desc-head"><span class="desc-name" style="color:${s.activeBg}">${s.name}</span><span class="desc-en">${s.en}</span></div>`+
+    `<div class="tags">${tags}</div><ul class="bullets">${li}</ul>`;
+  document.getElementById('bulletAccent').textContent = `.bullets li::before{color:${s.activeBg}}`;
+}
+
+/* ── Canvas draw ── */
+function drawChart(cv,s,dark){
+  const W=cv.offsetWidth||320, H=cv.offsetHeight||260;
+  if(!W||!H) return;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=W*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const m={t:22,r:16,b:34,l:42};
+  const cW=W-m.l-m.r, cH=H-m.t-m.b;
+  const yMn=-235, yMx=430;
+  const xOf=i=>m.l+(i/(N-1))*cW;
+  const yOf=v=>m.t+(1-(v-yMn)/(yMx-yMn))*cH;
+  const y0=yOf(0);
+
+  const bgC   = s.bg  [dark?'d':'l'];
+  const gridC = s.grid[dark?'d':'l'];
+  const zeroC = s.zero[dark?'d':'l'];
+  const txtC  = s.text[dark?'d':'l'];
+  const surC  = s.surplus[dark?'d':'l'];
+
+  /* bg */
+  ctx.fillStyle=bgC; ctx.fillRect(0,0,W,H);
+
+  /* grid */
+  ctx.strokeStyle=gridC; ctx.lineWidth=1;
+  if(cur==='dark') ctx.setLineDash([2,6]);
+  [-150,-100,-50,50,100,150,200,250,300,350,400].forEach(v=>{
+    const y=yOf(v);
+    if(y<m.t-1||y>m.t+cH+1) return;
+    ctx.beginPath(); ctx.moveTo(m.l,y); ctx.lineTo(W-m.r,y); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  /* y labels */
+  ctx.fillStyle=txtC; ctx.textAlign='right'; ctx.font='10px monospace';
+  [-100,100,200,300].forEach(v=>{
+    const y=yOf(v);
+    if(y<m.t||y>m.t+cH) return;
+    ctx.fillText(v+'만',m.l-4,y+3.5);
+  });
+
+  /* zero line */
+  ctx.strokeStyle=zeroC; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(m.l,y0); ctx.lineTo(W-m.r,y0); ctx.stroke();
+  ctx.fillStyle=zeroC; ctx.font='9px monospace'; ctx.textAlign='right';
+  ctx.fillText('0',m.l-4,y0+3.5);
+
+  /* retire line (index 10 = age 65) */
+  const rx=xOf(10);
+  ctx.strokeStyle=s.retire; ctx.lineWidth=1.2; ctx.setLineDash([5,4]);
+  ctx.globalAlpha=0.7;
+  ctx.beginPath(); ctx.moveTo(rx,m.t); ctx.lineTo(rx,m.t+cH); ctx.stroke();
+  ctx.setLineDash([]); ctx.globalAlpha=1;
+  ctx.fillStyle=s.retire; ctx.font='bold 9px -apple-system,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('은퇴',rx,m.t+9);
+
+  /* fill helper */
+  function fill(vals,color,above){
+    const g=ctx.createLinearGradient(0,above?m.t:y0,0,above?y0:m.t+cH);
+    const a1=cur==='dark'||cur==='premium'?'55':'38';
+    g.addColorStop(0,color+a1); g.addColorStop(1,color+'06');
+    ctx.beginPath();
+    vals.forEach((v,i)=>{ const x=xOf(i),y=yOf(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.lineTo(xOf(N-1),y0); ctx.lineTo(xOf(0),y0); ctx.closePath();
+    ctx.fillStyle=g; ctx.fill();
+  }
+
+  /* line helper */
+  function line(vals,color,lw,dash){
+    if(s.glow){ ctx.shadowColor=color; ctx.shadowBlur=14; }
+    ctx.strokeStyle=color; ctx.lineWidth=lw;
+    ctx.lineJoin='round'; ctx.lineCap='round';
+    ctx.setLineDash(dash?[8,5]:[]);
+    ctx.beginPath();
+    vals.forEach((v,i)=>{ const x=xOf(i),y=yOf(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke(); ctx.setLineDash([]); ctx.shadowBlur=0;
+    if(s.glow){
+      const li=vals.length-1;
+      ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=12;
+      ctx.beginPath(); ctx.arc(xOf(li),yOf(vals[li]),4,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur=0;
+    }
+  }
+
+  const expNeg = expense.map(v=>-v);
+  if(s.incFill) fill(income,s.income,true);
+  if(s.expFill) fill(expNeg,s.expense,false);
+
+  /* soft: surplus area tint */
+  if(cur==='soft'){
+    ctx.beginPath();
+    surplus.forEach((v,i)=>{ const x=xOf(i),y=yOf(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.lineTo(xOf(N-1),y0); ctx.lineTo(xOf(0),y0); ctx.closePath();
+    const g2=ctx.createLinearGradient(0,yOf(120),0,y0);
+    g2.addColorStop(0,surC+'28'); g2.addColorStop(1,surC+'04');
+    ctx.fillStyle=g2; ctx.fill();
+  }
+
+  line(expNeg,s.expense,s.lw.exp,false);
+  line(income,s.income,s.lw.inc,false);
+  line(surplus,surC,s.lw.sur,s.surplusDash);
+
+  /* x labels */
+  ctx.fillStyle=txtC; ctx.font='10px -apple-system,sans-serif'; ctx.textAlign='center';
+  [55,60,65,70,75,80,85].forEach(a=>ctx.fillText(a+'세',xOf(a-55),m.t+cH+15));
+}
+
+window.addEventListener('load',()=>{
+  dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const t=document.documentElement.getAttribute('data-theme');
+  if(t==='dark') dark=true; else if(t==='light') dark=false;
+  sw('clean');
+});
+window.addEventListener('resize',()=>render());
+</script>

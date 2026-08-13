@@ -17,6 +17,7 @@ class HouseType(Enum):
     OWN = "자가"
     JEONSE = "전세"
     WOLSE = "월세"
+    OTHER = "기타"
 
 
 class PensionType(Enum):
@@ -77,10 +78,12 @@ class RealEstate:
     """부동산"""
     name: str                        # "본가", "투자용 아파트" 등
     house_type: HouseType
+    property_category: str = "아파트"  # 아파트/단독주택/빌라·다세대/상가/오피스텔/토지/기타
     market_value: float = 0          # 시세
     official_price: float = 0        # 공시가격 (건보/세금 산정용)
     debt: float = 0                  # 담보대출 잔액
-    monthly_rent_income: float = 0   # 월세 수입 (있을 경우)
+    monthly_rent_income: float = 0   # 월 임대수입 (임대인 — 있을 경우)
+    monthly_rent_expense: float = 0  # 월 임차료 (임차인 — 월세 거주 시 납부액)
     is_primary_residence: bool = True  # 1세대 1주택 여부
     acquisition_date: Optional[date] = None
     acquisition_price: float = 0

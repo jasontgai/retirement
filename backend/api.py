@@ -100,15 +100,24 @@ class _ActivityLogMiddleware(BaseHTTPMiddleware):
         norm_path = re.sub(r'/\d+', '/{id}', request.url.path)
         action = f"{request.method} {norm_path}"
         user_id = user_email = None
+        # 우선순위: Authorization 헤더 → 쿼리파라미터 token (set-session) → 쿠키 (logout-page)
         auth = request.headers.get("Authorization", "")
-        if auth.startswith("Bearer "):
+        token_str = (auth[7:] if auth.startswith("Bearer ") else None
+                     or request.query_params.get("token")
+                     or request.cookies.get("ret_token"))
+        if token_str:
             try:
-                payload = auth_utils.decode_token(auth[7:])
+                payload = auth_utils.decode_token(token_str)
                 if payload:
                     user_id = int(payload.get("sub", 0)) or None
                     user_email = payload.get("email")
             except Exception:
                 pass
+        # 핸들러가 직접 설정한 사용자 정보 (OAuth 콜백·로그인 등 — JWT가 내부에서 생성되는 경우)
+        if not user_id:
+            user_id = getattr(request.state, '_log_user_id', None)
+        if not user_email:
+            user_email = getattr(request.state, '_log_email', None)
         return dict(action=action, user_id=user_id, user_email=user_email,
                     status_code=status_code, ip=ip, ua=ua)
 
@@ -273,10 +282,12 @@ class PensionIn(BaseModel):
 class RealEstateIn(BaseModel):
     name: str
     house_type: str = "자가"
+    property_category: str = "아파트"   # 아파트/단독주택/빌라·다세대/상가/오피스텔/토지/기타
     market_value: float = 0
     official_price: float = 0
     debt: float = 0
     monthly_rent_income: float = 0
+    monthly_rent_expense: float = 0
     is_primary_residence: bool = True
 
 
@@ -367,7 +378,9 @@ _PENSION_TYPE_MAP = {
     "개인연금": PensionType.PRIVATE_PENSION,
     "주택연금": PensionType.HOUSE_PENSION,
 }
-_HOUSE_TYPE_MAP = {"자가": HouseType.OWN, "전세": HouseType.JEONSE, "월세": HouseType.WOLSE}
+_HOUSE_TYPE_MAP = {
+    "자가": HouseType.OWN, "전세": HouseType.JEONSE, "월세": HouseType.WOLSE, "기타": HouseType.OTHER,
+}
 
 
 def pydantic_to_userprofile(data: FullProfileIn) -> UserProfile:
@@ -403,10 +416,12 @@ def pydantic_to_userprofile(data: FullProfileIn) -> UserProfile:
         RealEstate(
             name=r.name,
             house_type=_HOUSE_TYPE_MAP.get(r.house_type, HouseType.OWN),
+            property_category=r.property_category,
             market_value=r.market_value,
             official_price=r.official_price,
             debt=r.debt,
             monthly_rent_income=r.monthly_rent_income,
+            monthly_rent_expense=r.monthly_rent_expense,
             is_primary_residence=r.is_primary_residence,
         )
         for r in data.real_estates
@@ -523,6 +538,8 @@ def login(request: Request, form: OAuth2PasswordRequestForm = Depends(), db: Ses
     if not user.password_hash or not auth_utils.verify_password(form.password, user.password_hash):
         raise HTTPException(status_code=401, detail="비밀번호가 올바르지 않습니다.")
     token = auth_utils.create_access_token(user.id, user.email)
+    request.state._log_user_id = user.id
+    request.state._log_email   = user.email
     return TokenOut(access_token=token, user_id=user.id, name=user.name,
                     is_admin=bool(getattr(user, 'is_admin', False)))
 
@@ -628,8 +645,14 @@ def create_profile(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # 유저당 프로필 1개 원칙: 기존 프로필이 있으면 새로 만들지 않고 업데이트
+    existing = repo.list_profiles(db, current_user.id)
     user_profile = pydantic_to_userprofile(data)
-    row = repo.save_profile(db, current_user.id, user_profile, title=data.title)
+    if existing:
+        row = repo.upsert_profile(db, current_user.id, user_profile,
+                                  profile_id=existing[0].id, title=data.title)
+    else:
+        row = repo.save_profile(db, current_user.id, user_profile, title=data.title)
     return {"id": row.id, "title": row.title, "created_at": str(row.created_at)}
 
 
@@ -673,8 +696,10 @@ def _serialize_profile(row) -> dict:
         "real_estates": [
             {
                 "name": r.name, "house_type": r.house_type,
+                "property_category": getattr(r, 'property_category', '아파트'),
                 "market_value": r.market_value, "official_price": r.official_price,
                 "debt": r.debt, "monthly_rent_income": r.monthly_rent_income,
+                "monthly_rent_expense": r.monthly_rent_expense,
                 "is_primary_residence": r.is_primary_residence,
             } for r in row.real_estates
         ],
@@ -1154,6 +1179,7 @@ def _exchange_oauth_token(provider: str, code: str) -> tuple[dict, str | None]:
 @app.get("/auth/callback/{provider}")
 def oauth_callback(
     provider: str,
+    request: Request,
     code: str = None,
     state: str = None,
     error: str = None,
@@ -1222,6 +1248,8 @@ def oauth_callback(
             user = auth_utils.create_oauth_user(db, email, name, provider, oauth_id)
 
     jwt_token = auth_utils.create_access_token(user.id, user.email)
+    request.state._log_user_id = user.id
+    request.state._log_email   = user.email
     _is_admin = int(bool(getattr(user, 'is_admin', False)))
     _oauth_prov = getattr(user, 'oauth_provider', '') or ''
     _redirect = (

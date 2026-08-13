@@ -4,7 +4,9 @@
       "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:9080/health\" -TimeoutSec 3; \"백엔드 응답: $\\($r.StatusCode\\)\" } catch { \"백엔드 응답 없음: $_\" })",
       "PowerShell($env:PYTHONIOENCODING = \"utf-8\"; .venv\\\\Scripts\\\\streamlit.exe run frontend/app.py --server.port 8501 --server.headless true 2>&1 | Select-Object -First 30)",
       "PowerShell($env:PYTHONIOENCODING = \"utf-8\"; .venv\\\\Scripts\\\\python.exe -c \"import streamlit; print\\(streamlit.__version__\\); import frontend.app\" 2>&1 | head -50)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(python3 -c ' *)",
+      "WebFetch(domain:www.nps.or.kr)"
     ]
   }
 }

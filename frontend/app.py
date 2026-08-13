@@ -916,10 +916,10 @@ _AGE_AVG_DATA = {
         'real_estates': [
             {'name': '자가 주택', 'house_type': '자가',
              'market_value': 300_000_000, 'official_price': 210_000_000,
-             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True},
+             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True, 'property_category': '아파트'},
         ],
         'financial_assets': [
-            {'name': '예적금·펀드', 'asset_type': '예적금',
+            {'name': '예적금·펀드', 'asset_type': '예금/적금',
              'amount': 80_000_000, 'annual_return_rate': 0.025, 'is_taxable': True}
         ],
         'debts': [
@@ -954,10 +954,10 @@ _AGE_AVG_DATA = {
         'real_estates': [
             {'name': '자가 주택', 'house_type': '자가',
              'market_value': 350_000_000, 'official_price': 245_000_000,
-             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True},
+             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True, 'property_category': '아파트'},
         ],
         'financial_assets': [
-            {'name': '예적금·펀드', 'asset_type': '예적금',
+            {'name': '예적금·펀드', 'asset_type': '예금/적금',
              'amount': 120_000_000, 'annual_return_rate': 0.025, 'is_taxable': True}
         ],
         'debts': [
@@ -992,10 +992,10 @@ _AGE_AVG_DATA = {
         'real_estates': [
             {'name': '자가 주택', 'house_type': '자가',
              'market_value': 400_000_000, 'official_price': 280_000_000,
-             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True},
+             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True, 'property_category': '아파트'},
         ],
         'financial_assets': [
-            {'name': '예적금·펀드', 'asset_type': '예적금',
+            {'name': '예적금·펀드', 'asset_type': '예금/적금',
              'amount': 150_000_000, 'annual_return_rate': 0.025, 'is_taxable': True}
         ],
         'debts': [
@@ -1013,27 +1013,27 @@ _AGE_AVG_DATA = {
         'pensions': [
             {'pension_type': '국민연금', 'name': '국민연금',
              'current_balance': 0, 'monthly_contribution': 188_000,
-             'contribution_end_age': 60, 'expected_start_age': 65,
+             'contribution_end_age': 62, 'expected_start_age': 65,
              'expected_monthly_payout': 900_000, 'payout_period_years': 0,
              'annual_return_rate': 0.0, 'contribution_years': 0},
             {'pension_type': '퇴직연금DC', 'name': '퇴직연금DC',
              'current_balance': 80_000_000, 'monthly_contribution': 200_000,
-             'contribution_end_age': 60, 'expected_start_age': 60,
+             'contribution_end_age': 62, 'expected_start_age': 62,
              'expected_monthly_payout': 0, 'payout_period_years': 20,
              'annual_return_rate': 0.04, 'contribution_years': 0},
             {'pension_type': 'IRP', 'name': 'IRP',
              'current_balance': 20_000_000, 'monthly_contribution': 200_000,
-             'contribution_end_age': 60, 'expected_start_age': 65,
+             'contribution_end_age': 62, 'expected_start_age': 65,
              'expected_monthly_payout': 0, 'payout_period_years': 20,
              'annual_return_rate': 0.03, 'contribution_years': 0},
         ],
         'real_estates': [
             {'name': '자가 주택', 'house_type': '자가',
              'market_value': 400_000_000, 'official_price': 280_000_000,
-             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True},
+             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True, 'property_category': '아파트'},
         ],
         'financial_assets': [
-            {'name': '예적금·펀드', 'asset_type': '예적금',
+            {'name': '예적금·펀드', 'asset_type': '예금/적금',
              'amount': 150_000_000, 'annual_return_rate': 0.025, 'is_taxable': True}
         ],
         'debts': [
@@ -1068,10 +1068,10 @@ _AGE_AVG_DATA = {
         'real_estates': [
             {'name': '자가 주택', 'house_type': '자가',
              'market_value': 380_000_000, 'official_price': 266_000_000,
-             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True},
+             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True, 'property_category': '아파트'},
         ],
         'financial_assets': [
-            {'name': '예적금·펀드', 'asset_type': '예적금',
+            {'name': '예적금·펀드', 'asset_type': '예금/적금',
              'amount': 130_000_000, 'annual_return_rate': 0.025, 'is_taxable': True}
         ],
         'debts': [
@@ -1106,10 +1106,10 @@ _AGE_AVG_DATA = {
         'real_estates': [
             {'name': '자가 주택', 'house_type': '자가',
              'market_value': 320_000_000, 'official_price': 224_000_000,
-             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True},
+             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True, 'property_category': '아파트'},
         ],
         'financial_assets': [
-            {'name': '예적금·펀드', 'asset_type': '예적금',
+            {'name': '예적금·펀드', 'asset_type': '예금/적금',
              'amount': 100_000_000, 'annual_return_rate': 0.025, 'is_taxable': True}
         ],
         'debts': [
@@ -1137,10 +1137,10 @@ _AGE_AVG_DATA = {
         'real_estates': [
             {'name': '자가 주택', 'house_type': '자가',
              'market_value': 280_000_000, 'official_price': 196_000_000,
-             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True},
+             'debt': 0, 'monthly_rent_income': 0, 'is_primary_residence': True, 'property_category': '아파트'},
         ],
         'financial_assets': [
-            {'name': '예적금·펀드', 'asset_type': '예적금',
+            {'name': '예적금·펀드', 'asset_type': '예금/적금',
              'amount': 80_000_000, 'annual_return_rate': 0.02, 'is_taxable': True}
         ],
         'debts': [],
@@ -1504,12 +1504,11 @@ def show_main_app():
         return False
 
     # 분석 결과가 없으면 자동 실행 (온보딩 or 저장 후 재분석 트리거)
-    # 관리자는 개인 분석 자동 실행 불필요 — 분석 탭 직접 이동 시에만 실행
     if (st.session_state.analysis_result is None
             and st.session_state.get('profile_id') is not None
-            and not st.session_state.get('is_admin', False)
             and not st.session_state.pop('_skip_auto_analysis', False)):
         if _run_analysis():
+            st.session_state['_goto_analysis_tab'] = True
             st.rerun()
 
 
@@ -1536,16 +1535,6 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
     box-shadow: 0 0 12px rgba(198,40,40,0.5) !important;
 }
 </style>""", unsafe_allow_html=True)
-            # 관리자 탭 활성 시 하단 섹션(내 정보 저장, 분석 내용) 자동 숨김 CSS 주입
-            st.html("""<script>
-(function(){
-  if(window.parent.__stAdmHide)return;
-  window.parent.__stAdmHide=true;
-  var s=window.parent.document.createElement('style');
-  s.textContent=':root:has([data-baseweb="tab"]:last-of-type[aria-selected="true"]) [data-testid="stTabs"]~[data-testid]{display:none!important}';
-  window.parent.document.head.appendChild(s);
-})();
-</script>""", unsafe_allow_javascript=True)
         # 내 정보가 없을 때 국가평균으로 채워진 폼 안내
         if st.session_state.get('profile_id', 0) == 0 and st.session_state.analysis_result is None:
             _fb_br = st.session_state.get('_avg_bracket', 55)
@@ -1555,6 +1544,19 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 icon=None,
             )
         tabs = st.tabs(_tab_labels)
+        # 컨설팅(6번째)·관리자(7번째) 탭 활성 시 stTabs 이후 형제 요소 숨김
+        # CSS :has() 방식 — JS 타이밍 문제 없이 즉각 반응
+        st.markdown("""
+<style>
+[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(6)[aria-selected="true"]) ~ *,
+[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(7)[aria-selected="true"]) ~ * {
+    display: none !important;
+}
+/* 탭↔저장버튼 사이 공백 제거 */
+[role="tabpanel"] { padding-bottom: 0 !important; }
+div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
+</style>
+""", unsafe_allow_html=True)
         # "내 정보 직접 입력하기" 클릭 후 본인 탭(index=1)으로 자동 포커스
         if st.session_state.pop('_goto_personal_tab', False):
             st.iframe("""<script>
@@ -1562,6 +1564,18 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
   function clickTab() {
     var tabs = window.parent.document.querySelectorAll('button[data-baseweb="tab"]');
     if (tabs.length > 1) { tabs[1].click(); }
+    else { setTimeout(clickTab, 100); }
+  }
+  setTimeout(clickTab, 150);
+})();
+</script>""", height=1)
+        # 자동 분석 완료 후 분석 탭(index=0)으로 이동 (관리자 탭 등 다른 탭에서 결과가 숨겨지는 방지)
+        if st.session_state.pop('_goto_analysis_tab', False):
+            st.iframe("""<script>
+(function() {
+  function clickTab() {
+    var tabs = window.parent.document.querySelectorAll('button[data-baseweb="tab"]');
+    if (tabs.length > 0) { tabs[0].click(); }
     else { setTimeout(clickTab, 100); }
   }
   setTimeout(clickTab, 150);
@@ -1578,6 +1592,16 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 st.session_state["inp_inflation"] = 2.0
             inf_rate = st.session_state["inp_inflation"] / 100
 
+            # 로그인 후 첫 렌더 시 퇴직연금 수령 나이 불일치 알림 (세션당 1회)
+            if not st.session_state.get('_pension_warn_shown'):
+                _rchk = st.session_state.get('inp_retirement_age', 62)
+                _bad = [p['pension_type'] for p in st.session_state.get('pensions', [])
+                        if p.get('pension_type') in ('퇴직연금DC', '퇴직연금DB')
+                        and p.get('expected_start_age', _rchk) != _rchk]
+                if _bad:
+                    st.toast(f"⚠️ 퇴직연금 수령 시작 나이가 은퇴희망 연령({_rchk}세)과 다릅니다. 연금 탭에서 확인해주세요.", icon="⚠️")
+                st.session_state['_pension_warn_shown'] = True
+
             if st.session_state.get('onboarding_done'):
                 st.info("📊 현재 대한민국 평균 기준 시뮬레이션 중입니다. 탭에서 내 정보를 입력한 뒤 아래 버튼을 누르세요.")
             if st.button("🔍 내 정보로 분석하기", type="primary", width='stretch'):
@@ -1587,6 +1611,12 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                     # 분석 완료 후 자동 저장
                     _ap = _build_save_payload()
                     _apid = st.session_state.profile_id
+                    if not _apid or _apid == 0:
+                        # 로그인 시 프로필 로드가 실패했을 수 있으므로 재확인
+                        _ep, _ = call_api("/profiles/latest", method="GET")
+                        if _ep and _ep.get('id'):
+                            _apid = _ep['id']
+                            st.session_state.profile_id = _apid
                     _ar, _ae = (call_api(f"/profiles/{_apid}", _ap, method="PUT")
                                  if _apid and _apid != 0
                                  else call_api("/profiles", _ap))
@@ -1594,6 +1624,27 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                         st.error(f"⚠️ 자동 저장 실패: {_ae}  \n분석 결과는 표시되지만 데이터가 저장되지 않았습니다. '💾 내 정보 저장' 버튼을 눌러 직접 저장해 주세요.")
                     else:
                         st.session_state.profile_id = _ar.get('id', _apid)
+                        st.rerun()
+
+            if not _is_onboarding:
+                if st.button("💾 내 정보 저장", use_container_width=True):
+                    _payload = _build_save_payload()
+                    _pid = st.session_state.profile_id
+                    if not _pid or _pid == 0:
+                        _ep2, _ = call_api("/profiles/latest", method="GET")
+                        if _ep2 and _ep2.get('id'):
+                            _pid = _ep2['id']
+                            st.session_state.profile_id = _pid
+                    if _pid and _pid != 0:
+                        _r, _e = call_api(f"/profiles/{_pid}", _payload, method="PUT")
+                    else:
+                        _r, _e = call_api("/profiles", _payload)
+                    if _e:
+                        st.error(f"저장 실패: {_e}")
+                    else:
+                        st.session_state.profile_id = _r.get('id', _pid)
+                        st.success("✅ 저장 완료! 분석 중...")
+                        _run_analysis()
                         st.rerun()
 
 
@@ -1695,6 +1746,20 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
             PENSION_TYPES = ["국민연금", "퇴직연금DB", "퇴직연금DC", "IRP", "연금저축", "개인연금"]
             registered = {p['pension_type']: i for i, p in enumerate(st.session_state.pensions)}
             edit_idx = st.session_state.editing_pension_idx
+
+            # 은퇴연령 vs 퇴직연금 수령시작 나이 불일치 경고
+            _ret_age_chk = st.session_state.get('inp_retirement_age', 62)
+            _dc_mismatch = [
+                p for p in st.session_state.pensions
+                if p.get('pension_type') in ('퇴직연금DC', '퇴직연금DB')
+                and p.get('expected_start_age', _ret_age_chk) != _ret_age_chk
+            ]
+            if _dc_mismatch:
+                st.warning(
+                    f"⚠️ 퇴직연금 수령 시작 나이가 은퇴희망 연령({_ret_age_chk}세)과 다릅니다. "
+                    f"아래 목록에서 수정해주세요.",
+                    icon=None,
+                )
 
             # ── 수정 모드 ──────────────────────────────────────────
             if edit_idx is not None and edit_idx < len(st.session_state.pensions):
@@ -1870,7 +1935,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                     st.markdown("#### 🔗 공식 사이트")
                     st.markdown(
                         "| 용도 | 링크 |\n|:---:|:---:|\n"
-                        "| 예상연금 모의계산 (로그인 불필요) | [국민연금공단 모의계산기](https://csa.nps.or.kr/ib2010/mvc/pension/pensionCalculation.do) |\n"
+                        "| 예상연금 모의계산 (로그인 불필요) | [국민연금공단 모의계산기](https://minwon.nps.or.kr) |\n"
                         "| 내 가입내역·예상수령액 조회 | [내 연금 알아보기](https://www.nps.or.kr/jsppage/business/moca/moca_04.jsp) |\n"
                         "| 수급개시연령 · 감액기준 공식 안내 | [국민연금공단 노령연금](https://www.nps.or.kr/jsppage/pension/hd/hd_01_01.jsp) |\n"
                         "| 보험료율 · 기준소득월액 현황 | [국민연금 보험료 안내](https://www.nps.or.kr/jsppage/business/info/info_04_01.jsp) |",
@@ -1893,10 +1958,10 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                     st.markdown("**🔗 공식 사이트**")
                     st.markdown(
                         "| 용도 | 링크 |\n|:---:|:---:|\n"
-                        "| 연금저축·IRP 세액공제 한도 안내 | [국세청 연금계좌](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6655&cntntsId=7751) |\n"
-                        "| 퇴직연금 제도 안내 (고용노동부) | [퇴직연금 포털](https://www.moel.go.kr/retirementBenefit/main.do) |\n"
-                        "| 연금상품 비교공시 | [금융감독원 통합연금포털](https://100lifeplan.fss.or.kr) |\n"
-                        "| 사적연금 과세 기준 | [국세청 연금소득 안내](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6527&cntntsId=7667) |"
+                        "| 연금저축·IRP 세액공제 한도 안내 | [국세청 연금계좌](https://www.nts.go.kr) |\n"
+                        "| 퇴직연금 제도 안내 (고용노동부) | [퇴직연금 포털](https://www.moel.go.kr) |\n"
+                        "| 연금상품 비교공시 | [금융감독원 통합연금포털](https://www.fss.or.kr/fss/lifeplan/lifeplanIndex/index.do?menuNo=201101) |\n"
+                        "| 사적연금 과세 기준 | [국세청 연금소득 안내](https://www.nts.go.kr) |"
                     )
 
                 with st.expander("➕ 새 연금 추가", expanded=False):
@@ -2017,22 +2082,32 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                         st.subheader(f"✏️ {r['name']} 수정")
                     with st.form("edit_re"):
                         re_name = st.text_input("이름", r['name'])
-                        re_type = st.selectbox("종류", ["자가", "전세", "월세"],
-                                               index=["자가", "전세", "월세"].index(r['house_type']))
-                        re_market = _sl("시세", 0, 200000,
+                        _RE_PROP_TYPES = ["아파트", "단독주택", "빌라·다세대", "상가", "오피스텔", "토지", "기타"]
+                        _RE_HOUSE_TYPES = ["자가", "전세", "월세", "기타"]
+                        _cur_prop = r.get('property_category', '아파트')
+                        re_prop = st.selectbox("부동산 종류",  _RE_PROP_TYPES,
+                                               index=_RE_PROP_TYPES.index(_cur_prop) if _cur_prop in _RE_PROP_TYPES else 0)
+                        re_type = st.selectbox("점유형태", _RE_HOUSE_TYPES,
+                                               index=_RE_HOUSE_TYPES.index(r['house_type']) if r['house_type'] in _RE_HOUSE_TYPES else 0)
+                        re_market = _sl("시세 (전세금·보증금)", 0, 200000,
                                         min(200000, int(r['market_value'] // 10000)), 1000, fmt="won") * 10000
                         re_official = _sl("공시가격 (비우면 시세*70%)", 0, 200000,
                                           min(200000, int((r['official_price'] or 0) // 10000)), 1000, fmt="won") * 10000
                         re_debt = _sl("담보대출", 0, 100000,
                                       min(100000, int(r['debt'] // 10000)), 1000, fmt="won") * 10000
-                        re_rent = _sl("월세 수입", 0, 500,
-                                      min(500, int(r['monthly_rent_income'] // 10000)), 10, fmt="won") * 10000
+                        re_rent = _sl("월 임대수입", 0, 2000,
+                                      min(2000, int(r['monthly_rent_income'] // 10000)), 10, fmt="won") * 10000
+                        re_rent_exp = _sl("월 임차료 (월세 거주 시 납부액)", 0, 500,
+                                          min(500, int(r.get('monthly_rent_expense', 0) // 10000)), 10, fmt="won") * 10000
                         re_primary = st.toggle("주거용 (1세대 1주택)", value=r['is_primary_residence'])
                         if st.form_submit_button("저장", width='stretch'):
                             st.session_state.real_estates[re_edit_idx] = {
-                                "name": re_name, "house_type": re_type,
+                                "name": re_name,
+                                "property_category": re_prop,
+                                "house_type": re_type,
                                 "market_value": re_market, "official_price": re_official,
                                 "debt": re_debt, "monthly_rent_income": re_rent,
+                                "monthly_rent_expense": re_rent_exp,
                                 "is_primary_residence": re_primary,
                             }
                             st.session_state.editing_re_idx = None; st.rerun()
@@ -2040,26 +2115,38 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                     with st.expander("➕ 부동산 추가", expanded=False):
                         with st.form("add_re", clear_on_submit=True):
                             re_name = st.text_input("이름", "본가")
-                            re_type = st.selectbox("종류", ["자가", "전세", "월세"])
-                            re_market = _sl("시세", 0, 200000, 0, 1000, fmt="won") * 10000
+                            _RE_PROP_TYPES = ["아파트", "단독주택", "빌라·다세대", "상가", "오피스텔", "토지", "기타"]
+                            re_prop = st.selectbox("부동산 종류", _RE_PROP_TYPES)
+                            re_type = st.selectbox("점유형태", ["자가", "전세", "월세", "기타"])
+                            re_market = _sl("시세 (전세금·보증금)", 0, 200000, 0, 1000, fmt="won") * 10000
                             re_official = _sl("공시가격 (비우면 시세*70%)", 0, 200000, 0, 1000, fmt="won") * 10000
                             re_debt = _sl("담보대출", 0, 100000, 0, 1000, fmt="won") * 10000
-                            re_rent = _sl("월세 수입", 0, 500, 0, 10, fmt="won") * 10000
+                            re_rent = _sl("월 임대수입", 0, 2000, 0, 10, fmt="won") * 10000
+                            re_rent_exp = _sl("월 임차료 (월세 거주 시 납부액)", 0, 500, 0, 10, fmt="won") * 10000
                             re_primary = st.toggle("주거용 (1세대 1주택)", value=True)
                             if st.form_submit_button("추가", width='stretch'):
                                 st.session_state.real_estates.append({
-                                    "name": re_name, "house_type": re_type,
+                                    "name": re_name,
+                                    "property_category": re_prop,
+                                    "house_type": re_type,
                                     "market_value": re_market, "official_price": re_official,
                                     "debt": re_debt, "monthly_rent_income": re_rent,
+                                    "monthly_rent_expense": re_rent_exp,
                                     "is_primary_residence": re_primary,
                                 })
                                 st.rerun()
                     for i, r in enumerate(st.session_state.real_estates):
                         c1, c2, c3 = st.columns([5, 1, 1])
                         with c1:
-                            st.markdown(f"**{r['name']}** ({r['house_type']})")
-                            st.caption(f"시세 {fmt_won(r['market_value'])} · 대출 {fmt_won(r['debt'])}"
-                                       + (f" · 월세 {fmt_won(r['monthly_rent_income'])}" if r['monthly_rent_income'] else ""))
+                            _prop_cat = r.get('property_category', '')
+                            _prop_label = f"{_prop_cat} · " if _prop_cat else ""
+                            st.markdown(f"**{r['name']}** ({_prop_label}{r['house_type']})")
+                            _re_cap = f"시세 {fmt_won(r['market_value'])} · 대출 {fmt_won(r['debt'])}"
+                            if r.get('monthly_rent_income'):
+                                _re_cap += f" · 🏦 임대수입 {fmt_won(r['monthly_rent_income'])}/월"
+                            if r.get('monthly_rent_expense'):
+                                _re_cap += f" · 임차료 {fmt_won(r['monthly_rent_expense'])}/월"
+                            st.caption(_re_cap)
                         with c2:
                             if st.button("✏️", key=f"edit_re_{i}", help="수정"):
                                 st.session_state.editing_re_idx = i; st.rerun()
@@ -2068,7 +2155,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                                 st.session_state.real_estates.pop(i); st.rerun()
 
             elif asset_subtab == "💳 금융":
-                FA_TYPES = ["예금", "적금", "주식", "채권", "펀드", "ETF", "ISA"]
+                FA_TYPES = ["예금/적금", "주식/펀드", "채권", "ISA", "가상자산", "기타"]
                 fa_edit_idx = st.session_state.editing_fa_idx
 
                 if fa_edit_idx is not None and fa_edit_idx < len(st.session_state.financial_assets):
@@ -2304,7 +2391,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                                 st.session_state.insurances.pop(i); st.rerun()
 
             elif asset_subtab == "📉 대출":
-                D_TYPES = ["주담대", "신용대출", "전세대출", "기타"]
+                D_TYPES = ["주담대", "신용대출", "전세대출", "임차보증금", "기타"]
                 d_edit_idx = st.session_state.editing_d_idx
 
                 if d_edit_idx is not None and d_edit_idx < len(st.session_state.debts):
@@ -2349,7 +2436,10 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                         c1, c2, c3 = st.columns([5, 1, 1])
                         with c1:
                             st.markdown(f"**{d['name']}** ({d['debt_type']})")
-                            st.caption(f"잔액 {fmt_won(d['balance'])} · 이율 {d['interest_rate']*100:.2f}%")
+                            _d_cap = f"잔액 {fmt_won(d['balance'])} · 이율 {d['interest_rate']*100:.2f}%"
+                            if d.get('monthly_payment'):
+                                _d_cap += f" · 월상환 {fmt_won(d['monthly_payment'])}"
+                            st.caption(_d_cap)
                         with c2:
                             if st.button("✏️", key=f"edit_d_{i}", help="수정"):
                                 st.session_state.editing_d_idx = i; st.rerun()
@@ -2402,8 +2492,8 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 st.session_state['_admin_checked'] = True
 
             # 관리자 상태 표시 (진단용 — 확인 후 제거 가능)
-            if st.session_state.get('is_admin'):
-                st.success("🔑 관리자 모드 — 분석 실행 후 저장 버튼이 나타납니다.")
+            #if st.session_state.get('is_admin'):
+            #    st.success("🔑 관리자 모드 — 분석 실행 후 저장 버튼이 나타납니다.")
             _cons_result = st.session_state.get('analysis_result')
             if not _cons_result:
                 st.info("💡 내 정보를 입력하고 저장하면 맞춤 컨설팅을 확인할 수 있습니다.")
@@ -2623,7 +2713,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 _std_total_bal = sum(_std_pen[g]['적립금'] for g in _std_pen)
 
                 _KR_AVG = {
-                    '은퇴연령':         f"{_std['retire_age']}세" if _std else '60세',
+                    '은퇴연령':         f"{_std['retire_age']}세" if _std else '62세',
                     '월 수입':          fmt_won(_std['monthly_income'] if _std else 2_040_000),
                     '월 지출':          fmt_won(_std['monthly_expense'] if _std else 2_520_000),
                     '월 잉여':          fmt_won(_std['monthly_surplus'] if _std else -480_000),
@@ -2787,8 +2877,9 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                             font=dict(color='#ddd'),
                             legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
                             margin=dict(l=10, r=10, t=60, b=40),
+                            dragmode=False,
                         )
-                        st.plotly_chart(_fig1, width="stretch")
+                        st.plotly_chart(_fig1, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
 
                     # ── 그래프 2: 수입/지출 구성 (스냅샷 막대) ──────────
                     with _gtab2:
@@ -2838,8 +2929,9 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                             legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
                             margin=dict(l=10, r=10, t=60, b=40),
                             hovermode='x unified',
+                            dragmode=False,
                         )
-                        st.plotly_chart(_fig2, width="stretch")
+                        st.plotly_chart(_fig2, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
 
                     # ── 그래프 3: 나이별 월수입·월지출 라인 ───────────
                     with _gtab3:
@@ -2916,10 +3008,36 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                                 hovertemplate='%{x}세 지출: <b>%{y:,}만원</b><extra>' + _emoji + '</extra>',
                             ))
 
+                        # ── 대출상환금·임차료 음수 고정선 ──
+                        _g_debt = cf.get('월지출_대출상환', 0)
+                        _g_rent = cf.get('월지출_임차료', 0)
+                        if _g_ages and _g_debt > 0:
+                            _debt_man = round(_g_debt / 10000)
+                            _fig1.add_trace(go.Scatter(
+                                x=_g_ages,
+                                y=[-_debt_man] * len(_g_ages),
+                                name=f'대출상환금 (-{_debt_man:,}만)',
+                                mode='lines',
+                                line=dict(color='#ff7043', width=1.8, dash='dashdot'),
+                                hovertemplate='%{x}세 대출상환금: <b>-%{customdata:,}만원</b><extra>대출상환금</extra>',
+                                customdata=[_debt_man] * len(_g_ages),
+                            ))
+                        if _g_ages and _g_rent > 0:
+                            _rent_man = round(_g_rent / 10000)
+                            _fig1.add_trace(go.Scatter(
+                                x=_g_ages,
+                                y=[-_rent_man] * len(_g_ages),
+                                name=f'임차료 (-{_rent_man:,}만)',
+                                mode='lines',
+                                line=dict(color='#ab47bc', width=1.8, dash='dashdot'),
+                                hovertemplate='%{x}세 임차료: <b>-%{customdata:,}만원</b><extra>임차료</extra>',
+                                customdata=[_rent_man] * len(_g_ages),
+                            ))
+
                         _fig1.add_hline(y=0, line_dash='dash',
                                         line_color='rgba(255,255,255,0.2)')
                         _fig1.update_layout(
-                            title=dict(text="나이별 월 수입(실선) / 지출(점선) — 만원", font=dict(size=16, color='#fff')),
+                            title=dict(text="나이별 월 수입(실선) / 지출(점선) · 고정의무지출(음수선) — 만원", font=dict(size=16, color='#fff')),
                             xaxis=dict(title="나이", tickmode='linear', dtick=5,
                                        gridcolor='rgba(255,255,255,0.08)', color='#ccc'),
                             yaxis=dict(title="금액 (만원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
@@ -2930,8 +3048,9 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                                         bgcolor='rgba(0,0,0,0)', font=dict(size=11)),
                             margin=dict(l=10, r=10, t=60, b=40),
                             hovermode='x unified',
+                            dragmode=False,
                         )
-                        st.plotly_chart(_fig1, width="stretch")
+                        st.plotly_chart(_fig1, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
 
                     # ── 그래프 4: 종합 레이더 차트 ────────────────────
                     with _gtab4:
@@ -2991,8 +3110,9 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                             legend=dict(orientation='h', yanchor='bottom', y=-0.15,
                                         bgcolor='rgba(0,0,0,0)'),
                             margin=dict(l=30, r=30, t=60, b=60),
+                            dragmode=False,
                         )
-                        st.plotly_chart(_fig3, width="stretch")
+                        st.plotly_chart(_fig3, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
 
                 # 연금 상세보기 (_std_pen 은 위에서 사용자 맞춤 계산 완료)
                 with st.expander("📋 연금 상세보기", expanded=False):
@@ -3734,25 +3854,6 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                         st.info("프로필이 없습니다.")
 
 
-    if not _is_onboarding:
-        _save_col, _status_col = st.columns([2, 5])
-        with _save_col:
-            if st.button("💾 내 정보 저장", width='stretch'):
-                _payload = _build_save_payload()
-                _pid = st.session_state.profile_id
-                if _pid and _pid != 0:
-                    _r, _e = call_api(f"/profiles/{_pid}", _payload, method="PUT")
-                else:
-                    _r, _e = call_api("/profiles", _payload)
-                if _e:
-                    st.error(f"저장 실패: {_e}")
-                else:
-                    st.session_state.profile_id = _r.get('id', _pid)
-                    with _status_col:
-                        st.success("✅ 저장 완료! 분석 중...")
-                    _run_analysis()
-                    st.rerun()
-
     if st.session_state.analysis_result:
         result = st.session_state.analysis_result
         cf = result.get('현금흐름', {})
@@ -3814,6 +3915,15 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                     elif age < 80: return _spending_rates.get('75~79세', 0.75)
                     elif age < 85: return _spending_rates.get('80~84세', 0.65)
                     else:          return _spending_rates.get('85세+', 0.55)
+
+                def _medical_mult(age):
+                    # 나이 증가에 따른 의료비 증가 배율 (건보공단 자료 기반)
+                    if age < 65:  return 1.0
+                    elif age < 70: return 1.3
+                    elif age < 75: return 1.7
+                    elif age < 80: return 2.2
+                    elif age < 85: return 2.8
+                    else:          return 3.5
 
                 # ── 시각화 차트 ──────────────────────────────────
                 # 현재 나이부터 5세 간격 눈금
@@ -3913,71 +4023,88 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 
                 _chart_retire_age = int(st.session_state.get('_chart_retire_age', _retire_age))
 
-                # ── 상세 인터랙티브 차트 (자동 표시) ────────────────
-                import streamlit.components.v1 as _cv1, sys as _sys, pathlib as _pl, tempfile as _tf
-                _sys.path.insert(0, str(_pl.Path(__file__).parent))
+                # ── 상세 인터랙티브 차트 (D3.js) ──
+                _cur_detail = st.session_state.get('_show_detail', False)
+                _show_detail = st.toggle(
+                    '📊 요약보기' if _cur_detail else '📊 상세보기',
+                    value=_cur_detail,
+                    key='_show_detail',
+                )
+                _d3_data = {
+                    'retire_age': _retire_age,
+                    'inflation':  float(st.session_state.get('inp_inflation', 2.5)),
+                    'spending_rates': {
+                        'under65': float(st.session_state.get('sr_under65', 100)) / 100,
+                        '65_69':   float(st.session_state.get('sr_65_69',    95)) / 100,
+                        '70_74':   float(st.session_state.get('sr_70_74',    85)) / 100,
+                        '75_79':   float(st.session_state.get('sr_75_79',    75)) / 100,
+                        '80_84':   float(st.session_state.get('sr_80_84',    65)) / 100,
+                        '85plus':  float(st.session_state.get('sr_85plus',   55)) / 100,
+                    },
+                    'ages': [int(a) for a in sorted(_age_map.keys())],
+                    'income': {
+                        int(age): {
+                            src: round((val or 0) / 10000, 2)
+                            for src, val in _age_map[age].get('항목별', {}).items()
+                        }
+                        for age in sorted(_age_map.keys())
+                    },
+                    'contrib_items': _contrib_items,
+                    'base_expense_man': round(((cf.get('월지출_합계') or 0) - (cf.get('월지출_세금건보') or 0)) / 10000, 2)
+                                        - float(st.session_state.get('inp_living',    270))
+                                        - float(st.session_state.get('inp_medical',    50))
+                                        - float(st.session_state.get('inp_leisure',    70))
+                                        - float(st.session_state.get('inp_family',     40))
+                                        - float(st.session_state.get('inp_insurance',  25))
+                                        - float(st.session_state.get('inp_other',      20)),
+                    'living_man':       float(st.session_state.get('inp_living',    270)),
+                    'medical_man':      float(st.session_state.get('inp_medical',    50)),
+                    'leisure_man':      float(st.session_state.get('inp_leisure',    70)),
+                    'family_man':       float(st.session_state.get('inp_family',     40)),
+                    'insurance_man':    float(st.session_state.get('inp_insurance',  25)),
+                    'other_man':        float(st.session_state.get('inp_other',      20)),
+                    'debt_man':         round((cf.get('월지출_대출상환') or 0) / 10000, 2),
+                    'rent_man':         round((cf.get('월지출_임차료') or 0) / 10000, 2),
+                    'tax': {
+                        int(age): round((_age_map[age].get('월소득세') or 0) / 10000, 2)
+                        for age in sorted(_age_map.keys())
+                    },
+                    'health_ins': {
+                        int(age): round((_age_map[age].get('월건보료') or 0) / 10000, 2)
+                        for age in sorted(_age_map.keys())
+                    },
+                    'colors':          dict(zip(_all_keys, _clr_range)),
+                    'income_sources':  _income_keys,
+                    'salary_man':      float(_salary_man),
+                    'ret_dep_pensions': list(_ret_dep_pensions),
+                    'inf_linked_pensions': {
+                        src: {'start_age': int(sa), 'base_man': float(bm)}
+                        for src, (sa, bm) in _src_start_info.items()
+                        if src in _inf_linked_pensions
+                    },
+                    'min_age': min(int(a) for a in _age_map.keys()),
+                    'max_age': max(int(a) for a in _age_map.keys()),
+                }
                 try:
-                    from detail_chart import generate_detail_html as _gen_chart
-                    _detail_data = {
-                        'ages': [int(a) for a in sorted(_age_map.keys())],
-                        'income': {
-                            int(age): {
-                                src: round(val / 10000, 2)
-                                for src, val in _age_map[age]['항목별'].items()
-                            }
-                            for age in sorted(_age_map.keys())
-                        },
-                        'contrib_items': _contrib_items,
-                        'retire_age': _chart_retire_age,
-                        'inflation': float(st.session_state.get('_chart_inf_rate', st.session_state.get('inp_inflation', 2.0))),
-                        'base_expense_man': round(cf.get('월지출_합계', 0) / 10000, 2),
-                        'spending_rates': {
-                            'under65': float(st.session_state.get('sr_under65', 100)) / 100,
-                            '65_69':   float(st.session_state.get('sr_65_69',   90))  / 100,
-                            '70_74':   float(st.session_state.get('sr_70_74',   80))  / 100,
-                            '75_79':   float(st.session_state.get('sr_75_79',   70))  / 100,
-                            '80plus':  float(st.session_state.get('sr_80plus',  60))  / 100,
-                        },
-                        'tax': {
-                            int(age): round(_age_map[age].get('월소득세', 0) / 10000, 2)
-                            for age in sorted(_age_map.keys())
-                        },
-                        'health_ins': {
-                            int(age): round(_age_map[age].get('월건보료', 0) / 10000, 2)
-                            for age in sorted(_age_map.keys())
-                        },
-                        'colors': dict(zip(_all_keys, _clr_range)),
-                        'income_sources': _income_keys,
-                        'salary_man': float(_salary_man),
-                        'ret_dep_pensions': list(_ret_dep_pensions),
-                        'inf_linked_pensions': {
-                            src: {'start_age': int(sa), 'base_man': float(bm)}
-                            for src, (sa, bm) in _src_start_info.items()
-                            if src in _inf_linked_pensions
-                        },
-                        'min_age': int(_min_age),
-                        'max_age': int(_max_age),
-                    }
-                    # 캐시 키: 은퇴연령 또는 분석 결과가 바뀔 때만 재생성
-                    _chart_cache_key = (_chart_retire_age,
-                                        st.session_state.get('_chart_inf_rate', 2.5),
-                                        len(_age_map))
-                    if st.session_state.get('_detail_chart_key') != _chart_cache_key:
-                        st.session_state['_detail_chart_html'] = _gen_chart(_detail_data, compact=True)
-                        (_pl.Path(_tf.gettempdir()) / "retirement_detail_chart.html").write_text(
-                            _gen_chart(_detail_data, compact=False), encoding='utf-8'
-                        )
-                        st.session_state['_detail_chart_key'] = _chart_cache_key
-                    st.link_button("🔗 새 창에서 전체화면 열기", url="/api/detail-chart",
-                                   help="별도 탭에서 D3 차트를 전체 화면으로 봅니다")
-                    _cv1.html(st.session_state['_detail_chart_html'], height=700, scrolling=True)
-                except Exception as _e:
-                    st.error(f"차트 생성 오류: {_e}")
+                    from detail_chart import generate_detail_html as _gen_html
+                except ImportError:
+                    import sys as _sys, pathlib as _pl
+                    _sys.path.insert(0, str(_pl.Path(__file__).parent))
+                    from detail_chart import generate_detail_html as _gen_html
+                _d3_html = _gen_html(_d3_data, compact=True, show_detail=_show_detail)
+                _iframe_h = 710 if _show_detail else 580
+                st.components.v1.html(_d3_html, height=_iframe_h, scrolling=False)
 
 
             with st.expander("📋 구간별 수입/지출 세부 내역", expanded=False):
                 _inf_rate = st.session_state.get('inp_inflation', 2.0) / 100
-                _cf_living  = cf.get('월지출_생활', 0)
+                _living_won    = st.session_state.get('inp_living',    270) * 10000
+                _medical_won   = st.session_state.get('inp_medical',    50) * 10000
+                _leisure_won   = st.session_state.get('inp_leisure',    70) * 10000
+                _family_won    = st.session_state.get('inp_family',     40) * 10000
+                _insurance_won = st.session_state.get('inp_insurance',  25) * 10000
+                _other_won     = st.session_state.get('inp_other',      20) * 10000
+                _cf_living  = _living_won  # 기본 생활비만 (나머지 항목 별도 계산)
                 _nps_info = {
                     name: info
                     for name, info in result.get('연금분석', {}).items()
@@ -3985,6 +4112,8 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                 }
                 _cf_member  = cf.get('월지출_회원권', 0)
                 _cf_vehicle = cf.get('월지출_차량', 0)
+                _cf_debt    = cf.get('월지출_대출상환', 0)
+                _cf_rent    = cf.get('월지출_임차료', 0)
 
                 _prev_total = 0
                 for _row in _age_rows:
@@ -4001,10 +4130,15 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                         _yrs = max(0, _row['나이'] - _retire_age)
                         _inf_mult  = (1 + _inf_rate) ** _yrs
                         _age_mult  = _exp_mult(_row['나이'])
-                        _exp_living  = round(_cf_living  * _inf_mult * _age_mult)
-                        _exp_member  = round(_cf_member  * _inf_mult * _age_mult)
-                        _exp_vehicle = round(_cf_vehicle * _inf_mult * _age_mult)
-                        _exp_total   = _exp_living + _exp_member + _exp_vehicle + _tax_total
+                        _exp_living    = round(_cf_living    * _inf_mult * _age_mult)
+                        _exp_medical   = round(_medical_won  * _inf_mult * _medical_mult(_row['나이']))
+                        _exp_leisure   = round(_leisure_won  * _inf_mult * _age_mult)
+                        _exp_family    = round(_family_won   * _inf_mult * _age_mult)
+                        _exp_insurance = round(_insurance_won * _inf_mult * _age_mult)
+                        _exp_other     = round(_other_won    * _inf_mult * _age_mult)
+                        _exp_member    = round(_cf_member    * _inf_mult * _age_mult)
+                        _exp_vehicle   = round(_cf_vehicle   * _inf_mult * _age_mult)
+                        _exp_total     = _exp_living + _exp_medical + _exp_leisure + _exp_family + _exp_insurance + _exp_other + _exp_member + _exp_vehicle + _tax_total + _cf_debt + _cf_rent
                         _surplus     = _total - _exp_total
 
                         _sur_sign = "+" if _surplus >= 0 else ""
@@ -4057,11 +4191,21 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                 _inf_label = f" (물가 {_yrs}년" if _yrs > 0 else ""
                                 _age_pct = round(_age_mult * 100)
                                 _age_label = f" · 체감 {_age_pct}%)" if _inf_label else f" (체감 {_age_pct}%)"
-                                st.markdown(f"- 생활비{_inf_label}{_age_label}: **{fmt_won(_exp_living)}**")
+                                st.markdown(f"- 기본 생활비{_inf_label}{_age_label}: **{fmt_won(_exp_living)}**")
+                                _med_x = round(_medical_mult(_row['나이']), 1)
+                                st.markdown(f"- 의료비 (×{_med_x}배{_inf_label[:-1] if _inf_label else ''}): **{fmt_won(_exp_medical)}**")
+                                if _exp_leisure:   st.markdown(f"- 여가/취미{_age_label}: **{fmt_won(_exp_leisure)}**")
+                                if _exp_family:    st.markdown(f"- 자녀/부모 지원{_age_label}: **{fmt_won(_exp_family)}**")
+                                if _exp_insurance: st.markdown(f"- 보험료{_age_label}: **{fmt_won(_exp_insurance)}**")
+                                if _exp_other:     st.markdown(f"- 기타{_age_label}: **{fmt_won(_exp_other)}**")
                                 if _exp_member:
                                     st.markdown(f"- 회원권 연회비: **{fmt_won(_exp_member)}**")
                                 if _exp_vehicle:
                                     st.markdown(f"- 차량 유지비: **{fmt_won(_exp_vehicle)}**")
+                                if _cf_debt:
+                                    st.markdown(f"- 대출 월상환금: **{fmt_won(_cf_debt)}**")
+                                if _cf_rent:
+                                    st.markdown(f"- 월세 임차료: **{fmt_won(_cf_rent)}**")
                                 if _itax:
                                     st.markdown(f"- 소득세: **{fmt_won(_itax)}**")
                                 if _hi:
@@ -4515,17 +4659,17 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
 - 임의계속가입 중에도 소득·재산 변동 없으면 보험료 고정
 - 재취직하면 즉시 직장가입자로 전환 (임의계속가입 종료)
 
-🔗 [건강보험공단 임의계속가입 안내](https://www.nhis.or.kr/nhis/policy/wbhada02300m01.do)
+🔗 [건강보험공단 임의계속가입 안내](https://www.nhis.or.kr)
 """)
 
             st.divider()
             st.markdown("**🔗 현행 기준 확인**")
             st.markdown(
                 "| 항목 | 공식 링크 |\n|:---:|:---:|\n"
-                "| 종합소득세 세율표 (현행) | [국세청 세율 안내](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6527&cntntsId=7667) |\n"
-                "| 연금소득 세액공제·과세 기준 | [국세청 연금소득](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=6655&cntntsId=7751) |\n"
+                "| 종합소득세 세율표 (현행) | [국세청 세율 안내](https://www.nts.go.kr) |\n"
+                "| 연금소득 세액공제·과세 기준 | [국세청 연금소득](https://www.nts.go.kr) |\n"
                 "| 홈택스 모의계산 (종합소득세) | [홈택스 세금계산기](https://www.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/pp/index_pp.xml&menuCd=ST) |\n"
-                "| 지역가입자 건강보험료 계산 | [건강보험공단 보험료 계산기](https://www.nhis.or.kr/nhis/minwon/retrieveLocalInsureInfoCalc.do) |\n"
+                "| 지역가입자 건강보험료 계산 | [건강보험공단 보험료 계산기](https://www.nhis.or.kr) |\n"
                 "| 피부양자 등재 조건 확인 | [건강보험공단 피부양자 안내](https://www.nhis.or.kr/nhis/policy/wbhada01500m01.do) |"
             )
 
@@ -4938,8 +5082,8 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
         "[국세청](https://www.nts.go.kr) · "
         "[건강보험공단](https://www.nhis.or.kr) · "
         "[주택금융공사](https://www.hf.go.kr) · "
-        "[통합연금포털](https://100lifeplan.fss.or.kr) · "
-        "[고용노동부 퇴직연금](https://www.moel.go.kr/retirementBenefit/main.do)"
+        "[통합연금포털](https://www.fss.or.kr/fss/lifeplan/lifeplanIndex/index.do?menuNo=201101) · "
+        "[고용노동부 퇴직연금](https://www.moel.go.kr)"
         "</small>",
         unsafe_allow_html=True,
     )
@@ -4960,18 +5104,33 @@ else:
     # onboarding_done=True(신규 가입 직후)이면 국가평균이 이미 세팅됐으므로 API 호출 생략
     if st.session_state.profile_id is None and not st.session_state.get('onboarding_done'):
         _prof, _err = call_api("/profiles/latest", method="GET")
-        _has_saved_profile = False
-        if not _err and _prof and _prof.get('id'):
+        if _err:
+            # API 오류: 재시도 횟수 체크 (무한루프 방지)
+            _retry = st.session_state.get('_prof_load_retry', 0) + 1
+            st.session_state['_prof_load_retry'] = _retry
+            if _retry <= 2:
+                st.rerun()
+            else:
+                # 3회 실패 → 국가평균 임시 모드 (profile_id=None 유지해 재로그인 시 재시도)
+                st.session_state.pop('_prof_load_retry', None)
+                _default_age = st.session_state.get('_reg_age', 55)
+                _apply_national_avg(int(_default_age))
+                st.session_state.onboarding_done = True
+                st.session_state.analysis_result = None
+                # profile_id=0 설정하지 않음 → 저장 시 POST가 아닌 PUT 체크 경로 유지
+                st.session_state.profile_id = 0
+                st.rerun()
+        elif _prof and _prof.get('id'):
+            st.session_state.pop('_prof_load_retry', None)
             _restore_from_profile(_prof)
-            # DB에 저장된 프로필이 있으면 무조건 내 정보 모드
-            _has_saved_profile = True
-        if not _has_saved_profile:
-            # 프로필 없음 → 국가 평균으로 온보딩 (기본 55세 구간)
+            st.rerun()
+        else:
+            # 프로필 없음(신규 사용자) → 국가 평균으로 온보딩 (기본 55세 구간)
+            st.session_state.pop('_prof_load_retry', None)
             _default_age = st.session_state.get('_reg_age', 55)
             _apply_national_avg(int(_default_age))
             st.session_state.onboarding_done = True
             st.session_state.analysis_result = None
-            if not st.session_state.get('profile_id'):
-                st.session_state.profile_id = 0
-        st.rerun()
+            st.session_state.profile_id = 0
+            st.rerun()
     show_main_app()

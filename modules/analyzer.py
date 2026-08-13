@@ -716,16 +716,22 @@ class RetirementAnalyzer:
         membership_dues = sum(m.annual_dues for m in self.profile.memberships) / 12
         # 차량 유지비
         vehicle_cost = sum(v.annual_cost for v in self.profile.vehicles) / 12
+        # 대출 월상환금
+        monthly_debt = sum(d.monthly_payment for d in self.profile.debts)
+        # 월 임차료 (임차인으로서 납부하는 월세)
+        monthly_rent_exp = sum(re.monthly_rent_expense for re in self.profile.real_estates)
 
         monthly_tax = tax_info['총_세부담_연'] / 12
         total_expense = (expense.total_monthly + membership_dues +
-                         vehicle_cost + monthly_tax)
+                         vehicle_cost + monthly_tax + monthly_debt + monthly_rent_exp)
 
         return {
             '월수입': income['월수입_합계'],
             '월지출_생활': expense.total_monthly,
             '월지출_회원권': round(membership_dues),
             '월지출_차량': round(vehicle_cost),
+            '월지출_대출상환': round(monthly_debt),
+            '월지출_임차료': round(monthly_rent_exp),
             '월지출_세금건보': round(monthly_tax),
             '월지출_합계': round(total_expense),
             '월잉여(부족)': round(income['월수입_합계'] - total_expense),
@@ -745,10 +751,12 @@ class RetirementAnalyzer:
         lifespan = personal.expected_lifespan
         expense = self.profile.expected_expense
 
-        # 은퇴 시점 기준 월지출 (생활비 + 회원권 + 차량)
+        # 은퇴 시점 기준 월지출 (생활비 + 회원권 + 차량 + 대출상환 + 임차료)
         membership_dues = sum(m.annual_dues for m in self.profile.memberships) / 12
         vehicle_cost = sum(v.annual_cost for v in self.profile.vehicles) / 12
-        base_monthly_expense = expense.total_monthly + membership_dues + vehicle_cost
+        monthly_debt = sum(d.monthly_payment for d in self.profile.debts)
+        monthly_rent_exp = sum(re.monthly_rent_expense for re in self.profile.real_estates)
+        base_monthly_expense = expense.total_monthly + membership_dues + vehicle_cost + monthly_debt + monthly_rent_exp
 
         age_rows = self._project_income_by_age()
         age_map = {r['나이']: r for r in age_rows}

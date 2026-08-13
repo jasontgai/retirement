@@ -65,13 +65,14 @@ def run_column_migrations(engine):
     from sqlalchemy import text
     db_name = os.getenv('DB_NAME', 'retirement')
     new_cols = [
-        ('profiles', 'parttime_monthly',      'BIGINT DEFAULT 0'),
-        ('profiles', 'parttime_until_age',    'INT DEFAULT 70'),
-        ('profiles', 'spouse_nps_monthly',    'BIGINT DEFAULT 0'),
-        ('profiles', 'spouse_nps_start_age',  'INT DEFAULT 65'),
-        ('profiles', 'spouse_other_monthly',  'BIGINT DEFAULT 0'),
-        ('profiles', 'spouse_other_start_age','INT DEFAULT 65'),
-        ('users',    'is_admin',              'TINYINT(1) NOT NULL DEFAULT 0'),
+        ('profiles',     'parttime_monthly',      'BIGINT DEFAULT 0'),
+        ('profiles',     'parttime_until_age',    'INT DEFAULT 70'),
+        ('profiles',     'spouse_nps_monthly',    'BIGINT DEFAULT 0'),
+        ('profiles',     'spouse_nps_start_age',  'INT DEFAULT 65'),
+        ('profiles',     'spouse_other_monthly',  'BIGINT DEFAULT 0'),
+        ('profiles',     'spouse_other_start_age','INT DEFAULT 65'),
+        ('users',        'is_admin',              'TINYINT(1) NOT NULL DEFAULT 0'),
+        ('real_estates', 'property_category',     "VARCHAR(50) NOT NULL DEFAULT '아파트'"),
     ]
     with engine.connect() as conn:
         for tbl, col, typedef in new_cols:

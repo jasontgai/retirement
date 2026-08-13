@@ -1,42 +1,42 @@
 kairang.pe.kr:8443 {
     tls C:/certs/kairang.pe.kr-chain.pem C:/certs/kairang.pe.kr-key.pem
 
-    # 백엔드 API 경로 (FastAPI → localhost:9080)
+    # 백엔드 API 경로 (FastAPI → 127.0.0.1:9080)
     handle /api/* {
         uri strip_prefix /api
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /auth/* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /analyze* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /profiles* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /pension* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /house-pension* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /tax* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /health* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /scenarios* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
     handle /admin* {
-        reverse_proxy localhost:9080
+        reverse_proxy 127.0.0.1:9080
     }
 
     # 나머지는 Streamlit (프론트엔드 → localhost:8501)
     handle {
-        reverse_proxy localhost:8501 {
+        reverse_proxy 127.0.0.1:8501 {
             header_up X-Real-IP {remote_host}
             header_up X-Forwarded-For {remote_host}
         }

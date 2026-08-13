@@ -16,7 +16,16 @@
       "PowerShell(Get-Process | Where-Object { $_.Id -eq 22636 -or $_.Id -eq 18304 } | Select-Object Id, ProcessName, StartTime)",
       "PowerShell(Stop-Process -Id 22636 -Force -ErrorAction SilentlyContinue)",
       "PowerShell(\\(Get-Command caddy -ErrorAction SilentlyContinue\\).Source)",
-      "PowerShell(& \"c:\\\\Users\\\\jason004\\\\retirement_app\\\\.venv\\\\Scripts\\\\python.exe\" -c \"from streamlit.components.v1 import html; print\\('ok'\\)\" 2>&1)"
+      "PowerShell(& \"c:\\\\Users\\\\jason004\\\\retirement_app\\\\.venv\\\\Scripts\\\\python.exe\" -c \"from streamlit.components.v1 import html; print\\('ok'\\)\" 2>&1)",
+      "Bash(.venv/Scripts/python.exe -c ' *)",
+      "Bash(python -c \"import frontend.detail_chart\")",
+      "Bash(python -c \"import frontend.app\")",
+      "Bash(python -c ' *)",
+      "PowerShell(Get-Process -Id 20976)",
+      "PowerShell(python -c \"import ast; ast.parse\\(open\\('c:/Users/jason004/retirement_app/frontend/detail_chart.py', encoding='utf-8'\\).read\\(\\)\\); print\\('OK'\\)\")",
+      "PowerShell(Get-Process -Id 24564)",
+      "PowerShell(caddy reload --config \"c:\\\\Users\\\\jason004\\\\retirement_app\\\\Caddyfile\" 2>&1)",
+      "PowerShell(& \"c:\\\\Users\\\\jason004\\\\retirement_app\\\\caddy.exe\" reload --config \"c:\\\\Users\\\\jason004\\\\retirement_app\\\\Caddyfile\" 2>&1)"
     ]
   }
 }

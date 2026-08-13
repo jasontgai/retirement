@@ -68,10 +68,12 @@ def save_profile(db: Session, user_id: int, user_profile, title: str = "기본 �
             profile_id=row.id,
             name=re.name,
             house_type=re.house_type.value,
+            property_category=getattr(re, 'property_category', '아파트'),
             market_value=int(re.market_value),
             official_price=int(re.official_price),
             debt=int(re.debt),
             monthly_rent_income=int(re.monthly_rent_income),
+            monthly_rent_expense=int(re.monthly_rent_expense),
             is_primary_residence=re.is_primary_residence,
             acquisition_date=re.acquisition_date,
             acquisition_price=int(re.acquisition_price),
@@ -158,12 +160,16 @@ def delete_profile(db: Session, profile_id: int, user_id: int) -> bool:
 
 
 def upsert_profile(db: Session, user_id: int, user_profile, profile_id: int | None = None, title: str = "기본 플랜") -> Profile:
-    """기존 프로필 있으면 같은 트랜잭션에서 삭제 후 재생성 (원자적)"""
-    if profile_id:
-        existing = get_profile(db, profile_id, user_id)
-        if existing:
-            db.delete(existing)
-            # commit 하지 않음 — save_profile의 commit이 delete+insert를 한 번에 처리
+    """기존 프로필을 삭제 후 재생성 (유저당 1개 원칙 유지).
+    profile_id가 없거나 이미 삭제된 경우 첫 번째 기존 프로필을 대신 교체."""
+    target = get_profile(db, profile_id, user_id) if profile_id else None
+    if target is None:
+        # 지정 ID가 없거나 이미 삭제된 경우 → 첫 번째 기존 프로필 교체
+        others = list_profiles(db, user_id)
+        target = others[0] if others else None
+    if target:
+        db.delete(target)
+        # commit 하지 않음 — save_profile의 commit이 delete+insert를 한 번에 처리
     return save_profile(db, user_id, user_profile, title)
 
 
