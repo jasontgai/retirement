@@ -1,3 +1,7 @@
+{
+    auto_https disable_redirects
+}
+
 kairang.pe.kr:8443 {
     tls C:/certs/kairang.pe.kr-chain.pem C:/certs/kairang.pe.kr-key.pem
 

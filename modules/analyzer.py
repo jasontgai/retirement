@@ -392,9 +392,11 @@ class RetirementAnalyzer:
         rows = []
         for age in range(_start_age, lifespan + 1):
             sources = {}
+            # 임대수입: 현시점부터 물가 반영
+            if rental_monthly > 0:
+                _inf_yrs = max(0, age - _current_age)
+                sources['임대수입'] = round(rental_monthly * (1 + self.inflation_rate) ** _inf_yrs)
             if age >= retirement_age:
-                if rental_monthly > 0:
-                    sources['임대수입'] = rental_monthly
                 if fi_monthly > 0:
                     sources['금융자산수익'] = fi_monthly
 

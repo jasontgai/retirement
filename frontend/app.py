@@ -219,6 +219,15 @@ st.markdown("""
 # 세션 상태 초기화
 # ============================================================
 def init_state():
+    # Streamlit 위젯 클린업 대응: rerun이 위젯 렌더링 전에 호출될 때
+    # 프로그래밍 방식으로 설정된 위젯 키(_restore_from_profile 등)가 삭제됨.
+    # _safe_personal은 비위젯 키라 보존되므로, 삭제된 키를 여기서 먼저 복원.
+    _snap_r = st.session_state.get('_safe_personal')
+    if _snap_r and st.session_state.get('profile_id', 0) > 0:
+        for _k, _v in _snap_r.items():
+            if _k not in st.session_state:
+                st.session_state[_k] = _v
+
     defaults = {
         # 인증
         'token': None,
@@ -493,7 +502,9 @@ def _restore_from_profile(p: dict):
     exp  = p.get('expected_expense', {})
 
     st.session_state.inp_name            = pers.get('name', '')
-    st.session_state.inp_birth_year      = pers.get('birth_year', 1975)
+    _by_val = pers.get('birth_year', 1975)
+    st.session_state.inp_birth_year      = _by_val
+    st.session_state._safe_birth_year    = _by_val  # 보호 스냅샷
     st.session_state.inp_birth_month     = pers.get('birth_month', 5)
     st.session_state.inp_birth_day       = pers.get('birth_day', 15)
     st.session_state.inp_gender          = pers.get('gender', '남')
@@ -527,6 +538,32 @@ def _restore_from_profile(p: dict):
     st.session_state.insurances          = p.get('insurances', [])
 
     st.session_state.profile_id          = p.get('id', 0)
+
+    # 개인정보 보호 스냅샷: rerun으로 위젯 키가 삭제되더라도 init_state()에서 복원
+    st.session_state._safe_personal = {
+        'inp_birth_year':       pers.get('birth_year', 1975),
+        'inp_birth_month':      pers.get('birth_month', 5),
+        'inp_birth_day':        pers.get('birth_day', 15),
+        'inp_gender':           pers.get('gender', '남'),
+        'inp_retirement_age':   pers.get('retirement_age', 62),
+        'inp_lifespan':         pers.get('expected_lifespan', 85),
+        'inp_dependents':       pers.get('dependents', 1),
+        'inp_salary':           inc.get('annual_salary', 80_000_000) // 10000,
+        'inp_bonus':            inc.get('annual_bonus', 0) // 10000,
+        'inp_is_employee':      inc.get('is_employee', True),
+        'inp_parttime_monthly': inc.get('parttime_monthly', 0) // 10000,
+        'inp_parttime_until':   inc.get('parttime_until_age', 70),
+        'inp_spouse_nps':       pers.get('spouse_nps_monthly', 0) // 10000,
+        'inp_spouse_nps_age':   pers.get('spouse_nps_start_age', 65),
+        'inp_spouse_other':     pers.get('spouse_other_monthly', 0) // 10000,
+        'inp_spouse_other_age': pers.get('spouse_other_start_age', 65),
+        'inp_living':           exp.get('living_cost', 2_500_000) // 10000,
+        'inp_medical':          exp.get('medical_cost', 500_000) // 10000,
+        'inp_leisure':          exp.get('leisure_cost', 800_000) // 10000,
+        'inp_family':           exp.get('family_support', 0) // 10000,
+        'inp_insurance':        exp.get('insurance_premium', 300_000) // 10000,
+        'inp_other':            exp.get('other', 200_000) // 10000,
+    }
 
 
 def fmt_won(amount):
@@ -1160,42 +1197,53 @@ def _nearest_bracket(age: int) -> int:
 
 def _apply_national_avg(current_age: int, birth_year: int = None):
     """연령에 맞는 2026 국가 평균 데이터를 session_state에 적용.
-    birth_year 지정 시 해당 출생연도를 그대로 사용, 미지정 시 current_age로 역산."""
+    birth_year 지정 시 해당 출생연도를 그대로 사용, 미지정 시 current_age로 역산.
+    저장된 프로필이 있는 경우(profile_id > 0) 개인정보 필드는 덮어쓰지 않음."""
+    import traceback as _tb
     bracket = _nearest_bracket(current_age)
     avg = _AGE_AVG_DATA[bracket]
     ss = st.session_state
     _cur_year = __import__('datetime').date.today().year
+    _pid = ss.get('profile_id')
+    _has_saved_profile = _pid is not None and _pid != 0
+    # 디버그 로그: 누가 언제 이 함수를 호출하는지 추적
+    _log.warning(
+        f"[apply_national_avg] 호출됨 age={current_age} profile_id={_pid} "
+        f"has_saved={_has_saved_profile}\n"
+        + ''.join(_tb.format_stack()[:-1])
+    )
 
-    ss.inp_birth_year     = birth_year if birth_year is not None else (_cur_year - current_age)
-    ss.inp_birth_month    = 1
-    ss.inp_birth_day      = 1
-    ss.inp_gender         = '남'
-    ss.inp_retirement_age = avg['retirement_age']
-    ss.inp_lifespan       = avg['lifespan']
-    ss.inp_dependents     = avg['dependents']
-    ss.inp_salary         = avg['salary']
-    ss.inp_bonus          = avg['bonus']
-    ss.inp_is_employee    = avg['is_employee']
-    ss.inp_parttime_monthly = avg['parttime_monthly']
-    ss.inp_parttime_until   = avg['parttime_until']
+    if not _has_saved_profile:
+        ss.inp_birth_year     = birth_year if birth_year is not None else (_cur_year - current_age)
+        ss.inp_birth_month    = 1
+        ss.inp_birth_day      = 1
+        ss.inp_gender         = '남'
+        ss.inp_retirement_age = avg['retirement_age']
+        ss.inp_lifespan       = avg['lifespan']
+        ss.inp_dependents     = avg['dependents']
+        ss.inp_salary         = avg['salary']
+        ss.inp_bonus          = avg['bonus']
+        ss.inp_is_employee    = avg['is_employee']
+        ss.inp_parttime_monthly = avg['parttime_monthly']
+        ss.inp_parttime_until   = avg['parttime_until']
+        ss.inp_spouse_nps       = 0
+        ss.inp_spouse_nps_age   = 65
+        ss.inp_spouse_other     = 0
+        ss.inp_spouse_other_age = 65
+        ss.inp_living     = avg['living']
+        ss.inp_medical    = avg['medical']
+        ss.inp_leisure    = avg['leisure']
+        ss.inp_family     = avg['family']
+        ss.inp_insurance  = avg['insurance']
+        ss.inp_other      = avg['other']
+        ss.pensions          = [p.copy() for p in avg['pensions']]
+        ss.financial_assets  = [a.copy() for a in avg['financial_assets']]
+        ss.debts             = [d.copy() for d in avg['debts']]
+        ss.real_estates      = avg.get('real_estates', [])
+        ss.memberships       = avg.get('memberships', [])
+        ss.vehicles          = avg.get('vehicles', [])
+        ss.insurances        = avg.get('insurances', [])
     ss.inp_inflation        = avg.get('inflation', 2.0)
-    ss.inp_spouse_nps       = 0
-    ss.inp_spouse_nps_age   = 65
-    ss.inp_spouse_other     = 0
-    ss.inp_spouse_other_age = 65
-    ss.inp_living     = avg['living']
-    ss.inp_medical    = avg['medical']
-    ss.inp_leisure    = avg['leisure']
-    ss.inp_family     = avg['family']
-    ss.inp_insurance  = avg['insurance']
-    ss.inp_other      = avg['other']
-    ss.pensions          = [p.copy() for p in avg['pensions']]
-    ss.financial_assets  = [a.copy() for a in avg['financial_assets']]
-    ss.debts             = [d.copy() for d in avg['debts']]
-    ss.real_estates      = avg.get('real_estates', [])
-    ss.memberships       = avg.get('memberships', [])
-    ss.vehicles          = avg.get('vehicles', [])
-    ss.insurances        = avg.get('insurances', [])
     # 적용된 연령대 저장 (배너 표시용)
     ss._avg_bracket      = bracket
 
@@ -1325,6 +1373,16 @@ def show_account_page():
 # 메인 앱
 # ============================================================
 def show_main_app():
+    # 백엔드 API 오류 배너 (세션 만료 후 프로필 로드 실패 시)
+    if st.session_state.pop('_profile_api_error', False):
+        st.warning(
+            "⚠️ 내 정보를 불러오지 못했습니다 (백엔드 연결 오류). "
+            "잠시 후 **페이지를 새로고침**하거나 아래 버튼을 눌러 다시 시도하세요.",
+        )
+        if st.button("🔄 내 정보 다시 불러오기"):
+            st.session_state.profile_id = None   # 재시도 트리거
+            st.rerun()
+
     # 사이드바 - 사용자 정보 + 관리
     with st.sidebar:
         st.markdown(f"""
@@ -1384,11 +1442,9 @@ def show_main_app():
                 st.session_state.pop('onboarding_done', None)
                 st.session_state.analysis_result = None
                 st.session_state._goto_personal_tab = True
+                # 내 정보가 없는 경우: 국가평균은 온보딩 시 이미 session_state에 설정되어 있음.
+                # 여기서 _apply_national_avg를 다시 호출하면 사용자가 이미 입력한 값을 덮어쓰므로 제거.
                 if st.session_state.get('profile_id', 0) == 0:
-                    # 내 정보가 없는 경우: 1975년생 기준 국가평균으로 모든 입력 필드를
-                    # 명시적으로 재설정한다. rerun 전에 호출해야 위젯 캐시가 갱신됨.
-                    _cur_yr = __import__('datetime').date.today().year
-                    _apply_national_avg(_cur_yr - 1975, birth_year=1975)
                     st.session_state._skip_auto_analysis = True
                 st.rerun()
         with _ob_c2:
@@ -1511,6 +1567,31 @@ def show_main_app():
             st.session_state['_goto_analysis_tab'] = True
             st.rerun()
 
+
+    def _do_quick_save():
+        _payload = _build_save_payload()
+        _pid = st.session_state.profile_id
+        if not _pid or _pid == 0:
+            _ep2, _ = call_api("/profiles/latest", method="GET")
+            if _ep2 and _ep2.get('id'):
+                _pid = _ep2['id']
+                st.session_state.profile_id = _pid
+        if _pid and _pid != 0:
+            _r, _e = call_api(f"/profiles/{_pid}", _payload, method="PUT")
+        else:
+            _r, _e = call_api("/profiles", _payload)
+        if _e:
+            st.error(f"저장 실패: {_e}")
+        else:
+            st.session_state.profile_id = _r.get('id', _pid)
+            # 저장 성공 시 보호 스냅샷 동기화 + 온보딩 배너 제거
+            st.session_state._safe_birth_year = st.session_state.get('inp_birth_year', st.session_state.get('_safe_birth_year'))
+            _cur_snap = st.session_state.get('_safe_personal')
+            if _cur_snap:
+                st.session_state._safe_personal = {k: st.session_state.get(k, v) for k, v in _cur_snap.items()}
+            st.session_state.pop('onboarding_done', None)
+            st.toast("✅ 저장 완료!")
+            st.rerun()
 
     # 탭 네비게이션 (저장된 프로필이 있는 경우에만 표시)
     if not _is_onboarding:
@@ -1660,18 +1741,33 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 name = st.text_input("이름", key="inp_name")
                 gender = st.selectbox("성별", ["남", "여"], key="inp_gender")
             with col2:
-                birth_year = _sl("출생년도", 1940, 2010, st.session_state.get("inp_birth_year", 1975), 1, "inp_birth_year", "년")
+                # 보호: 저장된 프로필이 있을 때 코드가 출생년도를 몰래 바꾸는 것을 차단
+                _ss = st.session_state
+                if (_ss.get('profile_id', 0) > 0
+                        and '_safe_birth_year' in _ss
+                        and _ss.get('inp_birth_year') != _ss._safe_birth_year
+                        and not _ss.pop('_birth_year_user_changed', False)):
+                    _log.warning(f"[guard] inp_birth_year 복원: {_ss.inp_birth_year} → {_ss._safe_birth_year}")
+                    _ss.inp_birth_year = _ss._safe_birth_year
+
+                def _on_birth_year_change():
+                    st.session_state._safe_birth_year = st.session_state.inp_birth_year
+                    st.session_state._birth_year_user_changed = True
+
+                birth_year = st.number_input(
+                    "출생년도 (년)", min_value=1940, max_value=2010,
+                    step=1, key="inp_birth_year",
+                    on_change=_on_birth_year_change,
+                )
                 retirement_age = _sl("은퇴희망 연령", 50, 75, st.session_state.get("inp_retirement_age", 62), 1, "inp_retirement_age", "세")
                 st.caption("📊 대한민국 평균 은퇴연령: **62세** (통계청 2024)")
 
             col3, col4 = st.columns(2)
             with col3:
                 birth_month = st.selectbox("출생월", list(range(1, 13)),
-                    index=st.session_state.get("inp_birth_month", 1) - 1,
                     format_func=lambda m: f"{m}월", key="inp_birth_month")
             with col4:
                 birth_day = st.selectbox("출생일", list(range(1, 32)),
-                    index=st.session_state.get("inp_birth_day", 1) - 1,
                     format_func=lambda d: f"{d}일", key="inp_birth_day")
 
             expected_lifespan = _sl("기대수명", 75, 120, st.session_state.get("inp_lifespan", 85), 1, "inp_lifespan", "세")
@@ -1735,9 +1831,9 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 else:
                     st.success(f"✅ {birth_year}년생 정상 수급연령: **{result['normal_start_age']}세**")
 
-        # ----------------------------------------------------------
-        # 탭 2: 연금
-        # ----------------------------------------------------------
+            st.divider()
+            if st.button("💾 내 정보 저장", key="save_btn_personal", use_container_width=True):
+                _do_quick_save()
 
         # ----------------------------------------------------------
         # 탭 3: 연금
@@ -2055,9 +2151,9 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 else:
                     st.info("등록된 연금이 없습니다.")
 
-        # ----------------------------------------------------------
-        # 탭 3: 자산
-        # ----------------------------------------------------------
+            st.divider()
+            if st.button("💾 내 정보 저장", key="save_btn_pension", use_container_width=True):
+                _do_quick_save()
 
         # ----------------------------------------------------------
         # 탭 4: 자산
@@ -2447,9 +2543,9 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                             if st.button("🗑", key=f"del_d_{i}"):
                                 st.session_state.debts.pop(i); st.rerun()
 
-        # ----------------------------------------------------------
-        # 탭 4: 예상 지출
-        # ----------------------------------------------------------
+            st.divider()
+            if st.button("💾 내 정보 저장", key="save_btn_assets", use_container_width=True):
+                _do_quick_save()
 
         # ----------------------------------------------------------
         # 탭 5: 예상 지출
@@ -2464,9 +2560,12 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
             other     = _sl("기타", 0, 1000, st.session_state.get("inp_other", 20), 10, "inp_other", "won") * 10000
             total_monthly = living + medical + leisure + family + insurance + other
             _metric_card("월 지출 합계", fmt_won(total_monthly))
+            st.divider()
+            if st.button("💾 내 정보 저장", key="save_btn_expense", use_container_width=True):
+                _do_quick_save()
 
         # ----------------------------------------------------------
-        # 탭 5: 컨설팅
+        # 탭 6: 컨설팅
         # ----------------------------------------------------------
         with tabs[5]:
             st.subheader("🎯 은퇴 재원마련 컨설팅")
@@ -2616,57 +2715,222 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     _rates_only = [p.get('annual_return_rate', 0) for p in _pensions_ss if p.get('annual_return_rate', 0) > 0]
                     _pension_avg_return = round(sum(_rates_only) / len(_rates_only) * 100, 1) if _rates_only else 0.0
 
-                _snap_payload = {
-                    'label': '',
-                    'retire_age':      int(_retire_age_cur),
-                    'monthly_income':  int(cf.get('월수입', 0)),
-                    'monthly_expense': int(cf.get('월지출_합계', 0)),
-                    'monthly_surplus': int(cf.get('월잉여(부족)', 0)),
-                    'total_assets':    int(assets.get('순자산', 0)),
-                    'detail': {
-                        '총자산':        int(assets.get('총자산', 0)),
-                        '총부채':        int(assets.get('총부채', 0)),
-                        '금융자산':      _asset_num(assets.get('금융자산', 0)),
-                        '부동산':        _asset_num(assets.get('부동산', 0)),
-                        '국민연금':      _nps_monthly,
-                        '사적연금':      _private_monthly,
-                        '연금합계':      _pension_total,
-                        '연금_총적립금': _pension_bal_total,
-                        '연금_평균수익률': _pension_avg_return,
-                        '연금상세': _pension_by_group,
-                    },
-                }
+                # ── 관리자 시나리오 통합 저장 폼 ─────────────────────────────
                 if st.session_state.get('is_admin'):
-                    _sc_b1, _sc_b2, _sc_b3 = st.columns(3)
-                    with _sc_b1:
-                        if st.button("📌 GOOD CASE 저장", key='btn_save_good', help="현재 분석 결과를 GOOD CASE로 저장", width='stretch'):
-                            _p = {**_snap_payload, 'label': 'GOOD'}
-                            _sr, _se = call_api("/scenarios", _p)
+                    def _avg_defaults(bracket):
+                        avg    = _AGE_AVG_DATA[bracket]
+                        re_val = sum(r.get('market_value', 0) for r in avg.get('real_estates', [])) // 10000
+                        re_dbt = sum(r.get('debt', 0)         for r in avg.get('real_estates', [])) // 10000
+                        fa_val = sum(f.get('amount', 0)       for f in avg.get('financial_assets', [])) // 10000
+                        d_bal  = sum(d.get('balance', 0)      for d in avg.get('debts', [])) // 10000
+                        d_pay  = sum(d.get('monthly_payment', 0) for d in avg.get('debts', [])) // 10000
+                        nps_p  = sum(p.get('expected_monthly_payout', 0) for p in avg.get('pensions', [])
+                                     if p.get('pension_type') == '국민연금') // 10000
+                        prv_p  = sum(p.get('expected_monthly_payout', 0) for p in avg.get('pensions', [])
+                                     if p.get('pension_type') != '국민연금') // 10000
+                        p_bal  = sum(p.get('current_balance', 0) for p in avg.get('pensions', [])) // 10000
+                        m_exp  = avg['living'] + avg['medical'] + avg['leisure'] + avg['family'] + avg['insurance'] + avg['other']
+                        return {
+                            'retire_age': avg['retirement_age'],
+                            'income':     (avg.get('salary', 0) or 0) // 12,
+                            'expense':    m_exp,
+                            'assets':     max(0, re_val + fa_val - re_dbt - d_bal),
+                            'fa':         fa_val, 're': re_val,
+                            'nps':        nps_p,  'priv': prv_p,
+                            'pen_total':  nps_p + prv_p,
+                            'pen_bal':    p_bal,  'pen_ret': 3.9,
+                            'living':     avg['living'],   'medical':   avg['medical'],
+                            'leisure':    avg['leisure'],  'family':    avg['family'],
+                            'insurance':  avg['insurance'],'other':     avg['other'],
+                            'debt':       d_pay,           'rent':      0,
+                        }
+
+                    _ss = st.session_state
+                    with st.expander("💾 시나리오 저장 (관리자)", expanded=False):
+                        _sv_label = st.radio(
+                            "저장 레이블", ["STANDARD", "GOOD", "BEST"],
+                            horizontal=True, key='uform_label',
+                        )
+
+                        if _sv_label == "STANDARD":
+                            _br_col, _btn_col = st.columns([2, 1])
+                            with _br_col:
+                                _std_br = st.selectbox(
+                                    "기준 연령대", [40, 45, 50, 55, 60, 65, 70],
+                                    index=3, key='uform_bracket',
+                                    format_func=lambda x: f"{x}세",
+                                )
+                            with _btn_col:
+                                st.write("")
+                                if st.button("📥 국가평균 적용", key='btn_avg_apply',
+                                             use_container_width=True):
+                                    _d = _avg_defaults(_std_br)
+                                    for _k, _v in {
+                                        'uform_retire_age': _d['retire_age'],
+                                        'uform_income':     _d['income'],
+                                        'uform_expense':    _d['expense'],
+                                        'uform_assets':     _d['assets'],
+                                        'uform_fa':         _d['fa'],
+                                        'uform_re':         _d['re'],
+                                        'uform_nps':        _d['nps'],
+                                        'uform_priv':       _d['priv'],
+                                        'uform_pen_total':  _d['pen_total'],
+                                        'uform_pen_bal':    _d['pen_bal'],
+                                        'uform_pen_ret':    _d['pen_ret'],
+                                        'uform_living':     _d['living'],
+                                        'uform_medical':    _d['medical'],
+                                        'uform_leisure':    _d['leisure'],
+                                        'uform_family':     _d['family'],
+                                        'uform_insurance':  _d['insurance'],
+                                        'uform_other':      _d['other'],
+                                        'uform_debt':       _d['debt'],
+                                        'uform_rent':       _d['rent'],
+                                    }.items():
+                                        _ss[_k] = _v
+                                    st.rerun()
+
+                        st.caption("수정 후 하단 저장 버튼을 누르세요 (단위: 만원/월, 만원)")
+
+                        st.markdown("**기본 정보**")
+                        _fi1, _fi2, _fi3 = st.columns(3)
+                        with _fi1:
+                            _sv_retire = st.number_input(
+                                "은퇴 연령 (세)", 40, 80,
+                                int(_ss.get('uform_retire_age', int(_retire_age_cur))),
+                                1, key='uform_retire_age')
+                        with _fi2:
+                            _sv_income = st.number_input(
+                                "월 수입 (만원)", 0, 10000,
+                                int(_ss.get('uform_income', round(cf.get('월수입', 0) / 10000))),
+                                10, key='uform_income')
+                        with _fi3:
+                            _sv_expense_t = st.number_input(
+                                "월 지출 (만원)", 0, 5000,
+                                int(_ss.get('uform_expense', round(cf.get('월지출_합계', 0) / 10000))),
+                                10, key='uform_expense')
+
+                        st.markdown("**자산 (만원)**")
+                        _as1, _as2, _as3 = st.columns(3)
+                        with _as1:
+                            _sv_assets = st.number_input(
+                                "순자산", 0, 1_000_000,
+                                max(0, int(_ss.get('uform_assets', round(assets.get('순자산', 0) / 10000)))),
+                                100, key='uform_assets')
+                        with _as2:
+                            _sv_fa = st.number_input(
+                                "금융자산", 0, 500_000,
+                                max(0, int(_ss.get('uform_fa', round(_asset_num(assets.get('금융자산', 0)) / 10000)))),
+                                100, key='uform_fa')
+                        with _as3:
+                            _sv_re = st.number_input(
+                                "부동산", 0, 1_000_000,
+                                max(0, int(_ss.get('uform_re', round(_asset_num(assets.get('부동산', 0)) / 10000)))),
+                                100, key='uform_re')
+
+                        st.markdown("**연금 (만원/월 · 만원)**")
+                        _pe1, _pe2, _pe3, _pe4, _pe5 = st.columns(5)
+                        with _pe1:
+                            _sv_nps = st.number_input(
+                                "국민연금(월)", 0, 500,
+                                int(_ss.get('uform_nps', round(_nps_monthly / 10000))),
+                                5, key='uform_nps')
+                        with _pe2:
+                            _sv_priv = st.number_input(
+                                "사적연금(월)", 0, 1000,
+                                int(_ss.get('uform_priv', round(_private_monthly / 10000))),
+                                5, key='uform_priv')
+                        with _pe3:
+                            _sv_pen_total = st.number_input(
+                                "연금합계(월)", 0, 2000,
+                                int(_ss.get('uform_pen_total', round(_pension_total / 10000))),
+                                5, key='uform_pen_total')
+                        with _pe4:
+                            _sv_pen_bal = st.number_input(
+                                "총적립금(만원)", 0, 200_000,
+                                int(_ss.get('uform_pen_bal', round(_pension_bal_total / 10000))),
+                                1000, key='uform_pen_bal')
+                        with _pe5:
+                            _sv_pen_ret = st.number_input(
+                                "평균수익률(%)", 0.0, 20.0,
+                                float(_ss.get('uform_pen_ret', float(_pension_avg_return))),
+                                0.1, format="%.1f", key='uform_pen_ret')
+
+                        st.markdown("**지출 세부 (만원/월)**")
+                        _ex1, _ex2, _ex3, _ex4 = st.columns(4)
+                        with _ex1:
+                            _sv_living = st.number_input(
+                                "생활비", 0, 5000,
+                                int(_ss.get('uform_living', int(_ss.get('inp_living', 270)))),
+                                10, key='uform_living')
+                            _sv_medical = st.number_input(
+                                "의료비", 0, 1000,
+                                int(_ss.get('uform_medical', int(_ss.get('inp_medical', 50)))),
+                                5, key='uform_medical')
+                        with _ex2:
+                            _sv_leisure = st.number_input(
+                                "여가/취미", 0, 1000,
+                                int(_ss.get('uform_leisure', int(_ss.get('inp_leisure', 70)))),
+                                5, key='uform_leisure')
+                            _sv_family = st.number_input(
+                                "자녀/부모", 0, 1000,
+                                int(_ss.get('uform_family', int(_ss.get('inp_family', 40)))),
+                                5, key='uform_family')
+                        with _ex3:
+                            _sv_insurance = st.number_input(
+                                "보험료", 0, 500,
+                                int(_ss.get('uform_insurance', int(_ss.get('inp_insurance', 25)))),
+                                5, key='uform_insurance')
+                            _sv_other = st.number_input(
+                                "기타", 0, 500,
+                                int(_ss.get('uform_other', int(_ss.get('inp_other', 20)))),
+                                5, key='uform_other')
+                        with _ex4:
+                            _sv_debt = st.number_input(
+                                "대출상환", 0, 2000,
+                                int(_ss.get('uform_debt', round(cf.get('월지출_대출상환', 0) / 10000))),
+                                5, key='uform_debt')
+                            _sv_rent = st.number_input(
+                                "임차료", 0, 500,
+                                int(_ss.get('uform_rent', round(cf.get('월지출_임차료', 0) / 10000))),
+                                5, key='uform_rent')
+
+                        st.divider()
+                        if st.button(f"💾 {_sv_label} 저장", key='btn_unified_save',
+                                     use_container_width=True, type='primary'):
+                            _upl = {
+                                'label':           _sv_label,
+                                'retire_age':      int(_sv_retire),
+                                'monthly_income':  int(_sv_income * 10000),
+                                'monthly_expense': int(_sv_expense_t * 10000),
+                                'monthly_surplus': int((_sv_income - _sv_expense_t) * 10000),
+                                'total_assets':    int(_sv_assets * 10000),
+                                'detail': {
+                                    '총자산':          int((_sv_fa + _sv_re) * 10000),
+                                    '총부채':          0,
+                                    '금융자산':        int(_sv_fa * 10000),
+                                    '부동산':          int(_sv_re * 10000),
+                                    '국민연금':        int(_sv_nps * 10000),
+                                    '사적연금':        int(_sv_priv * 10000),
+                                    '연금합계':        int(_sv_pen_total * 10000),
+                                    '연금_총적립금':   int(_sv_pen_bal * 10000),
+                                    '연금_평균수익률': float(_sv_pen_ret),
+                                    '연금상세':        _pension_by_group,
+                                    '지출_생활비':     int(_sv_living    * 10000),
+                                    '지출_의료비':     int(_sv_medical   * 10000),
+                                    '지출_여가':       int(_sv_leisure   * 10000),
+                                    '지출_자녀부모':   int(_sv_family    * 10000),
+                                    '지출_보험료':     int(_sv_insurance * 10000),
+                                    '지출_기타':       int(_sv_other     * 10000),
+                                    '지출_대출상환':   int(_sv_debt      * 10000),
+                                    '지출_임차료':     int(_sv_rent      * 10000),
+                                },
+                            }
+                            _sr, _se = call_api("/scenarios", _upl)
                             if _se:
                                 st.error(f"저장 실패: {_se}")
                             else:
                                 st.session_state._sc_dirty = True
-                                st.toast("✅ GOOD CASE 저장 완료!")
-                                st.rerun()
-                    with _sc_b2:
-                        if st.button("🏆 BEST CASE 저장", key='btn_save_best', help="현재 분석 결과를 BEST CASE로 저장", width='stretch'):
-                            _p = {**_snap_payload, 'label': 'BEST'}
-                            _sr, _se = call_api("/scenarios", _p)
-                            if _se:
-                                st.error(f"저장 실패: {_se}")
-                            else:
-                                st.session_state._sc_dirty = True
-                                st.toast("✅ BEST CASE 저장 완료!")
-                                st.rerun()
-                    with _sc_b3:
-                        if st.button("🇰🇷 우리나라 평균 저장", key='btn_save_std', help="현재 분석 결과를 우리나라 평균(STANDARD)으로 저장", width='stretch'):
-                            _p = {**_snap_payload, 'label': 'STANDARD'}
-                            _sr, _se = call_api("/scenarios", _p)
-                            if _se:
-                                st.error(f"저장 실패: {_se}")
-                            else:
-                                st.session_state._sc_dirty = True
-                                st.toast("✅ 우리나라 평균(STANDARD) 저장 완료!")
+                                st.toast(f"✅ {_sv_label} 저장 완료!")
                                 st.rerun()
 
                 # 저장된 시나리오 불러와 비교표 — session_state 캐시로 매 rerun마다 HTTP 요청 방지
@@ -2677,6 +2941,24 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 _snap_map = {s['label']: s for s in (_snaps or [])} if not _snaps_err else {}
                 st.divider()
                 st.markdown("#### 📊 시나리오 비교")
+
+                # 관리자: 저장된 시나리오 삭제 버튼
+                if st.session_state.get('is_admin') and _snap_map:
+                    _del_labels = [l for l in ['STANDARD', 'GOOD', 'BEST'] if l in _snap_map]
+                    if _del_labels:
+                        _dcols = st.columns(len(_del_labels) + 1)
+                        _dcols[0].caption("🗑️ 시나리오 삭제")
+                        for _di, _dlbl in enumerate(_del_labels):
+                            with _dcols[_di + 1]:
+                                if st.button(f"❌ {_dlbl} 삭제", key=f'btn_del_{_dlbl}',
+                                             use_container_width=True):
+                                    _dr, _de = call_api(f"/scenarios/{_dlbl}", method="DELETE")
+                                    if _de:
+                                        st.error(f"삭제 실패: {_de}")
+                                    else:
+                                        st.session_state._sc_dirty = True
+                                        st.toast(f"🗑️ {_dlbl} 삭제 완료!")
+                                        st.rerun()
 
                 # STANDARD: DB에서 로드, 없으면 기본값 사용
                 _std = _snap_map.get('STANDARD')
@@ -2725,7 +3007,24 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     '연금합계(월)':     fmt_won(_std_val('연금합계', 2_040_000)),
                     '연금 적립금':      fmt_won(_std_total_bal),        # 사용자 맞춤 계산
                     '연금 평균수익률':  f"{_std_val('연금_평균수익률', 3.9)}%",
+                    '지출_생활비':      fmt_won(_std_val('지출_생활비', 2_700_000)),
+                    '지출_의료비':      fmt_won(_std_val('지출_의료비',   500_000)),
+                    '지출_여가':        fmt_won(_std_val('지출_여가',     700_000)),
+                    '지출_자녀부모':    fmt_won(_std_val('지출_자녀부모', 400_000)),
+                    '지출_보험료':      fmt_won(_std_val('지출_보험료',   250_000)),
+                    '지출_기타':        fmt_won(_std_val('지출_기타',     200_000)),
+                    '지출_대출상환':    fmt_won(_std_val('지출_대출상환',       0)),
+                    '지출_임차료':      fmt_won(_std_val('지출_임차료',         0)),
                 }
+
+                _cur_exp_living    = int(st.session_state.get('inp_living',    270)) * 10000
+                _cur_exp_medical   = int(st.session_state.get('inp_medical',    50)) * 10000
+                _cur_exp_leisure   = int(st.session_state.get('inp_leisure',    70)) * 10000
+                _cur_exp_family    = int(st.session_state.get('inp_family',     40)) * 10000
+                _cur_exp_insurance = int(st.session_state.get('inp_insurance',  25)) * 10000
+                _cur_exp_other     = int(st.session_state.get('inp_other',      20)) * 10000
+                _cur_exp_debt      = int(cf.get('월지출_대출상환', 0))
+                _cur_exp_rent      = int(cf.get('월지출_임차료', 0))
 
                 _cols_hdr = ['항목', '현재 상황', '🇰🇷 우리나라 평균']
                 _cols_data = {
@@ -2741,26 +3040,45 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     '연금합계(월)':    [fmt_won(_pension_total),                        _KR_AVG['연금합계(월)']],
                     '연금 적립금':     [fmt_won(_pension_bal_total),                    _KR_AVG['연금 적립금']],
                     '연금 평균수익률': [f"{_pension_avg_return}%",                      _KR_AVG['연금 평균수익률']],
+                    '── 지출 세부 ──': ['',                                             ''],
+                    '생활비':          [fmt_won(_cur_exp_living),                       _KR_AVG['지출_생활비']],
+                    '의료비':          [fmt_won(_cur_exp_medical),                      _KR_AVG['지출_의료비']],
+                    '여가/취미':       [fmt_won(_cur_exp_leisure),                      _KR_AVG['지출_여가']],
+                    '자녀/부모 지원':  [fmt_won(_cur_exp_family),                       _KR_AVG['지출_자녀부모']],
+                    '보험료':          [fmt_won(_cur_exp_insurance),                    _KR_AVG['지출_보험료']],
+                    '기타':            [fmt_won(_cur_exp_other),                        _KR_AVG['지출_기타']],
+                    '대출 상환':       [fmt_won(_cur_exp_debt),                         _KR_AVG['지출_대출상환']],
+                    '임차료':          [fmt_won(_cur_exp_rent),                         _KR_AVG['지출_임차료']],
                 }
                 for _lbl in ['GOOD', 'BEST']:
                     _emoji = '📌 GOOD CASE' if _lbl == 'GOOD' else '🏆 BEST CASE'
                     if _lbl in _snap_map:
                         _s = _snap_map[_lbl]
+                        _sd = _s.get('detail', {})
                         _cols_hdr.append(_emoji)
                         _cols_data['은퇴연령'].append(f"{_s['retire_age']}세")
                         _cols_data['월 수입'].append(fmt_won(_s['monthly_income']))
                         _cols_data['월 지출'].append(fmt_won(_s['monthly_expense']))
                         _cols_data['월 잉여'].append(fmt_won(_s['monthly_surplus']))
                         _cols_data['순자산'].append(fmt_won(_s['total_assets']))
-                        _cols_data['금융자산'].append(fmt_won(_asset_num(_s['detail'].get('금융자산', 0))))
-                        _cols_data['부동산'].append(fmt_won(_asset_num(_s['detail'].get('부동산', 0))))
-                        _cols_data['국민연금(월)'].append(fmt_won(_s['detail'].get('국민연금', 0)))
-                        _cols_data['사적연금(월)'].append(fmt_won(_s['detail'].get('사적연금', 0)))
-                        _cols_data['연금합계(월)'].append(fmt_won(_s['detail'].get('연금합계', 0)))
+                        _cols_data['금융자산'].append(fmt_won(_asset_num(_sd.get('금융자산', 0))))
+                        _cols_data['부동산'].append(fmt_won(_asset_num(_sd.get('부동산', 0))))
+                        _cols_data['국민연금(월)'].append(fmt_won(_sd.get('국민연금', 0)))
+                        _cols_data['사적연금(월)'].append(fmt_won(_sd.get('사적연금', 0)))
+                        _cols_data['연금합계(월)'].append(fmt_won(_sd.get('연금합계', 0)))
                         _s_yrs_ret = max(0, _s.get('retire_age', _retire_age_cur) - _cur_age_u)
-                        _s_pv = _pen_pv_total(_s.get('detail', {}).get('연금상세', {}), _s_yrs_ret)
+                        _s_pv = _pen_pv_total(_sd.get('연금상세', {}), _s_yrs_ret)
                         _cols_data['연금 적립금'].append(fmt_won(_s_pv))
-                        _cols_data['연금 평균수익률'].append(f"{_s['detail'].get('연금_평균수익률', 0)}%")
+                        _cols_data['연금 평균수익률'].append(f"{_sd.get('연금_평균수익률', 0)}%")
+                        _cols_data['── 지출 세부 ──'].append('')
+                        _cols_data['생활비'].append(fmt_won(_sd.get('지출_생활비', 0)))
+                        _cols_data['의료비'].append(fmt_won(_sd.get('지출_의료비', 0)))
+                        _cols_data['여가/취미'].append(fmt_won(_sd.get('지출_여가', 0)))
+                        _cols_data['자녀/부모 지원'].append(fmt_won(_sd.get('지출_자녀부모', 0)))
+                        _cols_data['보험료'].append(fmt_won(_sd.get('지출_보험료', 0)))
+                        _cols_data['기타'].append(fmt_won(_sd.get('지출_기타', 0)))
+                        _cols_data['대출 상환'].append(fmt_won(_sd.get('지출_대출상환', 0)))
+                        _cols_data['임차료'].append(fmt_won(_sd.get('지출_임차료', 0)))
 
                 _df_cmp = pd.DataFrame(
                     [[k] + v for k, v in _cols_data.items()],
@@ -2951,9 +3269,10 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         _g_ages  = [r['나이'] for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
                         _g_incs  = [round(max(0, r.get('월수입', 0) - r.get('월세금', 0)) / 10000)
                                     for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
-                        _g_base_exp = cf.get('월지출_합계', 0)
-                        _g_exps  = [round(_g_base_exp * _age_spend_rate(age) * (1 + _inf_rate) ** i / 10000)
-                                    for i, age in enumerate(_g_ages)]
+                        _g_base_exp  = cf.get('월지출_합계', 0)
+                        _g_cur_age   = _cage_rows_g[0]['나이'] if _cage_rows_g else _retire_age_cur
+                        _g_exps  = [round(_g_base_exp * _age_spend_rate(age) * (1 + _inf_rate) ** max(0, age - _g_cur_age) / 10000)
+                                    for age in _g_ages]
 
                         _fig1 = go.Figure()
 
@@ -3023,15 +3342,17 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                                 customdata=[_debt_man] * len(_g_ages),
                             ))
                         if _g_ages and _g_rent > 0:
-                            _rent_man = round(_g_rent / 10000)
+                            _rent_base = round(_g_rent / 10000)
+                            _rent_cur_age = _cage_rows_g[0]['나이'] if _cage_rows_g else _g_ages[0]
+                            _g_rents = [round(_rent_base * (1 + _inf_rate) ** max(0, age - _rent_cur_age)) for age in _g_ages]
                             _fig1.add_trace(go.Scatter(
                                 x=_g_ages,
-                                y=[-_rent_man] * len(_g_ages),
-                                name=f'임차료 (-{_rent_man:,}만)',
+                                y=[-v for v in _g_rents],
+                                name=f'임차료 (물가반영, 기준 -{_rent_base:,}만)',
                                 mode='lines',
                                 line=dict(color='#ab47bc', width=1.8, dash='dashdot'),
                                 hovertemplate='%{x}세 임차료: <b>-%{customdata:,}만원</b><extra>임차료</extra>',
-                                customdata=[_rent_man] * len(_g_ages),
+                                customdata=_g_rents,
                             ))
 
                         _fig1.add_hline(y=0, line_dash='dash',
@@ -3114,7 +3435,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         )
                         st.plotly_chart(_fig3, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
 
-                # 연금 상세보기 (_std_pen 은 위에서 사용자 맞춤 계산 완료)
+                # 연금 상세보기 — 위 비교표의 멀티셀렉트 선택에 연동
                 with st.expander("📋 연금 상세보기", expanded=False):
                     _det_grps = ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']
 
@@ -3138,17 +3459,21 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         v = _grp_val(d, grp, '수익률')
                         return f"{v}%" if v else '-'
 
-                    # 열 헤더: 현재 + 우리나라 평균 고정, GOOD/BEST는 저장된 경우에만
-                    _det_hdr = ['연금 종류', '나 (현재)', '🇰🇷 우리나라 평균']
-                    if 'GOOD' in _snap_map: _det_hdr.append('📌 GOOD')
-                    if 'BEST' in _snap_map: _det_hdr.append('🏆 BEST')
+                    # 비교표 멀티셀렉트와 동일한 선택 반영
+                    _d_show_std  = '🇰🇷 우리나라 평균' in _sel
+                    _d_show_good = '📌 GOOD CASE' in _sel and 'GOOD' in _snap_map
+                    _d_show_best = '🏆 BEST CASE' in _sel and 'BEST' in _snap_map
+
+                    _det_hdr = ['연금 종류', '나 (현재)']
+                    if _d_show_std:  _det_hdr.append('🇰🇷 우리나라 평균')
+                    if _d_show_good: _det_hdr.append('📌 GOOD')
+                    if _d_show_best: _det_hdr.append('🏆 BEST')
 
                     def _det_row(grp, key, fmt_fn):
-                        row = [grp,
-                               fmt_fn(_user_pen_adj, grp, key),   # 현재 (PV)
-                               fmt_fn(_std_pen, grp, key)]         # 우리나라 평균 (PV)
-                        if 'GOOD' in _snap_map: row.append(fmt_fn(_good_det, grp, key))
-                        if 'BEST' in _snap_map: row.append(fmt_fn(_best_det, grp, key))
+                        row = [grp, fmt_fn(_user_pen_adj, grp, key)]
+                        if _d_show_std:  row.append(fmt_fn(_std_pen, grp, key))
+                        if _d_show_good: row.append(fmt_fn(_good_det, grp, key))
+                        if _d_show_best: row.append(fmt_fn(_best_det, grp, key))
                         return row
 
                     st.markdown("**적립금 현황** (현가평가연금액)")
@@ -3164,15 +3489,17 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     )), unsafe_allow_html=True)
 
                     st.markdown("**연 수익률**")
-                    _det_hdr_rt = ['연금 종류', '나 (현재)', '🇰🇷 우리나라 평균']
-                    if 'GOOD' in _snap_map: _det_hdr_rt.append('📌 GOOD')
-                    if 'BEST' in _snap_map: _det_hdr_rt.append('🏆 BEST')
+                    _det_hdr_rt = ['연금 종류', '나 (현재)']
+                    if _d_show_std:  _det_hdr_rt.append('🇰🇷 우리나라 평균')
+                    if _d_show_good: _det_hdr_rt.append('📌 GOOD')
+                    if _d_show_best: _det_hdr_rt.append('🏆 BEST')
                     _rows_rt = []
                     for _g in _det_grps:
                         _v = _grp_val(_pension_by_group, _g, '수익률')
-                        _row_rt = [_g, f"{_v}%" if _v else '-', _fr(_std_pen, _g)]
-                        if 'GOOD' in _snap_map: _row_rt.append(_fr(_good_det_raw, _g))
-                        if 'BEST' in _snap_map: _row_rt.append(_fr(_best_det_raw, _g))
+                        _row_rt = [_g, f"{_v}%" if _v else '-']
+                        if _d_show_std:  _row_rt.append(_fr(_std_pen, _g))
+                        if _d_show_good: _row_rt.append(_fr(_good_det_raw, _g))
+                        if _d_show_best: _row_rt.append(_fr(_best_det_raw, _g))
                         _rows_rt.append(_row_rt)
                     st.markdown(_rtbl(pd.DataFrame(_rows_rt, columns=_det_hdr_rt)),
                                 unsafe_allow_html=True)
@@ -3475,7 +3802,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                 st.caption("※ 본 컨설팅은 참고용 정보이며, 실제 투자 결정은 공인 재무설계사(CFP)와 상담하시기 바랍니다.")
 
         # ----------------------------------------------------------
-        # 탭 6: 관리자 (is_admin=True 일 때만 탭 존재)
+        # 탭 7: 관리자 (is_admin=True 일 때만 탭 존재)
         # ----------------------------------------------------------
         if st.session_state.get('is_admin'):
             with tabs[6]:
@@ -4114,6 +4441,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                 _cf_vehicle = cf.get('월지출_차량', 0)
                 _cf_debt    = cf.get('월지출_대출상환', 0)
                 _cf_rent    = cf.get('월지출_임차료', 0)
+                _rent_base_age = _age_rows[0]['나이'] if _age_rows else _retire_age
 
                 _prev_total = 0
                 for _row in _age_rows:
@@ -4127,7 +4455,7 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                         _tax_total = _row.get('월세금', 0)
                         _delta = _total - _prev_total
 
-                        _yrs = max(0, _row['나이'] - _retire_age)
+                        _yrs = max(0, _row['나이'] - _rent_base_age)
                         _inf_mult  = (1 + _inf_rate) ** _yrs
                         _age_mult  = _exp_mult(_row['나이'])
                         _exp_living    = round(_cf_living    * _inf_mult * _age_mult)
@@ -4138,7 +4466,9 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                         _exp_other     = round(_other_won    * _inf_mult * _age_mult)
                         _exp_member    = round(_cf_member    * _inf_mult * _age_mult)
                         _exp_vehicle   = round(_cf_vehicle   * _inf_mult * _age_mult)
-                        _exp_total     = _exp_living + _exp_medical + _exp_leisure + _exp_family + _exp_insurance + _exp_other + _exp_member + _exp_vehicle + _tax_total + _cf_debt + _cf_rent
+                        _rent_inf_mult = (1 + _inf_rate) ** max(0, _row['나이'] - _rent_base_age)
+                        _exp_rent      = round(_cf_rent      * _rent_inf_mult)
+                        _exp_total     = _exp_living + _exp_medical + _exp_leisure + _exp_family + _exp_insurance + _exp_other + _exp_member + _exp_vehicle + _tax_total + _cf_debt + _exp_rent
                         _surplus     = _total - _exp_total
 
                         _sur_sign = "+" if _surplus >= 0 else ""
@@ -4204,8 +4534,9 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                     st.markdown(f"- 차량 유지비: **{fmt_won(_exp_vehicle)}**")
                                 if _cf_debt:
                                     st.markdown(f"- 대출 월상환금: **{fmt_won(_cf_debt)}**")
-                                if _cf_rent:
-                                    st.markdown(f"- 월세 임차료: **{fmt_won(_cf_rent)}**")
+                                if _exp_rent:
+                                    _rent_note = f"{_inf_label})" if _inf_label else ""
+                                    st.markdown(f"- 월세 임차료{_rent_note}: **{fmt_won(_exp_rent)}**")
                                 if _itax:
                                     st.markdown(f"- 소득세: **{fmt_won(_itax)}**")
                                 if _hi:
@@ -5111,14 +5442,11 @@ else:
             if _retry <= 2:
                 st.rerun()
             else:
-                # 3회 실패 → 국가평균 임시 모드 (profile_id=None 유지해 재로그인 시 재시도)
+                # 3회 실패 → 에러 표시. _apply_national_avg 호출 금지 (내 정보 보호)
+                # 신규 사용자가 아닌 한 여기서 필드를 덮어쓰면 안 됨.
                 st.session_state.pop('_prof_load_retry', None)
-                _default_age = st.session_state.get('_reg_age', 55)
-                _apply_national_avg(int(_default_age))
-                st.session_state.onboarding_done = True
-                st.session_state.analysis_result = None
-                # profile_id=0 설정하지 않음 → 저장 시 POST가 아닌 PUT 체크 경로 유지
                 st.session_state.profile_id = 0
+                st.session_state['_profile_api_error'] = True  # 에러 배너 표시용
                 st.rerun()
         elif _prof and _prof.get('id'):
             st.session_state.pop('_prof_load_retry', None)

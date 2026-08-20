@@ -73,7 +73,7 @@ reportHeightDeferred();"""
     --input-bdr:   #d0d0e8;
     --grid-line:   #f0f0f8;
     --axis-text:   #9090b0;
-    --zero-line:   #ddddee;
+    --zero-line:   #9090b8;
     --tt-bg:       rgba(255,255,255,0.97);
     --tt-border:   #e0e0f0;
     --tt-age:      #7B2FFF;
@@ -103,7 +103,7 @@ reportHeightDeferred();"""
       --input-bdr:   #28283E;
       --grid-line:   #12121E;
       --axis-text:   #505078;
-      --zero-line:   #222230;
+      --zero-line:   #5858a0;
       --tt-bg:       rgba(10,10,20,0.96);
       --tt-border:   #28283E;
       --tt-age:      #9B5FFF;
@@ -299,9 +299,9 @@ reportHeightDeferred();"""
     fill: none;
     pointer-events: none;
   }}
-  .zero-line {{          /* 기준 0선 — 얇게 */
+  .zero-line {{          /* 기준 0선 */
     stroke: var(--zero-line);
-    stroke-width: 0.8px;
+    stroke-width: 1.8px;
   }}
   .retire-line {{        /* 은퇴선 — 참조선 */
     stroke: var(--retire-clr);
@@ -351,23 +351,40 @@ reportHeightDeferred();"""
   /* ─── 툴팁 ─── */
   #tooltip {{
     position: fixed;
-    pointer-events: none;
+    pointer-events: auto;
     background: var(--tt-bg);
     border: 1px solid var(--tt-border);
     border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 0.78rem;
-    line-height: 1.7;
-    max-width: 260px;
+    padding: clamp(6px, 0.8vw + 2px, 10px) clamp(9px, 1vw + 4px, 14px);
+    font-size: clamp(0.60rem, 0.35rem + 1vw, 0.78rem);
+    line-height: 1.6;
+    max-width: clamp(180px, 38vw, 260px);
+    max-height: 78vh;
+    overflow-y: auto;
     display: none;
     z-index: 999;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   }}
+  #tooltip .tt-toggle {{
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 3px 0;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border);
+    color: var(--tt-key);
+    font-size: clamp(0.54rem, 0.24rem + 1vw, 0.72rem);
+    cursor: pointer;
+    text-align: center;
+    opacity: 0.75;
+  }}
+  #tooltip .tt-toggle:hover {{ opacity: 1; color: var(--tt-age); }}
   #tooltip .tt-age {{
     font-weight: 700;
     color: var(--tt-age);
     margin-bottom: 4px;
-    font-size: 0.85rem;
+    font-size: clamp(0.66rem, 0.42rem + 1vw, 0.85rem);
   }}
   #tooltip .tt-row {{
     display: flex;
@@ -571,14 +588,15 @@ function computeData() {{
     const taxVal = -(tax[age] || 0);
     const hiVal  = -(hi[age] || 0);
 
-    const yrs      = Math.max(0, aNum - retireAge);
+    const yrs      = Math.max(0, aNum - (RAW.ages[0] || retireAge));
     const infMult  = Math.pow(1 + inflRate / 100, yrs);
     const ageMult  = expMult(aNum);
 
-    // 가시 고정지출: hiddenKeys에 포함된 항목은 제외 → 총지출·잉여 동적 반영
+    const rentInfYrs = Math.max(0, aNum - (RAW.ages[0] || retireAge));
+    const rentExp  = rawRent * Math.pow(1 + inflRate / 100, rentInfYrs); // 현시점부터 물가 반영
     const visDebt  = hiddenKeys.has('대출상환금') ? 0 : rawDebt;
-    const visRent  = hiddenKeys.has('임차료')     ? 0 : rawRent;
-    const fixedExp = rawDebt + rawRent;
+    const visRent  = hiddenKeys.has('임차료')     ? 0 : rentExp;
+    const fixedExp = rawDebt + rentExp;
 
     const livingExp   = livingBase   * infMult * ageMult;
     const medicalExp  = medicalBase  * infMult * medicalMult(aNum);
@@ -606,7 +624,7 @@ function computeData() {{
       contribMap, taxVal, hiVal,
       livingExp, medicalExp, leisureExp, familyExp, insExp, otherExp, residualExp,
       fixedExp,
-      visDebt, visRent,
+      visDebt, visRent, rentExp,
       expense,
       surplus: totalIncome - expense,
     }};
@@ -640,6 +658,13 @@ function draw() {{
   const W = getWidth() - margin.left - margin.right;
   const H = getHeight();
 
+  // 호버 배경 (z-order 맨 아래 — 합계만 표시, 세부항목 없음)
+  g.append('rect').attr('class', 'hover-overlay')
+    .attr('width', W).attr('height', H)
+    .attr('fill', 'transparent')
+    .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
+    .on('mouseleave', hideTooltip);
+
   const ages = data.map(d => d.age);
   const srcKeys = RAW.income_sources;  // 항상 전체 키 (위치 변동 방지)
   const allContribKeys = [...new Set(RAW.contrib_items.map(c => c.label))];
@@ -670,8 +695,8 @@ function draw() {{
     yMax = Math.max(yMax, d.stackTotal);
     // 가시 고정밴드 + 가시 기여금/세금/건보료 깊이
     const visDebtD = hiddenKeys.has('대출상환금') ? 0 : (RAW.debt_man || 0);
-    const visRentD = hiddenKeys.has('임차료')     ? 0 : (RAW.rent_man || 0);
     const visCtbD  = allContribKeys.reduce((s, k) => hiddenKeys.has(k) ? s : s + Math.abs(d.contribMap[k] || 0), 0)
+                   + (hiddenKeys.has('임차료')      ? 0 : d.rentExp)
                    + (hiddenKeys.has('소득세')      ? 0 : Math.abs(d.taxVal))
                    + (hiddenKeys.has('건보료')      ? 0 : Math.abs(d.hiVal))
                    + (hiddenKeys.has('의료비')      ? 0 : d.medicalExp)
@@ -680,7 +705,7 @@ function draw() {{
                    + (hiddenKeys.has('자녀/부모지원') ? 0 : d.familyExp)
                    + (hiddenKeys.has('보험료')      ? 0 : d.insExp)
                    + (hiddenKeys.has('기타')        ? 0 : d.otherExp);
-    yMin = Math.min(yMin, -(visDebtD + visRentD + visCtbD), d.surplus);
+    yMin = Math.min(yMin, -(visDebtD + visCtbD), d.surplus);
   }});
   yMax = yMax * 1.15 || 100;
   yMin = yMin * 1.2 || -50;
@@ -748,12 +773,13 @@ function draw() {{
     stacked.forEach(layer => {{
       const isHidden = hiddenKeys.has(layer.key);
       const col = colorMap[layer.key] || '#aaa';
+      const _ikey = layer.key;
       incAreaG.append('path')
         .datum(layer)
         .attr('fill', col)
         .attr('opacity', isHidden ? 0.02 : 0.18)
         .attr('d', areaGen)
-        .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
+        .on('mousemove', function(event) {{ showTooltip(event, data, xScale, _ikey); }})
         .on('mouseleave', hideTooltip);
       incAreaG.append('path')
         .datum(layer)
@@ -761,7 +787,7 @@ function draw() {{
         .attr('stroke', col)
         .attr('opacity', isHidden ? 0.06 : 0.9)
         .attr('d', lineGenArea)
-        .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
+        .on('mousemove', function(event) {{ showTooltip(event, data, xScale, _ikey); }})
         .on('mouseleave', hideTooltip);
     }});
   }}
@@ -772,25 +798,20 @@ function draw() {{
     // 간략보기: 세부 채우기/선 없이 합계선만 사용
   }} else {{
 
-  // 대출상환금·임차료: 독립 고정 밴드 (0 바로 아래, d3.stack 외부)
+  // 대출상환금: 독립 고정 밴드 (0 바로 아래, 계약금액이므로 물가 미반영)
   const rawDebtV = RAW.debt_man || 0;
-  const rawRentV = RAW.rent_man || 0;
-  // hiddenKeys에 포함된 항목은 밴드 숨김
   const debtV = hiddenKeys.has('대출상환금') ? 0 : rawDebtV;
-  const rentV = hiddenKeys.has('임차료')     ? 0 : rawRentV;
-  const fixedTop   = 0;
-  const debtBottom = -(debtV);
-  const rentBottom = -(debtV + rentV);
+  const rentBottom = -(debtV);   // 임차료는 ctbStack으로 이동
 
   if (rawDebtV > 0) {{
-    const dy0 = yScale(fixedTop);
+    const dy0 = yScale(0);
     const dy1 = yScale(-(rawDebtV));
     const isDebtHidden = hiddenKeys.has('대출상환금');
     g.append('rect').attr('class', 'fixed-band')
-      .attr('x', 0).attr('y', isDebtHidden ? dy0 : dy0)
+      .attr('x', 0).attr('y', dy0)
       .attr('width', W).attr('height', isDebtHidden ? 0 : dy1 - dy0)
       .attr('fill', '#ff7043').attr('opacity', isDebtHidden ? 0 : 0.10)
-      .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
+      .on('mousemove', function(event) {{ showTooltip(event, data, xScale, '대출상환금'); }})
       .on('mouseleave', hideTooltip);
     if (!isDebtHidden) {{
       g.append('line').attr('class', 'ctb-neg-line')
@@ -800,31 +821,14 @@ function draw() {{
         .attr('stroke-dasharray', '4,3').attr('stroke-opacity', 0.85);
     }}
   }}
-  if (rawRentV > 0) {{
-    const ry0 = yScale(debtBottom);
-    const ry1 = yScale(-(debtV + rawRentV));
-    const isRentHidden = hiddenKeys.has('임차료');
-    g.append('rect').attr('class', 'fixed-band')
-      .attr('x', 0).attr('y', ry0)
-      .attr('width', W).attr('height', isRentHidden ? 0 : ry1 - ry0)
-      .attr('fill', '#ab47bc').attr('opacity', isRentHidden ? 0 : 0.10)
-      .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
-      .on('mouseleave', hideTooltip);
-    if (!isRentHidden) {{
-      g.append('line').attr('class', 'ctb-neg-line')
-        .attr('x1', 0).attr('x2', W)
-        .attr('y1', ry1).attr('y2', ry1)
-        .attr('stroke', '#ab47bc').attr('stroke-width', 1)
-        .attr('stroke-dasharray', '4,3').attr('stroke-opacity', 0.85);
-    }}
-  }}
 
   // 기여금·세금·건보료: d3.stack (대출/임차료 아래부터 시작)
   // 세부 지출 스택: 납입·세금·건보료 → 의료비 → 나머지 생활지출
-  const ctbStackKeys = [...allContribKeys, '소득세', '건보료', '의료비', '기타', '보험료', '자녀/부모지원', '여가/취미', '생활비'];
-  const ctbBaseVal   = rentBottom;   // 가시 고정밴드 하단에서 스택 시작
+  const ctbStackKeys = ['임차료', ...allContribKeys, '소득세', '건보료', '의료비', '기타', '보험료', '자녀/부모지원', '여가/취미', '생활비'];
+  const ctbBaseVal   = rentBottom;   // 대출상환금 하단에서 스택 시작
   const ctbStackData = data.map(d => {{
     const row = {{ age: d.age }};
+    row['임차료'] = hiddenKeys.has('임차료') ? 0 : -d.rentExp;  // 물가상승 반영
     allContribKeys.forEach(k => {{ row[k] = d.contribMap[k] || 0; }});
     row['소득세']       = d.taxVal;
     row['건보료']       = d.hiVal;
@@ -877,13 +881,14 @@ function draw() {{
       const hasVal = layer.some(pt => Math.abs(pt[1] - pt[0]) > 0.01);
       if (!hasVal) return;
       const isHidden = hiddenKeys.has(layer.key);
+      const _ckey = layer.key;
       g.append('path')
         .datum(layer)
         .attr('class', 'contrib-areas')
         .attr('fill', col)
         .attr('opacity', isHidden ? 0.02 : 0.15)
         .attr('d', ctbAreaGen)
-        .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
+        .on('mousemove', function(event) {{ showTooltip(event, data, xScale, _ckey); }})
         .on('mouseleave', hideTooltip);
       if (!isHidden) {{
         g.append('path')
@@ -891,7 +896,7 @@ function draw() {{
           .attr('class', 'ctb-neg-line')
           .attr('stroke', col)
           .attr('d', ctbLineGen)
-          .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
+          .on('mousemove', function(event) {{ showTooltip(event, data, xScale, _ckey); }})
           .on('mouseleave', hideTooltip);
       }}
     }});
@@ -953,72 +958,123 @@ function draw() {{
     .attr('x', rx + 7).attr('y', 22)
     .text('은퇴 ' + retireAge + '세');
 
-  // 호버 오버레이
-  g.selectAll('.hover-overlay').remove();
-  g.append('rect').attr('class', 'hover-overlay')
-    .attr('width', W).attr('height', H)
-    .attr('fill', 'transparent')
-    .on('mousemove', function(event) {{ showTooltip(event, data, xScale); }})
-    .on('mouseleave', hideTooltip);
-
   updateStatusBar(data);
 }}
 
 // ─── 툴팁 ───
 const tooltip = document.getElementById('tooltip');
-function showTooltip(event, data, xScale) {{
+let _ttShowAll  = false;   // 전체보기 토글 상태
+let _ttLast     = null;    // 마지막 showTooltip 호출 인자
+let _ttHideTimer = null;   // 지연 숨김 타이머
+
+// 마우스가 툴팁 위로 이동하면 숨김 취소
+tooltip.addEventListener('mouseenter', () => {{
+  if (_ttHideTimer) {{ clearTimeout(_ttHideTimer); _ttHideTimer = null; }}
+}});
+tooltip.addEventListener('mouseleave', () => {{ tooltip.style.display = 'none'; }});
+
+function showTooltip(event, data, xScale, hoverKey) {{
+  if (_ttHideTimer) {{ clearTimeout(_ttHideTimer); _ttHideTimer = null; }}
+  _ttLast = {{event, data, xScale, hoverKey}};
+  _renderTooltip(event, data, xScale, hoverKey);
+}}
+
+function _renderTooltip(event, data, xScale, hoverKey) {{
   const [mx] = d3.pointer(event, g.node());
   const age = Math.round(xScale.invert(mx));
   const d = data.find(r => r.age === age);
   if (!d) return;
 
+  const incomeKeys = new Set(RAW.income_sources);
+  const isIncKey = hoverKey && incomeKeys.has(hoverKey);
+  const isExpKey = hoverKey && !isIncKey;
+
   let html = `<div class="tt-age">${{age}}세</div>`;
-  const incEntries = Object.entries(d.srcMap).filter(([k, v]) => v > 0);
-  if (incEntries.length) {{
-    html += `<div class="tt-div"></div>`;
+  html += `<div class="tt-div"></div>`;
+
+  if (_ttShowAll) {{
+    // ── 전체보기: 모든 수입 항목
+    const incEntries = Object.entries(d.srcMap).filter(([k, v]) => v > 0);
     incEntries.forEach(([k, v]) => {{
       html += `<div class="tt-row"><span class="tt-key">${{k}}</span><span class="tt-val">${{fmt(v)}}</span></div>`;
     }});
-    html += `<div class="tt-row"><span class="tt-key" style="font-weight:700">수입 합계</span><span class="tt-val" style="color:var(--tt-age)">${{fmt(d.totalIncome)}}</span></div>`;
+  }} else if (isIncKey) {{
+    // ── 항목별: 호버된 수입 항목만
+    const v = d.srcMap[hoverKey] || 0;
+    if (v > 0) html += `<div class="tt-row"><span class="tt-key">${{hoverKey}}</span><span class="tt-val">${{fmt(v)}}</span></div>`;
   }}
+  html += `<div class="tt-row"><span class="tt-key" style="font-weight:700">수입 합계</span><span class="tt-val" style="color:var(--tt-age)">${{fmt(d.totalIncome)}}</span></div>`;
+
   html += `<div class="tt-div"></div>`;
-  if (!hiddenKeys.has('생활비')   && d.livingExp  > 0) html += `<div class="tt-row"><span class="tt-key">생활비</span><span class="tt-val tt-neg">${{fmt(d.livingExp)}}</span></div>`;
-  if (!hiddenKeys.has('의료비')   && d.medicalExp > 0) html += `<div class="tt-row"><span class="tt-key">의료비 (×${{medicalMult(age).toFixed(1)}})</span><span class="tt-val tt-neg">${{fmt(d.medicalExp)}}</span></div>`;
-  if (!hiddenKeys.has('여가/취미') && d.leisureExp > 0) html += `<div class="tt-row"><span class="tt-key">여가/취미</span><span class="tt-val tt-neg">${{fmt(d.leisureExp)}}</span></div>`;
-  if (!hiddenKeys.has('자녀/부모지원') && d.familyExp > 0) html += `<div class="tt-row"><span class="tt-key">자녀/부모 지원</span><span class="tt-val tt-neg">${{fmt(d.familyExp)}}</span></div>`;
-  if (!hiddenKeys.has('보험료')   && d.insExp     > 0) html += `<div class="tt-row"><span class="tt-key">보험료</span><span class="tt-val tt-neg">${{fmt(d.insExp)}}</span></div>`;
-  if (!hiddenKeys.has('기타')     && d.otherExp   > 0) html += `<div class="tt-row"><span class="tt-key">기타</span><span class="tt-val tt-neg">${{fmt(d.otherExp)}}</span></div>`;
-  if (RAW.debt_man > 0 && !hiddenKeys.has('대출상환금')) html += `<div class="tt-row"><span class="tt-key">대출 월상환금</span><span class="tt-val tt-neg">${{fmt(RAW.debt_man)}}</span></div>`;
-  if (RAW.rent_man > 0 && !hiddenKeys.has('임차료'))     html += `<div class="tt-row"><span class="tt-key">월세 임차료</span><span class="tt-val tt-neg">${{fmt(RAW.rent_man)}}</span></div>`;
+  if (_ttShowAll) {{
+    // ── 전체보기: 모든 지출 항목
+    if (!hiddenKeys.has('생활비')        && d.livingExp  > 0) html += `<div class="tt-row"><span class="tt-key">생활비</span><span class="tt-val tt-neg">${{fmt(d.livingExp)}}</span></div>`;
+    if (!hiddenKeys.has('의료비')        && d.medicalExp > 0) html += `<div class="tt-row"><span class="tt-key">의료비 (×${{medicalMult(age).toFixed(1)}})</span><span class="tt-val tt-neg">${{fmt(d.medicalExp)}}</span></div>`;
+    if (!hiddenKeys.has('여가/취미')     && d.leisureExp > 0) html += `<div class="tt-row"><span class="tt-key">여가/취미</span><span class="tt-val tt-neg">${{fmt(d.leisureExp)}}</span></div>`;
+    if (!hiddenKeys.has('자녀/부모지원') && d.familyExp  > 0) html += `<div class="tt-row"><span class="tt-key">자녀/부모 지원</span><span class="tt-val tt-neg">${{fmt(d.familyExp)}}</span></div>`;
+    if (!hiddenKeys.has('보험료')        && d.insExp     > 0) html += `<div class="tt-row"><span class="tt-key">보험료</span><span class="tt-val tt-neg">${{fmt(d.insExp)}}</span></div>`;
+    if (!hiddenKeys.has('기타')          && d.otherExp   > 0) html += `<div class="tt-row"><span class="tt-key">기타</span><span class="tt-val tt-neg">${{fmt(d.otherExp)}}</span></div>`;
+    if (RAW.debt_man > 0 && !hiddenKeys.has('대출상환금'))    html += `<div class="tt-row"><span class="tt-key">대출 월상환금</span><span class="tt-val tt-neg">${{fmt(RAW.debt_man)}}</span></div>`;
+    if (RAW.rent_man > 0 && !hiddenKeys.has('임차료'))        html += `<div class="tt-row"><span class="tt-key">월세 임차료</span><span class="tt-val tt-neg">${{fmt(d.rentExp)}}</span></div>`;
+    const contribs = Object.entries(d.contribMap).filter(([k, v]) => v !== 0 && !hiddenKeys.has(k));
+    if (d.taxVal && !hiddenKeys.has('소득세')) html += `<div class="tt-row"><span class="tt-key">소득세</span><span class="tt-val tt-neg">${{fmt(Math.abs(d.taxVal))}}</span></div>`;
+    if (d.hiVal  && !hiddenKeys.has('건보료')) html += `<div class="tt-row"><span class="tt-key">건보료</span><span class="tt-val tt-neg">${{fmt(Math.abs(d.hiVal))}}</span></div>`;
+    contribs.forEach(([k, v]) => {{
+      html += `<div class="tt-row"><span class="tt-key">${{k}}</span><span class="tt-val tt-neg">${{fmt(Math.abs(v))}}</span></div>`;
+    }});
+  }} else if (isExpKey) {{
+    // ── 항목별: 호버된 지출 항목만
+    switch (hoverKey) {{
+      case '생활비':        if (d.livingExp  > 0) html += `<div class="tt-row"><span class="tt-key">생활비</span><span class="tt-val tt-neg">${{fmt(d.livingExp)}}</span></div>`; break;
+      case '의료비':        if (d.medicalExp > 0) html += `<div class="tt-row"><span class="tt-key">의료비 (×${{medicalMult(age).toFixed(1)}})</span><span class="tt-val tt-neg">${{fmt(d.medicalExp)}}</span></div>`; break;
+      case '여가/취미':     if (d.leisureExp > 0) html += `<div class="tt-row"><span class="tt-key">여가/취미</span><span class="tt-val tt-neg">${{fmt(d.leisureExp)}}</span></div>`; break;
+      case '자녀/부모지원': if (d.familyExp  > 0) html += `<div class="tt-row"><span class="tt-key">자녀/부모 지원</span><span class="tt-val tt-neg">${{fmt(d.familyExp)}}</span></div>`; break;
+      case '보험료':        if (d.insExp     > 0) html += `<div class="tt-row"><span class="tt-key">보험료</span><span class="tt-val tt-neg">${{fmt(d.insExp)}}</span></div>`; break;
+      case '기타':          if (d.otherExp   > 0) html += `<div class="tt-row"><span class="tt-key">기타</span><span class="tt-val tt-neg">${{fmt(d.otherExp)}}</span></div>`; break;
+      case '대출상환금':    if (RAW.debt_man > 0) html += `<div class="tt-row"><span class="tt-key">대출 월상환금</span><span class="tt-val tt-neg">${{fmt(RAW.debt_man)}}</span></div>`; break;
+      case '임차료':        if (d.rentExp    > 0) html += `<div class="tt-row"><span class="tt-key">월세 임차료</span><span class="tt-val tt-neg">${{fmt(d.rentExp)}}</span></div>`; break;
+      case '소득세':        if (d.taxVal)         html += `<div class="tt-row"><span class="tt-key">소득세</span><span class="tt-val tt-neg">${{fmt(Math.abs(d.taxVal))}}</span></div>`; break;
+      case '건보료':        if (d.hiVal)          html += `<div class="tt-row"><span class="tt-key">건보료</span><span class="tt-val tt-neg">${{fmt(Math.abs(d.hiVal))}}</span></div>`; break;
+      default: {{
+        const cv = d.contribMap[hoverKey];
+        if (cv) html += `<div class="tt-row"><span class="tt-key">${{hoverKey}}</span><span class="tt-val tt-neg">${{fmt(Math.abs(cv))}}</span></div>`;
+      }}
+    }}
+  }}
   html += `<div class="tt-row"><span class="tt-key" style="font-weight:700">지출 합계</span><span class="tt-val tt-neg">${{fmt(d.expense)}}</span></div>`;
   html += `<div class="tt-row"><span class="tt-key">잉여/부족</span><span class="tt-val ${{d.surplus >= 0 ? 'tt-pos' : 'tt-neg'}}">${{fmtSign(d.surplus)}}</span></div>`;
 
-  const contribs = Object.entries(d.contribMap).filter(([k, v]) => v !== 0 && !hiddenKeys.has(k));
-  const hasTax = d.taxVal && !hiddenKeys.has('소득세');
-  const hasHi  = d.hiVal  && !hiddenKeys.has('건보료');
-  if (contribs.length || hasTax || hasHi) {{
-    html += `<div class="tt-div"></div>`;
-    contribs.forEach(([k, v]) => {{
-      html += `<div class="tt-row"><span class="tt-key">${{k}}</span><span class="tt-val tt-neg">${{fmt(v)}}</span></div>`;
-    }});
-    if (hasTax) html += `<div class="tt-row"><span class="tt-key">소득세</span><span class="tt-val tt-neg">${{fmt(d.taxVal)}}</span></div>`;
-    if (hasHi)  html += `<div class="tt-row"><span class="tt-key">건보료</span><span class="tt-val tt-neg">${{fmt(d.hiVal)}}</span></div>`;
-  }}
+  // 토글 버튼
+  html += `<button class="tt-toggle" onclick="toggleTTAll()">${{_ttShowAll ? '📌 항목별 보기' : '📋 전체 보기'}}</button>`;
 
   tooltip.innerHTML = html;
   tooltip.style.display = 'block';
   tooltip.style.left = '-9999px';
-  tooltip.style.top  = (event.clientY - 10) + 'px';
+  tooltip.style.top  = '-9999px';
   const ttW = tooltip.offsetWidth;
+  const ttH = tooltip.offsetHeight;
+  // 수평: 오른쪽 공간 부족하면 왼쪽으로 플립
   const spaceRight = window.innerWidth - event.clientX;
   if (spaceRight < ttW + 24) {{
-    tooltip.style.left = (event.clientX - ttW - 12) + 'px';
+    tooltip.style.left = Math.max(4, event.clientX - ttW - 12) + 'px';
   }} else {{
     tooltip.style.left = (event.clientX + 16) + 'px';
   }}
+  // 수직: 아래로 삐져나오면 위로 플립
+  let top = event.clientY - 10;
+  if (top + ttH > window.innerHeight - 8) {{
+    top = event.clientY - ttH - 10;
+  }}
+  tooltip.style.top = Math.max(4, top) + 'px';
 }}
+
+function toggleTTAll() {{
+  _ttShowAll = !_ttShowAll;
+  if (_ttLast) _renderTooltip(_ttLast.event, _ttLast.data, _ttLast.xScale, _ttLast.hoverKey);
+}}
+
 function hideTooltip() {{
-  tooltip.style.display = 'none';
+  _ttHideTimer = setTimeout(() => {{ tooltip.style.display = 'none'; }}, 180);
 }}
 
 // ─── 상태바 ───
