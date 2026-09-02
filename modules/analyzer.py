@@ -378,7 +378,14 @@ class RetirementAnalyzer:
         pension_analysis = self._analyze_pensions()
 
         rental_monthly = sum(re.monthly_rent_income for re in self.profile.real_estates)
-        fi_monthly = round(sum(
+        # 은퇴 전 소득형 자산(예금/채권): 이자가 실제 발생하므로 은퇴 전에도 수익으로 반영
+        _FIXED_INCOME_TYPES = {'예금/적금', '채권'}
+        fi_monthly_fixed = round(sum(
+            fa.amount * fa.annual_return_rate
+            for fa in self.profile.financial_assets
+            if fa.asset_type in _FIXED_INCOME_TYPES
+        ) / 12)
+        fi_monthly_all = round(sum(
             fa.amount * fa.annual_return_rate for fa in self.profile.financial_assets
         ) / 12)
 
@@ -396,9 +403,13 @@ class RetirementAnalyzer:
             if rental_monthly > 0:
                 _inf_yrs = max(0, age - _current_age)
                 sources['임대수입'] = round(rental_monthly * (1 + self.inflation_rate) ** _inf_yrs)
-            if age >= retirement_age:
-                if fi_monthly > 0:
-                    sources['금융자산수익'] = fi_monthly
+            # 금융자산수익: 예금/채권은 은퇴 전에도, 나머지는 은퇴 후부터
+            if age < retirement_age:
+                if fi_monthly_fixed > 0:
+                    sources['금융자산수익'] = fi_monthly_fixed
+            else:
+                if fi_monthly_all > 0:
+                    sources['금융자산수익'] = fi_monthly_all
 
             for pension in self.profile.pensions:
                 info = pension_analysis.get(pension.name, {})
@@ -525,7 +536,7 @@ class RetirementAnalyzer:
                 _tax_m = round(_tax_result['total'] / 12)
                 _hi_result = calculate_health_insurance_local(
                     annual_pension_income=_pension_annual,
-                    annual_financial_income=fi_monthly * 12,
+                    annual_financial_income=fi_monthly_all * 12,
                     annual_other_income=rental_monthly * 12,
                 )
                 _hi_m = _hi_result['monthly_total']

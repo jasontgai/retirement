@@ -79,11 +79,12 @@ class RealEstate:
     name: str                        # "본가", "투자용 아파트" 등
     house_type: HouseType
     property_category: str = "아파트"  # 아파트/단독주택/빌라·다세대/상가/오피스텔/토지/기타
-    market_value: float = 0          # 시세
+    market_value: float = 0          # 임대인: 시세 / 임차인: 낸 전세금·보증금 (돌려받을 자산)
     official_price: float = 0        # 공시가격 (건보/세금 산정용)
-    debt: float = 0                  # 담보대출 잔액
-    monthly_rent_income: float = 0   # 월 임대수입 (임대인 — 있을 경우)
-    monthly_rent_expense: float = 0  # 월 임차료 (임차인 — 월세 거주 시 납부액)
+    debt: float = 0                  # 담보대출·전세대출 잔액
+    monthly_rent_income: float = 0   # 월 임대수입 (임대인)
+    monthly_rent_expense: float = 0  # 월 임차료 (임차인)
+    received_deposit: float = 0      # 임대인: 세입자에게 받은 전세금·보증금 (돌려줘야 할 부채)
     is_primary_residence: bool = True  # 1세대 1주택 여부
     acquisition_date: Optional[date] = None
     acquisition_price: float = 0
@@ -189,6 +190,11 @@ class UserProfile:
         return sum(re.market_value for re in self.real_estates)
 
     @property
+    def total_received_deposit(self) -> float:
+        """임대인이 세입자에게 받은 전세금·보증금 합계 (돌려줘야 할 부채)"""
+        return sum(getattr(re, 'received_deposit', 0) for re in self.real_estates)
+
+    @property
     def total_financial_assets(self) -> float:
         return sum(fa.amount for fa in self.financial_assets)
 
@@ -206,4 +212,5 @@ class UserProfile:
         vehicle_value = sum(v.market_value for v in self.vehicles)
         return (self.total_real_estate_value + self.total_financial_assets +
                 membership_value + vehicle_value +
-                self.total_insurance_surrender_value - self.total_debt)
+                self.total_insurance_surrender_value
+                - self.total_debt - self.total_received_deposit)

@@ -462,6 +462,13 @@ def call_api(endpoint, payload=None, method="POST", form=False):
     _cip = st.session_state.get('client_ip')
     if _cip:
         headers["X-Client-IP"] = _cip
+    # 브라우저 실제 UA를 X-Browser-UA로 전달 (백엔드 활동로그에서 python-requests 대신 사용)
+    try:
+        _bua = st.context.headers.get("User-Agent", "")
+        if _bua:
+            headers["X-Browser-UA"] = _bua
+    except Exception:
+        pass
     try:
         if method == "GET":
             resp = requests.get(url, headers=headers, timeout=30)
@@ -469,6 +476,8 @@ def call_api(endpoint, payload=None, method="POST", form=False):
             resp = requests.delete(url, json=payload, headers=headers, timeout=30)
         elif method == "PUT":
             resp = requests.put(url, json=payload, headers=headers, timeout=30)
+        elif method == "PATCH":
+            resp = requests.patch(url, json=payload, headers=headers, timeout=30)
         elif form:
             resp = requests.post(url, data=payload, headers=headers, timeout=30)
         else:
@@ -1564,7 +1573,9 @@ def show_main_app():
             and st.session_state.get('profile_id') is not None
             and not st.session_state.pop('_skip_auto_analysis', False)):
         if _run_analysis():
-            st.session_state['_goto_analysis_tab'] = True
+            # _silent_reanalysis=True면 현재 탭 유지 (편집 후 조용한 재분석)
+            if not st.session_state.pop('_silent_reanalysis', False):
+                st.session_state['_goto_analysis_tab'] = True
             st.rerun()
 
 
@@ -1590,12 +1601,13 @@ def show_main_app():
             if _cur_snap:
                 st.session_state._safe_personal = {k: st.session_state.get(k, v) for k, v in _cur_snap.items()}
             st.session_state.pop('onboarding_done', None)
-            st.toast("✅ 저장 완료!")
+            st.session_state.analysis_result = None   # 저장 후 자동 재분석 트리거
+            st.toast("✅ 저장 완료! 재분석 중...")
             st.rerun()
 
     # 탭 네비게이션 (저장된 프로필이 있는 경우에만 표시)
     if not _is_onboarding:
-        _tab_labels = ["📊 분석", "🙋 본인", "💼 연금", "🏠 자산/부채", "💳 지출", "🎯 컨설팅"]
+        _tab_labels = ["📊 분석", "✏️ 내 정보", "🎯 컨설팅", "📋 커뮤니티"]
         if st.session_state.get('is_admin'):
             _tab_labels.append("🔧 관리자")
             # 관리자 탭 강조 CSS — 마지막 탭을 붉은 계열로
@@ -1625,12 +1637,14 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 icon=None,
             )
         tabs = st.tabs(_tab_labels)
-        # 컨설팅(6번째)·관리자(7번째) 탭 활성 시 stTabs 이후 형제 요소 숨김
+        # 컨설팅(6번째)·게시판(7번째)·관리자(8번째) 탭 활성 시 stTabs 이후 형제 요소 숨김
         # CSS :has() 방식 — JS 타이밍 문제 없이 즉각 반응
         st.markdown("""
 <style>
-[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(6)[aria-selected="true"]) ~ *,
-[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(7)[aria-selected="true"]) ~ * {
+/* 컨설팅(3)·커뮤니티(4)·관리자(5) 탭 활성 시 탭 외부 요소 숨김 */
+[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(3)[aria-selected="true"]):not(:has([role="tablist"] > button:nth-child(5))) ~ *,
+[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(4)[aria-selected="true"]):not(:has([role="tablist"] > button:nth-child(6))) ~ *,
+[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(5)[aria-selected="true"]):not(:has([role="tablist"] > button:nth-child(6))) ~ * {
     display: none !important;
 }
 /* 탭↔저장버튼 사이 공백 제거 */
@@ -1638,24 +1652,28 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
 div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
 </style>
 """, unsafe_allow_html=True)
-        # "내 정보 직접 입력하기" 클릭 후 본인 탭(index=1)으로 자동 포커스
+        # "내 정보 직접 입력하기" 클릭 후 ✏️내 정보 탭(index=1)으로 자동 포커스
         if st.session_state.pop('_goto_personal_tab', False):
             st.iframe("""<script>
 (function() {
   function clickTab() {
-    var tabs = window.parent.document.querySelectorAll('button[data-baseweb="tab"]');
+    var tl = window.parent.document.querySelector('[role="tablist"]');
+    if (!tl) { setTimeout(clickTab, 100); return; }
+    var tabs = tl.querySelectorAll('button[data-baseweb="tab"]');
     if (tabs.length > 1) { tabs[1].click(); }
     else { setTimeout(clickTab, 100); }
   }
   setTimeout(clickTab, 150);
 })();
 </script>""", height=1)
-        # 자동 분석 완료 후 분석 탭(index=0)으로 이동 (관리자 탭 등 다른 탭에서 결과가 숨겨지는 방지)
+        # 자동 분석 완료 후 📊분석 탭(index=0)으로 이동
         if st.session_state.pop('_goto_analysis_tab', False):
             st.iframe("""<script>
 (function() {
   function clickTab() {
-    var tabs = window.parent.document.querySelectorAll('button[data-baseweb="tab"]');
+    var tl = window.parent.document.querySelector('[role="tablist"]');
+    if (!tl) { setTimeout(clickTab, 100); return; }
+    var tabs = tl.querySelectorAll('button[data-baseweb="tab"]');
     if (tabs.length > 0) { tabs[0].click(); }
     else { setTimeout(clickTab, 100); }
   }
@@ -1664,7 +1682,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
 </script>""", height=1)
 
         # ----------------------------------------------------------
-        # 탭 1: 분석
+        # 탭 0: 분석
         # ----------------------------------------------------------
         with tabs[0]:
             st.subheader("종합 분석 실행")
@@ -1732,7 +1750,13 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
         # ----------------------------------------------------------
         # 탭 2: 본인 정보
         # ----------------------------------------------------------
+        # ----------------------------------------------------------
+        # 탭 1: 내 정보 (서브탭: 본인·연금·자산/부채·지출)
+        # ----------------------------------------------------------
         with tabs[1]:
+            _info_tabs = st.tabs(["🙋 본인", "💼 연금", "🏠 자산/부채", "💳 지출"])
+
+        with _info_tabs[0]:
             st.subheader("기본 정보")
             col1, col2 = st.columns(2)
             with col1:
@@ -1837,8 +1861,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
 
         # ----------------------------------------------------------
         # 탭 3: 연금
-        # ----------------------------------------------------------
-        with tabs[2]:
+        with _info_tabs[1]:
             PENSION_TYPES = ["국민연금", "퇴직연금DB", "퇴직연금DC", "IRP", "연금저축", "개인연금"]
             registered = {p['pension_type']: i for i, p in enumerate(st.session_state.pensions)}
             edit_idx = st.session_state.editing_pension_idx
@@ -1935,6 +1958,8 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                             "payout_period_years": pn_period,
                         }
                         st.session_state.editing_pension_idx = None
+                        st.session_state.analysis_result = None   # 변경된 연금으로 재분석
+                        st.session_state._silent_reanalysis = True  # 탭 이동 없이 조용히
                         st.rerun()
 
             # ── 추가 + 목록 모드 ────────────────────────────────────
@@ -2051,6 +2076,41 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
     > 💡 **세액공제 절세 팁**: IRP + 연금저축 합산 연 900만원까지 납입 시 최대 148.5만원 환급
     > 💡 **연 1,500만원 초과 수령** 시 종합과세 또는 16.5% 분리과세 선택 필요
     """)
+
+                with st.expander("🌐 국내상장 해외ETF 절세 전략 (2025년 세법 기준)", expanded=False):
+                    st.markdown("""
+**📌 핵심: 같은 해외ETF라도 어느 계좌에서 사느냐에 따라 세금이 크게 다릅니다.**
+
+| 계좌 | 운용 중 과세 | 수령·매도 시 세율 | 절세 핵심 |
+|:---:|:---:|:---:|:---:|
+| **일반 계좌** | 매매차익 즉시 과세 | **배당소득세 15.4%** | 없음 |
+| **IRP / 연금저축** | ✅ 과세 없음 (과세이연) | **연금소득세 3.3~5.5%** | 약 10%p 절세 |
+| **ISA** | ✅ 과세 없음 | 비과세 500만원 + 초과분 **9.9%** 분리과세 | 비과세 한도 내 절세 |
+
+#### 예시: S&P500 ETF에 연 600만원 10년 투자, 수익률 연 8% 가정
+
+| 구분 | 일반 계좌 | IRP/연금저축 |
+|:---:|:---:|:---:|
+| 10년 후 평가액 | 약 8,680만원 | 동일 |
+| 세전 수익 | 약 2,680만원 | 동일 |
+| 세금 | **약 412만원** (15.4%) | **약 89~148만원** (3.3~5.5%) |
+| 절세 효과 | — | **약 264~323만원** 차이 |
+
+#### 2025년 주요 세법 변경 포인트
+
+- **금융투자소득세(금투세) 폐지** (2025.1.1 시행): 국내주식·국내ETF 매매차익 비과세 유지
+  - 단, **국내상장 해외ETF** 매매차익은 금투세 대상이 아니었으며 여전히 배당소득세 15.4% 적용 (일반계좌)
+- **연금계좌 내 국내상장 해외ETF**: 매매해도 즉시과세 없음 → 복리 효과 극대화 가능
+- **ISA 비과세 한도 확대**: 일반형 200만원 → 500만원, 서민·농어민형 400만원 → 1,000만원
+
+#### 실전 활용 순서
+
+1. **IRP/연금저축** 연 900만원 한도 먼저 채우기 (세액공제 + 과세이연 이중 혜택)
+2. **ISA** 연 2,000만원 한도로 해외ETF 운용 (비과세 500만원 + 9.9% 분리과세)
+3. 위 한도 초과분만 일반 계좌에서 운용
+
+> ⚠️ IRP/연금저축은 만 55세 이전 중도 해지 시 기타소득세 16.5% + 세액공제 반납이므로 장기 보유 목적으로만 활용하세요.
+""")
                     st.markdown("**🔗 공식 사이트**")
                     st.markdown(
                         "| 용도 | 링크 |\n|:---:|:---:|\n"
@@ -2125,6 +2185,8 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                                     "annual_return_rate": pn_return, "payout_period_years": pn_period,
                                     "contribution_years": 0,
                                 })
+                                st.session_state.analysis_result = None
+                                st.session_state._silent_reanalysis = True
                                 st.rerun()
 
                 if st.session_state.pensions:
@@ -2147,6 +2209,8 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         with c3:
                             if st.button("🗑", key=f"del_pn_{i}", help="삭제"):
                                 st.session_state.pensions.pop(i)
+                                st.session_state.analysis_result = None
+                                st.session_state._silent_reanalysis = True
                                 st.rerun()
                 else:
                     st.info("등록된 연금이 없습니다.")
@@ -2155,10 +2219,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
             if st.button("💾 내 정보 저장", key="save_btn_pension", use_container_width=True):
                 _do_quick_save()
 
-        # ----------------------------------------------------------
-        # 탭 4: 자산
-        # ----------------------------------------------------------
-        with tabs[3]:
+        with _info_tabs[2]:
             asset_subtab = st.radio(
                 "자산 유형",
                 ["🏠 부동산", "💳 금융", "⛳ 회원권", "🚗 차량", "🛡 보험", "📉 대출"],
@@ -2167,6 +2228,114 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
 
             if asset_subtab == "🏠 부동산":
                 re_edit_idx = st.session_state.editing_re_idx
+
+                _RE_PROP_TYPES = ["아파트", "단독주택", "빌라·다세대", "상가", "오피스텔", "토지", "기타"]
+
+                # 화면 표시용 레이블 → 저장 값 매핑
+                _HT_DISPLAY = [
+                    "자가 (직접 거주)",
+                    "자가 (전세 임대 중)",
+                    "자가 (월세 임대 중)",
+                    "전세 거주 (임차인)",
+                    "월세 거주 (임차인)",
+                    "기타",
+                ]
+                _HT_TO_STORED = {
+                    "자가 (직접 거주)":    "자가",
+                    "자가 (전세 임대 중)": "자가",
+                    "자가 (월세 임대 중)": "자가",
+                    "전세 거주 (임차인)":  "전세",
+                    "월세 거주 (임차인)":  "월세",
+                    "기타":               "기타",
+                }
+
+                def _stored_to_display(stored, r_dict):
+                    """DB 저장값 → 화면 레이블 (기존 데이터 로딩용)"""
+                    if stored == "자가":
+                        if r_dict.get('monthly_rent_income', 0) > 0:
+                            return "자가 (월세 임대 중)"
+                        if r_dict.get('received_deposit', 0) > 0:
+                            return "자가 (전세 임대 중)"
+                        return "자가 (직접 거주)"
+                    if stored == "전세":
+                        return "전세 거주 (임차인)"
+                    if stored == "월세":
+                        return "월세 거주 (임차인)"
+                    return "기타"
+
+                def _re_form(form_key, r=None):
+                    """부동산 입력 폼. r=None이면 신규 추가, dict이면 수정."""
+                    _def = r if r is not None else {}
+                    _stored_ht = _def.get('house_type', '자가')
+                    _init_disp = _stored_to_display(_stored_ht, _def)
+
+                    re_name = st.text_input("이름", _def.get('name', '본가'))
+                    re_prop = st.selectbox("부동산 종류", _RE_PROP_TYPES,
+                                           index=_RE_PROP_TYPES.index(_def.get('property_category', '아파트'))
+                                           if _def.get('property_category', '아파트') in _RE_PROP_TYPES else 0)
+                    re_disp = st.selectbox("점유형태 / 역할", _HT_DISPLAY,
+                                           index=_HT_DISPLAY.index(_init_disp) if _init_disp in _HT_DISPLAY else 0)
+                    re_type = _HT_TO_STORED[re_disp]   # 저장 시 사용할 값
+
+                    _is_owner  = re_disp.startswith("자가") or re_disp == "기타"
+                    _is_jeonse_landlord = re_disp == "자가 (전세 임대 중)"
+                    _is_wolse_landlord  = re_disp == "자가 (월세 임대 중)"
+                    _is_tenant_jeonse   = re_disp == "전세 거주 (임차인)"
+                    _is_tenant_wolse    = re_disp == "월세 거주 (임차인)"
+
+                    # ── 역할 안내 ──────────────────────────────
+                    if _is_jeonse_landlord:
+                        st.info("🏠 **임대인 (전세)** — 시세는 자산, 받은 전세금은 돌려줘야 할 부채로 반영됩니다.")
+                    elif _is_wolse_landlord:
+                        st.info("🏠 **임대인 (월세)** — 시세는 자산, 받은 보증금은 부채, 월세 수입은 소득으로 반영됩니다.")
+                    elif re_disp == "자가 (직접 거주)":
+                        st.info("🏠 **자가 직접 거주** — 시세는 자산으로 반영됩니다.")
+                    elif _is_tenant_jeonse:
+                        st.info("🪑 **임차인 (전세)** — 낸 전세금은 돌려받을 자산으로 반영됩니다.")
+                    elif _is_tenant_wolse:
+                        st.info("🪑 **임차인 (월세)** — 낸 보증금은 자산, 월 임차료는 지출로 반영됩니다.")
+                    else:
+                        st.info("🏠 **자가 기타** — 시세는 자산으로 반영됩니다.")
+
+                    # ── 자산 필드 ─────────────────────────────
+                    if _is_owner:
+                        re_market = _sl("시세 (자산)", 0, 200000,
+                                        min(200000, int(_def.get('market_value', 0) // 10000)), 1000, fmt="won") * 10000
+                    else:
+                        re_market = _sl("낸 전세금·보증금 (돌려받을 자산)", 0, 200000,
+                                        min(200000, int(_def.get('market_value', 0) // 10000)), 1000, fmt="won") * 10000
+
+                    re_official = _sl("공시가격 (비우면 시세×70%)", 0, 200000,
+                                      min(200000, int((_def.get('official_price') or 0) // 10000)), 1000, fmt="won") * 10000
+
+                    # ── 부채·수입·지출 필드 ───────────────────
+                    if _is_owner:
+                        re_debt = _sl("담보대출 (부채)", 0, 100000,
+                                      min(100000, int(_def.get('debt', 0) // 10000)), 1000, fmt="won") * 10000
+                        if _is_jeonse_landlord or _is_wolse_landlord:
+                            re_recv_dep = _sl("받은 보증금 (세입자에게 돌려줄 부채)", 0, 200000,
+                                              min(200000, int(_def.get('received_deposit', 0) // 10000)), 1000, fmt="won") * 10000
+                            re_rent = _sl("월 임대수입 (월세 수령액)", 0, 2000,
+                                          min(2000, int(_def.get('monthly_rent_income', 0) // 10000)), 10, fmt="won") * 10000
+                        else:
+                            re_recv_dep = 0
+                            re_rent = 0
+                        re_rent_exp = 0
+                    else:
+                        re_debt = _sl("전세대출 (부채)", 0, 100000,
+                                      min(100000, int(_def.get('debt', 0) // 10000)), 1000, fmt="won") * 10000
+                        re_recv_dep = 0
+                        re_rent = 0
+                        if _is_tenant_wolse:
+                            re_rent_exp = _sl("월 임차료 (지출)", 0, 500,
+                                              min(500, int(_def.get('monthly_rent_expense', 0) // 10000)), 10, fmt="won") * 10000
+                        else:
+                            re_rent_exp = 0
+
+                    re_primary = st.toggle("주거용 (1세대 1주택)", value=_def.get('is_primary_residence', True))
+
+                    return (re_name, re_prop, re_type, re_market, re_official,
+                            re_debt, re_recv_dep, re_rent, re_rent_exp, re_primary)
 
                 if re_edit_idx is not None and re_edit_idx < len(st.session_state.real_estates):
                     r = st.session_state.real_estates[re_edit_idx]
@@ -2177,67 +2346,60 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     with col_title:
                         st.subheader(f"✏️ {r['name']} 수정")
                     with st.form("edit_re"):
-                        re_name = st.text_input("이름", r['name'])
-                        _RE_PROP_TYPES = ["아파트", "단독주택", "빌라·다세대", "상가", "오피스텔", "토지", "기타"]
-                        _RE_HOUSE_TYPES = ["자가", "전세", "월세", "기타"]
-                        _cur_prop = r.get('property_category', '아파트')
-                        re_prop = st.selectbox("부동산 종류",  _RE_PROP_TYPES,
-                                               index=_RE_PROP_TYPES.index(_cur_prop) if _cur_prop in _RE_PROP_TYPES else 0)
-                        re_type = st.selectbox("점유형태", _RE_HOUSE_TYPES,
-                                               index=_RE_HOUSE_TYPES.index(r['house_type']) if r['house_type'] in _RE_HOUSE_TYPES else 0)
-                        re_market = _sl("시세 (전세금·보증금)", 0, 200000,
-                                        min(200000, int(r['market_value'] // 10000)), 1000, fmt="won") * 10000
-                        re_official = _sl("공시가격 (비우면 시세*70%)", 0, 200000,
-                                          min(200000, int((r['official_price'] or 0) // 10000)), 1000, fmt="won") * 10000
-                        re_debt = _sl("담보대출", 0, 100000,
-                                      min(100000, int(r['debt'] // 10000)), 1000, fmt="won") * 10000
-                        re_rent = _sl("월 임대수입", 0, 2000,
-                                      min(2000, int(r['monthly_rent_income'] // 10000)), 10, fmt="won") * 10000
-                        re_rent_exp = _sl("월 임차료 (월세 거주 시 납부액)", 0, 500,
-                                          min(500, int(r.get('monthly_rent_expense', 0) // 10000)), 10, fmt="won") * 10000
-                        re_primary = st.toggle("주거용 (1세대 1주택)", value=r['is_primary_residence'])
+                        (_re_name, _re_prop, _re_type, _re_mkt, _re_off,
+                         _re_debt, _re_rdep, _re_rent, _re_rexp, _re_prim) = _re_form("edit_re", r)
                         if st.form_submit_button("저장", width='stretch'):
                             st.session_state.real_estates[re_edit_idx] = {
-                                "name": re_name,
-                                "property_category": re_prop,
-                                "house_type": re_type,
-                                "market_value": re_market, "official_price": re_official,
-                                "debt": re_debt, "monthly_rent_income": re_rent,
-                                "monthly_rent_expense": re_rent_exp,
-                                "is_primary_residence": re_primary,
+                                "name": _re_name, "property_category": _re_prop,
+                                "house_type": _re_type, "market_value": _re_mkt,
+                                "official_price": _re_off, "debt": _re_debt,
+                                "received_deposit": _re_rdep,
+                                "monthly_rent_income": _re_rent,
+                                "monthly_rent_expense": _re_rexp,
+                                "is_primary_residence": _re_prim,
                             }
                             st.session_state.editing_re_idx = None; st.rerun()
                 else:
                     with st.expander("➕ 부동산 추가", expanded=False):
                         with st.form("add_re", clear_on_submit=True):
-                            re_name = st.text_input("이름", "본가")
-                            _RE_PROP_TYPES = ["아파트", "단독주택", "빌라·다세대", "상가", "오피스텔", "토지", "기타"]
-                            re_prop = st.selectbox("부동산 종류", _RE_PROP_TYPES)
-                            re_type = st.selectbox("점유형태", ["자가", "전세", "월세", "기타"])
-                            re_market = _sl("시세 (전세금·보증금)", 0, 200000, 0, 1000, fmt="won") * 10000
-                            re_official = _sl("공시가격 (비우면 시세*70%)", 0, 200000, 0, 1000, fmt="won") * 10000
-                            re_debt = _sl("담보대출", 0, 100000, 0, 1000, fmt="won") * 10000
-                            re_rent = _sl("월 임대수입", 0, 2000, 0, 10, fmt="won") * 10000
-                            re_rent_exp = _sl("월 임차료 (월세 거주 시 납부액)", 0, 500, 0, 10, fmt="won") * 10000
-                            re_primary = st.toggle("주거용 (1세대 1주택)", value=True)
+                            (_re_name, _re_prop, _re_type, _re_mkt, _re_off,
+                             _re_debt, _re_rdep, _re_rent, _re_rexp, _re_prim) = _re_form("add_re")
                             if st.form_submit_button("추가", width='stretch'):
                                 st.session_state.real_estates.append({
-                                    "name": re_name,
-                                    "property_category": re_prop,
-                                    "house_type": re_type,
-                                    "market_value": re_market, "official_price": re_official,
-                                    "debt": re_debt, "monthly_rent_income": re_rent,
-                                    "monthly_rent_expense": re_rent_exp,
-                                    "is_primary_residence": re_primary,
+                                    "name": _re_name, "property_category": _re_prop,
+                                    "house_type": _re_type, "market_value": _re_mkt,
+                                    "official_price": _re_off, "debt": _re_debt,
+                                    "received_deposit": _re_rdep,
+                                    "monthly_rent_income": _re_rent,
+                                    "monthly_rent_expense": _re_rexp,
+                                    "is_primary_residence": _re_prim,
                                 })
                                 st.rerun()
                     for i, r in enumerate(st.session_state.real_estates):
                         c1, c2, c3 = st.columns([5, 1, 1])
                         with c1:
-                            _prop_cat = r.get('property_category', '')
+                            _prop_cat  = r.get('property_category', '')
                             _prop_label = f"{_prop_cat} · " if _prop_cat else ""
-                            st.markdown(f"**{r['name']}** ({_prop_label}{r['house_type']})")
-                            _re_cap = f"시세 {fmt_won(r['market_value'])} · 대출 {fmt_won(r['debt'])}"
+                            _ht = r.get('house_type', '')
+                            _rdep = r.get('received_deposit', 0)
+                            _rent_inc = r.get('monthly_rent_income', 0)
+                            if _ht in ("자가", "기타"):
+                                if _rent_inc > 0:
+                                    _role_badge = "🏠 임대인(월세)"
+                                elif _rdep > 0:
+                                    _role_badge = "🏠 임대인(전세)"
+                                else:
+                                    _role_badge = "🏠 자가"
+                            else:
+                                _role_badge = "🪑 임차인"
+                            st.markdown(f"**{r['name']}** ({_prop_label}{_ht}) {_role_badge}")
+                            if _ht in ("자가", "기타"):
+                                _re_cap = f"시세 {fmt_won(r['market_value'])} · 담보대출 {fmt_won(r['debt'])}"
+                                if _rdep:
+                                    _re_cap += f" · 받은 보증금(부채) {fmt_won(_rdep)}"
+                            else:
+                                _re_cap = (f"전세금·보증금(자산) {fmt_won(r['market_value'])} · "
+                                           f"대출 {fmt_won(r['debt'])}")
                             if r.get('monthly_rent_income'):
                                 _re_cap += f" · 🏦 임대수입 {fmt_won(r['monthly_rent_income'])}/월"
                             if r.get('monthly_rent_expense'):
@@ -2547,10 +2709,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
             if st.button("💾 내 정보 저장", key="save_btn_assets", use_container_width=True):
                 _do_quick_save()
 
-        # ----------------------------------------------------------
-        # 탭 5: 예상 지출
-        # ----------------------------------------------------------
-        with tabs[4]:
+        with _info_tabs[3]:
             st.subheader("은퇴 후 월 예상 지출")
             living    = _sl("기본 생활비", 0, 2000, st.session_state.get("inp_living",   270), 10, "inp_living",   "won") * 10000
             medical   = _sl("의료비",       0, 1000, st.session_state.get("inp_medical",   50), 10, "inp_medical",  "won") * 10000
@@ -2565,9 +2724,9 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 _do_quick_save()
 
         # ----------------------------------------------------------
-        # 탭 6: 컨설팅
+        # 탭 2: 컨설팅
         # ----------------------------------------------------------
-        with tabs[5]:
+        with tabs[2]:
             st.subheader("🎯 은퇴 재원마련 컨설팅")
 
             # 나이별 체감율 (session_state 기반 — 그래프·진단 양쪽에서 공용)
@@ -2715,1097 +2874,1534 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     _rates_only = [p.get('annual_return_rate', 0) for p in _pensions_ss if p.get('annual_return_rate', 0) > 0]
                     _pension_avg_return = round(sum(_rates_only) / len(_rates_only) * 100, 1) if _rates_only else 0.0
 
-                # ── 관리자 시나리오 통합 저장 폼 ─────────────────────────────
-                if st.session_state.get('is_admin'):
-                    def _avg_defaults(bracket):
-                        avg    = _AGE_AVG_DATA[bracket]
-                        re_val = sum(r.get('market_value', 0) for r in avg.get('real_estates', [])) // 10000
-                        re_dbt = sum(r.get('debt', 0)         for r in avg.get('real_estates', [])) // 10000
-                        fa_val = sum(f.get('amount', 0)       for f in avg.get('financial_assets', [])) // 10000
-                        d_bal  = sum(d.get('balance', 0)      for d in avg.get('debts', [])) // 10000
-                        d_pay  = sum(d.get('monthly_payment', 0) for d in avg.get('debts', [])) // 10000
-                        nps_p  = sum(p.get('expected_monthly_payout', 0) for p in avg.get('pensions', [])
-                                     if p.get('pension_type') == '국민연금') // 10000
-                        prv_p  = sum(p.get('expected_monthly_payout', 0) for p in avg.get('pensions', [])
-                                     if p.get('pension_type') != '국민연금') // 10000
-                        p_bal  = sum(p.get('current_balance', 0) for p in avg.get('pensions', [])) // 10000
-                        m_exp  = avg['living'] + avg['medical'] + avg['leisure'] + avg['family'] + avg['insurance'] + avg['other']
-                        return {
-                            'retire_age': avg['retirement_age'],
-                            'income':     (avg.get('salary', 0) or 0) // 12,
-                            'expense':    m_exp,
-                            'assets':     max(0, re_val + fa_val - re_dbt - d_bal),
-                            'fa':         fa_val, 're': re_val,
-                            'nps':        nps_p,  'priv': prv_p,
-                            'pen_total':  nps_p + prv_p,
-                            'pen_bal':    p_bal,  'pen_ret': 3.9,
-                            'living':     avg['living'],   'medical':   avg['medical'],
-                            'leisure':    avg['leisure'],  'family':    avg['family'],
-                            'insurance':  avg['insurance'],'other':     avg['other'],
-                            'debt':       d_pay,           'rent':      0,
-                        }
 
-                    _ss = st.session_state
-                    with st.expander("💾 시나리오 저장 (관리자)", expanded=False):
-                        _sv_label = st.radio(
-                            "저장 레이블", ["STANDARD", "GOOD", "BEST"],
-                            horizontal=True, key='uform_label',
-                        )
+                # ── 컨설팅 서브탭 ─────────────────────────────────────────────
+                _ctabs = st.tabs(["📊 시나리오 비교", "📋 재원 진단", "💡 투자 가이드", "🔢 재무계산기"])
 
-                        if _sv_label == "STANDARD":
-                            _br_col, _btn_col = st.columns([2, 1])
-                            with _br_col:
-                                _std_br = st.selectbox(
-                                    "기준 연령대", [40, 45, 50, 55, 60, 65, 70],
-                                    index=3, key='uform_bracket',
-                                    format_func=lambda x: f"{x}세",
-                                )
-                            with _btn_col:
-                                st.write("")
-                                if st.button("📥 국가평균 적용", key='btn_avg_apply',
-                                             use_container_width=True):
-                                    _d = _avg_defaults(_std_br)
-                                    for _k, _v in {
-                                        'uform_retire_age': _d['retire_age'],
-                                        'uform_income':     _d['income'],
-                                        'uform_expense':    _d['expense'],
-                                        'uform_assets':     _d['assets'],
-                                        'uform_fa':         _d['fa'],
-                                        'uform_re':         _d['re'],
-                                        'uform_nps':        _d['nps'],
-                                        'uform_priv':       _d['priv'],
-                                        'uform_pen_total':  _d['pen_total'],
-                                        'uform_pen_bal':    _d['pen_bal'],
-                                        'uform_pen_ret':    _d['pen_ret'],
-                                        'uform_living':     _d['living'],
-                                        'uform_medical':    _d['medical'],
-                                        'uform_leisure':    _d['leisure'],
-                                        'uform_family':     _d['family'],
-                                        'uform_insurance':  _d['insurance'],
-                                        'uform_other':      _d['other'],
-                                        'uform_debt':       _d['debt'],
-                                        'uform_rent':       _d['rent'],
-                                    }.items():
-                                        _ss[_k] = _v
-                                    st.rerun()
-
-                        st.caption("수정 후 하단 저장 버튼을 누르세요 (단위: 만원/월, 만원)")
-
-                        st.markdown("**기본 정보**")
-                        _fi1, _fi2, _fi3 = st.columns(3)
-                        with _fi1:
-                            _sv_retire = st.number_input(
-                                "은퇴 연령 (세)", 40, 80,
-                                int(_ss.get('uform_retire_age', int(_retire_age_cur))),
-                                1, key='uform_retire_age')
-                        with _fi2:
-                            _sv_income = st.number_input(
-                                "월 수입 (만원)", 0, 10000,
-                                int(_ss.get('uform_income', round(cf.get('월수입', 0) / 10000))),
-                                10, key='uform_income')
-                        with _fi3:
-                            _sv_expense_t = st.number_input(
-                                "월 지출 (만원)", 0, 5000,
-                                int(_ss.get('uform_expense', round(cf.get('월지출_합계', 0) / 10000))),
-                                10, key='uform_expense')
-
-                        st.markdown("**자산 (만원)**")
-                        _as1, _as2, _as3 = st.columns(3)
-                        with _as1:
-                            _sv_assets = st.number_input(
-                                "순자산", 0, 1_000_000,
-                                max(0, int(_ss.get('uform_assets', round(assets.get('순자산', 0) / 10000)))),
-                                100, key='uform_assets')
-                        with _as2:
-                            _sv_fa = st.number_input(
-                                "금융자산", 0, 500_000,
-                                max(0, int(_ss.get('uform_fa', round(_asset_num(assets.get('금융자산', 0)) / 10000)))),
-                                100, key='uform_fa')
-                        with _as3:
-                            _sv_re = st.number_input(
-                                "부동산", 0, 1_000_000,
-                                max(0, int(_ss.get('uform_re', round(_asset_num(assets.get('부동산', 0)) / 10000)))),
-                                100, key='uform_re')
-
-                        st.markdown("**연금 (만원/월 · 만원)**")
-                        _pe1, _pe2, _pe3, _pe4, _pe5 = st.columns(5)
-                        with _pe1:
-                            _sv_nps = st.number_input(
-                                "국민연금(월)", 0, 500,
-                                int(_ss.get('uform_nps', round(_nps_monthly / 10000))),
-                                5, key='uform_nps')
-                        with _pe2:
-                            _sv_priv = st.number_input(
-                                "사적연금(월)", 0, 1000,
-                                int(_ss.get('uform_priv', round(_private_monthly / 10000))),
-                                5, key='uform_priv')
-                        with _pe3:
-                            _sv_pen_total = st.number_input(
-                                "연금합계(월)", 0, 2000,
-                                int(_ss.get('uform_pen_total', round(_pension_total / 10000))),
-                                5, key='uform_pen_total')
-                        with _pe4:
-                            _sv_pen_bal = st.number_input(
-                                "총적립금(만원)", 0, 200_000,
-                                int(_ss.get('uform_pen_bal', round(_pension_bal_total / 10000))),
-                                1000, key='uform_pen_bal')
-                        with _pe5:
-                            _sv_pen_ret = st.number_input(
-                                "평균수익률(%)", 0.0, 20.0,
-                                float(_ss.get('uform_pen_ret', float(_pension_avg_return))),
-                                0.1, format="%.1f", key='uform_pen_ret')
-
-                        st.markdown("**지출 세부 (만원/월)**")
-                        _ex1, _ex2, _ex3, _ex4 = st.columns(4)
-                        with _ex1:
-                            _sv_living = st.number_input(
-                                "생활비", 0, 5000,
-                                int(_ss.get('uform_living', int(_ss.get('inp_living', 270)))),
-                                10, key='uform_living')
-                            _sv_medical = st.number_input(
-                                "의료비", 0, 1000,
-                                int(_ss.get('uform_medical', int(_ss.get('inp_medical', 50)))),
-                                5, key='uform_medical')
-                        with _ex2:
-                            _sv_leisure = st.number_input(
-                                "여가/취미", 0, 1000,
-                                int(_ss.get('uform_leisure', int(_ss.get('inp_leisure', 70)))),
-                                5, key='uform_leisure')
-                            _sv_family = st.number_input(
-                                "자녀/부모", 0, 1000,
-                                int(_ss.get('uform_family', int(_ss.get('inp_family', 40)))),
-                                5, key='uform_family')
-                        with _ex3:
-                            _sv_insurance = st.number_input(
-                                "보험료", 0, 500,
-                                int(_ss.get('uform_insurance', int(_ss.get('inp_insurance', 25)))),
-                                5, key='uform_insurance')
-                            _sv_other = st.number_input(
-                                "기타", 0, 500,
-                                int(_ss.get('uform_other', int(_ss.get('inp_other', 20)))),
-                                5, key='uform_other')
-                        with _ex4:
-                            _sv_debt = st.number_input(
-                                "대출상환", 0, 2000,
-                                int(_ss.get('uform_debt', round(cf.get('월지출_대출상환', 0) / 10000))),
-                                5, key='uform_debt')
-                            _sv_rent = st.number_input(
-                                "임차료", 0, 500,
-                                int(_ss.get('uform_rent', round(cf.get('월지출_임차료', 0) / 10000))),
-                                5, key='uform_rent')
-
-                        st.divider()
-                        if st.button(f"💾 {_sv_label} 저장", key='btn_unified_save',
-                                     use_container_width=True, type='primary'):
-                            _upl = {
-                                'label':           _sv_label,
-                                'retire_age':      int(_sv_retire),
-                                'monthly_income':  int(_sv_income * 10000),
-                                'monthly_expense': int(_sv_expense_t * 10000),
-                                'monthly_surplus': int((_sv_income - _sv_expense_t) * 10000),
-                                'total_assets':    int(_sv_assets * 10000),
-                                'detail': {
-                                    '총자산':          int((_sv_fa + _sv_re) * 10000),
-                                    '총부채':          0,
-                                    '금융자산':        int(_sv_fa * 10000),
-                                    '부동산':          int(_sv_re * 10000),
-                                    '국민연금':        int(_sv_nps * 10000),
-                                    '사적연금':        int(_sv_priv * 10000),
-                                    '연금합계':        int(_sv_pen_total * 10000),
-                                    '연금_총적립금':   int(_sv_pen_bal * 10000),
-                                    '연금_평균수익률': float(_sv_pen_ret),
-                                    '연금상세':        _pension_by_group,
-                                    '지출_생활비':     int(_sv_living    * 10000),
-                                    '지출_의료비':     int(_sv_medical   * 10000),
-                                    '지출_여가':       int(_sv_leisure   * 10000),
-                                    '지출_자녀부모':   int(_sv_family    * 10000),
-                                    '지출_보험료':     int(_sv_insurance * 10000),
-                                    '지출_기타':       int(_sv_other     * 10000),
-                                    '지출_대출상환':   int(_sv_debt      * 10000),
-                                    '지출_임차료':     int(_sv_rent      * 10000),
-                                },
+                with _ctabs[0]:
+                    # ── 관리자 시나리오 통합 저장 폼 ─────────────────────────────
+                    if st.session_state.get('is_admin'):
+                        def _avg_defaults(bracket):
+                            avg    = _AGE_AVG_DATA[bracket]
+                            re_val = sum(r.get('market_value', 0) for r in avg.get('real_estates', [])) // 10000
+                            re_dbt = sum(r.get('debt', 0)         for r in avg.get('real_estates', [])) // 10000
+                            fa_val = sum(f.get('amount', 0)       for f in avg.get('financial_assets', [])) // 10000
+                            d_bal  = sum(d.get('balance', 0)      for d in avg.get('debts', [])) // 10000
+                            d_pay  = sum(d.get('monthly_payment', 0) for d in avg.get('debts', [])) // 10000
+                            nps_p  = sum(p.get('expected_monthly_payout', 0) for p in avg.get('pensions', [])
+                                         if p.get('pension_type') == '국민연금') // 10000
+                            prv_p  = sum(p.get('expected_monthly_payout', 0) for p in avg.get('pensions', [])
+                                         if p.get('pension_type') != '국민연금') // 10000
+                            p_bal  = sum(p.get('current_balance', 0) for p in avg.get('pensions', [])) // 10000
+                            m_exp  = avg['living'] + avg['medical'] + avg['leisure'] + avg['family'] + avg['insurance'] + avg['other']
+                            return {
+                                'retire_age': avg['retirement_age'],
+                                'income':     (avg.get('salary', 0) or 0) // 12,
+                                'expense':    m_exp,
+                                'assets':     max(0, re_val + fa_val - re_dbt - d_bal),
+                                'fa':         fa_val, 're': re_val,
+                                'nps':        nps_p,  'priv': prv_p,
+                                'pen_total':  nps_p + prv_p,
+                                'pen_bal':    p_bal,  'pen_ret': 3.9,
+                                'living':     avg['living'],   'medical':   avg['medical'],
+                                'leisure':    avg['leisure'],  'family':    avg['family'],
+                                'insurance':  avg['insurance'],'other':     avg['other'],
+                                'debt':       d_pay,           'rent':      0,
                             }
-                            _sr, _se = call_api("/scenarios", _upl)
-                            if _se:
-                                st.error(f"저장 실패: {_se}")
-                            else:
-                                st.session_state._sc_dirty = True
-                                st.toast(f"✅ {_sv_label} 저장 완료!")
-                                st.rerun()
 
-                # 저장된 시나리오 불러와 비교표 — session_state 캐시로 매 rerun마다 HTTP 요청 방지
-                if '_sc_cache' not in st.session_state or st.session_state.pop('_sc_dirty', False):
-                    _snaps, _snaps_err = call_api("/scenarios", method="GET")
-                    st.session_state._sc_cache = (_snaps, _snaps_err)
-                _snaps, _snaps_err = st.session_state._sc_cache
-                _snap_map = {s['label']: s for s in (_snaps or [])} if not _snaps_err else {}
-                st.divider()
-                st.markdown("#### 📊 시나리오 비교")
+                        _ss = st.session_state
+                        with st.expander("💾 시나리오 저장 (관리자)", expanded=False):
+                            _sv_label = st.radio(
+                                "저장 레이블", ["STANDARD", "GOOD", "BEST"],
+                                horizontal=True, key='uform_label',
+                            )
 
-                # 관리자: 저장된 시나리오 삭제 버튼
-                if st.session_state.get('is_admin') and _snap_map:
-                    _del_labels = [l for l in ['STANDARD', 'GOOD', 'BEST'] if l in _snap_map]
-                    if _del_labels:
-                        _dcols = st.columns(len(_del_labels) + 1)
-                        _dcols[0].caption("🗑️ 시나리오 삭제")
-                        for _di, _dlbl in enumerate(_del_labels):
-                            with _dcols[_di + 1]:
-                                if st.button(f"❌ {_dlbl} 삭제", key=f'btn_del_{_dlbl}',
-                                             use_container_width=True):
-                                    _dr, _de = call_api(f"/scenarios/{_dlbl}", method="DELETE")
-                                    if _de:
-                                        st.error(f"삭제 실패: {_de}")
-                                    else:
-                                        st.session_state._sc_dirty = True
-                                        st.toast(f"🗑️ {_dlbl} 삭제 완료!")
+                            if _sv_label == "STANDARD":
+                                _br_col, _btn_col = st.columns([2, 1])
+                                with _br_col:
+                                    _std_br = st.selectbox(
+                                        "기준 연령대", [40, 45, 50, 55, 60, 65, 70],
+                                        index=3, key='uform_bracket',
+                                        format_func=lambda x: f"{x}세",
+                                    )
+                                with _btn_col:
+                                    st.write("")
+                                    if st.button("📥 국가평균 적용", key='btn_avg_apply',
+                                                 use_container_width=True):
+                                        _d = _avg_defaults(_std_br)
+                                        for _k, _v in {
+                                            'uform_retire_age': _d['retire_age'],
+                                            'uform_income':     _d['income'],
+                                            'uform_expense':    _d['expense'],
+                                            'uform_assets':     _d['assets'],
+                                            'uform_fa':         _d['fa'],
+                                            'uform_re':         _d['re'],
+                                            'uform_nps':        _d['nps'],
+                                            'uform_priv':       _d['priv'],
+                                            'uform_pen_total':  _d['pen_total'],
+                                            'uform_pen_bal':    _d['pen_bal'],
+                                            'uform_pen_ret':    _d['pen_ret'],
+                                            'uform_living':     _d['living'],
+                                            'uform_medical':    _d['medical'],
+                                            'uform_leisure':    _d['leisure'],
+                                            'uform_family':     _d['family'],
+                                            'uform_insurance':  _d['insurance'],
+                                            'uform_other':      _d['other'],
+                                            'uform_debt':       _d['debt'],
+                                            'uform_rent':       _d['rent'],
+                                        }.items():
+                                            _ss[_k] = _v
                                         st.rerun()
 
-                # STANDARD: DB에서 로드, 없으면 기본값 사용
-                _std = _snap_map.get('STANDARD')
-                def _std_val(key, default):
-                    if _std:
-                        d = _std.get('detail', {})
-                        v = d.get(key)
-                        return v if v is not None else default
-                    return default
+                            st.caption("수정 후 하단 저장 버튼을 누르세요 (단위: 만원/월, 만원)")
 
-                # ── 우리나라 평균 연금: 사용자 맞춤 현재가치 역산 ──────────
-                # (_pv_for_user, _yrs_to_ret_u, _yrs_to_nps_u 는 위에서 정의됨)
-                # STANDARD DB의 연금상세(월수령액·수익률)를 기준으로 사용자 맞춤 적립금 계산
-                _std_pen_raw = (_std or {}).get('detail', {}).get('연금상세') or {}
-                _std_pen_fb = {   # DB 없을 때 기본값 (DB STANDARD 기준)
-                    '국민연금': {'월수령액': 1_260_000, '수익률': 4.0},
-                    '퇴직연금': {'월수령액':   460_000, '수익률': 4.0},
-                    'IRP':      {'월수령액':   140_000, '수익률': 4.0},
-                    '개인연금': {'월수령액':   180_000, '수익률': 3.5},
-                    '기타':     {'월수령액':         0, '수익률': 0.0},
-                }
-                _std_pen = {}
-                _yrs_to_ret_std = max(0, ((_std or {}).get('retire_age') or _retire_age_cur) - _cur_age_u)
-                for _sg in ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']:
-                    _rg  = _std_pen_raw.get(_sg) or _std_pen_fb.get(_sg, {})
-                    _pmt = _rg.get('월수령액', 0)
-                    _rte = _rg.get('수익률', 4.0)
-                    _yrs = _yrs_to_nps_u if _sg == '국민연금' else _yrs_to_ret_std
-                    _std_pen[_sg] = {
-                        '적립금':   _pv_for_user(_pmt, _rte, _yrs),
-                        '월수령액': _pmt,
-                        '수익률':   _rte,
+                            st.markdown("**기본 정보**")
+                            _fi1, _fi2, _fi3 = st.columns(3)
+                            with _fi1:
+                                _sv_retire = st.number_input(
+                                    "은퇴 연령 (세)", 40, 80,
+                                    int(_ss.get('uform_retire_age', int(_retire_age_cur))),
+                                    1, key='uform_retire_age')
+                            with _fi2:
+                                _sv_income = st.number_input(
+                                    "월 수입 (만원)", 0, 10000,
+                                    int(_ss.get('uform_income', round(cf.get('월수입', 0) / 10000))),
+                                    10, key='uform_income')
+                            with _fi3:
+                                _sv_expense_t = st.number_input(
+                                    "월 지출 (만원)", 0, 5000,
+                                    int(_ss.get('uform_expense', round(cf.get('월지출_합계', 0) / 10000))),
+                                    10, key='uform_expense')
+
+                            st.markdown("**자산 (만원)**")
+                            _as1, _as2, _as3 = st.columns(3)
+                            with _as1:
+                                _sv_assets = st.number_input(
+                                    "순자산", 0, 1_000_000,
+                                    max(0, int(_ss.get('uform_assets', round(assets.get('순자산', 0) / 10000)))),
+                                    100, key='uform_assets')
+                            with _as2:
+                                _sv_fa = st.number_input(
+                                    "금융자산", 0, 500_000,
+                                    max(0, int(_ss.get('uform_fa', round(_asset_num(assets.get('금융자산', 0)) / 10000)))),
+                                    100, key='uform_fa')
+                            with _as3:
+                                _sv_re = st.number_input(
+                                    "부동산", 0, 1_000_000,
+                                    max(0, int(_ss.get('uform_re', round(_asset_num(assets.get('부동산', 0)) / 10000)))),
+                                    100, key='uform_re')
+
+                            st.markdown("**연금 (만원/월 · 만원)**")
+                            _pe1, _pe2, _pe3, _pe4, _pe5 = st.columns(5)
+                            with _pe1:
+                                _sv_nps = st.number_input(
+                                    "국민연금(월)", 0, 500,
+                                    int(_ss.get('uform_nps', round(_nps_monthly / 10000))),
+                                    5, key='uform_nps')
+                            with _pe2:
+                                _sv_priv = st.number_input(
+                                    "사적연금(월)", 0, 1000,
+                                    int(_ss.get('uform_priv', round(_private_monthly / 10000))),
+                                    5, key='uform_priv')
+                            with _pe3:
+                                _sv_pen_total = st.number_input(
+                                    "연금합계(월)", 0, 2000,
+                                    int(_ss.get('uform_pen_total', round(_pension_total / 10000))),
+                                    5, key='uform_pen_total')
+                            with _pe4:
+                                _sv_pen_bal = st.number_input(
+                                    "총적립금(만원)", 0, 200_000,
+                                    int(_ss.get('uform_pen_bal', round(_pension_bal_total / 10000))),
+                                    1000, key='uform_pen_bal')
+                            with _pe5:
+                                _sv_pen_ret = st.number_input(
+                                    "평균수익률(%)", 0.0, 20.0,
+                                    float(_ss.get('uform_pen_ret', float(_pension_avg_return))),
+                                    0.1, format="%.1f", key='uform_pen_ret')
+
+                            st.markdown("**지출 세부 (만원/월)**")
+                            _ex1, _ex2, _ex3, _ex4 = st.columns(4)
+                            with _ex1:
+                                _sv_living = st.number_input(
+                                    "생활비", 0, 5000,
+                                    int(_ss.get('uform_living', int(_ss.get('inp_living', 270)))),
+                                    10, key='uform_living')
+                                _sv_medical = st.number_input(
+                                    "의료비", 0, 1000,
+                                    int(_ss.get('uform_medical', int(_ss.get('inp_medical', 50)))),
+                                    5, key='uform_medical')
+                            with _ex2:
+                                _sv_leisure = st.number_input(
+                                    "여가/취미", 0, 1000,
+                                    int(_ss.get('uform_leisure', int(_ss.get('inp_leisure', 70)))),
+                                    5, key='uform_leisure')
+                                _sv_family = st.number_input(
+                                    "자녀/부모", 0, 1000,
+                                    int(_ss.get('uform_family', int(_ss.get('inp_family', 40)))),
+                                    5, key='uform_family')
+                            with _ex3:
+                                _sv_insurance = st.number_input(
+                                    "보험료", 0, 500,
+                                    int(_ss.get('uform_insurance', int(_ss.get('inp_insurance', 25)))),
+                                    5, key='uform_insurance')
+                                _sv_other = st.number_input(
+                                    "기타", 0, 500,
+                                    int(_ss.get('uform_other', int(_ss.get('inp_other', 20)))),
+                                    5, key='uform_other')
+                            with _ex4:
+                                _sv_debt = st.number_input(
+                                    "대출상환", 0, 2000,
+                                    int(_ss.get('uform_debt', round(cf.get('월지출_대출상환', 0) / 10000))),
+                                    5, key='uform_debt')
+                                _sv_rent = st.number_input(
+                                    "임차료", 0, 500,
+                                    int(_ss.get('uform_rent', round(cf.get('월지출_임차료', 0) / 10000))),
+                                    5, key='uform_rent')
+
+                            st.divider()
+                            if st.button(f"💾 {_sv_label} 저장", key='btn_unified_save',
+                                         use_container_width=True, type='primary'):
+                                _upl = {
+                                    'label':           _sv_label,
+                                    'retire_age':      int(_sv_retire),
+                                    'monthly_income':  int(_sv_income * 10000),
+                                    'monthly_expense': int(_sv_expense_t * 10000),
+                                    'monthly_surplus': int((_sv_income - _sv_expense_t) * 10000),
+                                    'total_assets':    int(_sv_assets * 10000),
+                                    'detail': {
+                                        '총자산':          int((_sv_fa + _sv_re) * 10000),
+                                        '총부채':          0,
+                                        '금융자산':        int(_sv_fa * 10000),
+                                        '부동산':          int(_sv_re * 10000),
+                                        '국민연금':        int(_sv_nps * 10000),
+                                        '사적연금':        int(_sv_priv * 10000),
+                                        '연금합계':        int(_sv_pen_total * 10000),
+                                        '연금_총적립금':   int(_sv_pen_bal * 10000),
+                                        '연금_평균수익률': float(_sv_pen_ret),
+                                        '연금상세':        _pension_by_group,
+                                        '지출_생활비':     int(_sv_living    * 10000),
+                                        '지출_의료비':     int(_sv_medical   * 10000),
+                                        '지출_여가':       int(_sv_leisure   * 10000),
+                                        '지출_자녀부모':   int(_sv_family    * 10000),
+                                        '지출_보험료':     int(_sv_insurance * 10000),
+                                        '지출_기타':       int(_sv_other     * 10000),
+                                        '지출_대출상환':   int(_sv_debt      * 10000),
+                                        '지출_임차료':     int(_sv_rent      * 10000),
+                                    },
+                                }
+                                _sr, _se = call_api("/scenarios", _upl)
+                                if _se:
+                                    st.error(f"저장 실패: {_se}")
+                                else:
+                                    st.session_state._sc_dirty = True
+                                    st.toast(f"✅ {_sv_label} 저장 완료!")
+                                    st.rerun()
+
+                    # 저장된 시나리오 불러와 비교표 — session_state 캐시로 매 rerun마다 HTTP 요청 방지
+                    if '_sc_cache' not in st.session_state or st.session_state.pop('_sc_dirty', False):
+                        _snaps, _snaps_err = call_api("/scenarios", method="GET")
+                        st.session_state._sc_cache = (_snaps, _snaps_err)
+                    _snaps, _snaps_err = st.session_state._sc_cache
+                    _snap_map = {s['label']: s for s in (_snaps or [])} if not _snaps_err else {}
+                    st.divider()
+                    st.markdown("#### 📊 시나리오 비교")
+
+                    # 관리자: 저장된 시나리오 삭제 버튼
+                    if st.session_state.get('is_admin') and _snap_map:
+                        _del_labels = [l for l in ['STANDARD', 'GOOD', 'BEST'] if l in _snap_map]
+                        if _del_labels:
+                            _dcols = st.columns(len(_del_labels) + 1)
+                            _dcols[0].caption("🗑️ 시나리오 삭제")
+                            for _di, _dlbl in enumerate(_del_labels):
+                                with _dcols[_di + 1]:
+                                    if st.button(f"❌ {_dlbl} 삭제", key=f'btn_del_{_dlbl}',
+                                                 use_container_width=True):
+                                        _dr, _de = call_api(f"/scenarios/{_dlbl}", method="DELETE")
+                                        if _de:
+                                            st.error(f"삭제 실패: {_de}")
+                                        else:
+                                            st.session_state._sc_dirty = True
+                                            st.toast(f"🗑️ {_dlbl} 삭제 완료!")
+                                            st.rerun()
+
+                    # STANDARD: DB에서 로드, 없으면 기본값 사용
+                    _std = _snap_map.get('STANDARD')
+                    def _std_val(key, default):
+                        if _std:
+                            d = _std.get('detail', {})
+                            v = d.get(key)
+                            return v if v is not None else default
+                        return default
+
+                    # ── 우리나라 평균 연금: 사용자 맞춤 현재가치 역산 ──────────
+                    # (_pv_for_user, _yrs_to_ret_u, _yrs_to_nps_u 는 위에서 정의됨)
+                    # STANDARD DB의 연금상세(월수령액·수익률)를 기준으로 사용자 맞춤 적립금 계산
+                    _std_pen_raw = (_std or {}).get('detail', {}).get('연금상세') or {}
+                    _std_pen_fb = {   # DB 없을 때 기본값 (DB STANDARD 기준)
+                        '국민연금': {'월수령액': 1_260_000, '수익률': 4.0},
+                        '퇴직연금': {'월수령액':   460_000, '수익률': 4.0},
+                        'IRP':      {'월수령액':   140_000, '수익률': 4.0},
+                        '개인연금': {'월수령액':   180_000, '수익률': 3.5},
+                        '기타':     {'월수령액':         0, '수익률': 0.0},
                     }
-                _std_total_bal = sum(_std_pen[g]['적립금'] for g in _std_pen)
-
-                _KR_AVG = {
-                    '은퇴연령':         f"{_std['retire_age']}세" if _std else '62세',
-                    '월 수입':          fmt_won(_std['monthly_income'] if _std else 2_040_000),
-                    '월 지출':          fmt_won(_std['monthly_expense'] if _std else 2_520_000),
-                    '월 잉여':          fmt_won(_std['monthly_surplus'] if _std else -480_000),
-                    '순자산':           fmt_won(_std['total_assets'] if _std else 548_000_000),
-                    '금융자산':         fmt_won(_std_val('금융자산', 120_000_000)),
-                    '부동산':           fmt_won(_std_val('부동산', 480_000_000)),
-                    '국민연금(월)':     fmt_won(_std_val('국민연금', 1_260_000)),
-                    '사적연금(월)':     fmt_won(_std_val('사적연금', 780_000)),
-                    '연금합계(월)':     fmt_won(_std_val('연금합계', 2_040_000)),
-                    '연금 적립금':      fmt_won(_std_total_bal),        # 사용자 맞춤 계산
-                    '연금 평균수익률':  f"{_std_val('연금_평균수익률', 3.9)}%",
-                    '지출_생활비':      fmt_won(_std_val('지출_생활비', 2_700_000)),
-                    '지출_의료비':      fmt_won(_std_val('지출_의료비',   500_000)),
-                    '지출_여가':        fmt_won(_std_val('지출_여가',     700_000)),
-                    '지출_자녀부모':    fmt_won(_std_val('지출_자녀부모', 400_000)),
-                    '지출_보험료':      fmt_won(_std_val('지출_보험료',   250_000)),
-                    '지출_기타':        fmt_won(_std_val('지출_기타',     200_000)),
-                    '지출_대출상환':    fmt_won(_std_val('지출_대출상환',       0)),
-                    '지출_임차료':      fmt_won(_std_val('지출_임차료',         0)),
-                }
-
-                _cur_exp_living    = int(st.session_state.get('inp_living',    270)) * 10000
-                _cur_exp_medical   = int(st.session_state.get('inp_medical',    50)) * 10000
-                _cur_exp_leisure   = int(st.session_state.get('inp_leisure',    70)) * 10000
-                _cur_exp_family    = int(st.session_state.get('inp_family',     40)) * 10000
-                _cur_exp_insurance = int(st.session_state.get('inp_insurance',  25)) * 10000
-                _cur_exp_other     = int(st.session_state.get('inp_other',      20)) * 10000
-                _cur_exp_debt      = int(cf.get('월지출_대출상환', 0))
-                _cur_exp_rent      = int(cf.get('월지출_임차료', 0))
-
-                _cols_hdr = ['항목', '현재 상황', '🇰🇷 우리나라 평균']
-                _cols_data = {
-                    '은퇴연령':        [f"{_retire_age_cur}세",                          _KR_AVG['은퇴연령']],
-                    '월 수입':         [fmt_won(cf.get('월수입', 0)),                    _KR_AVG['월 수입']],
-                    '월 지출':         [fmt_won(cf.get('월지출_합계', 0)),               _KR_AVG['월 지출']],
-                    '월 잉여':         [fmt_won(cf.get('월잉여(부족)', 0)),              _KR_AVG['월 잉여']],
-                    '순자산':          [fmt_won(assets.get('순자산', 0)),                _KR_AVG['순자산']],
-                    '금융자산':        [fmt_won(_asset_num(assets.get('금융자산', 0))),  _KR_AVG['금융자산']],
-                    '부동산':          [fmt_won(_asset_num(assets.get('부동산', 0))),    _KR_AVG['부동산']],
-                    '국민연금(월)':    [fmt_won(_nps_monthly),                          _KR_AVG['국민연금(월)']],
-                    '사적연금(월)':    [fmt_won(_private_monthly),                      _KR_AVG['사적연금(월)']],
-                    '연금합계(월)':    [fmt_won(_pension_total),                        _KR_AVG['연금합계(월)']],
-                    '연금 적립금':     [fmt_won(_pension_bal_total),                    _KR_AVG['연금 적립금']],
-                    '연금 평균수익률': [f"{_pension_avg_return}%",                      _KR_AVG['연금 평균수익률']],
-                    '── 지출 세부 ──': ['',                                             ''],
-                    '생활비':          [fmt_won(_cur_exp_living),                       _KR_AVG['지출_생활비']],
-                    '의료비':          [fmt_won(_cur_exp_medical),                      _KR_AVG['지출_의료비']],
-                    '여가/취미':       [fmt_won(_cur_exp_leisure),                      _KR_AVG['지출_여가']],
-                    '자녀/부모 지원':  [fmt_won(_cur_exp_family),                       _KR_AVG['지출_자녀부모']],
-                    '보험료':          [fmt_won(_cur_exp_insurance),                    _KR_AVG['지출_보험료']],
-                    '기타':            [fmt_won(_cur_exp_other),                        _KR_AVG['지출_기타']],
-                    '대출 상환':       [fmt_won(_cur_exp_debt),                         _KR_AVG['지출_대출상환']],
-                    '임차료':          [fmt_won(_cur_exp_rent),                         _KR_AVG['지출_임차료']],
-                }
-                for _lbl in ['GOOD', 'BEST']:
-                    _emoji = '📌 GOOD CASE' if _lbl == 'GOOD' else '🏆 BEST CASE'
-                    if _lbl in _snap_map:
-                        _s = _snap_map[_lbl]
-                        _sd = _s.get('detail', {})
-                        _cols_hdr.append(_emoji)
-                        _cols_data['은퇴연령'].append(f"{_s['retire_age']}세")
-                        _cols_data['월 수입'].append(fmt_won(_s['monthly_income']))
-                        _cols_data['월 지출'].append(fmt_won(_s['monthly_expense']))
-                        _cols_data['월 잉여'].append(fmt_won(_s['monthly_surplus']))
-                        _cols_data['순자산'].append(fmt_won(_s['total_assets']))
-                        _cols_data['금융자산'].append(fmt_won(_asset_num(_sd.get('금융자산', 0))))
-                        _cols_data['부동산'].append(fmt_won(_asset_num(_sd.get('부동산', 0))))
-                        _cols_data['국민연금(월)'].append(fmt_won(_sd.get('국민연금', 0)))
-                        _cols_data['사적연금(월)'].append(fmt_won(_sd.get('사적연금', 0)))
-                        _cols_data['연금합계(월)'].append(fmt_won(_sd.get('연금합계', 0)))
-                        _s_yrs_ret = max(0, _s.get('retire_age', _retire_age_cur) - _cur_age_u)
-                        _s_pv = _pen_pv_total(_sd.get('연금상세', {}), _s_yrs_ret)
-                        _cols_data['연금 적립금'].append(fmt_won(_s_pv))
-                        _cols_data['연금 평균수익률'].append(f"{_sd.get('연금_평균수익률', 0)}%")
-                        _cols_data['── 지출 세부 ──'].append('')
-                        _cols_data['생활비'].append(fmt_won(_sd.get('지출_생활비', 0)))
-                        _cols_data['의료비'].append(fmt_won(_sd.get('지출_의료비', 0)))
-                        _cols_data['여가/취미'].append(fmt_won(_sd.get('지출_여가', 0)))
-                        _cols_data['자녀/부모 지원'].append(fmt_won(_sd.get('지출_자녀부모', 0)))
-                        _cols_data['보험료'].append(fmt_won(_sd.get('지출_보험료', 0)))
-                        _cols_data['기타'].append(fmt_won(_sd.get('지출_기타', 0)))
-                        _cols_data['대출 상환'].append(fmt_won(_sd.get('지출_대출상환', 0)))
-                        _cols_data['임차료'].append(fmt_won(_sd.get('지출_임차료', 0)))
-
-                _df_cmp = pd.DataFrame(
-                    [[k] + v for k, v in _cols_data.items()],
-                    columns=_cols_hdr,
-                )
-
-                # ── 비교 항목 선택 (항목·현재 상황은 항상 고정) ──────
-                _fixed_hdr  = _cols_hdr[:2]   # ['항목', '현재 상황']
-                _option_hdr = _cols_hdr[2:]   # ['🇰🇷 우리나라 평균', ...]
-                if _option_hdr:
-                    _sel = st.multiselect(
-                        "비교 항목 선택",
-                        options=_option_hdr,
-                        default=_option_hdr,
-                        key='cmp_col_sel',
-                        placeholder="비교할 항목을 선택하세요",
-                    )
-                    _show_cols = _fixed_hdr + _sel
-                else:
-                    _show_cols = _fixed_hdr
-                st.markdown(_rtbl_sticky(_df_cmp[_show_cols]), unsafe_allow_html=True)
-
-                # 선택된 시나리오 레이블 세트 (그래프 필터링용)
-                _col_to_sc = {'🇰🇷 우리나라 평균': 'STANDARD', '📌 GOOD CASE': 'GOOD', '🏆 BEST CASE': 'BEST'}
-                _sel_sc = {_col_to_sc[c] for c in (_sel if _option_hdr else []) if c in _col_to_sc}
-
-                # ── 시나리오 비교 그래프 ────────────────────────────────
-                import plotly.graph_objects as go
-                from plotly.subplots import make_subplots
-
-                _lifespan_g = int(_cons_result.get('사용자정보', {}).get('기대수명', 90))
-
-                # 공통 팔레트 — 현재/STANDARD/GOOD/BEST
-                _SC_COLORS = {
-                    '현재 (나)':      '#1565c0',
-                    '🇰🇷 우리나라 평균': '#78909c',
-                    '📌 GOOD':        '#66bb6a',
-                    '🏆 BEST':        '#ffa726',
-                }
-
-                # ── 나이별 순자산 시뮬레이션 ──────────────────────────
-                def _asset_sim(start, m_inc, m_exp, r_age, lifespan, ret=0.04, inf=0.025):
-                    ages, vals = [], []
-                    a = start
-                    for i, age in enumerate(range(r_age, lifespan + 1)):
-                        ages.append(age)
-                        vals.append(round(a / 1e8, 2))   # 억원
-                        net = (m_inc - m_exp * (1 + inf) ** i) * 12
-                        a = a * (1 + ret) + net
-                    return ages, vals
-
-                _chart_series = {}
-                # 현재 상황
-                _chart_series['현재 (나)'] = _asset_sim(
-                    assets.get('순자산', 0),
-                    cf.get('월수입', 0),
-                    cf.get('월지출_합계', 0),
-                    _retire_age_cur,
-                    _lifespan_g,
-                )
-                # 저장된 시나리오
-                for _lbl, _emoji in [('STANDARD', '🇰🇷 우리나라 평균'), ('GOOD', '📌 GOOD'), ('BEST', '🏆 BEST')]:
-                    if _lbl in _snap_map and _lbl in _sel_sc:
-                        _sv = _snap_map[_lbl]
-                        _chart_series[_emoji] = _asset_sim(
-                            _sv['total_assets'],
-                            _sv['monthly_income'],
-                            _sv['monthly_expense'],
-                            _sv['retire_age'],
-                            _lifespan_g,
-                        )
-
-                with st.expander("📈 시나리오 비교 그래프", expanded=True):
-                    _gtab1, _gtab2, _gtab3, _gtab4 = st.tabs([
-                        "💰 자산 구성", "📊 수입/지출 구성", "📈 나이별 수입/지출", "🎯 종합 레이더"
-                    ])
-
-                    # ── 그래프 1: 자산 구성 비교 ──────────────────────
-                    with _gtab1:
-                        _bar_labels, _bar_re, _bar_fin, _bar_pen = [], [], [], []
-                        _bar_labels.append('현재 (나)')
-                        _bar_re.append(round(_asset_num(assets.get('부동산', 0)) / 1e8, 1))
-                        _bar_fin.append(round(_asset_num(assets.get('금융자산', 0)) / 1e8, 1))
-                        _bar_pen.append(round(_pension_bal_total / 1e8, 1))
-                        for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
-                            if _lbl in _snap_map and _lbl in _sel_sc:
-                                _sv = _snap_map[_lbl]
-                                _bar_labels.append(_emoji)
-                                _bar_re.append(round(_asset_num(_sv['detail'].get('부동산', 0)) / 1e8, 1))
-                                _bar_fin.append(round(_asset_num(_sv['detail'].get('금융자산', 0)) / 1e8, 1))
-                                _s_pr = _pen_pv_total(_sv.get('detail', {}).get('연금상세', {}),
-                                                      max(0, _sv.get('retire_age', _retire_age_cur) - _cur_age_u))
-                                _bar_pen.append(round(_s_pr / 1e8, 1))
-
-                        _fig1 = go.Figure()
-                        _fig1.add_trace(go.Bar(name='부동산', x=_bar_labels, y=_bar_re,
-                                               marker=dict(color='rgba(239,83,80,0.2)',
-                                                           line=dict(color='rgba(239,83,80,0.85)', width=1.5)),
-                                               hovertemplate='%{x}<br>부동산: <b>%{y:.1f}억</b><extra></extra>'))
-                        _fig1.add_trace(go.Bar(name='금융자산', x=_bar_labels, y=_bar_fin,
-                                               marker=dict(color='rgba(66,165,245,0.2)',
-                                                           line=dict(color='rgba(66,165,245,0.85)', width=1.5)),
-                                               hovertemplate='%{x}<br>금융자산: <b>%{y:.1f}억</b><extra></extra>'))
-                        _fig1.add_trace(go.Bar(name='연금 적립금(PV)', x=_bar_labels, y=_bar_pen,
-                                               marker=dict(color='rgba(102,187,106,0.2)',
-                                                           line=dict(color='rgba(102,187,106,0.85)', width=1.5)),
-                                               hovertemplate='%{x}<br>연금PV: <b>%{y:.1f}억</b><extra></extra>'))
-                        _fig1.update_layout(
-                            barmode='stack',
-                            title=dict(text="시나리오별 자산 구성 비교 (억원)", font=dict(size=16, color='#fff')),
-                            xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
-                            yaxis=dict(title="금액 (억원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
-                            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                            font=dict(color='#ddd'),
-                            legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
-                            margin=dict(l=10, r=10, t=60, b=40),
-                            dragmode=False,
-                        )
-                        st.plotly_chart(_fig1, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
-
-                    # ── 그래프 2: 수입/지출 구성 (스냅샷 막대) ──────────
-                    with _gtab2:
-                        _cf_labels, _cf_inc, _cf_exp, _cf_sur = [], [], [], []
-                        def _add_cf(label, inc, exp):
-                            _cf_labels.append(label)
-                            _cf_inc.append(round(inc / 10000))
-                            _cf_exp.append(round(exp / 10000))
-                            _cf_sur.append(round((inc - exp) / 10000))
-                        _add_cf('현재 (나)', cf.get('월수입', 0), cf.get('월지출_합계', 0))
-                        for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
-                            if _lbl in _snap_map and _lbl in _sel_sc:
-                                _sv = _snap_map[_lbl]
-                                _add_cf(_emoji, _sv['monthly_income'], _sv['monthly_expense'])
-
-                        _fig2 = go.Figure()
-                        _fig2.add_trace(go.Bar(
-                            name='월 수입', x=_cf_labels, y=_cf_inc,
-                            marker=dict(color='rgba(66,165,245,0.2)',
-                                        line=dict(color='rgba(66,165,245,0.9)', width=1.5)),
-                            hovertemplate='%{x}<br>월수입: <b>%{y:,}만원</b><extra></extra>',
-                        ))
-                        _fig2.add_trace(go.Bar(
-                            name='월 지출', x=_cf_labels, y=_cf_exp,
-                            marker=dict(color='rgba(239,83,80,0.2)',
-                                        line=dict(color='rgba(239,83,80,0.9)', width=1.5)),
-                            hovertemplate='%{x}<br>월지출: <b>%{y:,}만원</b><extra></extra>',
-                        ))
-                        _fig2.add_trace(go.Scatter(
-                            name='월 잉여(+)/부족(-)', x=_cf_labels, y=_cf_sur,
-                            mode='lines+markers+text',
-                            text=[f"{v:+,}만" for v in _cf_sur],
-                            textposition='top center',
-                            textfont=dict(size=12, color='#ffd54f'),
-                            line=dict(color='#ffd54f', width=2, dash='dot'),
-                            marker=dict(size=8, color='#ffd54f', line=dict(color='#fff', width=1)),
-                            hovertemplate='%{x}<br>잉여: <b>%{y:+,}만원</b><extra></extra>',
-                        ))
-                        _fig2.add_hline(y=0, line_dash='dash', line_color='rgba(255,255,255,0.3)')
-                        _fig2.update_layout(
-                            barmode='group',
-                            title=dict(text="시나리오별 월 수입 / 지출 비교 (만원)", font=dict(size=16, color='#fff')),
-                            xaxis=dict(gridcolor='rgba(255,255,255,0.08)', color='#ccc'),
-                            yaxis=dict(title="금액 (만원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
-                            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                            font=dict(color='#ddd'),
-                            legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
-                            margin=dict(l=10, r=10, t=60, b=40),
-                            hovermode='x unified',
-                            dragmode=False,
-                        )
-                        st.plotly_chart(_fig2, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
-
-                    # ── 그래프 3: 나이별 월수입·월지출 라인 ───────────
-                    with _gtab3:
-                        _inf_rate = st.session_state.get('inp_inflation', 2.0) / 100
-
-                        # 시나리오별 나이→(수입,지출) 데이터 생성
-                        def _cf_by_age(m_inc, m_exp, r_age, lifespan, inf=_inf_rate):
-                            ages, incs, exps = [], [], []
-                            for i, age in enumerate(range(r_age, lifespan + 1)):
-                                ages.append(age)
-                                incs.append(round(m_inc / 10000))          # 만원, 수입은 고정
-                                exps.append(round(m_exp * (1 + inf) ** i / 10000))  # 물가상승 반영
-                            return ages, incs, exps
-
-                        # 현재(나): 실제 나이별수입 데이터 사용
-                        _cage_rows_g = _cons_result.get('나이별수입', [])
-                        _g_ages  = [r['나이'] for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
-                        _g_incs  = [round(max(0, r.get('월수입', 0) - r.get('월세금', 0)) / 10000)
-                                    for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
-                        _g_base_exp  = cf.get('월지출_합계', 0)
-                        _g_cur_age   = _cage_rows_g[0]['나이'] if _cage_rows_g else _retire_age_cur
-                        _g_exps  = [round(_g_base_exp * _age_spend_rate(age) * (1 + _inf_rate) ** max(0, age - _g_cur_age) / 10000)
-                                    for age in _g_ages]
-
-                        _fig1 = go.Figure()
-
-                        # ── 현재(나) ──
-                        if _g_ages:
-                            _fig1.add_trace(go.Scatter(
-                                x=_g_ages, y=_g_incs, name='수입 — 현재(나)',
-                                mode='lines',
-                                line=dict(color='#1565c0', width=2.5),
-                                hovertemplate='%{x}세 수입: <b>%{y:,}만원</b><extra>현재(나)</extra>',
-                            ))
-                            _fig1.add_trace(go.Scatter(
-                                x=_g_ages, y=_g_exps, name='지출 — 현재(나)',
-                                mode='lines',
-                                line=dict(color='#1565c0', width=2.5, dash='dot'),
-                                hovertemplate='%{x}세 지출: <b>%{y:,}만원</b><extra>현재(나)</extra>',
-                            ))
-                            # 잉여/부족 영역
-                            _g_sur = [inc - exp for inc, exp in zip(_g_incs, _g_exps)]
-                            _fig1.add_trace(go.Scatter(
-                                x=_g_ages + _g_ages[::-1],
-                                y=[max(0, s) for s in _g_sur] + [0] * len(_g_ages),
-                                fill='toself', mode='none', showlegend=False,
-                                fillcolor='rgba(21,101,192,0.08)',
-                                hoverinfo='skip',
-                            ))
-
-                        # ── 저장된 시나리오 ──
-                        _sc_styles = {
-                            'STANDARD': ('🇰🇷 평균',  '#78909c'),
-                            'GOOD':     ('📌 GOOD',   '#66bb6a'),
-                            'BEST':     ('🏆 BEST',   '#ffa726'),
+                    _std_pen = {}
+                    _yrs_to_ret_std = max(0, ((_std or {}).get('retire_age') or _retire_age_cur) - _cur_age_u)
+                    for _sg in ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']:
+                        _rg  = _std_pen_raw.get(_sg) or _std_pen_fb.get(_sg, {})
+                        _pmt = _rg.get('월수령액', 0)
+                        _rte = _rg.get('수익률', 4.0)
+                        _yrs = _yrs_to_nps_u if _sg == '국민연금' else _yrs_to_ret_std
+                        _std_pen[_sg] = {
+                            '적립금':   _pv_for_user(_pmt, _rte, _yrs),
+                            '월수령액': _pmt,
+                            '수익률':   _rte,
                         }
-                        for _lbl, (_emoji, _scol) in _sc_styles.items():
-                            if _lbl not in _snap_map or _lbl not in _sel_sc:
-                                continue
+                    _std_total_bal = sum(_std_pen[g]['적립금'] for g in _std_pen)
+
+                    _KR_AVG = {
+                        '은퇴연령':         f"{_std['retire_age']}세" if _std else '62세',
+                        '월 수입':          fmt_won(_std['monthly_income'] if _std else 2_040_000),
+                        '월 지출':          fmt_won(_std['monthly_expense'] if _std else 2_520_000),
+                        '월 잉여':          fmt_won(_std['monthly_surplus'] if _std else -480_000),
+                        '순자산':           fmt_won(_std['total_assets'] if _std else 548_000_000),
+                        '금융자산':         fmt_won(_std_val('금융자산', 120_000_000)),
+                        '부동산':           fmt_won(_std_val('부동산', 480_000_000)),
+                        '국민연금(월)':     fmt_won(_std_val('국민연금', 1_260_000)),
+                        '사적연금(월)':     fmt_won(_std_val('사적연금', 780_000)),
+                        '연금합계(월)':     fmt_won(_std_val('연금합계', 2_040_000)),
+                        '연금 적립금':      fmt_won(_std_total_bal),        # 사용자 맞춤 계산
+                        '연금 평균수익률':  f"{_std_val('연금_평균수익률', 3.9)}%",
+                        '지출_생활비':      fmt_won(_std_val('지출_생활비', 2_700_000)),
+                        '지출_의료비':      fmt_won(_std_val('지출_의료비',   500_000)),
+                        '지출_여가':        fmt_won(_std_val('지출_여가',     700_000)),
+                        '지출_자녀부모':    fmt_won(_std_val('지출_자녀부모', 400_000)),
+                        '지출_보험료':      fmt_won(_std_val('지출_보험료',   250_000)),
+                        '지출_기타':        fmt_won(_std_val('지출_기타',     200_000)),
+                        '지출_대출상환':    fmt_won(_std_val('지출_대출상환',       0)),
+                        '지출_임차료':      fmt_won(_std_val('지출_임차료',         0)),
+                    }
+
+                    _cur_exp_living    = int(st.session_state.get('inp_living',    270)) * 10000
+                    _cur_exp_medical   = int(st.session_state.get('inp_medical',    50)) * 10000
+                    _cur_exp_leisure   = int(st.session_state.get('inp_leisure',    70)) * 10000
+                    _cur_exp_family    = int(st.session_state.get('inp_family',     40)) * 10000
+                    _cur_exp_insurance = int(st.session_state.get('inp_insurance',  25)) * 10000
+                    _cur_exp_other     = int(st.session_state.get('inp_other',      20)) * 10000
+                    _cur_exp_debt      = int(cf.get('월지출_대출상환', 0))
+                    _cur_exp_rent      = int(cf.get('월지출_임차료', 0))
+
+                    _cols_hdr = ['항목', '현재 상황', '🇰🇷 우리나라 평균']
+                    _cols_data = {
+                        '은퇴연령':        [f"{_retire_age_cur}세",                          _KR_AVG['은퇴연령']],
+                        '월 수입':         [fmt_won(cf.get('월수입', 0)),                    _KR_AVG['월 수입']],
+                        '월 지출':         [fmt_won(cf.get('월지출_합계', 0)),               _KR_AVG['월 지출']],
+                        '월 잉여':         [fmt_won(cf.get('월잉여(부족)', 0)),              _KR_AVG['월 잉여']],
+                        '순자산':          [fmt_won(assets.get('순자산', 0)),                _KR_AVG['순자산']],
+                        '금융자산':        [fmt_won(_asset_num(assets.get('금융자산', 0))),  _KR_AVG['금융자산']],
+                        '부동산':          [fmt_won(_asset_num(assets.get('부동산', 0))),    _KR_AVG['부동산']],
+                        '국민연금(월)':    [fmt_won(_nps_monthly),                          _KR_AVG['국민연금(월)']],
+                        '사적연금(월)':    [fmt_won(_private_monthly),                      _KR_AVG['사적연금(월)']],
+                        '연금합계(월)':    [fmt_won(_pension_total),                        _KR_AVG['연금합계(월)']],
+                        '연금 적립금':     [fmt_won(_pension_bal_total),                    _KR_AVG['연금 적립금']],
+                        '연금 평균수익률': [f"{_pension_avg_return}%",                      _KR_AVG['연금 평균수익률']],
+                        '── 지출 세부 ──': ['',                                             ''],
+                        '생활비':          [fmt_won(_cur_exp_living),                       _KR_AVG['지출_생활비']],
+                        '의료비':          [fmt_won(_cur_exp_medical),                      _KR_AVG['지출_의료비']],
+                        '여가/취미':       [fmt_won(_cur_exp_leisure),                      _KR_AVG['지출_여가']],
+                        '자녀/부모 지원':  [fmt_won(_cur_exp_family),                       _KR_AVG['지출_자녀부모']],
+                        '보험료':          [fmt_won(_cur_exp_insurance),                    _KR_AVG['지출_보험료']],
+                        '기타':            [fmt_won(_cur_exp_other),                        _KR_AVG['지출_기타']],
+                        '대출 상환':       [fmt_won(_cur_exp_debt),                         _KR_AVG['지출_대출상환']],
+                        '임차료':          [fmt_won(_cur_exp_rent),                         _KR_AVG['지출_임차료']],
+                    }
+                    for _lbl in ['GOOD', 'BEST']:
+                        _emoji = '📌 GOOD CASE' if _lbl == 'GOOD' else '🏆 BEST CASE'
+                        if _lbl in _snap_map:
+                            _s = _snap_map[_lbl]
+                            _sd = _s.get('detail', {})
+                            _cols_hdr.append(_emoji)
+                            _cols_data['은퇴연령'].append(f"{_s['retire_age']}세")
+                            _cols_data['월 수입'].append(fmt_won(_s['monthly_income']))
+                            _cols_data['월 지출'].append(fmt_won(_s['monthly_expense']))
+                            _cols_data['월 잉여'].append(fmt_won(_s['monthly_surplus']))
+                            _cols_data['순자산'].append(fmt_won(_s['total_assets']))
+                            _cols_data['금융자산'].append(fmt_won(_asset_num(_sd.get('금융자산', 0))))
+                            _cols_data['부동산'].append(fmt_won(_asset_num(_sd.get('부동산', 0))))
+                            _cols_data['국민연금(월)'].append(fmt_won(_sd.get('국민연금', 0)))
+                            _cols_data['사적연금(월)'].append(fmt_won(_sd.get('사적연금', 0)))
+                            _cols_data['연금합계(월)'].append(fmt_won(_sd.get('연금합계', 0)))
+                            _s_yrs_ret = max(0, _s.get('retire_age', _retire_age_cur) - _cur_age_u)
+                            _s_pv = _pen_pv_total(_sd.get('연금상세', {}), _s_yrs_ret)
+                            _cols_data['연금 적립금'].append(fmt_won(_s_pv))
+                            _cols_data['연금 평균수익률'].append(f"{_sd.get('연금_평균수익률', 0)}%")
+                            _cols_data['── 지출 세부 ──'].append('')
+                            _cols_data['생활비'].append(fmt_won(_sd.get('지출_생활비', 0)))
+                            _cols_data['의료비'].append(fmt_won(_sd.get('지출_의료비', 0)))
+                            _cols_data['여가/취미'].append(fmt_won(_sd.get('지출_여가', 0)))
+                            _cols_data['자녀/부모 지원'].append(fmt_won(_sd.get('지출_자녀부모', 0)))
+                            _cols_data['보험료'].append(fmt_won(_sd.get('지출_보험료', 0)))
+                            _cols_data['기타'].append(fmt_won(_sd.get('지출_기타', 0)))
+                            _cols_data['대출 상환'].append(fmt_won(_sd.get('지출_대출상환', 0)))
+                            _cols_data['임차료'].append(fmt_won(_sd.get('지출_임차료', 0)))
+
+                    _df_cmp = pd.DataFrame(
+                        [[k] + v for k, v in _cols_data.items()],
+                        columns=_cols_hdr,
+                    )
+
+                    # ── 비교 항목 선택 (항목·현재 상황은 항상 고정) ──────
+                    _fixed_hdr  = _cols_hdr[:2]   # ['항목', '현재 상황']
+                    _option_hdr = _cols_hdr[2:]   # ['🇰🇷 우리나라 평균', ...]
+                    if _option_hdr:
+                        _sel = st.multiselect(
+                            "비교 항목 선택",
+                            options=_option_hdr,
+                            default=_option_hdr,
+                            key='cmp_col_sel',
+                            placeholder="비교할 항목을 선택하세요",
+                        )
+                        _show_cols = _fixed_hdr + _sel
+                    else:
+                        _show_cols = _fixed_hdr
+                    st.markdown(_rtbl_sticky(_df_cmp[_show_cols]), unsafe_allow_html=True)
+
+                    # 선택된 시나리오 레이블 세트 (그래프 필터링용)
+                    _col_to_sc = {'🇰🇷 우리나라 평균': 'STANDARD', '📌 GOOD CASE': 'GOOD', '🏆 BEST CASE': 'BEST'}
+                    _sel_sc = {_col_to_sc[c] for c in (_sel if _option_hdr else []) if c in _col_to_sc}
+
+                    # ── 시나리오 비교 그래프 ────────────────────────────────
+                    import plotly.graph_objects as go
+                    from plotly.subplots import make_subplots
+
+                    _lifespan_g = int(_cons_result.get('사용자정보', {}).get('기대수명', 90))
+
+                    # 공통 팔레트 — 현재/STANDARD/GOOD/BEST
+                    _SC_COLORS = {
+                        '현재 (나)':      '#1565c0',
+                        '🇰🇷 우리나라 평균': '#78909c',
+                        '📌 GOOD':        '#66bb6a',
+                        '🏆 BEST':        '#ffa726',
+                    }
+
+                    # ── 나이별 순자산 시뮬레이션 ──────────────────────────
+                    def _asset_sim(start, m_inc, m_exp, r_age, lifespan, ret=0.04, inf=0.025):
+                        ages, vals = [], []
+                        a = start
+                        for i, age in enumerate(range(r_age, lifespan + 1)):
+                            ages.append(age)
+                            vals.append(round(a / 1e8, 2))   # 억원
+                            net = (m_inc - m_exp * (1 + inf) ** i) * 12
+                            a = a * (1 + ret) + net
+                        return ages, vals
+
+                    _chart_series = {}
+                    # 현재 상황
+                    _chart_series['현재 (나)'] = _asset_sim(
+                        assets.get('순자산', 0),
+                        cf.get('월수입', 0),
+                        cf.get('월지출_합계', 0),
+                        _retire_age_cur,
+                        _lifespan_g,
+                    )
+                    # 저장된 시나리오
+                    for _lbl, _emoji in [('STANDARD', '🇰🇷 우리나라 평균'), ('GOOD', '📌 GOOD'), ('BEST', '🏆 BEST')]:
+                        if _lbl in _snap_map and _lbl in _sel_sc:
                             _sv = _snap_map[_lbl]
-                            _sa, _si, _se = _cf_by_age(
-                                _sv['monthly_income'], _sv['monthly_expense'],
-                                _sv['retire_age'], _lifespan_g,
+                            _chart_series[_emoji] = _asset_sim(
+                                _sv['total_assets'],
+                                _sv['monthly_income'],
+                                _sv['monthly_expense'],
+                                _sv['retire_age'],
+                                _lifespan_g,
                             )
-                            _fig1.add_trace(go.Scatter(
-                                x=_sa, y=_si, name=f'수입 — {_emoji}',
-                                mode='lines',
-                                line=dict(color=_scol, width=2),
-                                hovertemplate='%{x}세 수입: <b>%{y:,}만원</b><extra>' + _emoji + '</extra>',
-                            ))
-                            _fig1.add_trace(go.Scatter(
-                                x=_sa, y=_se, name=f'지출 — {_emoji}',
-                                mode='lines',
-                                line=dict(color=_scol, width=2, dash='dot'),
-                                hovertemplate='%{x}세 지출: <b>%{y:,}만원</b><extra>' + _emoji + '</extra>',
-                            ))
 
-                        # ── 대출상환금·임차료 음수 고정선 ──
-                        _g_debt = cf.get('월지출_대출상환', 0)
-                        _g_rent = cf.get('월지출_임차료', 0)
-                        if _g_ages and _g_debt > 0:
-                            _debt_man = round(_g_debt / 10000)
-                            _fig1.add_trace(go.Scatter(
-                                x=_g_ages,
-                                y=[-_debt_man] * len(_g_ages),
-                                name=f'대출상환금 (-{_debt_man:,}만)',
-                                mode='lines',
-                                line=dict(color='#ff7043', width=1.8, dash='dashdot'),
-                                hovertemplate='%{x}세 대출상환금: <b>-%{customdata:,}만원</b><extra>대출상환금</extra>',
-                                customdata=[_debt_man] * len(_g_ages),
+                    with st.expander("📈 시나리오 비교 그래프", expanded=True):
+                        _gtab1, _gtab2, _gtab3, _gtab4 = st.tabs([
+                            "💰 자산 구성", "📊 수입/지출 구성", "📈 나이별 수입/지출", "🎯 종합 레이더"
+                        ])
+
+                        # ── 그래프 1: 자산 구성 비교 ──────────────────────
+                        with _gtab1:
+                            _bar_labels, _bar_re, _bar_fin, _bar_pen = [], [], [], []
+                            _bar_labels.append('현재 (나)')
+                            _bar_re.append(round(_asset_num(assets.get('부동산', 0)) / 1e8, 1))
+                            _bar_fin.append(round(_asset_num(assets.get('금융자산', 0)) / 1e8, 1))
+                            _bar_pen.append(round(_pension_bal_total / 1e8, 1))
+                            for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
+                                if _lbl in _snap_map and _lbl in _sel_sc:
+                                    _sv = _snap_map[_lbl]
+                                    _bar_labels.append(_emoji)
+                                    _bar_re.append(round(_asset_num(_sv['detail'].get('부동산', 0)) / 1e8, 1))
+                                    _bar_fin.append(round(_asset_num(_sv['detail'].get('금융자산', 0)) / 1e8, 1))
+                                    _s_pr = _pen_pv_total(_sv.get('detail', {}).get('연금상세', {}),
+                                                          max(0, _sv.get('retire_age', _retire_age_cur) - _cur_age_u))
+                                    _bar_pen.append(round(_s_pr / 1e8, 1))
+
+                            _fig1 = go.Figure()
+                            _fig1.add_trace(go.Bar(name='부동산', x=_bar_labels, y=_bar_re,
+                                                   marker=dict(color='rgba(239,83,80,0.2)',
+                                                               line=dict(color='rgba(239,83,80,0.85)', width=1.5)),
+                                                   hovertemplate='%{x}<br>부동산: <b>%{y:.1f}억</b><extra></extra>'))
+                            _fig1.add_trace(go.Bar(name='금융자산', x=_bar_labels, y=_bar_fin,
+                                                   marker=dict(color='rgba(66,165,245,0.2)',
+                                                               line=dict(color='rgba(66,165,245,0.85)', width=1.5)),
+                                                   hovertemplate='%{x}<br>금융자산: <b>%{y:.1f}억</b><extra></extra>'))
+                            _fig1.add_trace(go.Bar(name='연금 적립금(PV)', x=_bar_labels, y=_bar_pen,
+                                                   marker=dict(color='rgba(102,187,106,0.2)',
+                                                               line=dict(color='rgba(102,187,106,0.85)', width=1.5)),
+                                                   hovertemplate='%{x}<br>연금PV: <b>%{y:.1f}억</b><extra></extra>'))
+                            _fig1.update_layout(
+                                barmode='stack',
+                                title=dict(text="시나리오별 자산 구성 비교 (억원)", font=dict(size=16, color='#fff')),
+                                xaxis=dict(gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                                yaxis=dict(title="금액 (억원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                                font=dict(color='#ddd'),
+                                legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
+                                margin=dict(l=10, r=10, t=60, b=40),
+                                dragmode=False,
+                            )
+                            st.plotly_chart(_fig1, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
+
+                        # ── 그래프 2: 수입/지출 구성 (스냅샷 막대) ──────────
+                        with _gtab2:
+                            _cf_labels, _cf_inc, _cf_exp, _cf_sur = [], [], [], []
+                            def _add_cf(label, inc, exp):
+                                _cf_labels.append(label)
+                                _cf_inc.append(round(inc / 10000))
+                                _cf_exp.append(round(exp / 10000))
+                                _cf_sur.append(round((inc - exp) / 10000))
+                            _add_cf('현재 (나)', cf.get('월수입', 0), cf.get('월지출_합계', 0))
+                            for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
+                                if _lbl in _snap_map and _lbl in _sel_sc:
+                                    _sv = _snap_map[_lbl]
+                                    _add_cf(_emoji, _sv['monthly_income'], _sv['monthly_expense'])
+
+                            _fig2 = go.Figure()
+                            _fig2.add_trace(go.Bar(
+                                name='월 수입', x=_cf_labels, y=_cf_inc,
+                                marker=dict(color='rgba(66,165,245,0.2)',
+                                            line=dict(color='rgba(66,165,245,0.9)', width=1.5)),
+                                hovertemplate='%{x}<br>월수입: <b>%{y:,}만원</b><extra></extra>',
                             ))
-                        if _g_ages and _g_rent > 0:
-                            _rent_base = round(_g_rent / 10000)
-                            _rent_cur_age = _cage_rows_g[0]['나이'] if _cage_rows_g else _g_ages[0]
-                            _g_rents = [round(_rent_base * (1 + _inf_rate) ** max(0, age - _rent_cur_age)) for age in _g_ages]
-                            _fig1.add_trace(go.Scatter(
-                                x=_g_ages,
-                                y=[-v for v in _g_rents],
-                                name=f'임차료 (물가반영, 기준 -{_rent_base:,}만)',
-                                mode='lines',
-                                line=dict(color='#ab47bc', width=1.8, dash='dashdot'),
-                                hovertemplate='%{x}세 임차료: <b>-%{customdata:,}만원</b><extra>임차료</extra>',
-                                customdata=_g_rents,
+                            _fig2.add_trace(go.Bar(
+                                name='월 지출', x=_cf_labels, y=_cf_exp,
+                                marker=dict(color='rgba(239,83,80,0.2)',
+                                            line=dict(color='rgba(239,83,80,0.9)', width=1.5)),
+                                hovertemplate='%{x}<br>월지출: <b>%{y:,}만원</b><extra></extra>',
                             ))
+                            _fig2.add_trace(go.Scatter(
+                                name='월 잉여(+)/부족(-)', x=_cf_labels, y=_cf_sur,
+                                mode='lines+markers+text',
+                                text=[f"{v:+,}만" for v in _cf_sur],
+                                textposition='top center',
+                                textfont=dict(size=12, color='#ffd54f'),
+                                line=dict(color='#ffd54f', width=2, dash='dot'),
+                                marker=dict(size=8, color='#ffd54f', line=dict(color='#fff', width=1)),
+                                hovertemplate='%{x}<br>잉여: <b>%{y:+,}만원</b><extra></extra>',
+                            ))
+                            _fig2.add_hline(y=0, line_dash='dash', line_color='rgba(255,255,255,0.3)')
+                            _fig2.update_layout(
+                                barmode='group',
+                                title=dict(text="시나리오별 월 수입 / 지출 비교 (만원)", font=dict(size=16, color='#fff')),
+                                xaxis=dict(gridcolor='rgba(255,255,255,0.08)', color='#ccc'),
+                                yaxis=dict(title="금액 (만원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                                font=dict(color='#ddd'),
+                                legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
+                                margin=dict(l=10, r=10, t=60, b=40),
+                                hovermode='x unified',
+                                dragmode=False,
+                            )
+                            st.plotly_chart(_fig2, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
 
-                        _fig1.add_hline(y=0, line_dash='dash',
-                                        line_color='rgba(255,255,255,0.2)')
-                        _fig1.update_layout(
-                            title=dict(text="나이별 월 수입(실선) / 지출(점선) · 고정의무지출(음수선) — 만원", font=dict(size=16, color='#fff')),
-                            xaxis=dict(title="나이", tickmode='linear', dtick=5,
-                                       gridcolor='rgba(255,255,255,0.08)', color='#ccc'),
-                            yaxis=dict(title="금액 (만원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            font=dict(color='#ddd'),
-                            legend=dict(orientation='h', yanchor='bottom', y=1.02,
-                                        bgcolor='rgba(0,0,0,0)', font=dict(size=11)),
-                            margin=dict(l=10, r=10, t=60, b=40),
-                            hovermode='x unified',
-                            dragmode=False,
-                        )
-                        st.plotly_chart(_fig1, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
+                        # ── 그래프 3: 나이별 월수입·월지출 라인 ───────────
+                        with _gtab3:
+                            _inf_rate = st.session_state.get('inp_inflation', 2.0) / 100
 
-                    # ── 그래프 4: 종합 레이더 차트 ────────────────────
-                    with _gtab4:
-                        _r_cats = ['순자산<br>(억)', '월수입<br>(백만)', '월지출<br>(백만)', '연금합계<br>(월·만원)', '금융자산<br>(억)']
-                        def _radar_vals(net, m_inc, m_exp, pen, fin):
-                            return [round(net/1e8,1), round(m_inc/1e6,1), round(m_exp/1e6,1),
-                                    round(pen/10000,1), round(fin/1e8,1)]
+                            # 시나리오별 나이→(수입,지출) 데이터 생성
+                            def _cf_by_age(m_inc, m_exp, r_age, lifespan, inf=_inf_rate):
+                                ages, incs, exps = [], [], []
+                                for i, age in enumerate(range(r_age, lifespan + 1)):
+                                    ages.append(age)
+                                    incs.append(round(m_inc / 10000))          # 만원, 수입은 고정
+                                    exps.append(round(m_exp * (1 + inf) ** i / 10000))  # 물가상승 반영
+                                return ages, incs, exps
 
-                        _r_data = {}
-                        # 현재
-                        _r_data['현재 (나)'] = _radar_vals(
-                            assets.get('순자산', 0), cf.get('월수입',0), cf.get('월지출_합계',0),
-                            _pension_total, _asset_num(assets.get('금융자산',0)),
-                        )
-                        for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
-                            if _lbl in _snap_map and _lbl in _sel_sc:
+                            # 현재(나): 실제 나이별수입 데이터 사용
+                            _cage_rows_g = _cons_result.get('나이별수입', [])
+                            _g_ages  = [r['나이'] for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
+                            _g_incs  = [round(max(0, r.get('월수입', 0) - r.get('월세금', 0)) / 10000)
+                                        for r in _cage_rows_g if r['나이'] >= _retire_age_cur]
+                            _g_base_exp  = cf.get('월지출_합계', 0)
+                            _g_cur_age   = _cage_rows_g[0]['나이'] if _cage_rows_g else _retire_age_cur
+                            _g_exps  = [round(_g_base_exp * _age_spend_rate(age) * (1 + _inf_rate) ** max(0, age - _g_cur_age) / 10000)
+                                        for age in _g_ages]
+
+                            _fig1 = go.Figure()
+
+                            # ── 현재(나) ──
+                            if _g_ages:
+                                _fig1.add_trace(go.Scatter(
+                                    x=_g_ages, y=_g_incs, name='수입 — 현재(나)',
+                                    mode='lines',
+                                    line=dict(color='#1565c0', width=2.5),
+                                    hovertemplate='%{x}세 수입: <b>%{y:,}만원</b><extra>현재(나)</extra>',
+                                ))
+                                _fig1.add_trace(go.Scatter(
+                                    x=_g_ages, y=_g_exps, name='지출 — 현재(나)',
+                                    mode='lines',
+                                    line=dict(color='#1565c0', width=2.5, dash='dot'),
+                                    hovertemplate='%{x}세 지출: <b>%{y:,}만원</b><extra>현재(나)</extra>',
+                                ))
+                                # 잉여/부족 영역
+                                _g_sur = [inc - exp for inc, exp in zip(_g_incs, _g_exps)]
+                                _fig1.add_trace(go.Scatter(
+                                    x=_g_ages + _g_ages[::-1],
+                                    y=[max(0, s) for s in _g_sur] + [0] * len(_g_ages),
+                                    fill='toself', mode='none', showlegend=False,
+                                    fillcolor='rgba(21,101,192,0.08)',
+                                    hoverinfo='skip',
+                                ))
+
+                            # ── 저장된 시나리오 ──
+                            _sc_styles = {
+                                'STANDARD': ('🇰🇷 평균',  '#78909c'),
+                                'GOOD':     ('📌 GOOD',   '#66bb6a'),
+                                'BEST':     ('🏆 BEST',   '#ffa726'),
+                            }
+                            for _lbl, (_emoji, _scol) in _sc_styles.items():
+                                if _lbl not in _snap_map or _lbl not in _sel_sc:
+                                    continue
                                 _sv = _snap_map[_lbl]
-                                _r_data[_emoji] = _radar_vals(
-                                    _sv['total_assets'], _sv['monthly_income'], _sv['monthly_expense'],
-                                    _sv['detail'].get('연금합계', 0), _asset_num(_sv['detail'].get('금융자산',0)),
+                                _sa, _si, _se = _cf_by_age(
+                                    _sv['monthly_income'], _sv['monthly_expense'],
+                                    _sv['retire_age'], _lifespan_g,
                                 )
+                                _fig1.add_trace(go.Scatter(
+                                    x=_sa, y=_si, name=f'수입 — {_emoji}',
+                                    mode='lines',
+                                    line=dict(color=_scol, width=2),
+                                    hovertemplate='%{x}세 수입: <b>%{y:,}만원</b><extra>' + _emoji + '</extra>',
+                                ))
+                                _fig1.add_trace(go.Scatter(
+                                    x=_sa, y=_se, name=f'지출 — {_emoji}',
+                                    mode='lines',
+                                    line=dict(color=_scol, width=2, dash='dot'),
+                                    hovertemplate='%{x}세 지출: <b>%{y:,}만원</b><extra>' + _emoji + '</extra>',
+                                ))
 
-                        # 정규화 (최대값 기준)
-                        _r_maxes = [max((v[i] for v in _r_data.values()), default=1) or 1 for i in range(5)]
+                            # ── 대출상환금·임차료 음수 고정선 ──
+                            _g_debt = cf.get('월지출_대출상환', 0)
+                            _g_rent = cf.get('월지출_임차료', 0)
+                            if _g_ages and _g_debt > 0:
+                                _debt_man = round(_g_debt / 10000)
+                                _fig1.add_trace(go.Scatter(
+                                    x=_g_ages,
+                                    y=[-_debt_man] * len(_g_ages),
+                                    name=f'대출상환금 (-{_debt_man:,}만)',
+                                    mode='lines',
+                                    line=dict(color='#ff7043', width=1.8, dash='dashdot'),
+                                    hovertemplate='%{x}세 대출상환금: <b>-%{customdata:,}만원</b><extra>대출상환금</extra>',
+                                    customdata=[_debt_man] * len(_g_ages),
+                                ))
+                            if _g_ages and _g_rent > 0:
+                                _rent_base = round(_g_rent / 10000)
+                                _rent_cur_age = _cage_rows_g[0]['나이'] if _cage_rows_g else _g_ages[0]
+                                _g_rents = [round(_rent_base * (1 + _inf_rate) ** max(0, age - _rent_cur_age)) for age in _g_ages]
+                                _fig1.add_trace(go.Scatter(
+                                    x=_g_ages,
+                                    y=[-v for v in _g_rents],
+                                    name=f'임차료 (물가반영, 기준 -{_rent_base:,}만)',
+                                    mode='lines',
+                                    line=dict(color='#ab47bc', width=1.8, dash='dashdot'),
+                                    hovertemplate='%{x}세 임차료: <b>-%{customdata:,}만원</b><extra>임차료</extra>',
+                                    customdata=_g_rents,
+                                ))
 
-                        _fig3 = go.Figure()
-                        for _sname, _rvals in _r_data.items():
-                            _norm = [round(v / _r_maxes[i] * 100, 1) for i, v in enumerate(_rvals)]
-                            _norm_closed = _norm + [_norm[0]]
-                            _cats_closed = _r_cats + [_r_cats[0]]
-                            _col = _SC_COLORS.get(_sname, '#aaaaaa')
-                            _hover = '<br>'.join(
-                                f"{_r_cats[i].replace('<br>', ' ')}: {_rvals[i]}" for i in range(5)
+                            _fig1.add_hline(y=0, line_dash='dash',
+                                            line_color='rgba(255,255,255,0.2)')
+                            _fig1.update_layout(
+                                title=dict(text="나이별 월 수입(실선) / 지출(점선) · 고정의무지출(음수선) — 만원", font=dict(size=16, color='#fff')),
+                                xaxis=dict(title="나이", tickmode='linear', dtick=5,
+                                           gridcolor='rgba(255,255,255,0.08)', color='#ccc'),
+                                yaxis=dict(title="금액 (만원)", gridcolor='rgba(255,255,255,0.1)', color='#ccc'),
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                font=dict(color='#ddd'),
+                                legend=dict(orientation='h', yanchor='bottom', y=1.02,
+                                            bgcolor='rgba(0,0,0,0)', font=dict(size=11)),
+                                margin=dict(l=10, r=10, t=60, b=40),
+                                hovermode='x unified',
+                                dragmode=False,
                             )
-                            _h = _col.lstrip('#')
-                            _fc = f'rgba({int(_h[0:2],16)},{int(_h[2:4],16)},{int(_h[4:6],16)},0.18)'
-                            _fig3.add_trace(go.Scatterpolar(
-                                r=_norm_closed, theta=_cats_closed,
-                                fill='toself',
-                                fillcolor=_fc,
-                                name=_sname,
-                                line=dict(color=_col, width=2),
-                                hovertemplate=f"<b>{_sname}</b><br>{_hover}<extra></extra>",
-                            ))
-                        _fig3.update_layout(
-                            polar=dict(
-                                bgcolor='rgba(0,0,0,0)',
-                                radialaxis=dict(visible=True, range=[0, 100],
-                                                gridcolor='rgba(255,255,255,0.15)', color='#aaa',
-                                                ticksuffix='%'),
-                                angularaxis=dict(gridcolor='rgba(255,255,255,0.15)', color='#ccc'),
-                            ),
-                            title=dict(text="종합 지표 비교 (최대값 = 100%)", font=dict(size=16, color='#fff')),
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            font=dict(color='#ddd'),
-                            legend=dict(orientation='h', yanchor='bottom', y=-0.15,
-                                        bgcolor='rgba(0,0,0,0)'),
-                            margin=dict(l=30, r=30, t=60, b=60),
-                            dragmode=False,
+                            st.plotly_chart(_fig1, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
+
+                        # ── 그래프 4: 종합 레이더 차트 ────────────────────
+                        with _gtab4:
+                            _r_cats = ['순자산<br>(억)', '월수입<br>(백만)', '월지출<br>(백만)', '연금합계<br>(월·만원)', '금융자산<br>(억)']
+                            def _radar_vals(net, m_inc, m_exp, pen, fin):
+                                return [round(net/1e8,1), round(m_inc/1e6,1), round(m_exp/1e6,1),
+                                        round(pen/10000,1), round(fin/1e8,1)]
+
+                            _r_data = {}
+                            # 현재
+                            _r_data['현재 (나)'] = _radar_vals(
+                                assets.get('순자산', 0), cf.get('월수입',0), cf.get('월지출_합계',0),
+                                _pension_total, _asset_num(assets.get('금융자산',0)),
+                            )
+                            for _lbl, _emoji in [('STANDARD','🇰🇷 평균'), ('GOOD','📌 GOOD'), ('BEST','🏆 BEST')]:
+                                if _lbl in _snap_map and _lbl in _sel_sc:
+                                    _sv = _snap_map[_lbl]
+                                    _r_data[_emoji] = _radar_vals(
+                                        _sv['total_assets'], _sv['monthly_income'], _sv['monthly_expense'],
+                                        _sv['detail'].get('연금합계', 0), _asset_num(_sv['detail'].get('금융자산',0)),
+                                    )
+
+                            # 정규화 (최대값 기준)
+                            _r_maxes = [max((v[i] for v in _r_data.values()), default=1) or 1 for i in range(5)]
+
+                            _fig3 = go.Figure()
+                            for _sname, _rvals in _r_data.items():
+                                _norm = [round(v / _r_maxes[i] * 100, 1) for i, v in enumerate(_rvals)]
+                                _norm_closed = _norm + [_norm[0]]
+                                _cats_closed = _r_cats + [_r_cats[0]]
+                                _col = _SC_COLORS.get(_sname, '#aaaaaa')
+                                _hover = '<br>'.join(
+                                    f"{_r_cats[i].replace('<br>', ' ')}: {_rvals[i]}" for i in range(5)
+                                )
+                                _h = _col.lstrip('#')
+                                _fc = f'rgba({int(_h[0:2],16)},{int(_h[2:4],16)},{int(_h[4:6],16)},0.18)'
+                                _fig3.add_trace(go.Scatterpolar(
+                                    r=_norm_closed, theta=_cats_closed,
+                                    fill='toself',
+                                    fillcolor=_fc,
+                                    name=_sname,
+                                    line=dict(color=_col, width=2),
+                                    hovertemplate=f"<b>{_sname}</b><br>{_hover}<extra></extra>",
+                                ))
+                            _fig3.update_layout(
+                                polar=dict(
+                                    bgcolor='rgba(0,0,0,0)',
+                                    radialaxis=dict(visible=True, range=[0, 100],
+                                                    gridcolor='rgba(255,255,255,0.15)', color='#aaa',
+                                                    ticksuffix='%'),
+                                    angularaxis=dict(gridcolor='rgba(255,255,255,0.15)', color='#ccc'),
+                                ),
+                                title=dict(text="종합 지표 비교 (최대값 = 100%)", font=dict(size=16, color='#fff')),
+                                plot_bgcolor='rgba(0,0,0,0)',
+                                paper_bgcolor='rgba(0,0,0,0)',
+                                font=dict(color='#ddd'),
+                                legend=dict(orientation='h', yanchor='bottom', y=-0.15,
+                                            bgcolor='rgba(0,0,0,0)'),
+                                margin=dict(l=30, r=30, t=60, b=60),
+                                dragmode=False,
+                            )
+                            st.plotly_chart(_fig3, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
+
+                    # 연금 상세보기 — 위 비교표의 멀티셀렉트 선택에 연동
+                    with st.expander("📋 연금 상세보기", expanded=False):
+                        _det_grps = ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']
+
+                        # GOOD/BEST: 저장된 월수령액·수익률 기반으로 현재가치 역산 (시나리오별 은퇴연령 반영)
+                        _good_det_raw  = _snap_map.get('GOOD', {}).get('detail', {}).get('연금상세', {})
+                        _best_det_raw  = _snap_map.get('BEST', {}).get('detail', {}).get('연금상세', {})
+                        _yrs_ret_good  = max(0, _snap_map.get('GOOD', {}).get('retire_age', _retire_age_cur) - _cur_age_u)
+                        _yrs_ret_best  = max(0, _snap_map.get('BEST', {}).get('retire_age', _retire_age_cur) - _cur_age_u)
+                        _user_pen_adj  = _pen_adj(_pension_by_group, _yrs_to_ret_u)
+                        _good_det      = _pen_adj(_good_det_raw, _yrs_ret_good) if _good_det_raw else {}
+                        _best_det      = _pen_adj(_best_det_raw, _yrs_ret_best) if _best_det_raw else {}
+
+                        def _grp_val(d, grp, key, default=0):
+                            return d.get(grp, {}).get(key, default)
+
+                        def _fw(d, grp, key):
+                            return fmt_won(_grp_val(d, grp, key)) if d else '-'
+
+                        def _fr(d, grp):
+                            if not d: return '-'
+                            v = _grp_val(d, grp, '수익률')
+                            return f"{v}%" if v else '-'
+
+                        # 비교표 멀티셀렉트와 동일한 선택 반영
+                        _d_show_std  = '🇰🇷 우리나라 평균' in _sel
+                        _d_show_good = '📌 GOOD CASE' in _sel and 'GOOD' in _snap_map
+                        _d_show_best = '🏆 BEST CASE' in _sel and 'BEST' in _snap_map
+
+                        _det_hdr = ['연금 종류', '나 (현재)']
+                        if _d_show_std:  _det_hdr.append('🇰🇷 우리나라 평균')
+                        if _d_show_good: _det_hdr.append('📌 GOOD')
+                        if _d_show_best: _det_hdr.append('🏆 BEST')
+
+                        def _det_row(grp, key, fmt_fn):
+                            row = [grp, fmt_fn(_user_pen_adj, grp, key)]
+                            if _d_show_std:  row.append(fmt_fn(_std_pen, grp, key))
+                            if _d_show_good: row.append(fmt_fn(_good_det, grp, key))
+                            if _d_show_best: row.append(fmt_fn(_best_det, grp, key))
+                            return row
+
+                        st.markdown("**적립금 현황** (현가평가연금액)")
+                        st.markdown(_rtbl(pd.DataFrame(
+                            [_det_row(_g, '적립금', _fw) for _g in _det_grps],
+                            columns=_det_hdr,
+                        )), unsafe_allow_html=True)
+
+                        st.markdown("**예상 월수령액** (은퇴 후 수령액)")
+                        st.markdown(_rtbl(pd.DataFrame(
+                            [_det_row(_g, '월수령액', _fw) for _g in _det_grps],
+                            columns=_det_hdr,
+                        )), unsafe_allow_html=True)
+
+                        st.markdown("**연 수익률**")
+                        _det_hdr_rt = ['연금 종류', '나 (현재)']
+                        if _d_show_std:  _det_hdr_rt.append('🇰🇷 우리나라 평균')
+                        if _d_show_good: _det_hdr_rt.append('📌 GOOD')
+                        if _d_show_best: _det_hdr_rt.append('🏆 BEST')
+                        _rows_rt = []
+                        for _g in _det_grps:
+                            _v = _grp_val(_pension_by_group, _g, '수익률')
+                            _row_rt = [_g, f"{_v}%" if _v else '-']
+                            if _d_show_std:  _row_rt.append(_fr(_std_pen, _g))
+                            if _d_show_good: _row_rt.append(_fr(_good_det_raw, _g))
+                            if _d_show_best: _row_rt.append(_fr(_best_det_raw, _g))
+                            _rows_rt.append(_row_rt)
+                        st.markdown(_rtbl(pd.DataFrame(_rows_rt, columns=_det_hdr_rt)),
+                                    unsafe_allow_html=True)
+
+                    if st.session_state.get('is_admin'):
+                        with st.expander("🗑️ 시나리오 삭제", expanded=False):
+                            _del_c1, _del_c2, _del_c3 = st.columns(3)
+                            with _del_c1:
+                                if 'GOOD' in _snap_map and st.button("GOOD 삭제", key='del_good'):
+                                    call_api("/scenarios/GOOD", method="DELETE")
+                                    st.session_state._sc_dirty = True
+                                    st.rerun()
+                            with _del_c2:
+                                if 'BEST' in _snap_map and st.button("BEST 삭제", key='del_best'):
+                                    call_api("/scenarios/BEST", method="DELETE")
+                                    st.session_state._sc_dirty = True
+                                    st.rerun()
+                            with _del_c3:
+                                if 'STANDARD' in _snap_map and st.button("STANDARD 삭제", key='del_std'):
+                                    call_api("/scenarios/STANDARD", method="DELETE")
+                                    st.session_state._sc_dirty = True
+                                    st.rerun()
+
+
+                    import datetime as _dt_mod
+
+                    _ss = st.session_state
+                    _ccf  = _cons_result.get('현금흐름', {})
+                    _cage_rows = _cons_result.get('나이별수입', [])
+                    _cage_map  = {r['나이']: r for r in _cage_rows}
+
+                    _cur_year  = _dt_mod.date.today().year
+                    _birth_yr  = _ss.get('inp_birth_year', 1975)
+                    _cur_age   = _cur_year - _birth_yr
+                    _user_info = _cons_result.get('사용자정보', {})
+                    _ret_age   = _user_info.get('희망은퇴연령', _ss.get('inp_retirement_age', 62))
+                    _lifespan  = _user_info.get('기대수명', _ss.get('inp_lifespan', 85))
+                    _cinf      = _ss.get('inp_inflation', 2.0) / 100
+                    _yrs_to_ret = max(0, _ret_age - _cur_age)
+                    _ret_yrs   = max(1, _lifespan - _ret_age)
+                    _base_exp  = _ccf.get('월지출_합계', 0)
+
+                    # 의료비는 별도 배율(나이↑→증가), 나머지 지출은 체감률(나이↑→감소)
+                    # _base_exp 에서 의료비를 분리하여 각각 올바른 배율 적용
+                    _diag_med_base = _ss.get('inp_medical', 50) * 10000
+                    _diag_other_base = max(0, _base_exp - _diag_med_base)
+
+                    def _diag_med_mult(age):
+                        if age < 65:   return 1.0
+                        elif age < 70: return 1.3
+                        elif age < 75: return 1.7
+                        elif age < 80: return 2.2
+                        elif age < 85: return 2.8
+                        else:          return 3.5
+
+                    # 은퇴 후 연령별 순현금흐름 합산 (잉여는 부족분과 상계)
+                    _net_cf = 0
+                    for _ca in range(_ret_age, _lifespan + 1):
+                        _crow = _cage_map.get(_ca, {})
+                        _cincome = max(0, _crow.get('월수입', 0) - _crow.get('월세금', 0))
+                        _inf_m   = (1 + _cinf) ** (_ca - _ret_age)
+                        _cexp    = (
+                            _diag_other_base * _age_spend_rate(_ca) * _inf_m   # 일반 지출 (체감)
+                            + _diag_med_base * _diag_med_mult(_ca) * _inf_m    # 의료비 (증가)
                         )
-                        st.plotly_chart(_fig3, width="stretch", config={'scrollZoom': False, 'displayModeBar': False})
+                        _net_cf += (_cincome - _cexp) * 12   # 잉여(+) / 부족(-)
+                    _total_shortage = max(0, -_net_cf)       # 부족이면 양수
 
-                # 연금 상세보기 — 위 비교표의 멀티셀렉트 선택에 연동
-                with st.expander("📋 연금 상세보기", expanded=False):
-                    _det_grps = ['국민연금', '퇴직연금', 'IRP', '개인연금', '기타']
-
-                    # GOOD/BEST: 저장된 월수령액·수익률 기반으로 현재가치 역산 (시나리오별 은퇴연령 반영)
-                    _good_det_raw  = _snap_map.get('GOOD', {}).get('detail', {}).get('연금상세', {})
-                    _best_det_raw  = _snap_map.get('BEST', {}).get('detail', {}).get('연금상세', {})
-                    _yrs_ret_good  = max(0, _snap_map.get('GOOD', {}).get('retire_age', _retire_age_cur) - _cur_age_u)
-                    _yrs_ret_best  = max(0, _snap_map.get('BEST', {}).get('retire_age', _retire_age_cur) - _cur_age_u)
-                    _user_pen_adj  = _pen_adj(_pension_by_group, _yrs_to_ret_u)
-                    _good_det      = _pen_adj(_good_det_raw, _yrs_ret_good) if _good_det_raw else {}
-                    _best_det      = _pen_adj(_best_det_raw, _yrs_ret_best) if _best_det_raw else {}
-
-                    def _grp_val(d, grp, key, default=0):
-                        return d.get(grp, {}).get(key, default)
-
-                    def _fw(d, grp, key):
-                        return fmt_won(_grp_val(d, grp, key)) if d else '-'
-
-                    def _fr(d, grp):
-                        if not d: return '-'
-                        v = _grp_val(d, grp, '수익률')
-                        return f"{v}%" if v else '-'
-
-                    # 비교표 멀티셀렉트와 동일한 선택 반영
-                    _d_show_std  = '🇰🇷 우리나라 평균' in _sel
-                    _d_show_good = '📌 GOOD CASE' in _sel and 'GOOD' in _snap_map
-                    _d_show_best = '🏆 BEST CASE' in _sel and 'BEST' in _snap_map
-
-                    _det_hdr = ['연금 종류', '나 (현재)']
-                    if _d_show_std:  _det_hdr.append('🇰🇷 우리나라 평균')
-                    if _d_show_good: _det_hdr.append('📌 GOOD')
-                    if _d_show_best: _det_hdr.append('🏆 BEST')
-
-                    def _det_row(grp, key, fmt_fn):
-                        row = [grp, fmt_fn(_user_pen_adj, grp, key)]
-                        if _d_show_std:  row.append(fmt_fn(_std_pen, grp, key))
-                        if _d_show_good: row.append(fmt_fn(_good_det, grp, key))
-                        if _d_show_best: row.append(fmt_fn(_best_det, grp, key))
-                        return row
-
-                    st.markdown("**적립금 현황** (현가평가연금액)")
-                    st.markdown(_rtbl(pd.DataFrame(
-                        [_det_row(_g, '적립금', _fw) for _g in _det_grps],
-                        columns=_det_hdr,
-                    )), unsafe_allow_html=True)
-
-                    st.markdown("**예상 월수령액** (은퇴 후 수령액)")
-                    st.markdown(_rtbl(pd.DataFrame(
-                        [_det_row(_g, '월수령액', _fw) for _g in _det_grps],
-                        columns=_det_hdr,
-                    )), unsafe_allow_html=True)
-
-                    st.markdown("**연 수익률**")
-                    _det_hdr_rt = ['연금 종류', '나 (현재)']
-                    if _d_show_std:  _det_hdr_rt.append('🇰🇷 우리나라 평균')
-                    if _d_show_good: _det_hdr_rt.append('📌 GOOD')
-                    if _d_show_best: _det_hdr_rt.append('🏆 BEST')
-                    _rows_rt = []
-                    for _g in _det_grps:
-                        _v = _grp_val(_pension_by_group, _g, '수익률')
-                        _row_rt = [_g, f"{_v}%" if _v else '-']
-                        if _d_show_std:  _row_rt.append(_fr(_std_pen, _g))
-                        if _d_show_good: _row_rt.append(_fr(_good_det_raw, _g))
-                        if _d_show_best: _row_rt.append(_fr(_best_det_raw, _g))
-                        _rows_rt.append(_row_rt)
-                    st.markdown(_rtbl(pd.DataFrame(_rows_rt, columns=_det_hdr_rt)),
-                                unsafe_allow_html=True)
-
-                if st.session_state.get('is_admin'):
-                    with st.expander("🗑️ 시나리오 삭제", expanded=False):
-                        _del_c1, _del_c2, _del_c3 = st.columns(3)
-                        with _del_c1:
-                            if 'GOOD' in _snap_map and st.button("GOOD 삭제", key='del_good'):
-                                call_api("/scenarios/GOOD", method="DELETE")
-                                st.session_state._sc_dirty = True
-                                st.rerun()
-                        with _del_c2:
-                            if 'BEST' in _snap_map and st.button("BEST 삭제", key='del_best'):
-                                call_api("/scenarios/BEST", method="DELETE")
-                                st.session_state._sc_dirty = True
-                                st.rerun()
-                        with _del_c3:
-                            if 'STANDARD' in _snap_map and st.button("STANDARD 삭제", key='del_std'):
-                                call_api("/scenarios/STANDARD", method="DELETE")
-                                st.session_state._sc_dirty = True
-                                st.rerun()
-
-
-                import datetime as _dt_mod
-
-                _ss = st.session_state
-                _ccf  = _cons_result.get('현금흐름', {})
-                _cage_rows = _cons_result.get('나이별수입', [])
-                _cage_map  = {r['나이']: r for r in _cage_rows}
-
-                _cur_year  = _dt_mod.date.today().year
-                _birth_yr  = _ss.get('inp_birth_year', 1975)
-                _cur_age   = _cur_year - _birth_yr
-                _user_info = _cons_result.get('사용자정보', {})
-                _ret_age   = _user_info.get('희망은퇴연령', _ss.get('inp_retirement_age', 62))
-                _lifespan  = _user_info.get('기대수명', _ss.get('inp_lifespan', 85))
-                _cinf      = _ss.get('inp_inflation', 2.0) / 100
-                _yrs_to_ret = max(0, _ret_age - _cur_age)
-                _ret_yrs   = max(1, _lifespan - _ret_age)
-                _base_exp  = _ccf.get('월지출_합계', 0)
-
-                # 은퇴 후 연령별 순현금흐름 합산 (잉여는 부족분과 상계)
-                _net_cf = 0
-                for _ca in range(_ret_age, _lifespan + 1):
-                    _crow = _cage_map.get(_ca, {})
-                    _cincome = max(0, _crow.get('월수입', 0) - _crow.get('월세금', 0))
-                    _cexp    = _base_exp * _age_spend_rate(_ca) * ((1 + _cinf) ** (_ca - _ret_age))
-                    _net_cf += (_cincome - _cexp) * 12   # 잉여(+) / 부족(-)
-                _total_shortage = max(0, -_net_cf)       # 부족이면 양수
-
-                # 현재 투자 가능 자산
-                _fa_list   = _ss.get('financial_assets', [])
-                _total_fa  = sum(a.get('amount', 0) for a in _fa_list)
-                _re_list   = _ss.get('real_estates', [])
-                _non_prim_equity = sum(
-                    max(0, re.get('market_value', 0) - re.get('debt', 0))
-                    for re in _re_list if not re.get('is_primary_residence', True)
-                )
-                _debt_list = _ss.get('debts', [])
-                _high_int_debt = sum(
-                    d.get('balance', 0) for d in _debt_list
-                    if d.get('interest_rate', 0) > 0.05
-                )
-
-                # 헬퍼 함수
-                def _fv_lump(pv, r, yrs):
-                    return pv * ((1 + r) ** yrs) if yrs > 0 else pv
-
-                def _fv_save(monthly, r, yrs):
-                    if yrs <= 0 or monthly <= 0: return 0
-                    if r <= 0: return monthly * 12 * yrs
-                    mr = r / 12; n = int(yrs * 12)
-                    return monthly * ((1 + mr) ** n - 1) / mr
-
-                def _monthly_for_fv(target, r, yrs):
-                    if target <= 0 or yrs <= 0: return 0
-                    if r <= 0: return target / (12 * yrs)
-                    mr = r / 12; n = int(yrs * 12)
-                    factor = ((1 + mr) ** n - 1) / mr
-                    return target / factor if factor > 0 else 0
-
-                # ── 1. 재원 진단 ────────────────────────────────
-                st.markdown("#### 📋 은퇴 재원 진단")
-                _d1, _d2, _d3 = st.columns(3)
-                with _d1:
-                    _metric_card("은퇴까지 남은 기간", f"{_yrs_to_ret}년")
-                with _d2:
-                    _metric_card("은퇴 후 생활 기간", f"{_ret_yrs}년")
-                with _d3:
-                    _metric_card("현재 금융자산", fmt_won(_total_fa))
-
-                _ret_row0  = _cage_map.get(_ret_age, {})
-                _ret_inc0  = max(0, _ret_row0.get('월수입', 0) - _ret_row0.get('월세금', 0))
-                _gap0      = max(0, _base_exp - _ret_inc0)
-
-                if _total_shortage > 0:
-                    st.error(
-                        f"⚠️ **은퇴 후 총 예상 부족액 약 {fmt_won(int(_total_shortage))}** "
-                        f"(은퇴 첫 해 월 {fmt_won(int(_gap0))} 부족 → 이후 매년 물가반영 증가)"
+                    # 현재 투자 가능 자산
+                    _fa_list   = _ss.get('financial_assets', [])
+                    _total_fa  = sum(a.get('amount', 0) for a in _fa_list)
+                    _re_list   = _ss.get('real_estates', [])
+                    _non_prim_equity = sum(
+                        max(0, re.get('market_value', 0) - re.get('debt', 0))
+                        for re in _re_list if not re.get('is_primary_residence', True)
                     )
-                else:
-                    st.success("✅ 현재 수입원으로 은퇴 후 생활비를 충당할 수 있습니다. 더 적극적인 자산 성장 전략을 검토해보세요.")
+                    _debt_list = _ss.get('debts', [])
+                    _high_int_debt = sum(
+                        d.get('balance', 0) for d in _debt_list
+                        if d.get('interest_rate', 0) > 0.05
+                    )
 
-                if _high_int_debt > 0:
-                    st.warning(f"💳 고금리 부채(5% 초과) **{fmt_won(int(_high_int_debt))}** 가 있습니다. 투자 전 상환 우선 검토를 권장합니다.")
+                    # 헬퍼 함수
+                    def _fv_lump(pv, r, yrs):
+                        return pv * ((1 + r) ** yrs) if yrs > 0 else pv
 
-                st.divider()
+                    def _fv_save(monthly, r, yrs):
+                        if yrs <= 0 or monthly <= 0: return 0
+                        if r <= 0: return monthly * 12 * yrs
+                        mr = r / 12; n = int(yrs * 12)
+                        return monthly * ((1 + mr) ** n - 1) / mr
 
-                # ── 2. 투자 시나리오 시뮬레이션 ─────────────────
-                st.markdown("#### 📊 투자 시나리오 시뮬레이션")
-                st.caption("매월 일정 금액을 은퇴 전까지 투자했을 때 은퇴 시점 예상 적립금을 비교합니다.")
+                    def _monthly_for_fv(target, r, yrs):
+                        if target <= 0 or yrs <= 0: return 0
+                        if r <= 0: return target / (12 * yrs)
+                        mr = r / 12; n = int(yrs * 12)
+                        factor = ((1 + mr) ** n - 1) / mr
+                        return target / factor if factor > 0 else 0
 
-                _sim_monthly = _sl("월 추가 투자액", 10, 500,
-                    st.session_state.get("cons_monthly_invest", 50), 10, "cons_monthly_invest", "won") * 10000
 
-                _scenarios = [
-                    {"name": "안정형",  "r": 0.03, "icon": "🏦", "color": "#1565c0",
-                     "desc": "예적금·국채·MMF", "risk": "낮음"},
-                    {"name": "균형형",  "r": 0.05, "icon": "⚖️", "color": "#2e7d32",
-                     "desc": "ETF + 채권 혼합", "risk": "중간"},
-                    {"name": "성장형",  "r": 0.07, "icon": "📈", "color": "#e65100",
-                     "desc": "주식ETF·리츠 중심", "risk": "높음"},
-                    {"name": "공격형",  "r": 0.10, "icon": "🚀", "color": "#b71c1c",
-                     "desc": "성장주·대체투자 포함", "risk": "매우 높음"},
-                ]
+                with _ctabs[1]:
+                    # ── 1. 재원 진단 ────────────────────────────────
+                    st.markdown("#### 📋 은퇴 재원 진단")
+                    _d1, _d2, _d3 = st.columns(3)
+                    with _d1:
+                        _metric_card("은퇴까지 남은 기간", f"{_yrs_to_ret}년")
+                    with _d2:
+                        _metric_card("은퇴 후 생활 기간", f"{_ret_yrs}년")
+                    with _d3:
+                        _metric_card("현재 금융자산", fmt_won(_total_fa))
 
-                _sc_cols = st.columns(4)
-                for _sci, _sc in enumerate(_scenarios):
-                    _fa_grown   = _fv_lump(_total_fa, _sc['r'], _yrs_to_ret)
-                    _sv_grown   = _fv_save(_sim_monthly, _sc['r'], _yrs_to_ret)
-                    _total_pot  = _fa_grown + _sv_grown
-                    _remaining  = _total_shortage - _total_pot
-                    _covers     = _remaining <= 0
-                    _need_mo    = _monthly_for_fv(max(0, _total_shortage - _fv_lump(_total_fa, _sc['r'], _yrs_to_ret)), _sc['r'], _yrs_to_ret)
-                    with _sc_cols[_sci]:
-                        _bg = "#e8f5e9" if _covers else "#fff8e1"
+                    _ret_row0  = _cage_map.get(_ret_age, {})
+                    _ret_inc0  = max(0, _ret_row0.get('월수입', 0) - _ret_row0.get('월세금', 0))
+                    _ret_exp0  = (_diag_other_base * _age_spend_rate(_ret_age)
+                                  + _diag_med_base * _diag_med_mult(_ret_age))
+                    _gap0      = max(0, _ret_exp0 - _ret_inc0)
+
+                    if _total_shortage > 0:
+                        st.error(
+                            f"⚠️ **은퇴 후 총 예상 부족액 약 {fmt_won(int(_total_shortage))}** "
+                            f"(은퇴 첫 해 월 {fmt_won(int(_gap0))} 부족 → 이후 매년 물가반영 증가)"
+                        )
+                    else:
+                        st.success("✅ 현재 수입원으로 은퇴 후 생활비를 충당할 수 있습니다. 더 적극적인 자산 성장 전략을 검토해보세요.")
+
+                    if _high_int_debt > 0:
+                        st.warning(f"💳 고금리 부채(5% 초과) **{fmt_won(int(_high_int_debt))}** 가 있습니다. 투자 전 상환 우선 검토를 권장합니다.")
+
+                    st.divider()
+
+                    # ── 2. 투자 시나리오 시뮬레이션 ─────────────────
+                    st.markdown("#### 📊 투자 시나리오 시뮬레이션")
+                    st.caption("매월 일정 금액을 은퇴 전까지 투자했을 때 은퇴 시점 예상 적립금을 비교합니다.")
+
+                    _sim_monthly = _sl("월 추가 투자액", 10, 500,
+                        st.session_state.get("cons_monthly_invest", 50), 10, "cons_monthly_invest", "won") * 10000
+
+                    _scenarios = [
+                        {"name": "안정형",  "r": 0.03, "icon": "🏦", "color": "#1565c0",
+                         "desc": "예적금·국채·MMF", "risk": "낮음"},
+                        {"name": "균형형",  "r": 0.05, "icon": "⚖️", "color": "#2e7d32",
+                         "desc": "ETF + 채권 혼합", "risk": "중간"},
+                        {"name": "성장형",  "r": 0.07, "icon": "📈", "color": "#e65100",
+                         "desc": "주식ETF·리츠 중심", "risk": "높음"},
+                        {"name": "공격형",  "r": 0.10, "icon": "🚀", "color": "#b71c1c",
+                         "desc": "성장주·대체투자 포함", "risk": "매우 높음"},
+                    ]
+
+                    _sc_cols = st.columns(4)
+                    for _sci, _sc in enumerate(_scenarios):
+                        _fa_grown   = _fv_lump(_total_fa, _sc['r'], _yrs_to_ret)
+                        _sv_grown   = _fv_save(_sim_monthly, _sc['r'], _yrs_to_ret)
+                        _total_pot  = _fa_grown + _sv_grown
+                        _remaining  = _total_shortage - _total_pot
+                        _covers     = _remaining <= 0
+                        _need_mo    = _monthly_for_fv(max(0, _total_shortage - _fv_lump(_total_fa, _sc['r'], _yrs_to_ret)), _sc['r'], _yrs_to_ret)
+                        with _sc_cols[_sci]:
+                            _bg = "#e8f5e9" if _covers else "#fff8e1"
+                            st.markdown(f"""
+    <div style="border:1px solid {_sc['color']};border-radius:10px;padding:12px;background:{_bg};text-align:center;">
+    <div style="font-size:20px;">{_sc['icon']}</div>
+    <div style="font-weight:bold;color:{_sc['color']};font-size:15px;">{_sc['name']}</div>
+    <div style="font-size:11px;color:#555;margin:4px 0;">{_sc['desc']}<br>기대수익률 {_sc['r']*100:.0f}%</div>
+    <hr style="border:none;border-top:1px solid #ddd;margin:8px 0;">
+    <div style="font-size:12px;color:#555;">은퇴 시 적립금</div>
+    <div style="font-weight:bold;font-size:14px;">{fmt_won(int(_total_pot))}</div>
+    <div style="font-size:12px;color:#555;margin-top:6px;">{"✅ 부족액 커버 가능" if _covers else f"⚠️ 여전히 {fmt_won(int(_remaining))} 부족"}</div>
+    <div style="font-size:11px;color:#777;margin-top:4px;">{"" if _covers else f"필요 월 투자: {fmt_won(int(_need_mo))}"}</div>
+    <div style="font-size:11px;color:#888;margin-top:4px;">위험도: {_sc['risk']}</div>
+    </div>""", unsafe_allow_html=True)
+
+                    st.divider()
+
+
+                with _ctabs[2]:
+                    # ── 3. 투자 유형별 가이드 ──────────────────────
+                    st.markdown("#### 💡 투자 유형별 가이드")
+
+                    with st.expander("📈 주식투자 — 장기 분산투자 (ETF 중심)", expanded=False):
                         st.markdown(f"""
-<div style="border:1px solid {_sc['color']};border-radius:10px;padding:12px;background:{_bg};text-align:center;">
-<div style="font-size:20px;">{_sc['icon']}</div>
-<div style="font-weight:bold;color:{_sc['color']};font-size:15px;">{_sc['name']}</div>
-<div style="font-size:11px;color:#555;margin:4px 0;">{_sc['desc']}<br>기대수익률 {_sc['r']*100:.0f}%</div>
-<hr style="border:none;border-top:1px solid #ddd;margin:8px 0;">
-<div style="font-size:12px;color:#555;">은퇴 시 적립금</div>
-<div style="font-weight:bold;font-size:14px;">{fmt_won(int(_total_pot))}</div>
-<div style="font-size:12px;color:#555;margin-top:6px;">{"✅ 부족액 커버 가능" if _covers else f"⚠️ 여전히 {fmt_won(int(_remaining))} 부족"}</div>
-<div style="font-size:11px;color:#777;margin-top:4px;">{"" if _covers else f"필요 월 투자: {fmt_won(int(_need_mo))}"}</div>
-<div style="font-size:11px;color:#888;margin-top:4px;">위험도: {_sc['risk']}</div>
-</div>""", unsafe_allow_html=True)
+    **핵심 원칙:** 개별 종목보다 ETF로 분산, 장기 보유
 
-                st.divider()
+    | 상품 | 기대수익률 | 특징 |
+    |:---:|:---:|:---:|
+    | S&P500 ETF (VOO·IVV·TIGER 미국S&P500) | 연 7~10% | 미국 대형주 500개 분산, 50년 평균 연 10% |
+    | KOSPI200 ETF | 연 5~8% | 국내 대형주 분산 |
+    | 배당 ETF (SCHD·KODEX고배당) | 연 4~6% + 배당 | 배당 재투자로 복리 효과 |
+    | 글로벌 리츠 ETF | 연 5~7% | 부동산 간접투자, 배당 안정적 |
 
-                # ── 3. 투자 유형별 가이드 ──────────────────────
-                st.markdown("#### 💡 투자 유형별 가이드")
+    **은퇴까지 {_yrs_to_ret}년 → 장기투자에 유리한 시점**
+    적립식(DCA) 투자로 시장 타이밍 리스크 분산을 권장합니다.
 
-                with st.expander("📈 주식투자 — 장기 분산투자 (ETF 중심)", expanded=False):
-                    st.markdown(f"""
-**핵심 원칙:** 개별 종목보다 ETF로 분산, 장기 보유
+    **🔑 ETF 과세 방식 (2025년 세법 기준)**
 
-| 상품 | 기대수익률 | 특징 |
-|:---:|:---:|:---:|
-| S&P500 ETF (VOO·IVV·TIGER 미국S&P500) | 연 7~10% | 미국 대형주 500개 분산, 50년 평균 연 10% |
-| KOSPI200 ETF | 연 5~8% | 국내 대형주 분산 |
-| 배당 ETF (SCHD·KODEX고배당) | 연 4~6% + 배당 | 배당 재투자로 복리 효과 |
-| 글로벌 리츠 ETF | 연 5~7% | 부동산 간접투자, 배당 안정적 |
+    | 구분 | 국내주식 ETF | 국내상장 해외ETF |
+    |:---:|:---:|:---:|
+    | **일반 계좌** | 매매차익 비과세 (금투세 폐지) | 배당소득세 **15.4%** |
+    | **IRP/연금저축** | 과세이연 → 수령 시 **3.3~5.5%** | 동일 — 과세이연 → 수령 시 **3.3~5.5%** |
+    | **ISA** | 비과세 한도 내 비과세 | 비과세 500만원 + 초과분 **9.9%** |
 
-**은퇴까지 {_yrs_to_ret}년 → 장기투자에 유리한 시점**
-적립식(DCA) 투자로 시장 타이밍 리스크 분산을 권장합니다.
-ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가능합니다.
-""")
+    > 💡 **2025년 금투세 폐지**로 일반 계좌의 국내주식·ETF 매매차익은 비과세 유지됩니다.
+    > 💡 **국내상장 해외ETF**는 IRP/연금저축 안에서 사면 매매차익에 즉시 세금이 없고, 수령 시 3.3~5.5%만 납부합니다. (일반 계좌 대비 약 10%p 절세)
+    """)
 
-                with st.expander("🏠 부동산 투자 — 보유 자산 활용 전략", expanded=False):
-                    _has_primary = any(re.get('is_primary_residence') for re in _re_list)
-                    _has_rental  = any(re.get('monthly_rent_income', 0) > 0 for re in _re_list)
-                    _primary_val = next((re.get('market_value', 0) for re in _re_list if re.get('is_primary_residence')), 0)
-                    st.markdown(f"""
-**현재 보유 부동산 현황:**
-{'- 자가 보유 (' + fmt_won(_primary_val) + ') → **주택연금** 검토 가능' if _has_primary else '- 자가 없음 → 전세·월세 거주 중'}
-{'- 임대수익 발생 중 → 꾸준한 현금흐름 확보' if _has_rental else '- 임대수익 없음'}
+                    with st.expander("🏠 부동산 투자 — 보유 자산 활용 전략", expanded=False):
+                        _has_primary = any(re.get('is_primary_residence') for re in _re_list)
+                        _has_rental  = any(re.get('monthly_rent_income', 0) > 0 for re in _re_list)
+                        _primary_val = next((re.get('market_value', 0) for re in _re_list if re.get('is_primary_residence')), 0)
+                        st.markdown(f"""
+    **현재 보유 부동산 현황:**
+    {'- 자가 보유 (' + fmt_won(_primary_val) + ') → **주택연금** 검토 가능' if _has_primary else '- 자가 없음 → 전세·월세 거주 중'}
+    {'- 임대수익 발생 중 → 꾸준한 현금흐름 확보' if _has_rental else '- 임대수익 없음'}
 
-**부동산 투자 전략:**
+    **부동산 투자 전략:**
 
-| 전략 | 내용 | 적합 시기 |
-|:---:|:---:|:---:|
-| **주택연금** | 집을 담보로 사망 시까지 월 수령 | 은퇴 후 (55세↑) |
-| **소형 아파트·오피스텔** | 임대수익 월 50~100만원 | 은퇴 전 적립기 |
-| **리츠(REITs)** | 부동산 간접투자, 소액 가능 | 지금 당장 가능 |
-| **상업용 부동산** | 높은 수익률, 공실 리스크 | 자금 충분 시 |
+    | 전략 | 내용 | 적합 시기 |
+    |:---:|:---:|:---:|
+    | **주택연금** | 집을 담보로 사망 시까지 월 수령 | 은퇴 후 (55세↑) |
+    | **소형 아파트·오피스텔** | 임대수익 월 50~100만원 | 은퇴 전 적립기 |
+    | **리츠(REITs)** | 부동산 간접투자, 소액 가능 | 지금 당장 가능 |
+    | **상업용 부동산** | 높은 수익률, 공실 리스크 | 자금 충분 시 |
 
-{'**💡 주택연금 예시:** 70세 기준 시가 5억 주택 → 월 약 120만원 수령 (종신)' if _has_primary and _primary_val >= 300_000_000 else ''}
-""")
+    {'**💡 주택연금 예시:** 70세 기준 시가 5억 주택 → 월 약 120만원 수령 (종신)' if _has_primary and _primary_val >= 300_000_000 else ''}
+    """)
 
-                with st.expander("🪙 코인·대체투자 — 고위험 고수익", expanded=False):
-                    st.markdown(f"""
-**코인(암호화폐) 투자 원칙:**
+                    with st.expander("🪙 코인·대체투자 — 고위험 고수익", expanded=False):
+                        st.markdown(f"""
+    **코인(암호화폐) 투자 원칙:**
 
-- ⚠️ **포트폴리오의 5~10% 이내** 배분 권장 (은퇴 자금 핵심 부분으로 부적합)
-- 비트코인·이더리움 등 시가총액 상위 코인 중심으로 분산
-- 장기 보유(HODL) 전략이 단기 트레이딩보다 위험 대비 유리
-- 손실 가능성: -70~80%까지 하락 경험 있음 (2022년 코인 시장 기준)
+    - ⚠️ **포트폴리오의 5~10% 이내** 배분 권장 (은퇴 자금 핵심 부분으로 부적합)
+    - 비트코인·이더리움 등 시가총액 상위 코인 중심으로 분산
+    - 장기 보유(HODL) 전략이 단기 트레이딩보다 위험 대비 유리
+    - 손실 가능성: -70~80%까지 하락 경험 있음 (2022년 코인 시장 기준)
 
-**기타 대체투자:**
+    **기타 대체투자:**
 
-| 유형 | 기대수익 | 위험도 | 비고 |
-|:---:|:---:|:---:|:---:|
-| 비트코인 | 연 20~50% (변동폭 큼) | ★★★★★ | 소액·분산 |
-| 금·원자재 ETF | 연 3~5% | ★★☆☆☆ | 인플레이션 헤지 |
-| 사모펀드·VC | 연 10~15% | ★★★★☆ | 고액·장기 락업 |
-| 스타트업 엔젤 | 수십 배 또는 전손 | ★★★★★ | 전문가 영역 |
+    | 유형 | 기대수익 | 위험도 | 비고 |
+    |:---:|:---:|:---:|:---:|
+    | 비트코인 | 연 20~50% (변동폭 큼) | ★★★★★ | 소액·분산 |
+    | 금·원자재 ETF | 연 3~5% | ★★☆☆☆ | 인플레이션 헤지 |
+    | 사모펀드·VC | 연 10~15% | ★★★★☆ | 고액·장기 락업 |
+    | 스타트업 엔젤 | 수십 배 또는 전손 | ★★★★★ | 전문가 영역 |
 
-**은퇴 자금의 핵심은 안정성입니다.** 코인은 여유 자금 일부로만 활용하세요.
-""")
+    **은퇴 자금의 핵심은 안정성입니다.** 코인은 여유 자금 일부로만 활용하세요.
+    """)
 
-                with st.expander("🏦 안정형 투자 — 채권·예금·절세 계좌", expanded=False):
-                    st.markdown(f"""
-**절세 계좌 우선 활용 (세금 혜택이 가장 확실한 수익):**
+                    with st.expander("🏦 안정형 투자 — 채권·예금·절세 계좌", expanded=False):
+                        st.markdown(f"""
+    **절세 계좌 우선 활용 (세금 혜택이 가장 확실한 수익):**
 
-| 계좌 | 연 납입한도 | 혜택 |
-|:---:|:---:|:---:|
-| **IRP** | 900만원 | 납입액의 13.2~16.5% 세액공제 |
-| **연금저축** | 600만원 (IRP 합산 900만원) | 동일 세액공제, 투자 자유도 높음 |
-| **ISA** | 2,000만원 | 수익 200~400만원 비과세 + 저율과세 |
+    | 계좌 | 연 납입한도 | 혜택 | 2025년 변경 |
+    |:---:|:---:|:---:|:---:|
+    | **IRP** | 900만원 | 납입액의 13.2~16.5% 세액공제 + 과세이연 | 변동 없음 |
+    | **연금저축** | 600만원 (IRP 합산 900만원) | 동일 세액공제, 투자 자유도 높음 | 변동 없음 |
+    | **ISA** | 2,000만원 (총 한도 1억) | 비과세 한도 내 비과세 + 초과분 9.9% 분리과세 | ✅ 비과세 한도 500만원으로 확대 (기존 200만원) |
 
-**예시: 연 900만원 IRP/연금저축 납입 → 세액공제 약 {fmt_won(int(9_000_000 * 0.148))} 환급**
+    **예시: 연 900만원 IRP/연금저축 납입 → 세액공제 약 {fmt_won(int(9_000_000 * 0.148))} 환급**
 
-**채권 투자:**
-- 국고채 (10년): 연 3~3.5%, 원금 보장에 준함
-- 회사채 (AA등급): 연 4~5%, 신용 리스크 소량 존재
-- 채권형 ETF: KOSEF국고채3년, TIGER 미국채10년
+    **2025년 핵심 변경 — 금투세(금융투자소득세) 폐지:**
+    - 국내주식·국내ETF 매매차익: 기존에도 비과세였으나 금투세 도입 예정이었다가 **완전 폐지** 확정
+    - **국내상장 해외ETF** (TIGER 미국S&P500 등): 일반 계좌에서는 여전히 배당소득세 15.4% 적용
+      → IRP/연금저축에서 매수 시 과세이연 적용, 수령 시 3.3~5.5%로 절세 가능
 
-은퇴가 {_yrs_to_ret}년 남은 시점에서는 **주식 비중을 높이고** 은퇴 접근 시 점차 채권·예금 비중 확대를 권장합니다.
-""")
+    **채권 투자:**
+    - 국고채 (10년): 연 3~3.5%, 원금 보장에 준함
+    - 회사채 (AA등급): 연 4~5%, 신용 리스크 소량 존재
+    - 채권형 ETF: KOSEF국고채3년, TIGER 미국채10년
 
-                st.divider()
+    은퇴가 {_yrs_to_ret}년 남은 시점에서는 **주식 비중을 높이고** 은퇴 접근 시 점차 채권·예금 비중 확대를 권장합니다.
+    """)
 
-                # ── 4. 맞춤 포트폴리오 제안 ────────────────────
-                st.markdown("#### 🗂️ 입력 자산 기반 맞춤 조언")
+                    st.divider()
 
-                _advice_items = []
+                    # ── 4. 맞춤 포트폴리오 제안 ────────────────────
+                    st.markdown("#### 🗂️ 입력 자산 기반 맞춤 조언")
 
-                if _total_fa > 0:
-                    _avg_fa_return = (
-                        sum(a.get('amount', 0) * a.get('annual_return_rate', 0.03) for a in _fa_list)
-                        / _total_fa if _total_fa > 0 else 0.03
-                    )
-                    if _avg_fa_return < 0.04:
+                    _advice_items = []
+
+                    if _total_fa > 0:
+                        _avg_fa_return = (
+                            sum(a.get('amount', 0) * a.get('annual_return_rate', 0.03) for a in _fa_list)
+                            / _total_fa if _total_fa > 0 else 0.03
+                        )
+                        if _avg_fa_return < 0.04:
+                            _advice_items.append(
+                                f"💰 **금융자산 {fmt_won(_total_fa)}의 평균 수익률이 "
+                                f"{_avg_fa_return*100:.1f}%로 낮습니다.** "
+                                "예금·적금 비중을 줄이고 ETF(연 5~7%) 리밸런싱을 검토하세요."
+                            )
+                        else:
+                            _advice_items.append(
+                                f"✅ 금융자산 {fmt_won(_total_fa)}, 평균 수익률 "
+                                f"{_avg_fa_return*100:.1f}% — 양호한 수준입니다."
+                            )
+
+                    if _non_prim_equity > 0:
                         _advice_items.append(
-                            f"💰 **금융자산 {fmt_won(_total_fa)}의 평균 수익률이 "
-                            f"{_avg_fa_return*100:.1f}%로 낮습니다.** "
-                            "예금·적금 비중을 줄이고 ETF(연 5~7%) 리밸런싱을 검토하세요."
+                            f"🏠 **비거주 부동산 순자산 {fmt_won(int(_non_prim_equity))}** 보유 중. "
+                            "임대수익을 극대화하거나, 수익률이 낮으면 금융자산으로 전환도 검토하세요."
+                        )
+
+                    if _has_primary and _primary_val >= 300_000_000 and _cur_age >= 50:
+                        _advice_items.append(
+                            f"🏡 자가 주택 ({fmt_won(_primary_val)}) 보유 — "
+                            "은퇴 후 **주택연금**으로 안정적인 월 수입을 확보할 수 있습니다. "
+                            "(55세 이상, 공시가격 12억 이하 가입 가능)"
+                        )
+
+                    if _high_int_debt > 0:
+                        _advice_items.append(
+                            f"⚡ **고금리 부채 {fmt_won(int(_high_int_debt))}** 상환이 최우선입니다. "
+                            "5% 이상 이자는 5% 투자수익을 내는 것과 동일 효과입니다."
+                        )
+
+                    if _yrs_to_ret >= 10:
+                        _advice_items.append(
+                            f"⏳ 은퇴까지 **{_yrs_to_ret}년 이상** 남아 있어 "
+                            "복리 효과를 최대한 활용할 수 있습니다. "
+                            "성장형~균형형 포트폴리오가 적합합니다."
+                        )
+                    elif _yrs_to_ret >= 5:
+                        _advice_items.append(
+                            f"⏰ 은퇴까지 **{_yrs_to_ret}년**, 포트폴리오를 서서히 "
+                            "안정형으로 이동(주식→채권·예금 비중 확대)을 시작할 시점입니다."
                         )
                     else:
                         _advice_items.append(
-                            f"✅ 금융자산 {fmt_won(_total_fa)}, 평균 수익률 "
-                            f"{_avg_fa_return*100:.1f}% — 양호한 수준입니다."
+                            "🔔 은퇴가 5년 이내입니다. 지금부터는 원금 보호 중심으로 "
+                            "포트폴리오 보수화를 권장합니다."
                         )
 
-                if _non_prim_equity > 0:
-                    _advice_items.append(
-                        f"🏠 **비거주 부동산 순자산 {fmt_won(int(_non_prim_equity))}** 보유 중. "
-                        "임대수익을 극대화하거나, 수익률이 낮으면 금융자산으로 전환도 검토하세요."
-                    )
+                    if not _advice_items:
+                        _advice_items.append("자산 정보를 입력하면 맞춤 조언을 제공합니다.")
 
-                if _has_primary and _primary_val >= 300_000_000 and _cur_age >= 50:
-                    _advice_items.append(
-                        f"🏡 자가 주택 ({fmt_won(_primary_val)}) 보유 — "
-                        "은퇴 후 **주택연금**으로 안정적인 월 수입을 확보할 수 있습니다. "
-                        "(55세 이상, 공시가격 12억 이하 가입 가능)"
-                    )
+                    for _adv in _advice_items:
+                        st.markdown(f"- {_adv}")
 
-                if _high_int_debt > 0:
-                    _advice_items.append(
-                        f"⚡ **고금리 부채 {fmt_won(int(_high_int_debt))}** 상환이 최우선입니다. "
-                        "5% 이상 이자는 5% 투자수익을 내는 것과 동일 효과입니다."
-                    )
+                    st.caption("※ 본 컨설팅은 참고용 정보이며, 실제 투자 결정은 공인 재무설계사(CFP)와 상담하시기 바랍니다.")
 
-                if _yrs_to_ret >= 10:
-                    _advice_items.append(
-                        f"⏳ 은퇴까지 **{_yrs_to_ret}년 이상** 남아 있어 "
-                        "복리 효과를 최대한 활용할 수 있습니다. "
-                        "성장형~균형형 포트폴리오가 적합합니다."
-                    )
-                elif _yrs_to_ret >= 5:
-                    _advice_items.append(
-                        f"⏰ 은퇴까지 **{_yrs_to_ret}년**, 포트폴리오를 서서히 "
-                        "안정형으로 이동(주식→채권·예금 비중 확대)을 시작할 시점입니다."
-                    )
-                else:
-                    _advice_items.append(
-                        "🔔 은퇴가 5년 이내입니다. 지금부터는 원금 보호 중심으로 "
-                        "포트폴리오 보수화를 권장합니다."
-                    )
+                with _ctabs[3]:
+                    # ── 재무 계산기 ───────────────────────────────────────────
+                    st.markdown("#### 🔢 재무 계산기")
 
-                if not _advice_items:
-                    _advice_items.append("자산 정보를 입력하면 맞춤 조언을 제공합니다.")
+                    _fcalc_cat = st.radio(
+                        "계산기 유형",
+                        ["💰 예적금", "🏦 대출/할부"],
+                        horizontal=True,
+                        key="fcalc_cat",
+                    )
+                    # 카테고리 전환 시 이전 결과 초기화
+                    _fcalc_prev_cat = st.session_state.get('_fcalc_prev_cat')
+                    if _fcalc_prev_cat != _fcalc_cat:
+                        st.session_state.pop('_fcalc_result', None)
+                        st.session_state['_fcalc_prev_cat'] = _fcalc_cat
+                    st.divider()
 
-                for _adv in _advice_items:
-                    st.markdown(f"- {_adv}")
+                    # ── 공통 결과 표시 헬퍼 ─────────────────────────────
+                    def _fcalc_row(label, value, highlight=False):
+                        if highlight:
+                            st.markdown(f"**{label}**: **{value}**")
+                        else:
+                            st.markdown(f"{label}: {value}")
 
-                st.caption("※ 본 컨설팅은 참고용 정보이며, 실제 투자 결정은 공인 재무설계사(CFP)와 상담하시기 바랍니다.")
+                    def _fcalc_metrics(items):
+                        cols = st.columns(len(items))
+                        for col, (lbl, val) in zip(cols, items):
+                            with col:
+                                st.metric(lbl, val)
+
+                    def _draw_bar_chart(x_labels, bars, bar_colors, bar_names,
+                                        line_data=None, line_name=None):
+                        import plotly.graph_objects as _go_fc
+                        _fig_fc = _go_fc.Figure()
+                        for _bc, _bn, _bd in zip(bar_colors, bar_names, bars):
+                            _fig_fc.add_trace(_go_fc.Bar(
+                                name=_bn, x=x_labels, y=_bd, marker_color=_bc,
+                                hovertemplate='%{y:,.0f}만원<extra>' + _bn + '</extra>',
+                            ))
+                        if line_data is not None:
+                            _fig_fc.add_trace(_go_fc.Scatter(
+                                name=line_name, x=x_labels, y=line_data,
+                                mode='lines+markers',
+                                line=dict(color='#888888', width=2, dash='dot'),
+                                marker=dict(size=5),
+                                yaxis='y2',
+                                hovertemplate='잔금 %{y:,.0f}만원<extra></extra>',
+                            ))
+                            _fig_fc.update_layout(
+                                yaxis2=dict(
+                                    overlaying='y', side='right', showgrid=False,
+                                    tickformat=',', title='잔금 (만원)',
+                                ),
+                            )
+                        _fig_fc.update_layout(
+                            barmode='stack',
+                            height=320,
+                            margin=dict(l=40, r=60, t=30, b=0),
+                            legend=dict(orientation='h', y=1.12),
+                            yaxis=dict(title='금액 (만원)', tickformat=','),
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                        )
+                        st.plotly_chart(_fig_fc, use_container_width=True)
+
+                    # ── 예적금 ───────────────────────────────────────────
+                    if _fcalc_cat == "💰 예적금":
+                        _fcalc_type = st.radio(
+                            "계산 방식",
+                            ["목돈 굴리기", "목돈 모으기 (납입액 기준)", "목돈 모으기 (목표금액 기준)"],
+                            horizontal=True,
+                            key="fcalc_sav_type",
+                        )
+                        st.write("")
+
+                        # 공통 입력 ──────────────────────────────────────
+                        _fc1, _fc2 = st.columns(2)
+
+                        if _fcalc_type == "목돈 굴리기":
+                            with _fc1:
+                                _fc_p = st.number_input("원금 (만원)", min_value=1, value=1000, step=100, key="fc_p")
+                                _fc_r = st.number_input("연이율 (%)", min_value=0.01, value=3.5, step=0.1, format="%.2f", key="fc_r")
+                            with _fc2:
+                                _fc_y = st.number_input("기간 (년)", min_value=1, max_value=50, value=3, key="fc_y")
+                                _fc_int = st.radio("이자 방식", ["복리", "단리"], horizontal=True, key="fc_int")
+                                _fc_tax = st.selectbox("과세", ["일반과세 15.4%", "비과세 0%"], key="fc_tax")
+
+                            if st.button("계산하기", key="fc_btn_lump", type="primary", use_container_width=True):
+                                _fp = _fc_p * 10000
+                                _fr = _fc_r / 100
+                                _fn = _fc_y
+                                _ftax = 0.154 if "15.4" in _fc_tax else 0.0
+                                if _fc_int == "복리":
+                                    _fgross = _fp * (1 + _fr) ** _fn
+                                else:
+                                    _fgross = _fp * (1 + _fr * _fn)
+                                _fint = _fgross - _fp
+                                _ftax_amt = _fint * _ftax
+                                _fnet = _fgross - _ftax_amt
+                                _fy_lump = []
+                                for _yr in range(1, _fn + 1):
+                                    _fbal_yr = _fp * (1 + _fr) ** _yr if _fc_int == '복리' else _fp * (1 + _fr * _yr)
+                                    _fy_lump.append({'년': f'{_yr}년', '원금': int(_fp), '이자': int(_fbal_yr - _fp)})
+                                st.session_state['_fcalc_result'] = {
+                                    'type': 'lump',
+                                    'p': _fp, 'gross': _fgross, 'interest': _fint,
+                                    'tax': _ftax_amt, 'net': _fnet, 'year_data': _fy_lump,
+                                }
+                                st.rerun()
+
+                            if st.session_state.get('_fcalc_result', {}).get('type') == 'lump':
+                                _res = st.session_state['_fcalc_result']
+                                st.success(f"🎉 세후 수령액: **{fmt_won(int(_res['net']))}**")
+                                _fcalc_metrics([
+                                    ("원금", fmt_won(int(_res['p']))),
+                                    ("세전 이자", fmt_won(int(_res['interest']))),
+                                    ("이자세", fmt_won(int(_res['tax']))),
+                                    ("세후 수령액", fmt_won(int(_res['net']))),
+                                ])
+                                _yd = _res.get('year_data', [])
+                                if len(_yd) > 1:
+                                    st.caption('📊 연도별 원금 / 이자 누적')
+                                    _draw_bar_chart(
+                                        [d['년'] for d in _yd],
+                                        [[d['원금'] // 10000 for d in _yd],
+                                         [d['이자'] // 10000 for d in _yd]],
+                                        ['#4A90D9', '#27AE60'],
+                                        ['원금', '이자'],
+                                    )
+
+                        elif _fcalc_type == "목돈 모으기 (납입액 기준)":
+                            with _fc1:
+                                _fc_m = st.number_input("월 납입액 (만원)", min_value=1, value=50, step=10, key="fc_m")
+                                _fc_r2 = st.number_input("연이율 (%)", min_value=0.01, value=3.5, step=0.1, format="%.2f", key="fc_r2")
+                            with _fc2:
+                                _fc_y2 = st.number_input("기간 (년)", min_value=1, max_value=50, value=3, key="fc_y2")
+                                _fc_tax2 = st.selectbox("과세", ["일반과세 15.4%", "비과세 0%"], key="fc_tax2")
+
+                            if st.button("계산하기", key="fc_btn_save", type="primary", use_container_width=True):
+                                _fm = _fc_m * 10000
+                                _fr = _fc_r2 / 100 / 12
+                                _fn = _fc_y2 * 12
+                                _ftax = 0.154 if "15.4" in _fc_tax2 else 0.0
+                                if _fr > 0:
+                                    _fgross = _fm * ((1 + _fr) ** _fn - 1) / _fr * (1 + _fr)
+                                else:
+                                    _fgross = _fm * _fn
+                                _fpaid = _fm * _fn
+                                _fint = _fgross - _fpaid
+                                _ftax_amt = _fint * _ftax
+                                _fnet = _fgross - _ftax_amt
+                                _fy_sm = []
+                                _fr_sm = _fc_r2 / 100 / 12
+                                for _yr in range(1, _fc_y2 + 1):
+                                    _fn_yr = _yr * 12
+                                    _fbal_yr = _fm * ((1 + _fr_sm) ** _fn_yr - 1) / _fr_sm * (1 + _fr_sm) if _fr_sm > 0 else _fm * _fn_yr
+                                    _fpaid_yr = _fm * _fn_yr
+                                    _fy_sm.append({'년': f'{_yr}년', '납입액': int(_fpaid_yr), '이자': int(_fbal_yr - _fpaid_yr)})
+                                st.session_state['_fcalc_result'] = {
+                                    'type': 'save_m',
+                                    'paid': _fpaid, 'gross': _fgross, 'interest': _fint,
+                                    'tax': _ftax_amt, 'net': _fnet, 'year_data': _fy_sm,
+                                }
+                                st.rerun()
+
+                            if st.session_state.get('_fcalc_result', {}).get('type') == 'save_m':
+                                _res = st.session_state['_fcalc_result']
+                                st.success(f"🎉 세후 수령액: **{fmt_won(int(_res['net']))}**")
+                                _fcalc_metrics([
+                                    ("총 납입액", fmt_won(int(_res['paid']))),
+                                    ("세전 이자", fmt_won(int(_res['interest']))),
+                                    ("이자세", fmt_won(int(_res['tax']))),
+                                    ("세후 수령액", fmt_won(int(_res['net']))),
+                                ])
+                                _yd = _res.get('year_data', [])
+                                if len(_yd) > 1:
+                                    st.caption('📊 연도별 납입액 / 이자 누적')
+                                    _draw_bar_chart(
+                                        [d['년'] for d in _yd],
+                                        [[d['납입액'] // 10000 for d in _yd],
+                                         [d['이자'] // 10000 for d in _yd]],
+                                        ['#4A90D9', '#27AE60'],
+                                        ['납입액', '이자'],
+                                    )
+
+                        else:  # 목돈 모으기 (목표금액 기준)
+                            with _fc1:
+                                _fc_tgt = st.number_input("목표금액 (만원)", min_value=100, value=5000, step=500, key="fc_tgt")
+                                _fc_r3 = st.number_input("연이율 (%)", min_value=0.01, value=3.5, step=0.1, format="%.2f", key="fc_r3")
+                            with _fc2:
+                                _fc_y3 = st.number_input("기간 (년)", min_value=1, max_value=50, value=3, key="fc_y3")
+                                _fc_tax3 = st.selectbox("과세", ["일반과세 15.4%", "비과세 0%"], key="fc_tax3")
+
+                            if st.button("계산하기", key="fc_btn_target", type="primary", use_container_width=True):
+                                _ftgt = _fc_tgt * 10000
+                                _fr = _fc_r3 / 100 / 12
+                                _fn = _fc_y3 * 12
+                                _ftax = 0.154 if "15.4" in _fc_tax3 else 0.0
+                                # 목표금액(세후) 역산 → gross = net / (1 - tax_on_interest_ratio)
+                                # 반복추정 없이 gross를 목표로 삼고 세후를 보정
+                                if _fr > 0:
+                                    _factor = ((1 + _fr) ** _fn - 1) / _fr * (1 + _fr)
+                                    _fm_needed = _ftgt / _factor
+                                else:
+                                    _fm_needed = _ftgt / _fn
+                                _fpaid = _fm_needed * _fn
+                                _fint = _ftgt - _fpaid
+                                _ftax_amt = _fint * _ftax
+                                _fnet = _ftgt - _ftax_amt
+                                _fy_tgt = []
+                                _fr_tgt = _fc_r3 / 100 / 12
+                                for _yr in range(1, _fc_y3 + 1):
+                                    _fn_yr = _yr * 12
+                                    _fbal_yr = _fm_needed * ((1 + _fr_tgt) ** _fn_yr - 1) / _fr_tgt * (1 + _fr_tgt) if _fr_tgt > 0 else _fm_needed * _fn_yr
+                                    _fpaid_yr = _fm_needed * _fn_yr
+                                    _fy_tgt.append({'년': f'{_yr}년', '납입액': int(_fpaid_yr), '이자': int(_fbal_yr - _fpaid_yr)})
+                                st.session_state['_fcalc_result'] = {
+                                    'type': 'save_tgt',
+                                    'monthly': _fm_needed, 'paid': _fpaid,
+                                    'interest': _fint, 'tax': _ftax_amt, 'net': _fnet, 'year_data': _fy_tgt,
+                                }
+                                st.rerun()
+
+                            if st.session_state.get('_fcalc_result', {}).get('type') == 'save_tgt':
+                                _res = st.session_state['_fcalc_result']
+                                st.success(f"🎉 필요 월 납입액: **{fmt_won(int(_res['monthly']))}**")
+                                _fcalc_metrics([
+                                    ("월 납입액", fmt_won(int(_res['monthly']))),
+                                    ("총 납입액", fmt_won(int(_res['paid']))),
+                                    ("세전 이자", fmt_won(int(_res['interest']))),
+                                    ("세후 수령액", fmt_won(int(_res['net']))),
+                                ])
+                                _yd = _res.get('year_data', [])
+                                if len(_yd) > 1:
+                                    st.caption('📊 연도별 납입액 / 이자 누적')
+                                    _draw_bar_chart(
+                                        [d['년'] for d in _yd],
+                                        [[d['납입액'] // 10000 for d in _yd],
+                                         [d['이자'] // 10000 for d in _yd]],
+                                        ['#4A90D9', '#27AE60'],
+                                        ['납입액', '이자'],
+                                    )
+
+                    # ── 대출/할부 ─────────────────────────────────────────
+                    else:
+                        _fcalc_loan_type = st.radio(
+                            "상환 방식",
+                            ["원금균등", "원리금균등", "만기일시"],
+                            horizontal=True,
+                            key="fcalc_loan_type",
+                        )
+                        st.write("")
+
+                        _fl1, _fl2 = st.columns(2)
+                        with _fl1:
+                            _fl_amt = st.number_input("대출금액 (만원)", min_value=100, value=30000, step=1000, key="fl_amt")
+                            _fl_r = st.number_input("연이율 (%)", min_value=0.01, value=4.5, step=0.1, format="%.2f", key="fl_r")
+                        with _fl2:
+                            _fl_y = st.number_input("대출기간 (년)", min_value=1, max_value=50, value=20, key="fl_y")
+                            _fl_m = st.number_input("추가 개월 (0~11)", min_value=0, max_value=11, value=0, key="fl_m")
+
+                        if st.button("계산하기", key="fc_btn_loan", type="primary", use_container_width=True):
+                            import pandas as _pd_fc
+                            _fL = _fl_amt * 10000
+                            _fr = _fl_r / 100 / 12
+                            _fn = _fl_y * 12 + _fl_m
+
+                            _sched = []
+                            if _fcalc_loan_type == "원리금균등":
+                                if _fr > 0:
+                                    _f_monthly = _fL * _fr * (1 + _fr) ** _fn / ((1 + _fr) ** _fn - 1)
+                                else:
+                                    _f_monthly = _fL / _fn
+                                _bal = _fL
+                                for _mo in range(1, _fn + 1):
+                                    _int = _bal * _fr
+                                    _prin = _f_monthly - _int
+                                    _bal = max(0, _bal - _prin)
+                                    _sched.append({'회차': _mo, '원금': int(_prin), '이자': int(_int),
+                                                   '월상환액': int(_f_monthly), '잔금': int(_bal)})
+                                _ftotal = _f_monthly * _fn
+                                _ftotal_int = _ftotal - _fL
+                                st.session_state['_fcalc_result'] = {
+                                    'type': 'loan_equal_pmt',
+                                    'monthly': _f_monthly, 'total': _ftotal,
+                                    'total_int': _ftotal_int, 'L': _fL, 'sched': _sched,
+                                }
+
+                            elif _fcalc_loan_type == "원금균등":
+                                _f_prin = _fL / _fn
+                                _bal = _fL
+                                for _mo in range(1, _fn + 1):
+                                    _int = _bal * _fr
+                                    _monthly_total = _f_prin + _int
+                                    _bal = max(0, _bal - _f_prin)
+                                    _sched.append({'회차': _mo, '원금': int(_f_prin), '이자': int(_int),
+                                                   '월상환액': int(_monthly_total), '잔금': int(_bal)})
+                                _ftotal_int = _fr * _fL * (_fn + 1) / 2
+                                _ftotal = _fL + _ftotal_int
+                                _f_first = _f_prin + _fL * _fr
+                                st.session_state['_fcalc_result'] = {
+                                    'type': 'loan_equal_prin',
+                                    'first_monthly': _f_first, 'prin': _f_prin,
+                                    'total': _ftotal, 'total_int': _ftotal_int, 'L': _fL, 'sched': _sched,
+                                }
+
+                            else:  # 만기일시
+                                _f_m_int = _fL * _fr
+                                _ftotal_int = _f_m_int * _fn
+                                _ftotal = _fL + _ftotal_int
+                                for _mo in range(1, _fn + 1):
+                                    _sched.append({'회차': _mo, '원금': 0 if _mo < _fn else int(_fL),
+                                                   '이자': int(_f_m_int),
+                                                   '월납부액': int(_f_m_int) if _mo < _fn else int(_fL + _f_m_int),
+                                                   '잔금': int(_fL) if _mo < _fn else 0})
+                                st.session_state['_fcalc_result'] = {
+                                    'type': 'loan_bullet',
+                                    'monthly_int': _f_m_int, 'total_int': _ftotal_int,
+                                    'total': _ftotal, 'L': _fL, 'sched': _sched,
+                                }
+                            st.rerun()
+
+                        _fcr = st.session_state.get('_fcalc_result', {})
+                        if _fcr.get('type') in ('loan_equal_pmt', 'loan_equal_prin', 'loan_bullet'):
+                            import pandas as _pd_fc2
+                            if _fcr['type'] == 'loan_equal_pmt':
+                                st.success(f"🎉 월 상환액: **{fmt_won(int(_fcr['monthly']))}**")
+                                _fcalc_metrics([
+                                    ("대출금액", fmt_won(int(_fcr['L']))),
+                                    ("월 상환액", fmt_won(int(_fcr['monthly']))),
+                                    ("총 이자", fmt_won(int(_fcr['total_int']))),
+                                    ("총 상환액", fmt_won(int(_fcr['total']))),
+                                ])
+                            elif _fcr['type'] == 'loan_equal_prin':
+                                st.success(f"🎉 첫달 상환액: **{fmt_won(int(_fcr['first_monthly']))}** (매월 감소)")
+                                _fcalc_metrics([
+                                    ("대출금액", fmt_won(int(_fcr['L']))),
+                                    ("매월 원금", fmt_won(int(_fcr['prin']))),
+                                    ("총 이자", fmt_won(int(_fcr['total_int']))),
+                                    ("총 상환액", fmt_won(int(_fcr['total']))),
+                                ])
+                            else:
+                                st.success(f"🎉 월 이자: **{fmt_won(int(_fcr['monthly_int']))}** (만기 시 원금 일시 상환)")
+                                _fcalc_metrics([
+                                    ("대출금액", fmt_won(int(_fcr['L']))),
+                                    ("월 이자", fmt_won(int(_fcr['monthly_int']))),
+                                    ("총 이자", fmt_won(int(_fcr['total_int']))),
+                                    ("총 납부액", fmt_won(int(_fcr['total']))),
+                                ])
+
+                            _sched_data = _fcr.get('sched', [])
+                            if _sched_data:
+                                _sn_mo = len(_sched_data)
+                                _sn_yr = (_sn_mo + 11) // 12
+                                if _sn_mo <= 36:
+                                    _show_lu = st.radio('차트 단위', ['년별', '월별'], horizontal=True, key='fcalc_loan_unit')
+                                else:
+                                    _show_lu = '년별'
+                                if _show_lu == '월별':
+                                    _cx = [f"{s['회차']}개월" for s in _sched_data]
+                                    _cp = [s['원금'] // 10000 for s in _sched_data]
+                                    _ci = [s['이자'] // 10000 for s in _sched_data]
+                                    _cb = [s['잔금'] // 10000 for s in _sched_data]
+                                else:
+                                    _cx, _cp, _ci, _cb = [], [], [], []
+                                    for _lyr in range(1, _sn_yr + 1):
+                                        _lys = _sched_data[(_lyr-1)*12 : _lyr*12]
+                                        if _lys:
+                                            _cx.append(f'{_lyr}년')
+                                            _cp.append(sum(s['원금'] for s in _lys) // 10000)
+                                            _ci.append(sum(s['이자'] for s in _lys) // 10000)
+                                            _cb.append(_lys[-1]['잔금'] // 10000)
+                                _draw_bar_chart(
+                                    _cx, [_cp, _ci],
+                                    ['#4A90D9', '#E74C3C'],
+                                    ['원금 상환', '이자 납부'],
+                                    line_data=_cb, line_name='잔금',
+                                )
+                                with st.expander("📋 상환 스케줄 보기", expanded=False):
+                                    _df_sched = _pd_fc2.DataFrame(_sched_data)
+                                    for _col in _df_sched.columns:
+                                        if _col != '회차':
+                                            _df_sched[_col] = _df_sched[_col].apply(lambda v: fmt_won(v) if isinstance(v, int) and v != 0 else (fmt_won(v) if isinstance(v, int) else v))
+                                    st.dataframe(_df_sched, use_container_width=True, hide_index=True)
+
+            # ----------------------------------------------------------
+            # 탭 3: 커뮤니티 (게시판)
+            # ----------------------------------------------------------
+        with tabs[3]:
+            import sys as _sys_brd, pathlib as _pl_brd
+            _sys_brd.path.insert(0, str(_pl_brd.Path(__file__).parent))
+            from board import show_board as _show_board
+            _show_board(call_api, is_admin=st.session_state.get('is_admin', False))
 
         # ----------------------------------------------------------
-        # 탭 7: 관리자 (is_admin=True 일 때만 탭 존재)
+        # 탭 4: 관리자 (is_admin=True 일 때만 탭 존재)
         # ----------------------------------------------------------
         if st.session_state.get('is_admin'):
-            with tabs[6]:
+            with tabs[4]:
                 st.subheader("🔧 관리자 패널")
 
                 _adm_tab1, _adm_tab2, _adm_tab3, _adm_tab4, _adm_tab5 = st.tabs([
@@ -4537,16 +5133,40 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                 if _exp_rent:
                                     _rent_note = f"{_inf_label})" if _inf_label else ""
                                     st.markdown(f"- 월세 임차료{_rent_note}: **{fmt_won(_exp_rent)}**")
+                                _td = _row.get('세금계산기준', {})
                                 if _itax:
-                                    st.markdown(f"- 소득세: **{fmt_won(_itax)}**")
+                                    if _td:
+                                        _et = _td.get('실효세율', 0)
+                                        _pb = _td.get('과세표준', 0)
+                                        st.markdown(
+                                            f"- 소득세: **{fmt_won(_itax)}**"
+                                            f"<small style='color:var(--text-muted,#888);margin-left:6px;'>"
+                                            f"과표 {_pb:,}만원 × 실효세율 {_et:.1f}% (지방세 포함)</small>",
+                                            unsafe_allow_html=True,
+                                        )
+                                    else:
+                                        st.markdown(f"- 소득세: **{fmt_won(_itax)}**")
                                 if _hi:
-                                    st.markdown(f"- 건강보험료: **{fmt_won(_hi)}**")
+                                    if _td:
+                                        _hg = _td.get('건보료구분', '')
+                                        if _row['나이'] < _retire_age:
+                                            _hi_note = f"{_hg} — 보수월액 기준 7.09%"
+                                        else:
+                                            _hi_inc = _td.get('건보료_소득반영', 0)
+                                            _hi_note = f"{_hg} — 연금소득 {_hi_inc:,}만원 반영(공적연금 50% 산정)"
+                                        st.markdown(
+                                            f"- 건강보험료: **{fmt_won(_hi)}**"
+                                            f"<small style='color:var(--text-muted,#888);margin-left:6px;'>"
+                                            f"{_hi_note}</small>",
+                                            unsafe_allow_html=True,
+                                        )
+                                    else:
+                                        st.markdown(f"- 건강보험료: **{fmt_won(_hi)}**")
                                 if _tax_total and not _itax and not _hi:
                                     st.markdown(f"- 세금·건보료: **{fmt_won(_tax_total)}**")
 
-                            _td = _row.get('세금계산기준', {})
                             if _td and (_itax > 0 or _hi > 0):
-                                with st.expander("└ 세금·건보료 계산 기준", expanded=False):
+                                with st.expander("└ 세금·건보료 상세 계산 과정", expanded=False):
                                     if _row['나이'] < _retire_age:
                                         st.markdown(
                                             f"**소득 구분:** 근로소득  \n"
@@ -4556,11 +5176,12 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                             f"**과세표준:** {_td.get('과세표준', 0):,}만원  \n"
                                             f"**연 소득세:** {_td.get('연소득세', 0):,}만원 "
                                             f"(실효세율 {_td.get('실효세율', 0):.1f}%, 지방소득세 포함)  \n"
-                                            f"**건보료:** {_td.get('건보료_월', 0):.1f}만원/월 "
-                                            f"({_td.get('건보료구분', '')})"
+                                            f"**월 소득세:** {fmt_won(_itax)}  \n"
+                                            f"**건보료:** {fmt_won(_hi)}/월 "
+                                            f"({_td.get('건보료구분', '')} — 보수월액의 7.09%, 회사 50% 부담)"
                                         )
                                     else:
-                                        _pvt = _td.get('사적연금_분리과세', '')
+                                        _pvt = _td.get('사적연금_과세', '')
                                         _pvt_line = f"  \n**사적연금 과세 방식:** {_pvt}" if _pvt else ""
                                         _hi_inc = _td.get('건보료_소득반영', 0)
                                         st.markdown(
@@ -4570,9 +5191,10 @@ ISA 계좌 + 연금저축 활용 시 세금 혜택(비과세·과세이연) 가�
                                             f"**기본공제:** -150만원  \n"
                                             f"**과세표준:** {_td.get('과세표준', 0):,}만원  \n"
                                             f"**연 소득세:** {_td.get('연소득세', 0):,}만원 "
-                                            f"(실효세율 {_td.get('실효세율', 0):.1f}%, 지방소득세 포함)"
+                                            f"(실효세율 {_td.get('실효세율', 0):.1f}%, 지방소득세 포함)  \n"
+                                            f"**월 소득세:** {fmt_won(_itax)}"
                                             + _pvt_line +
-                                            f"  \n**건보료:** {_td.get('건보료_월', 0):.1f}만원/월 "
+                                            f"  \n**건보료:** {fmt_won(_hi)}/월 "
                                             f"({_td.get('건보료구분', '')} — 연금소득 {_hi_inc:,}만원 반영, "
                                             f"공적연금은 50%만 산정)"
                                         )

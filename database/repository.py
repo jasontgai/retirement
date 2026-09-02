@@ -74,6 +74,7 @@ def save_profile(db: Session, user_id: int, user_profile, title: str = "기본 �
             debt=int(re.debt),
             monthly_rent_income=int(re.monthly_rent_income),
             monthly_rent_expense=int(re.monthly_rent_expense),
+            received_deposit=int(getattr(re, 'received_deposit', 0)),
             is_primary_residence=re.is_primary_residence,
             acquisition_date=re.acquisition_date,
             acquisition_price=int(re.acquisition_price),

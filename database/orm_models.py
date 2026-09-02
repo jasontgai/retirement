@@ -110,6 +110,7 @@ class RealEstateRow(Base):
     debt: Mapped[int] = mapped_column(BigInteger, default=0)
     monthly_rent_income: Mapped[int] = mapped_column(BigInteger, default=0)
     monthly_rent_expense: Mapped[int] = mapped_column(BigInteger, default=0)
+    received_deposit: Mapped[int] = mapped_column(BigInteger, default=0)  # 임대인: 세입자에게 받은 보증금 (부채)
     is_primary_residence: Mapped[bool] = mapped_column(Boolean, default=True)
     acquisition_date: Mapped[datetime | None] = mapped_column(Date, nullable=True)
     acquisition_price: Mapped[int] = mapped_column(BigInteger, default=0)
@@ -240,6 +241,41 @@ class PasswordResetToken(Base):
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     used: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class Post(Base):
+    """게시판 글"""
+    __tablename__ = "posts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    board_type: Mapped[str] = mapped_column(String(20), nullable=False, index=True)  # free | report
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    title: Mapped[str] = mapped_column(String(300), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str | None] = mapped_column(String(30), nullable=True)   # report용: 버그|기능요청|기타
+    status: Mapped[str] = mapped_column(String(20), default="접수중")           # report용 상태
+    is_pinned: Mapped[bool] = mapped_column(Boolean, default=False)
+    view_count: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), index=True)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    author: Mapped["User"] = relationship("User")
+    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
+
+
+class Comment(Base):
+    """게시글 댓글"""
+    __tablename__ = "comments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    post_id: Mapped[int] = mapped_column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    post: Mapped["Post"] = relationship("Post", back_populates="comments")
+    author: Mapped["User"] = relationship("User")
 
 
 class UserActivity(Base):

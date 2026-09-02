@@ -433,7 +433,11 @@ reportHeightDeferred();"""
   </div>
 
   <div class="ctrl-group" style="min-width:auto">
-    <label>💸 나이별 지출 체감률 (%)</label>
+    <label>💸 나이별 지출 체감률 (%)
+      <span style="font-weight:400;font-size:0.75em;opacity:0.7;margin-left:8px;">
+        🏥 의료비 별도 증가: ~64세×1.0 / 65~69×1.3 / 70~74×1.7 / 75~79×2.2 / 80~84×2.8 / 85+×3.5
+      </span>
+    </label>
     <div class="spending-grid">
       <div class="spending-item">
         <label> ~64세</label>
@@ -963,7 +967,7 @@ function draw() {{
 
 // ─── 툴팁 ───
 const tooltip = document.getElementById('tooltip');
-let _ttShowAll  = false;   // 전체보기 토글 상태
+let _ttShowAll  = {_detail_js};   // 전체보기 토글 상태 (상세보기 모드면 기본 전체보기)
 let _ttLast     = null;    // 마지막 showTooltip 호출 인자
 let _ttHideTimer = null;   // 지연 숨김 타이머
 

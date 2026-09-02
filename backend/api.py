@@ -96,7 +96,8 @@ class _ActivityLogMiddleware(BaseHTTPMiddleware):
         x_client_ip = request.headers.get("X-Client-IP", "").split(",")[0].strip()
         xff = request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
         ip = x_client_ip or xff or (request.client.host if request.client else "")
-        ua = request.headers.get("User-Agent", "")
+        # X-Browser-UA: Streamlit 프론트엔드가 전달하는 실제 브라우저 UA
+        ua = request.headers.get("X-Browser-UA") or request.headers.get("User-Agent", "")
         norm_path = re.sub(r'/\d+', '/{id}', request.url.path)
         action = f"{request.method} {norm_path}"
         user_id = user_email = None
@@ -288,6 +289,7 @@ class RealEstateIn(BaseModel):
     debt: float = 0
     monthly_rent_income: float = 0
     monthly_rent_expense: float = 0
+    received_deposit: float = 0        # 임대인: 세입자에게 받은 전세금·보증금 (부채)
     is_primary_residence: bool = True
 
 
@@ -422,6 +424,7 @@ def pydantic_to_userprofile(data: FullProfileIn) -> UserProfile:
             debt=r.debt,
             monthly_rent_income=r.monthly_rent_income,
             monthly_rent_expense=r.monthly_rent_expense,
+            received_deposit=r.received_deposit,
             is_primary_residence=r.is_primary_residence,
         )
         for r in data.real_estates
@@ -700,6 +703,7 @@ def _serialize_profile(row) -> dict:
                 "market_value": r.market_value, "official_price": r.official_price,
                 "debt": r.debt, "monthly_rent_income": r.monthly_rent_income,
                 "monthly_rent_expense": r.monthly_rent_expense,
+                "received_deposit": getattr(r, 'received_deposit', 0),
                 "is_primary_residence": r.is_primary_residence,
             } for r in row.real_estates
         ],
@@ -1613,6 +1617,243 @@ def delete_scenario(
     if row:
         db.delete(row)
         db.commit()
+
+
+# ============================================================
+# 게시판 API
+# ============================================================
+
+from database.orm_models import Post as PostRow, Comment as CommentRow
+
+_BOARD_TYPES = {"free", "report"}
+_REPORT_CATEGORIES = {"버그", "기능요청", "기타"}
+_REPORT_STATUSES = {"접수중", "확인됨", "처리중", "완료", "보류"}
+
+
+class PostIn(BaseModel):
+    title: str = Field(..., min_length=1, max_length=300)
+    content: str = Field(..., min_length=1)
+    category: Optional[str] = None
+
+
+class CommentIn(BaseModel):
+    content: str = Field(..., min_length=1, max_length=2000)
+
+
+class StatusIn(BaseModel):
+    status: str
+
+
+def _serialize_post(p: PostRow, include_content: bool = False) -> dict:
+    d = {
+        "id": p.id,
+        "board_type": p.board_type,
+        "user_id": p.user_id,
+        "author_name": p.author.name if p.author else "알수없음",
+        "title": p.title,
+        "category": p.category,
+        "status": p.status,
+        "is_pinned": p.is_pinned,
+        "view_count": p.view_count,
+        "comment_count": len(p.comments) if p.comments is not None else 0,
+        "created_at": p.created_at.strftime("%Y-%m-%d %H:%M") if p.created_at else "",
+        "updated_at": p.updated_at.strftime("%Y-%m-%d %H:%M") if p.updated_at else "",
+    }
+    if include_content:
+        d["content"] = p.content
+        d["comments"] = [
+            {
+                "id": c.id,
+                "user_id": c.user_id,
+                "author_name": c.author.name if c.author else "알수없음",
+                "content": c.content,
+                "created_at": c.created_at.strftime("%Y-%m-%d %H:%M") if c.created_at else "",
+            }
+            for c in sorted(p.comments, key=lambda x: x.created_at)
+        ]
+    return d
+
+
+@app.get("/boards/{board_type}/posts")
+def list_posts(
+    board_type: str,
+    page: int = 1,
+    per_page: int = 20,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if board_type not in _BOARD_TYPES:
+        raise HTTPException(status_code=400, detail="유효하지 않은 게시판 타입")
+    q = (
+        db.query(PostRow)
+        .filter(PostRow.board_type == board_type)
+        .order_by(PostRow.is_pinned.desc(), PostRow.created_at.desc())
+    )
+    total = q.count()
+    posts = q.offset((page - 1) * per_page).limit(per_page).all()
+    return {
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "posts": [_serialize_post(p) for p in posts],
+    }
+
+
+@app.post("/boards/{board_type}/posts", status_code=201)
+def create_post(
+    board_type: str,
+    data: PostIn,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if board_type not in _BOARD_TYPES:
+        raise HTTPException(status_code=400, detail="유효하지 않은 게시판 타입")
+    if board_type == "report" and data.category and data.category not in _REPORT_CATEGORIES:
+        raise HTTPException(status_code=400, detail="유효하지 않은 카테고리")
+    post = PostRow(
+        board_type=board_type,
+        user_id=current_user.id,
+        title=data.title.strip(),
+        content=data.content.strip(),
+        category=data.category if board_type == "report" else None,
+        status="접수중" if board_type == "report" else "일반",
+    )
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+    return _serialize_post(post, include_content=True)
+
+
+@app.get("/boards/{board_type}/posts/{post_id}")
+def get_post(
+    board_type: str,
+    post_id: int,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    post = db.query(PostRow).filter(PostRow.id == post_id, PostRow.board_type == board_type).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다")
+    post.view_count += 1
+    db.commit()
+    return _serialize_post(post, include_content=True)
+
+
+@app.put("/boards/{board_type}/posts/{post_id}")
+def update_post(
+    board_type: str,
+    post_id: int,
+    data: PostIn,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    post = db.query(PostRow).filter(PostRow.id == post_id, PostRow.board_type == board_type).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다")
+    if post.user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="수정 권한이 없습니다")
+    post.title = data.title.strip()
+    post.content = data.content.strip()
+    if board_type == "report" and data.category:
+        post.category = data.category
+    db.commit()
+    return _serialize_post(post, include_content=True)
+
+
+@app.delete("/boards/{board_type}/posts/{post_id}", status_code=204)
+def delete_post(
+    board_type: str,
+    post_id: int,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    post = db.query(PostRow).filter(PostRow.id == post_id, PostRow.board_type == board_type).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다")
+    if post.user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="삭제 권한이 없습니다")
+    db.delete(post)
+    db.commit()
+
+
+@app.patch("/boards/{board_type}/posts/{post_id}/status", status_code=200)
+def update_post_status(
+    board_type: str,
+    post_id: int,
+    data: StatusIn,
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    if data.status not in _REPORT_STATUSES:
+        raise HTTPException(status_code=400, detail="유효하지 않은 상태값")
+    post = db.query(PostRow).filter(PostRow.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다")
+    post.status = data.status
+    db.commit()
+    return {"status": post.status}
+
+
+@app.patch("/boards/{board_type}/posts/{post_id}/pin", status_code=200)
+def toggle_pin(
+    board_type: str,
+    post_id: int,
+    current_user=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    post = db.query(PostRow).filter(PostRow.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다")
+    post.is_pinned = not post.is_pinned
+    db.commit()
+    return {"is_pinned": post.is_pinned}
+
+
+@app.post("/boards/{board_type}/posts/{post_id}/comments", status_code=201)
+def create_comment(
+    board_type: str,
+    post_id: int,
+    data: CommentIn,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    post = db.query(PostRow).filter(PostRow.id == post_id, PostRow.board_type == board_type).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다")
+    comment = CommentRow(
+        post_id=post_id,
+        user_id=current_user.id,
+        content=data.content.strip(),
+    )
+    db.add(comment)
+    db.commit()
+    db.refresh(comment)
+    return {
+        "id": comment.id,
+        "user_id": comment.user_id,
+        "author_name": current_user.name,
+        "content": comment.content,
+        "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M"),
+    }
+
+
+@app.delete("/boards/{board_type}/posts/{post_id}/comments/{comment_id}", status_code=204)
+def delete_comment(
+    board_type: str,
+    post_id: int,
+    comment_id: int,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    comment = db.query(CommentRow).filter(
+        CommentRow.id == comment_id, CommentRow.post_id == post_id
+    ).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="댓글을 찾을 수 없습니다")
+    if comment.user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="삭제 권한이 없습니다")
+    db.delete(comment)
+    db.commit()
 
 
 import pathlib, tempfile as _tempfile
