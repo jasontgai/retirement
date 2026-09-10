@@ -81,15 +81,39 @@ st.markdown("""
     }
     .stButton > button {
         width: 100%;
-        height: 48px;
-        border-radius: 24px;
-        font-size: 16px;
+        height: auto;
+        min-height: 34px;
+        border-radius: 18px;
+        font-size: 12px;
         font-weight: 600;
         background-color: #1976d2;
         color: white;
         border: none;
+        padding: 6px 10px;
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .stButton > button:hover { background-color: #1565c0; }
+    /* 전체 요소 간 줄간격 절반으로 축소 */
+    [data-testid="stVerticalBlock"] {
+        gap: 0.5rem !important;
+    }
+    /* 구분선(divider) 위아래 여백 축소 */
+    [data-testid="stDivider"],
+    div:has(> hr) {
+        margin-top: -1.5rem !important;
+        margin-bottom: -1.5rem !important;
+        padding: 0 !important;
+    }
+    hr {
+        margin: 0 !important;
+    }
+    /* streamlit_javascript 컴포넌트(뷰포트 감지용 height=0 iframe) 공간 제거 */
+    div:has(> iframe[height="0"]) {
+        display: none !important;
+    }
     .stNumberInput input, .stTextInput input, .stSelectbox > div {
         border-radius: 12px !important;
         font-size: 16px !important;
@@ -98,6 +122,7 @@ st.markdown("""
         border-radius: 16px;
         border: 1px solid rgba(128,128,128,0.2);
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 0 !important;
     }
     .main .block-container {
         padding-top: 1rem;
@@ -211,6 +236,19 @@ st.markdown("""
     details[open] div[data-testid="stExpanderToggleIcon"]::after {
         content: "-";
     }
+    /* 투자 시나리오 카드 다크모드 */
+    .inv-card { color: inherit !important; }
+    .inv-card .inv-sub { color: #888 !important; }
+    .inv-card hr { border-color: rgba(128,128,128,0.25) !important; }
+    [data-theme="dark"] .inv-card .inv-sub,
+    [data-baseweb="base-input"] ~ * .inv-card .inv-sub { color: #aaa !important; }
+    /* 비교표 sticky 열 다크모드 data-theme 대응 */
+    [data-theme="dark"] .cmp-s0,
+    [data-theme="dark"] .cmp-s1 { background:#0f1117 !important; }
+    [data-theme="dark"] .cmp-tbl thead .cmp-s0,
+    [data-theme="dark"] .cmp-tbl thead .cmp-s1 { background:rgba(21,101,192,0.30) !important; }
+    [data-theme="light"] .cmp-s0,
+    [data-theme="light"] .cmp-s1 { background:#ffffff !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -618,7 +656,7 @@ def _metric_card(label, value, delta=None, delta_color="normal"):
         if delta else ""
     )
     st.markdown(f"""
-    <div style="background:rgba(25,118,210,0.1);padding:14px 16px;border-radius:16px;margin-bottom:8px;">
+    <div style="background:rgba(25,118,210,0.1);padding:14px 16px;border-radius:16px;margin-bottom:14px;">
         <div style="text-align:center;font-size:1.15rem;font-weight:700;margin-bottom:6px;">{label}</div>
         <div style="text-align:center;font-size:1.05rem;font-weight:400;">{value}</div>
         {delta_html}
@@ -628,8 +666,8 @@ def _metric_card(label, value, delta=None, delta_color="normal"):
 def _rtbl(df):
     """첫 열(레이블)은 왼쪽, 나머지 값 열은 오른쪽 정렬한 HTML 테이블 문자열 반환."""
     cols = list(df.columns)
-    th_style = "padding:6px 12px;border-bottom:1px solid rgba(255,255,255,0.15);font-weight:600;white-space:nowrap;"
-    td_style = "padding:5px 12px;border-bottom:1px solid rgba(255,255,255,0.06);white-space:nowrap;"
+    th_style = "padding:4px 10px;border-bottom:1px solid rgba(255,255,255,0.15);font-weight:600;white-space:nowrap;"
+    td_style = "padding:3px 10px;border-bottom:1px solid rgba(255,255,255,0.06);white-space:nowrap;"
     hdr = "".join(
         f'<th style="{th_style}text-align:center;">{c}</th>'
         for i, c in enumerate(cols)
@@ -660,7 +698,7 @@ def _rtbl_sticky(df, n_fixed=2):
         "<style>"
         ".cmp-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}"
         ".cmp-tbl{border-collapse:separate;border-spacing:0;font-size:0.85rem;width:max-content;min-width:100%;}"
-        ".cmp-tbl th,.cmp-tbl td{padding:6px 14px;border-bottom:1px solid rgba(128,128,128,0.18);white-space:nowrap;}"
+        ".cmp-tbl th,.cmp-tbl td{padding:4px 10px;border-bottom:1px solid rgba(128,128,128,0.18);white-space:nowrap;}"
         ".cmp-tbl thead tr{background:rgba(25,118,210,0.13);}"
         ".cmp-tbl tbody tr:nth-child(even){background:rgba(0,0,0,0.025);}"
         f".cmp-s0{{position:sticky;left:0;z-index:2;min-width:{_w0}px;width:{_w0}px;"
@@ -670,10 +708,30 @@ def _rtbl_sticky(df, n_fixed=2):
         ".cmp-tbl thead .cmp-s0,.cmp-tbl thead .cmp-s1"
         "{z-index:3;background:rgba(21,101,192,0.18);}"
         "@media(prefers-color-scheme:dark){"
-        ".cmp-s0,.cmp-s1{background:#0f1117;}"
-        ".cmp-tbl thead .cmp-s0,.cmp-tbl thead .cmp-s1{background:rgba(21,101,192,0.30);}"
+        ".cmp-s0,.cmp-s1{background:#0f1117 !important;}"
+        ".cmp-tbl thead .cmp-s0,.cmp-tbl thead .cmp-s1{background:rgba(21,101,192,0.30) !important;}"
         "}"
+        "[data-theme=dark] .cmp-s0,[data-theme=dark] .cmp-s1{background:#0f1117 !important;}"
+        "[data-theme=dark] .cmp-tbl thead .cmp-s0,[data-theme=dark] .cmp-tbl thead .cmp-s1{background:rgba(21,101,192,0.30) !important;}"
+        "[data-theme=light] .cmp-s0,[data-theme=light] .cmp-s1{background:#ffffff !important;}"
         "</style>"
+        "<script>"
+        "(function(){"
+        "function applyBg(){"
+        "var root=document.documentElement;"
+        "var theme=root.getAttribute('data-theme')||"
+        "(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');"
+        "var bg=theme==='dark'?'#0f1117':'#ffffff';"
+        "var hbg=theme==='dark'?'rgba(21,101,192,0.30)':'rgba(21,101,192,0.18)';"
+        "document.querySelectorAll('.cmp-s0,.cmp-s1').forEach(function(el){"
+        "if(!el.closest('thead'))el.style.setProperty('background',bg,'important');"
+        "else el.style.setProperty('background',hbg,'important');"
+        "});}"
+        "applyBg();"
+        "new MutationObserver(applyBg).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});"
+        "window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',applyBg);"
+        "})();"
+        "</script>"
     )
 
     def _cls(i):
@@ -944,12 +1002,12 @@ _AGE_AVG_DATA = {
         'living': 340, 'medical': 30, 'leisure': 100, 'family': 60, 'insurance': 30, 'other': 30,
         'pensions': [
             {'pension_type': '국민연금', 'name': '국민연금',
-             'current_balance': 0, 'monthly_contribution': 206_000,
+             'current_balance': 0, 'monthly_contribution': 247_500,
              'contribution_end_age': 60, 'expected_start_age': 65,
              'expected_monthly_payout': 600_000, 'payout_period_years': 0,
              'annual_return_rate': 0.0, 'contribution_years': 0},
             {'pension_type': '퇴직연금DC', 'name': '퇴직연금DC',
-             'current_balance': 30_000_000, 'monthly_contribution': 380_000,
+             'current_balance': 30_000_000, 'monthly_contribution': 458_000,
              'contribution_end_age': 60, 'expected_start_age': 60,
              'expected_monthly_payout': 0, 'payout_period_years': 20,
              'annual_return_rate': 0.04, 'contribution_years': 0},
@@ -1427,7 +1485,7 @@ def show_main_app():
             st.markdown('</div>', unsafe_allow_html=True)
 
         st.divider()
-        st.caption("🌅 은퇴설계 v0.2.0")
+        st.caption("🌅 은퇴설계 v0.3.0")
 
     # ── 모드 헤더 (국가평균 vs 내 정보) ──────────────────────────
     _is_onboarding = st.session_state.get('onboarding_done', False)
@@ -1554,8 +1612,9 @@ def show_main_app():
         with st.spinner("분석 중..."):
             result, err = call_api("/analyze", payload)
         if err:
-            st.error(err)
+            st.session_state['_analysis_error'] = err
         else:
+            st.session_state.pop('_analysis_error', None)
             st.session_state.analysis_result = result
             st.session_state.adj_payout = {}
             st.session_state.adj_start_age = {}
@@ -1649,7 +1708,7 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
 }
 /* 탭↔저장버튼 사이 공백 제거 */
 [role="tabpanel"] { padding-bottom: 0 !important; }
-div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
+div:has(> [data-testid="stTabs"]) + div { margin-top: -2rem !important; }
 </style>
 """, unsafe_allow_html=True)
         # "내 정보 직접 입력하기" 클릭 후 ✏️내 정보 탭(index=1)으로 자동 포커스
@@ -1686,6 +1745,11 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
         # ----------------------------------------------------------
         with tabs[0]:
             st.subheader("종합 분석 실행")
+
+            # 분석 실패 에러를 탭 안에 표시
+            _analysis_err = st.session_state.pop('_analysis_error', None)
+            if _analysis_err:
+                st.error(f"⚠️ 분석 실패: {_analysis_err}")
 
             if "inp_inflation" not in st.session_state:
                 st.session_state["inp_inflation"] = 2.0
@@ -1724,6 +1788,8 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     else:
                         st.session_state.profile_id = _ar.get('id', _apid)
                         st.rerun()
+                else:
+                    st.rerun()  # 분석 실패 에러를 탭 내에 표시하기 위해 rerun
 
             if not _is_onboarding:
                 if st.button("💾 내 정보 저장", use_container_width=True):
@@ -1742,9 +1808,8 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         st.error(f"저장 실패: {_e}")
                     else:
                         st.session_state.profile_id = _r.get('id', _pid)
-                        st.success("✅ 저장 완료! 분석 중...")
                         _run_analysis()
-                        st.rerun()
+                        st.rerun()  # 성공/실패 모두 rerun → 에러는 탭 내부에 표시
 
 
         # ----------------------------------------------------------
@@ -1799,7 +1864,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
             dependents = _sl("부양가족 수", 0, 10, st.session_state.get("inp_dependents", 1), 1, "inp_dependents", "명")
 
             st.markdown("""
-    <div style="margin:1.2rem 0 0.5rem 0;">
+    <div style="margin:1.5rem 0 0.8rem 0;">
       <span style="background:rgba(25,118,210,0.15);color:#1976d2;border:1px solid rgba(25,118,210,0.4);
                    border-radius:6px;padding:4px 12px;font-size:0.95rem;font-weight:700;letter-spacing:0.02em;">
         💼 은퇴 전 소득
@@ -1817,7 +1882,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
             is_employee = st.toggle("직장가입자", key="inp_is_employee")
 
             st.markdown("""
-    <div style="margin:1.2rem 0 0.2rem 0;">
+    <div style="margin:1.5rem 0 0.8rem 0;">
       <span style="background:rgba(56,142,60,0.15);color:#388e3c;border:1px solid rgba(56,142,60,0.4);
                    border-radius:6px;padding:4px 12px;font-size:0.95rem;font-weight:700;letter-spacing:0.02em;">
         🌿 은퇴 후 소득
@@ -1832,7 +1897,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 parttime_until = _sl("종료 연령", 60, 80, st.session_state.get("inp_parttime_until", 70), 1, "inp_parttime_until", "세")
 
             st.markdown("""
-    <div style="margin:1.2rem 0 0.2rem 0;">
+    <div style="margin:1.5rem 0 0.8rem 0;">
       <span style="background:rgba(123,31,162,0.12);color:#7b1fa2;border:1px solid rgba(123,31,162,0.35);
                    border-radius:6px;padding:4px 12px;font-size:0.95rem;font-weight:700;letter-spacing:0.02em;">
         👫 배우자 연금
@@ -1848,7 +1913,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 spouse_other = _sl("배우자 기타연금 월수령액", 0, 500, st.session_state.get("inp_spouse_other", 0), 5, "inp_spouse_other", "won") * 10000
                 spouse_other_age = _sl("배우자 기타연금 개시연령", 50, 85, st.session_state.get("inp_spouse_other_age", 65), 1, "inp_spouse_other_age", "세")
 
-            if st.button("📌 내 국민연금 정상 수급연령 확인", key="check_age"):
+            if st.button("📌 내 국민연금 정상 수급연령 확인", key="check_age", use_container_width=True):
                 result, err = call_api(f"/pension/start-age/{birth_year}", method="GET")
                 if err:
                     st.error(err)
@@ -1863,6 +1928,9 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
         # 탭 3: 연금
         with _info_tabs[1]:
             PENSION_TYPES = ["국민연금", "퇴직연금DB", "퇴직연금DC", "IRP", "연금저축", "개인연금"]
+            # 국민연금·퇴직연금DB/DC는 1개 제한, IRP·연금저축·개인연금은 복수 허용
+            # IRP: 금융사별 1개씩 여러 금융사 동시 가입 가능 (법적으로 복수 허용)
+            _SINGLE_TYPES = {"국민연금", "퇴직연금DB", "퇴직연금DC"}
             registered = {p['pension_type']: i for i, p in enumerate(st.session_state.pensions)}
             edit_idx = st.session_state.editing_pension_idx
 
@@ -2123,7 +2191,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 with st.expander("➕ 새 연금 추가", expanded=False):
                     pn_type_sel = st.selectbox("연금 종류", PENSION_TYPES, key="new_pn_type")
 
-                    if pn_type_sel in registered:
+                    if pn_type_sel in _SINGLE_TYPES and pn_type_sel in registered:
                         st.warning(f"⚠️ **{pn_type_sel}** 은(는) 이미 등록되어 있습니다.")
                         if st.button("✏️ 수정하기", key="edit_existing_pn", width='stretch'):
                             st.session_state.editing_pension_idx = registered[pn_type_sel]
@@ -2162,7 +2230,10 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                             )
 
                         with st.form("add_pension", clear_on_submit=True):
-                            pn_name = st.text_input("상품명/기관명", value=pn_type_sel)
+                            # 동일 종류가 이미 있으면 번호 suffix
+                            _same_type_cnt = sum(1 for p in st.session_state.pensions if p['pension_type'] == pn_type_sel)
+                            _pn_default_name = pn_type_sel if _same_type_cnt == 0 else f"{pn_type_sel} {_same_type_cnt + 1}"
+                            pn_name = st.text_input("상품명/기관명", value=_pn_default_name)
                             c1, c2 = st.columns(2)
                             with c1:
                                 pn_balance = _sl("현재 적립금", 0, 50000, 0, 500, fmt="won") * 10000
@@ -3264,6 +3335,34 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     else:
                         _show_cols = _fixed_hdr
                     st.markdown(_rtbl_sticky(_df_cmp[_show_cols]), unsafe_allow_html=True)
+                    # JS로 sticky 열 배경색을 직접 주입 (st.markdown은 script 미실행)
+                    st.components.v1.html("""<script>
+(function(){
+  function isDark(){
+    try{
+      var t=window.parent.document.documentElement.getAttribute('data-theme');
+      if(t) return t==='dark';
+      var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;
+      var rgb=bg.match(/\\d+/g);
+      if(rgb&&rgb.length>=3){return(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3<128;}
+      return window.matchMedia('(prefers-color-scheme:dark)').matches;
+    }catch(e){return false;}
+  }
+  function fix(){
+    var dark=isDark();
+    var bg=dark?'#0f1117':'#ffffff';
+    var hbg=dark?'rgba(21,101,192,0.30)':'rgba(21,101,192,0.18)';
+    var col=dark?'#e0e0f4':'inherit';
+    window.parent.document.querySelectorAll('.cmp-s0,.cmp-s1').forEach(function(el){
+      if(!el.closest('thead')){el.style.setProperty('background',bg,'important');el.style.setProperty('color',col,'important');}
+      else{el.style.setProperty('background',hbg,'important');el.style.setProperty('color',col,'important');}
+    });
+  }
+  fix();
+  try{new MutationObserver(fix).observe(window.parent.document.documentElement,{attributes:true,attributeFilter:['data-theme','class','style']});}catch(e){}
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',fix);
+})();
+</script>""", height=0, scrolling=False)
 
                     # 선택된 시나리오 레이블 세트 (그래프 필터링용)
                     _col_to_sc = {'🇰🇷 우리나라 평균': 'STANDARD', '📌 GOOD CASE': 'GOOD', '🏆 BEST CASE': 'BEST'}
@@ -3821,18 +3920,18 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         _covers     = _remaining <= 0
                         _need_mo    = _monthly_for_fv(max(0, _total_shortage - _fv_lump(_total_fa, _sc['r'], _yrs_to_ret)), _sc['r'], _yrs_to_ret)
                         with _sc_cols[_sci]:
-                            _bg = "#e8f5e9" if _covers else "#fff8e1"
+                            _bg = "rgba(76,175,80,0.12)" if _covers else "rgba(255,193,7,0.10)"
                             st.markdown(f"""
-    <div style="border:1px solid {_sc['color']};border-radius:10px;padding:12px;background:{_bg};text-align:center;">
+    <div class="inv-card" style="border:1px solid {_sc['color']};border-radius:10px;padding:12px;background:{_bg};text-align:center;">
     <div style="font-size:20px;">{_sc['icon']}</div>
     <div style="font-weight:bold;color:{_sc['color']};font-size:15px;">{_sc['name']}</div>
-    <div style="font-size:11px;color:#555;margin:4px 0;">{_sc['desc']}<br>기대수익률 {_sc['r']*100:.0f}%</div>
-    <hr style="border:none;border-top:1px solid #ddd;margin:8px 0;">
-    <div style="font-size:12px;color:#555;">은퇴 시 적립금</div>
+    <div class="inv-sub" style="font-size:11px;margin:4px 0;">{_sc['desc']}<br>기대수익률 {_sc['r']*100:.0f}%</div>
+    <hr class="inv-card" style="border:none;border-top:1px solid rgba(128,128,128,0.25);margin:8px 0;">
+    <div class="inv-sub" style="font-size:12px;">은퇴 시 적립금</div>
     <div style="font-weight:bold;font-size:14px;">{fmt_won(int(_total_pot))}</div>
-    <div style="font-size:12px;color:#555;margin-top:6px;">{"✅ 부족액 커버 가능" if _covers else f"⚠️ 여전히 {fmt_won(int(_remaining))} 부족"}</div>
-    <div style="font-size:11px;color:#777;margin-top:4px;">{"" if _covers else f"필요 월 투자: {fmt_won(int(_need_mo))}"}</div>
-    <div style="font-size:11px;color:#888;margin-top:4px;">위험도: {_sc['risk']}</div>
+    <div class="inv-sub" style="font-size:12px;margin-top:6px;">{"✅ 부족액 커버 가능" if _covers else f"⚠️ 여전히 {fmt_won(int(_remaining))} 부족"}</div>
+    <div class="inv-sub" style="font-size:11px;margin-top:4px;">{"" if _covers else f"필요 월 투자: {fmt_won(int(_need_mo))}"}</div>
+    <div class="inv-sub" style="font-size:11px;margin-top:4px;">위험도: {_sc['risk']}</div>
     </div>""", unsafe_allow_html=True)
 
                     st.divider()
@@ -4028,10 +4127,25 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                             st.markdown(f"{label}: {value}")
 
                     def _fcalc_metrics(items):
+                        _mw = st.session_state.get('_vw', 1200)
+                        if _mw < 420:
+                            _fs_lbl, _fs_val = '0.60rem', '0.88rem'
+                        elif _mw < 640:
+                            _fs_lbl, _fs_val = '0.68rem', '1.0rem'
+                        else:
+                            _fs_lbl, _fs_val = '0.78rem', '1.2rem'
                         cols = st.columns(len(items))
                         for col, (lbl, val) in zip(cols, items):
                             with col:
-                                st.metric(lbl, val)
+                                st.markdown(
+                                    f'<div style="padding:4px 0 6px;">'
+                                    f'<div style="font-size:{_fs_lbl};color:#888;font-weight:500;'
+                                    f'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{lbl}</div>'
+                                    f'<div style="font-size:{_fs_val};font-weight:700;'
+                                    f'white-space:nowrap;">{val}</div>'
+                                    f'</div>',
+                                    unsafe_allow_html=True,
+                                )
 
                     def _draw_bar_chart(x_labels, bars, bar_colors, bar_names,
                                         line_data=None, line_name=None):
@@ -4065,8 +4179,10 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                             yaxis=dict(title='금액 (만원)', tickformat=','),
                             plot_bgcolor='rgba(0,0,0,0)',
                             paper_bgcolor='rgba(0,0,0,0)',
+                            dragmode=False,
                         )
-                        st.plotly_chart(_fig_fc, use_container_width=True)
+                        st.plotly_chart(_fig_fc, use_container_width=True,
+                                        config={'scrollZoom': False, 'displayModeBar': False})
 
                     # ── 예적금 ───────────────────────────────────────────
                     if _fcalc_cat == "💰 예적금":
@@ -4608,26 +4724,44 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     </script>""", height=0)
                     _al_refresh = st.button("📋 사용자 활동 로그 🔄", key="adm_al_refresh", use_container_width=True)
 
-                    _al_c1, _al_c2 = st.columns([1, 1])
+                    _al_c1, _al_c2, _al_c3 = st.columns([1, 1, 1])
                     with _al_c1:
                         _al_email = st.text_input("이메일 필터", key="adm_al_email", placeholder="전체")
                     with _al_c2:
                         _al_action = st.text_input("액션 필터", key="adm_al_action", placeholder="login, analyze …")
+                    with _al_c3:
+                        _al_ip = st.text_input("IP 필터", key="adm_al_ip", placeholder="예: 192.168")
 
                     _AL_PAGE_SIZE = 50
 
                     def _al_fetch(page=0):
                         _offset = page * _AL_PAGE_SIZE
                         _params = f"?limit={_AL_PAGE_SIZE}&offset={_offset}"
-                        if st.session_state.get('adm_al_action', '').strip():
-                            _params += f"&action={st.session_state['adm_al_action'].strip()}"
+                        _act = st.session_state.get('adm_al_action', '').strip()
+                        _eml = st.session_state.get('adm_al_email', '').strip()
+                        _ipl = st.session_state.get('adm_al_ip', '').strip()
+                        if _act:
+                            _params += f"&action={_act}"
+                        if _eml:
+                            _params += f"&email={_eml}"
+                        if _ipl:
+                            _params += f"&ip={_ipl}"
                         _data, _err = call_api(f"/admin/activity{_params}", method="GET")
                         st.session_state._adm_al_cache     = _data
                         st.session_state._adm_al_cache_err = _err
                         st.session_state._adm_al_page      = page
+                        st.session_state._adm_al_last_filter = (_act, _eml, _ipl)
 
-                    # 탭 첫 진입 또는 새로고침 버튼
-                    if '_adm_al_cache' not in st.session_state or _al_refresh:
+                    # 현재 필터값
+                    _cur_filter = (
+                        st.session_state.get('adm_al_action', '').strip(),
+                        st.session_state.get('adm_al_email', '').strip(),
+                        st.session_state.get('adm_al_ip', '').strip(),
+                    )
+                    _filter_changed = _cur_filter != st.session_state.get('_adm_al_last_filter')
+
+                    # 탭 첫 진입, 새로고침 버튼, 또는 필터 변경 시 fetch
+                    if '_adm_al_cache' not in st.session_state or _al_refresh or _filter_changed:
                         _al_fetch(0)
 
                     _adm_al     = st.session_state.get('_adm_al_cache')
@@ -4640,10 +4774,6 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         _al_total = _adm_al.get('total', 0)
                         _al_items = _adm_al.get('items', [])
                         _al_total_pages = max(1, -(-_al_total // _AL_PAGE_SIZE))  # ceiling
-
-                        # 이메일 클라이언트 필터
-                        if _al_email.strip():
-                            _al_items = [r for r in _al_items if _al_email.strip().lower() in (r.get('user_email') or '').lower()]
 
                         _al_df_data = []
                         for _r in _al_items:
@@ -5014,12 +5144,55 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                     import sys as _sys, pathlib as _pl
                     _sys.path.insert(0, str(_pl.Path(__file__).parent))
                     from detail_chart import generate_detail_html as _gen_html
+                # 뷰포트 너비 감지 — 먼저 계산해서 플레이스홀더 높이에도 사용
+                try:
+                    from streamlit_javascript import st_javascript as _st_js
+                    _vw = int(_st_js("window.innerWidth") or 1200)
+                except Exception:
+                    try:
+                        _vw = int(st.query_params.get('_vw', st.session_state.get('_vw', 1200)))
+                    except Exception:
+                        _vw = 1200
+                st.session_state['_vw'] = _vw
+                # 뷰포트 너비별 iframe 높이
+                if _show_detail:
+                    if   _vw >= 720: _iframe_h = 730
+                    elif _vw >= 640: _iframe_h = 760
+                    elif _vw >= 530: _iframe_h = 820
+                    elif _vw >= 420: _iframe_h = 880
+                    else:            _iframe_h = 960
+                else:
+                    if   _vw >= 460: _iframe_h = 600
+                    elif _vw >= 457: _iframe_h = 700
+                    elif _vw >= 410: _iframe_h = 750
+                    else:            _iframe_h = 850
+                # 로딩 플레이스홀더 — _gen_html() 실행 중 표시
+                _chart_slot = st.empty()
+                _chart_slot.markdown(f"""
+<div style="height:{_iframe_h}px;background:rgba(123,47,255,0.04);border-radius:10px;
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+border:1px solid rgba(123,47,255,0.12);">
+  <div style="font-size:2rem;animation:_chspin 1.5s linear infinite;display:inline-block;">📊</div>
+  <div style="font-size:0.88rem;color:#888;font-weight:500;letter-spacing:0.02em;">시나리오 차트 생성 중...</div>
+  <div style="width:180px;height:3px;background:rgba(128,128,128,0.15);border-radius:2px;overflow:hidden;">
+    <div style="height:100%;width:45%;background:linear-gradient(90deg,#7B2FFF,#00AAFF);
+    border-radius:2px;animation:_chslide 1.4s ease-in-out infinite;"></div>
+  </div>
+</div>
+<style>
+@keyframes _chspin{{0%{{transform:rotate(0deg)}}100%{{transform:rotate(360deg)}}}}
+@keyframes _chslide{{0%{{transform:translateX(-220%)}}100%{{transform:translateX(450%)}}}}
+</style>
+""", unsafe_allow_html=True)
+                # 차트 HTML 생성 (무거운 연산)
                 _d3_html = _gen_html(_d3_data, compact=True, show_detail=_show_detail)
-                _iframe_h = 710 if _show_detail else 580
-                st.components.v1.html(_d3_html, height=_iframe_h, scrolling=False)
+                # 같은 슬롯에 차트를 덮어씀 → 빈 요소가 gap을 낭비하는 문제 방지
+                with _chart_slot:
+                    st.components.v1.html(_d3_html, height=_iframe_h, scrolling=False)
 
 
-            with st.expander("📋 구간별 수입/지출 세부 내역", expanded=False):
+            _detail_exp = st.expander("📊 수입/지출 세부 내역", expanded=False)
+            with _detail_exp:
                 _inf_rate = st.session_state.get('inp_inflation', 2.0) / 100
                 _living_won    = st.session_state.get('inp_living',    270) * 10000
                 _medical_won   = st.session_state.get('inp_medical',    50) * 10000
@@ -5027,7 +5200,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 _family_won    = st.session_state.get('inp_family',     40) * 10000
                 _insurance_won = st.session_state.get('inp_insurance',  25) * 10000
                 _other_won     = st.session_state.get('inp_other',      20) * 10000
-                _cf_living  = _living_won  # 기본 생활비만 (나머지 항목 별도 계산)
+                _cf_living  = _living_won
                 _nps_info = {
                     name: info
                     for name, info in result.get('연금분석', {}).items()
@@ -5038,8 +5211,51 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                 _cf_debt    = cf.get('월지출_대출상환', 0)
                 _cf_rent    = cf.get('월지출_임차료', 0)
                 _rent_base_age = _age_rows[0]['나이'] if _age_rows else _retire_age
-
+                # 세금·건보료 상세 — 그래프 모드용 전 나이 사전 계산
+                _tax_details_g = {}
+                for _ar_g in _age_rows:
+                    _ai_g = _ar_g['나이']
+                    _itax_g = _ar_g.get('월소득세', 0)
+                    _hi_g = _ar_g.get('월건보료', 0)
+                    _td_g = _ar_g.get('세금계산기준', {})
+                    if _td_g and (_itax_g > 0 or _hi_g > 0):
+                        if _ai_g < _retire_age:
+                            _dh_g = (
+                                f"<strong>소득 구분:</strong> 근로소득<br>"
+                                f"<strong>연 총소득:</strong> {_td_g.get('연소득', 0):,}만원<br>"
+                                f"<strong>근로소득공제:</strong> -{_td_g.get('근로소득공제', 0):,}만원<br>"
+                                f"<strong>기본공제:</strong> -150만원<br>"
+                                f"<strong>과세표준:</strong> {_td_g.get('과세표준', 0):,}만원<br>"
+                                f"<strong>연 소득세:</strong> {_td_g.get('연소득세', 0):,}만원 "
+                                f"(실효세율 {_td_g.get('실효세율', 0):.1f}%, 지방소득세 포함)<br>"
+                                f"<strong>월 소득세:</strong> {fmt_won(_itax_g)}<br>"
+                                f"<strong>건보료:</strong> {fmt_won(_hi_g)}/월 "
+                                f"({_td_g.get('건보료구분', '')} — 보수월액의 7.09%, 회사 50% 부담)"
+                            )
+                        else:
+                            _pvt_g = _td_g.get('사적연금_과세', '')
+                            _pvt_ln_g = f"<br><strong>사적연금 과세 방식:</strong> {_pvt_g}" if _pvt_g else ""
+                            _hi_inc_g = _td_g.get('건보료_소득반영', 0)
+                            _dh_g = (
+                                f"<strong>소득 구분:</strong> 연금소득 (종합과세)<br>"
+                                f"<strong>연 연금소득:</strong> {_td_g.get('연연금소득', 0):,}만원<br>"
+                                f"<strong>연금소득공제:</strong> -{_td_g.get('연금소득공제', 0):,}만원<br>"
+                                f"<strong>기본공제:</strong> -150만원<br>"
+                                f"<strong>과세표준:</strong> {_td_g.get('과세표준', 0):,}만원<br>"
+                                f"<strong>연 소득세:</strong> {_td_g.get('연소득세', 0):,}만원 "
+                                f"(실효세율 {_td_g.get('실효세율', 0):.1f}%, 지방소득세 포함)<br>"
+                                f"<strong>월 소득세:</strong> {fmt_won(_itax_g)}"
+                                + _pvt_ln_g +
+                                f"<br><strong>건보료:</strong> {fmt_won(_hi_g)}/월 "
+                                f"({_td_g.get('건보료구분', '')} — 연금소득 {_hi_inc_g:,}만원 반영, "
+                                f"공적연금은 50%만 산정)"
+                            )
+                        _tax_details_g[str(_ai_g)] = _dh_g
+                _tax_details_g_js = json.dumps(_tax_details_g, ensure_ascii=False)
+                _dtab2, _dtab1 = st.tabs(["📊 그래프", "📋 텍스트"])
+            with _dtab1:
                 _prev_total = 0
+                _prev_exp_total = 0
                 for _row in _age_rows:
                     _items = _row['항목별']
                     _prev_items = _age_rows[max(0, _age_rows.index(_row) - 1)]['항목별']
@@ -5066,15 +5282,17 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                         _exp_rent      = round(_cf_rent      * _rent_inf_mult)
                         _exp_total     = _exp_living + _exp_medical + _exp_leisure + _exp_family + _exp_insurance + _exp_other + _exp_member + _exp_vehicle + _tax_total + _cf_debt + _exp_rent
                         _surplus     = _total - _exp_total
+                        _exp_delta   = _exp_total - _prev_exp_total
 
                         _sur_sign = "+" if _surplus >= 0 else ""
+                        _is_first = (_row == _age_rows[0])
+                        _inc_delta_str = "" if _is_first or _delta == 0 else f"({'+' if _delta > 0 else ''}{fmt_won(_delta)})"
+                        _exp_delta_str = "" if _is_first or _exp_delta == 0 else f"({'+' if _exp_delta > 0 else ''}{fmt_won(_exp_delta)})"
                         _hdr = (
-                            f"{_row['나이']}세~  —  수입 {fmt_won(_total)}"
-                            f"  |  지출 {fmt_won(_exp_total)}"
+                            f"{_row['나이']}세~  —  수입 {fmt_won(_total)}{_inc_delta_str}"
+                            f"  |  지출 {fmt_won(_exp_total)}{_exp_delta_str}"
                             f"  |  잉여 {_sur_sign}{fmt_won(_surplus)}"
                         )
-                        if _delta > 0:
-                            _hdr += f"  (수입 +{fmt_won(_delta)})"
 
                         with st.expander(_hdr, expanded=False):
                             col_inc, col_exp = st.columns(2)
@@ -5089,86 +5307,133 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                             )
                             st.divider()
 
-                            col_inc2, col_exp2 = st.columns(2)
+                            # ── CSS 비율 막대 헬퍼 ──────────────────────────────
+                            def _bar_row(label, amt, total, color, note=""):
+                                _w = max(1, min(100, int(amt / total * 100))) if total else 0
+                                _pct_str = f"{amt / total * 100:.0f}%" if total else "0%"
+                                _note_html = (
+                                    f'<div style="font-size:0.75em;color:#888;'
+                                    f'padding-left:6px;margin-top:1px;">{note}</div>'
+                                ) if note else ""
+                                return (
+                                    f'<div style="margin:4px 0 6px 0;">'
+                                    f'<div style="display:flex;align-items:center;gap:6px;font-size:0.84em;">'
+                                    f'<span style="min-width:75px;max-width:120px;white-space:nowrap;'
+                                    f'overflow:hidden;text-overflow:ellipsis;">{label}</span>'
+                                    f'<div style="flex:1;min-width:30px;background:rgba(128,128,128,0.18);'
+                                    f'border-radius:3px;height:7px;">'
+                                    f'<div style="width:{_w}%;background:{color};'
+                                    f'height:7px;border-radius:3px;"></div></div>'
+                                    f'<span style="min-width:24px;text-align:right;'
+                                    f'color:#888;font-size:0.9em;">{_pct_str}</span>'
+                                    f'<span style="min-width:58px;text-align:right;'
+                                    f'font-weight:600;">{fmt_won(amt)}</span>'
+                                    f'</div>{_note_html}</div>'
+                                )
+
+                            _INC_COLORS = ['#4A90D9','#27AE60','#8E44AD','#F39C12',
+                                           '#16A085','#2980B9','#E67E22','#C0392B']
+                            _EXP_COLORS = ['#E74C3C','#F39C12','#E67E22','#9B59B6',
+                                           '#95A5A6','#7F8C8D','#D35400','#BDC3C7',
+                                           '#C0392B','#8E44AD']
+
+                            _vw2 = st.session_state.get('_vw', 1200)
+                            if _vw2 < 640:
+                                col_inc2 = st.container()
+                                col_exp2 = st.container()
+                            else:
+                                col_inc2, col_exp2 = st.columns(2)
                             with col_inc2:
+                                st.markdown("")
                                 st.markdown("**수입 세부 내역**")
-                                for _src, _amt in _items.items():
+                                _inc_html = ""
+                                for _ci, (_src, _amt) in enumerate(sorted(_items.items(), key=lambda x: x[1], reverse=True)):
                                     _badge = " 🆕" if _src in _new_srcs else ""
-                                    _pct = (_amt / _total * 100) if _total else 0
-                                    st.markdown(f"- {_src}{_badge}: **{fmt_won(_amt)}** ({_pct:.0f}%)")
+                                    _note = ""
                                     if _src in _nps_info:
                                         _ni = _nps_info[_src]
-                                        _orig = _ni.get('월수령액_원래', 0)
+                                        _orig  = _ni.get('월수령액_원래', 0)
                                         _tdiff = _ni.get('조정_차이', 0)
                                         _treason = _ni.get('조정_사유', '')
-                                        _ided = _ni.get('재직자_감액', 0)
+                                        _ided  = _ni.get('재직자_감액', 0)
                                         _ireason = _ni.get('재직자_감액_사유', '')
-                                        _note_parts = []
+                                        _np = []
                                         if _tdiff != 0:
-                                            _sign = "+" if _tdiff > 0 else ""
-                                            _note_parts.append(f"예상수령금액 {fmt_won(_orig)} → {_sign}{fmt_won(_tdiff)} ({_treason})")
+                                            _s = "+" if _tdiff > 0 else ""
+                                            _np.append(f"예상 {fmt_won(_orig)} → {_s}{fmt_won(_tdiff)} ({_treason})")
                                         if _ided > 0:
-                                            _note_parts.append(f"재직자 감액 -{fmt_won(_ided)} ({_ireason})")
-                                        if _note_parts:
-                                            st.caption("  &nbsp;&nbsp;&nbsp;" + "  /  ".join(_note_parts))
+                                            _np.append(f"재직자 감액 -{fmt_won(_ided)} ({_ireason})")
+                                        _note = "  /  ".join(_np)
+                                    _inc_html += _bar_row(
+                                        _src + _badge, _amt, _total,
+                                        _INC_COLORS[_ci % len(_INC_COLORS)], _note,
+                                    )
+                                st.markdown(_inc_html, unsafe_allow_html=True)
 
                             with col_exp2:
+                                if _vw2 < 640:
+                                    st.markdown("")
                                 st.markdown("**지출 세부 내역**")
                                 _inf_label = f" (물가 {_yrs}년" if _yrs > 0 else ""
                                 _age_pct = round(_age_mult * 100)
-                                _age_label = f" · 체감 {_age_pct}%)" if _inf_label else f" (체감 {_age_pct}%)"
-                                st.markdown(f"- 기본 생활비{_inf_label}{_age_label}: **{fmt_won(_exp_living)}**")
+                                _age_label = f"체감 {_age_pct}%" if _age_pct != 100 else ""
                                 _med_x = round(_medical_mult(_row['나이']), 1)
-                                st.markdown(f"- 의료비 (×{_med_x}배{_inf_label[:-1] if _inf_label else ''}): **{fmt_won(_exp_medical)}**")
-                                if _exp_leisure:   st.markdown(f"- 여가/취미{_age_label}: **{fmt_won(_exp_leisure)}**")
-                                if _exp_family:    st.markdown(f"- 자녀/부모 지원{_age_label}: **{fmt_won(_exp_family)}**")
-                                if _exp_insurance: st.markdown(f"- 보험료{_age_label}: **{fmt_won(_exp_insurance)}**")
-                                if _exp_other:     st.markdown(f"- 기타{_age_label}: **{fmt_won(_exp_other)}**")
-                                if _exp_member:
-                                    st.markdown(f"- 회원권 연회비: **{fmt_won(_exp_member)}**")
-                                if _exp_vehicle:
-                                    st.markdown(f"- 차량 유지비: **{fmt_won(_exp_vehicle)}**")
-                                if _cf_debt:
-                                    st.markdown(f"- 대출 월상환금: **{fmt_won(_cf_debt)}**")
-                                if _exp_rent:
-                                    _rent_note = f"{_inf_label})" if _inf_label else ""
-                                    st.markdown(f"- 월세 임차료{_rent_note}: **{fmt_won(_exp_rent)}**")
                                 _td = _row.get('세금계산기준', {})
+
+                                # (레이블, 금액, 개별 고유 주석) 목록 구성
+                                # 체감률·물가는 공통이므로 행별 주석에서 제외 → 하단 footnote로
+                                _exp_rows = []
+                                _exp_rows.append(("기본 생활비", _exp_living,  ""))
+                                _exp_rows.append(("의료비",       _exp_medical, f"나이 가중 ×{_med_x}배"))
+                                if _exp_leisure:   _exp_rows.append(("여가/취미",       _exp_leisure,   ""))
+                                if _exp_family:    _exp_rows.append(("자녀·부모 지원", _exp_family,    ""))
+                                if _exp_insurance: _exp_rows.append(("보험료",          _exp_insurance, ""))
+                                if _exp_other:     _exp_rows.append(("기타",            _exp_other,     ""))
+                                if _exp_member:    _exp_rows.append(("회원권 연회비",   _exp_member,    ""))
+                                if _exp_vehicle:   _exp_rows.append(("차량 유지비",     _exp_vehicle,   ""))
+                                if _cf_debt:       _exp_rows.append(("대출 상환금",     _cf_debt,       ""))
+                                if _exp_rent:      _exp_rows.append(("월세 임차료",     _exp_rent,      ""))
                                 if _itax:
-                                    if _td:
-                                        _et = _td.get('실효세율', 0)
-                                        _pb = _td.get('과세표준', 0)
-                                        st.markdown(
-                                            f"- 소득세: **{fmt_won(_itax)}**"
-                                            f"<small style='color:var(--text-muted,#888);margin-left:6px;'>"
-                                            f"과표 {_pb:,}만원 × 실효세율 {_et:.1f}% (지방세 포함)</small>",
-                                            unsafe_allow_html=True,
-                                        )
-                                    else:
-                                        st.markdown(f"- 소득세: **{fmt_won(_itax)}**")
+                                    _et = _td.get('실효세율', 0)
+                                    _pb = _td.get('과세표준', 0)
+                                    _tax_note = f"과표 {_pb:,}만원 × 실효세율 {_et:.1f}%" if _td else ""
+                                    _exp_rows.append(("소득세", _itax, _tax_note))
                                 if _hi:
-                                    if _td:
-                                        _hg = _td.get('건보료구분', '')
-                                        if _row['나이'] < _retire_age:
-                                            _hi_note = f"{_hg} — 보수월액 기준 7.09%"
-                                        else:
-                                            _hi_inc = _td.get('건보료_소득반영', 0)
-                                            _hi_note = f"{_hg} — 연금소득 {_hi_inc:,}만원 반영(공적연금 50% 산정)"
-                                        st.markdown(
-                                            f"- 건강보험료: **{fmt_won(_hi)}**"
-                                            f"<small style='color:var(--text-muted,#888);margin-left:6px;'>"
-                                            f"{_hi_note}</small>",
-                                            unsafe_allow_html=True,
-                                        )
+                                    _hg = _td.get('건보료구분', '')
+                                    if _row['나이'] < _retire_age:
+                                        _hi_note = f"{_hg} — 보수월액 7.09%"
                                     else:
-                                        st.markdown(f"- 건강보험료: **{fmt_won(_hi)}**")
+                                        _hi_inc = _td.get('건보료_소득반영', 0)
+                                        _hi_note = f"{_hg} — 연금소득 {_hi_inc:,}만원 반영"
+                                    _exp_rows.append(("건강보험료", _hi, _hi_note if _td else ""))
                                 if _tax_total and not _itax and not _hi:
-                                    st.markdown(f"- 세금·건보료: **{fmt_won(_tax_total)}**")
+                                    _exp_rows.append(("세금·건보료", _tax_total, ""))
+
+                                _exp_html = ""
+                                for _ei, (_lbl, _eamt, _enote) in enumerate(sorted(_exp_rows, key=lambda x: x[1], reverse=True)):
+                                    _exp_html += _bar_row(
+                                        _lbl, _eamt, _exp_total,
+                                        _EXP_COLORS[_ei % len(_EXP_COLORS)], _enote,
+                                    )
+                                st.markdown(_exp_html, unsafe_allow_html=True)
+
+                                # 공통 주석 — 하단 footnote
+                                _footnotes = []
+                                if _age_pct != 100:
+                                    _footnotes.append(f"생활비 항목 체감 {_age_pct}% 적용")
+                                if _yrs > 0:
+                                    _footnotes.append(f"물가상승 {_yrs}년 반영")
+                                if _footnotes:
+                                    st.markdown(
+                                        f'<p style="font-size:0.75em;font-weight:600;color:#888;margin:4px 0 0 0;">'
+                                        f'※ {"  ·  ".join(_footnotes)}</p>',
+                                        unsafe_allow_html=True,
+                                    )
 
                             if _td and (_itax > 0 or _hi > 0):
                                 with st.expander("└ 세금·건보료 상세 계산 과정", expanded=False):
                                     if _row['나이'] < _retire_age:
-                                        st.markdown(
+                                        _tax_detail_md = (
                                             f"**소득 구분:** 근로소득  \n"
                                             f"**연 총소득:** {_td.get('연소득', 0):,}만원  \n"
                                             f"**근로소득공제:** -{_td.get('근로소득공제', 0):,}만원  \n"
@@ -5184,7 +5449,7 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                                         _pvt = _td.get('사적연금_과세', '')
                                         _pvt_line = f"  \n**사적연금 과세 방식:** {_pvt}" if _pvt else ""
                                         _hi_inc = _td.get('건보료_소득반영', 0)
-                                        st.markdown(
+                                        _tax_detail_md = (
                                             f"**소득 구분:** 연금소득 (종합과세)  \n"
                                             f"**연 연금소득:** {_td.get('연연금소득', 0):,}만원  \n"
                                             f"**연금소득공제:** -{_td.get('연금소득공제', 0):,}만원  \n"
@@ -5198,24 +5463,689 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -1rem !important; }
                                             f"({_td.get('건보료구분', '')} — 연금소득 {_hi_inc:,}만원 반영, "
                                             f"공적연금은 50%만 산정)"
                                         )
+                                    import re as _re_md
+                                    _tax_html = _re_md.sub(
+                                        r'\*\*(.+?)\*\*', r'<strong>\1</strong>', _tax_detail_md
+                                    ).replace('  \n', '<br>')
+                                    st.markdown(
+                                        f'<div style="font-size:0.84em;line-height:1.7;">{_tax_html}</div>',
+                                        unsafe_allow_html=True,
+                                    )
 
                         _prev_total = _total
+                        _prev_exp_total = _exp_total
+            with _dtab2:
+                _all_ages_data = []
+                for _ar in _age_rows:
+                    _ai = _ar['나이']
+                    _yi = max(0, _ai - _rent_base_age)
+                    _ii = (1 + _inf_rate) ** _yi
+                    _ami = _exp_mult(_ai)
+                    _mmi = _medical_mult(_ai)
+                    _inc_i = [{"label": k, "value": v}
+                               for k, v in sorted(_ar['항목별'].items(), key=lambda x: x[1], reverse=True)
+                               if v > 0]
+                    _exp_raw_i = [
+                        ("기본 생활비",     round(_cf_living     * _ii * _ami)),
+                        ("의료비",          round(_medical_won   * _ii * _mmi)),
+                        ("여가/취미",       round(_leisure_won   * _ii * _ami)),
+                        ("자녀·부모 지원", round(_family_won    * _ii * _ami)),
+                        ("보험료",          round(_insurance_won * _ii * _ami)),
+                        ("기타",            round(_other_won     * _ii * _ami)),
+                        ("회원권 연회비",   round(_cf_member     * _ii * _ami)),
+                        ("차량 유지비",     round(_cf_vehicle    * _ii * _ami)),
+                        ("대출 상환금",     _cf_debt),
+                        ("월세 임차료",     round(_cf_rent * _ii)),
+                        ("소득세",          _ar.get('월소득세', 0)),
+                        ("건강보험료",      _ar.get('월건보료', 0)),
+                    ]
+                    _exp_i = sorted([{"label": l, "value": v} for l, v in _exp_raw_i if v > 0],
+                                    key=lambda x: x["value"], reverse=True)
+                    _all_ages_data.append({"age": _ai, "inc": _inc_i, "exp": _exp_i})
+                _all_ages_js = json.dumps(_all_ages_data, ensure_ascii=False)
+                _pie_html = f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+:root{{--txt:#ddd;--txt-muted:#aaa}}
+[data-theme="light"]{{--txt:#1a1a1a;--txt-muted:#555}}
+[data-theme="dark"]{{--txt:#ddd;--txt-muted:#aaa}}
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:transparent;padding:8px;color:var(--txt)}}
+.type-bar{{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-bottom:8px}}
+.tbtn{{font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid rgba(128,128,128,.3);
+  background:transparent;color:var(--txt-muted);cursor:pointer;transition:all .15s}}
+.tbtn.on{{background:#388E3C;color:#fff;border-color:#388E3C}}
+.charts{{display:flex;justify-content:center;gap:16px;align-items:flex-start}}
+.chart-box{{display:flex;flex-direction:column;align-items:center;gap:2px}}
+.chart-title{{font-size:11px;font-weight:600;letter-spacing:.04em;margin-bottom:2px}}
+.chart-total{{font-size:11px;color:var(--txt-muted);margin-top:2px}}
+.tip{{position:fixed;background:rgba(15,15,15,.93);color:#fff;padding:7px 12px;border-radius:8px;
+  font-size:12px;pointer-events:none;display:none;z-index:999;border:1px solid rgba(255,255,255,.12);line-height:1.6;white-space:nowrap;max-width:220px}}
+.age-bar{{display:flex;flex-direction:column;align-items:center;gap:4px;width:90%;max-width:300px;margin-top:10px}}
+.age-lbl{{font-size:14px;font-weight:700;color:var(--txt)}}
+input[type=range]{{width:100%;accent-color:#81C784;cursor:pointer}}
+.age-ends{{display:flex;justify-content:space-between;width:100%;font-size:10px;color:var(--txt-muted)}}
+</style>
+<script>(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t)document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})()</script>
+</head><body>
+<div style="display:flex;flex-direction:column;align-items:center;gap:0">
+  <div class="type-bar">
+    <button class="tbtn on" data-mode="donut" onclick="setMode('donut',this)">도넛</button>
+    <button class="tbtn" data-mode="concentric" onclick="setMode('concentric',this)">동심원</button>
+    <button class="tbtn" data-mode="bar" onclick="setMode('bar',this)">막대</button>
+    <button class="tbtn" data-mode="stacked" onclick="setMode('stacked',this)">누적막대</button>
+    <button class="tbtn" data-mode="treemap" onclick="setMode('treemap',this)">트리맵</button>
+    <button class="tbtn" data-mode="waterfall" onclick="setMode('waterfall',this)">폭포</button>
+    <button class="tbtn" data-mode="sweep" onclick="setMode('sweep',this)">✦ 스윕</button>
+    <button class="tbtn" data-mode="bubble" onclick="setMode('bubble',this)">✦ 버블</button>
+  </div>
+  <div class="age-bar">
+    <div class="age-lbl" id="age-lbl"></div>
+    <input type="range" id="age-sl" min="0" value="0">
+    <div class="age-ends"><span id="age-min"></span><span id="age-max"></span></div>
+  </div>
+  <div id="chart-area"></div>
+</div>
+<div id="td-box" style="display:none;margin:10px auto 0;max-width:380px;padding:10px 14px;
+  border:1px solid rgba(128,128,128,0.2);border-radius:8px;font-size:0.80em;line-height:1.85;color:var(--txt)">
+  <div style="font-weight:700;margin-bottom:6px;color:var(--txt-muted);font-size:0.85em;letter-spacing:.04em;">
+    💰 세금·건보료 상세 계산</div>
+  <div id="td-content"></div>
+</div>
+<div class="tip" id="tip"></div>
+<script>
+const ALL={_all_ages_js};
+const TAX={_tax_details_g_js};
+let curMode='donut', curIdx=0;
+function fmt(v){{const m=Math.round(v/10000);if(m>=10000)return(m/10000).toFixed(1)+'억원';if(m>=1000)return(m/1000).toFixed(1)+'천만원';return m.toLocaleString()+'만원'}}
+function lerp(h1,h2,t){{
+  const p=s=>parseInt(s,16);
+  const r1=p(h1.slice(1,3)),g1=p(h1.slice(3,5)),b1=p(h1.slice(5,7));
+  const r2=p(h2.slice(1,3)),g2=p(h2.slice(3,5)),b2=p(h2.slice(5,7));
+  return 'rgb('+Math.round(r1+(r2-r1)*t)+','+Math.round(g1+(g2-g1)*t)+','+Math.round(b1+(b2-b1)*t)+')';
+}}
+function mkColors(data,dark,light){{
+  const sorted=[...data].sort((a,b)=>b.value-a.value);const n=data.length;
+  return data.map(d=>{{const rank=sorted.findIndex(s=>s===d);return lerp(dark,light,n===1?0:rank/(n-1));}});
+}}
+(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t)document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})()
+const tip=document.getElementById('tip');
+const ns='http://www.w3.org/2000/svg';
+function _txt(){{return getComputedStyle(document.documentElement).getPropertyValue('--txt').trim()||'#ddd';}}
+function _muted(){{return getComputedStyle(document.documentElement).getPropertyValue('--txt-muted').trim()||'#aaa';}}
+const CW=Math.max(260,Math.min(window.innerWidth-20,360));
+
+function showTip(x,y,lbl,d,frac){{
+  tip.style.display='block';
+  const tx=Math.min(x+14,window.innerWidth-230);
+  const ty=Math.max(10,y-40);
+  tip.style.left=tx+'px';tip.style.top=ty+'px';
+  tip.innerHTML='<span style="color:#999;font-size:10px">['+lbl+']</span> <strong>'+d.label+'</strong><br>'+fmt(d.value)+' <span style="color:#aaa">'+((frac*100).toFixed(1))+'%</span>';
+}}
+function addTip(el,lbl,d,frac){{
+  el.style.cursor='pointer';el.style.transition='opacity .1s';
+  el.addEventListener('mouseenter',()=>el.style.opacity='.68');
+  el.addEventListener('mouseleave',()=>{{el.style.opacity='1';tip.style.display='none'}});
+  el.addEventListener('mousemove',e=>showTip(e.clientX,e.clientY,lbl,d,frac));
+  el.addEventListener('touchstart',e=>{{
+    e.preventDefault();el.style.opacity='.68';
+    const t=e.touches[0];showTip(t.clientX,t.clientY,lbl,d,frac);
+  }},{{passive:false}});
+  el.addEventListener('touchend',()=>{{
+    el.style.opacity='1';setTimeout(()=>{{tip.style.display='none';}},1800);
+  }});
+}}
+
+function drawDonutSvg(svgEl,data,dark,light,lbl,S,R,ri){{
+  svgEl.innerHTML='';const cx=S/2,cy=S/2;
+  if(!data||!data.length)return;
+  const colors=mkColors(data,dark,light);
+  const tot=data.reduce((s,d)=>s+d.value,0);let ang=-Math.PI/2;
+  data.forEach((d,i)=>{{
+    const frac=d.value/tot,sa=ang,ea=ang+frac*2*Math.PI;ang=ea;
+    const la=frac>.5?1:0,co=Math.cos,si=Math.sin;
+    const p=document.createElementNS(ns,'path');
+    p.setAttribute('d',['M '+(cx+R*co(sa))+' '+(cy+R*si(sa)),
+      'A '+R+' '+R+' 0 '+la+' 1 '+(cx+R*co(ea))+' '+(cy+R*si(ea)),
+      'L '+(cx+ri*co(ea))+' '+(cy+ri*si(ea)),
+      'A '+ri+' '+ri+' 0 '+la+' 0 '+(cx+ri*co(sa))+' '+(cy+ri*si(sa))+' Z'].join(' '));
+    p.setAttribute('fill',colors[i]);p.setAttribute('stroke','rgba(0,0,0,.1)');p.setAttribute('stroke-width','1');
+    addTip(p,lbl,d,frac);svgEl.appendChild(p);
+  }});
+  const mk=(txt,y,fs,fw,cl)=>{{
+    const t=document.createElementNS(ns,'text');
+    t.setAttribute('x',cx);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size',fs);t.setAttribute('font-weight',fw);t.setAttribute('fill',cl);
+    t.textContent=txt;svgEl.appendChild(t);
+  }};
+  mk(lbl,cy-5,10,'400',lbl==='수입'?'#81C784':'#FFB74D');
+  mk(fmt(tot),cy+9,10,'700',_txt());
+}}
+
+function renderDonut(d){{
+  const area=document.getElementById('chart-area');
+  const DS=Math.floor((CW-24)/2),DR=Math.round(DS*0.425),Dri=Math.round(DS*0.275);
+  area.innerHTML='<div class="charts"><div class="chart-box"><div class="chart-title" style="color:#81C784">수입</div><svg id="sv-inc" viewBox="0 0 160 160" width="'+DS+'" height="'+DS+'" style="overflow:visible"></svg><div class="chart-total" id="tot-inc"></div></div><div class="chart-box"><div class="chart-title" style="color:#FFB74D">지출</div><svg id="sv-exp" viewBox="0 0 160 160" width="'+DS+'" height="'+DS+'" style="overflow:visible"></svg><div class="chart-total" id="tot-exp"></div></div></div>';
+  drawDonutSvg(document.getElementById('sv-inc'),d.inc,'#81C784','#C8E6C9','수입',160,68,44);
+  drawDonutSvg(document.getElementById('sv-exp'),d.exp,'#FFB74D','#FFE0B2','지출',160,68,44);
+  document.getElementById('tot-inc').textContent=fmt(d.inc.reduce((s,x)=>s+x.value,0));
+  document.getElementById('tot-exp').textContent=fmt(d.exp.reduce((s,x)=>s+x.value,0));
+}}
+
+function renderConcentric(d){{
+  const area=document.getElementById('chart-area');
+  const CS=Math.min(220,CW);
+  area.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div class="chart-title" id="conc-hint" style="color:#999"></div><svg id="sv-conc" viewBox="0 0 220 220" width="'+CS+'" height="'+CS+'" style="overflow:visible"></svg></div>';
+  const sv=document.getElementById('sv-conc');
+  const INC=d.inc,EXP=d.exp;
+  const it=INC.reduce((s,x)=>s+x.value,0),et=EXP.reduce((s,x)=>s+x.value,0);
+  const bigData=it>=et?INC:EXP,bigLbl=it>=et?'수입':'지출';
+  const smlData=it>=et?EXP:INC,smlLbl=it>=et?'지출':'수입';
+  const bigC=mkColors(bigData,'#81C784','#C8E6C9');
+  const smlC=mkColors(smlData,'#FFB74D','#FFE0B2');
+  document.getElementById('conc-hint').textContent='안쪽: '+smlLbl+' · 바깥쪽: '+bigLbl;
+  const W=220,cx=W/2,cy=W/2;
+  function ring(data,colors,R,ri,lbl){{
+    const tot=data.reduce((s,x)=>s+x.value,0);let ang=-Math.PI/2;
+    data.forEach((d,i)=>{{
+      const frac=d.value/tot,sa=ang,ea=ang+frac*2*Math.PI;ang=ea;
+      const la=frac>.5?1:0,co=Math.cos,si=Math.sin;
+      const p=document.createElementNS(ns,'path');
+      p.setAttribute('d',['M '+(cx+R*co(sa))+' '+(cy+R*si(sa)),
+        'A '+R+' '+R+' 0 '+la+' 1 '+(cx+R*co(ea))+' '+(cy+R*si(ea)),
+        'L '+(cx+ri*co(ea))+' '+(cy+ri*si(ea)),
+        'A '+ri+' '+ri+' 0 '+la+' 0 '+(cx+ri*co(sa))+' '+(cy+ri*si(sa))+' Z'].join(' '));
+      p.setAttribute('fill',colors[i]);p.setAttribute('stroke','rgba(0,0,0,.12)');p.setAttribute('stroke-width','1');
+      addTip(p,lbl,d,frac);sv.appendChild(p);
+    }});
+  }}
+  ring(smlData,smlC,58,34,smlLbl);ring(bigData,bigC,90,64,bigLbl);
+  const mk=(txt,y,fs,fw,cl)=>{{
+    const t=document.createElementNS(ns,'text');
+    t.setAttribute('x',cx);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size',fs);t.setAttribute('font-weight',fw);t.setAttribute('fill',cl);
+    t.textContent=txt;sv.appendChild(t);
+  }};
+  mk(smlLbl,cy-12,9,'400',smlLbl==='수입'?'#81C784':'#FFB74D');
+  mk(fmt(it>=et?et:it),cy+2,11,'700',_txt());
+  mk(bigLbl+' '+fmt(it>=et?it:et),cy+17,8,'400',bigLbl==='수입'?'#81C784':'#FFB74D');
+}}
+
+function renderBar(d){{
+  const area=document.getElementById('chart-area');
+  const bw=CW,rh=18,gap=4,lw=80,vw=60;
+  const allItems=[...d.inc.map(x=>{{return{{...x,type:'inc'}}}}), ...d.exp.map(x=>{{return{{...x,type:'exp'}}}})];
+  const maxVal=Math.max(...allItems.map(x=>x.value),1);
+  const incTot=d.inc.reduce((s,x)=>s+x.value,0);
+  const expTot=d.exp.reduce((s,x)=>s+x.value,0);
+  function section(data,dark,light,lbl,tot,titleCol){{
+    const colors=mkColors(data,dark,light);
+    const h=(rh+gap)*data.length+gap;
+    const sv=document.createElementNS(ns,'svg');
+    sv.setAttribute('width',bw);sv.setAttribute('height',h);sv.style.overflow='visible';
+    data.forEach((item,i)=>{{
+      const y=gap+i*(rh+gap);
+      const barW=Math.max(2,Math.round((item.value/maxVal)*(bw-lw-vw-8)));
+      const frac=item.value/tot;
+      const bg=document.createElementNS(ns,'rect');
+      bg.setAttribute('x',lw);bg.setAttribute('y',y);bg.setAttribute('width',bw-lw-vw-8);bg.setAttribute('height',rh);
+      bg.setAttribute('fill','rgba(255,255,255,.04)');bg.setAttribute('rx','4');sv.appendChild(bg);
+      const bar=document.createElementNS(ns,'rect');
+      bar.setAttribute('x',lw);bar.setAttribute('y',y);bar.setAttribute('width',barW);bar.setAttribute('height',rh);
+      bar.setAttribute('fill',colors[i]);bar.setAttribute('rx','4');
+      addTip(bar,lbl,item,frac);sv.appendChild(bar);
+      const tl=document.createElementNS(ns,'text');
+      tl.setAttribute('x',lw-4);tl.setAttribute('y',y+rh/2+4);tl.setAttribute('text-anchor','end');
+      tl.setAttribute('font-size','10');tl.setAttribute('fill',_muted());tl.textContent=item.label;sv.appendChild(tl);
+      const tv=document.createElementNS(ns,'text');
+      tv.setAttribute('x',bw-vw+4);tv.setAttribute('y',y+rh/2+4);tv.setAttribute('text-anchor','start');
+      tv.setAttribute('font-size','10');tv.setAttribute('fill',_muted());tv.textContent=fmt(item.value);sv.appendChild(tv);
+    }});
+    return sv;
+  }}
+  area.innerHTML='<div style="display:flex;flex-direction:column;gap:10px;align-items:center"></div>';
+  const wrap=area.firstChild;
+  function addSection(data,dark,light,lbl,tot,col){{
+    const hdr=document.createElement('div');
+    hdr.style.cssText='font-size:11px;font-weight:600;color:'+col+';width:'+bw+'px;display:flex;justify-content:space-between;';
+    hdr.innerHTML='<span>'+lbl+'</span><span style="color:var(--txt-muted)">합계 '+fmt(tot)+'</span>';
+    wrap.appendChild(hdr);
+    wrap.appendChild(section(data,dark,light,lbl,tot,col));
+  }}
+  addSection(d.inc,'#81C784','#C8E6C9','수입',incTot,'#81C784');
+  addSection(d.exp,'#FFB74D','#FFE0B2','지출',expTot,'#FFB74D');
+}}
+
+function renderStacked(d){{
+  const area=document.getElementById('chart-area');
+  const BW=CW,BH=32,GAP=10;
+  const incTot=d.inc.reduce((s,x)=>s+x.value,0);
+  const expTot=d.exp.reduce((s,x)=>s+x.value,0);
+  area.innerHTML='<div style="display:flex;flex-direction:column;gap:'+GAP+'px;align-items:center"></div>';
+  const wrap=area.firstChild;
+  function stackBar(data,dark,light,lbl,tot,col){{
+    const hdr=document.createElement('div');
+    hdr.style.cssText='font-size:11px;font-weight:600;color:'+col+';width:'+BW+'px;display:flex;justify-content:space-between;margin-bottom:2px';
+    hdr.innerHTML='<span>'+lbl+'</span><span style="color:var(--txt-muted)">'+fmt(tot)+'</span>';
+    wrap.appendChild(hdr);
+    const sv=document.createElementNS(ns,'svg');
+    sv.setAttribute('width',BW);sv.setAttribute('height',BH);sv.style.overflow='visible';sv.style.borderRadius='6px';
+    const colors=mkColors(data,dark,light);
+    let x=0;
+    data.forEach((item,i)=>{{
+      const w=Math.max(1,Math.round((item.value/tot)*BW));
+      const r=document.createElementNS(ns,'rect');
+      r.setAttribute('x',x);r.setAttribute('y',0);r.setAttribute('width',w);r.setAttribute('height',BH);
+      r.setAttribute('fill',colors[i]);
+      addTip(r,lbl,item,item.value/tot);sv.appendChild(r);
+      x+=w;
+    }});
+    wrap.appendChild(sv);
+  }}
+  stackBar(d.inc,'#81C784','#C8E6C9','수입',incTot,'#81C784');
+  stackBar(d.exp,'#FFB74D','#FFE0B2','지출',expTot,'#FFB74D');
+}}
+
+function renderTreemap(d){{
+  const area=document.getElementById('chart-area');
+  const W=CW,H=200;
+  const incTot=d.inc.reduce((s,x)=>s+x.value,0);
+  const expTot=d.exp.reduce((s,x)=>s+x.value,0);
+  const grand=incTot+expTot||1;
+  const incH=Math.max(20,Math.round((incTot/grand)*H));
+  const expH=Math.max(20,H-incH);
+  area.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:4px"></div>';
+  const wrap=area.firstChild;
+  function tmSection(data,dark,light,lbl,tot,sH,col){{
+    const hdr=document.createElement('div');
+    hdr.style.cssText='font-size:11px;font-weight:600;color:'+col+';width:'+W+'px;display:flex;justify-content:space-between';
+    hdr.innerHTML='<span>'+lbl+'</span><span style="color:var(--txt-muted)">'+fmt(tot)+'</span>';
+    wrap.appendChild(hdr);
+    const sv=document.createElementNS(ns,'svg');
+    sv.setAttribute('width',W);sv.setAttribute('height',sH);sv.style.overflow='visible';
+    const colors=mkColors(data,dark,light);
+    let x=0;
+    data.forEach((item,i)=>{{
+      const w=Math.max(1,Math.round((item.value/tot)*W));
+      const r=document.createElementNS(ns,'rect');
+      r.setAttribute('x',x+1);r.setAttribute('y',1);r.setAttribute('width',Math.max(1,w-2));r.setAttribute('height',sH-2);
+      r.setAttribute('fill',colors[i]);r.setAttribute('rx','4');
+      addTip(r,lbl,item,item.value/tot);sv.appendChild(r);
+      if(w>28){{
+        const t=document.createElementNS(ns,'text');
+        t.setAttribute('x',x+w/2);t.setAttribute('y',sH/2+4);t.setAttribute('text-anchor','middle');
+        t.setAttribute('font-size','9');t.setAttribute('fill','rgba(0,0,0,.55)');t.setAttribute('pointer-events','none');
+        t.textContent=item.label.length>4?item.label.slice(0,4)+'…':item.label;sv.appendChild(t);
+      }}
+      x+=w;
+    }});
+    wrap.appendChild(sv);
+  }}
+  tmSection(d.inc,'#81C784','#C8E6C9','수입',incTot,incH,'#81C784');
+  tmSection(d.exp,'#FFB74D','#FFE0B2','지출',expTot,expH,'#FFB74D');
+}}
+
+function renderWaterfall(d){{
+  const area=document.getElementById('chart-area');
+  const BW=CW,rh=18,gap=3,lw=82,vw=68;
+  const incTot=d.inc.reduce((s,x)=>s+x.value,0);
+  const expTot=d.exp.reduce((s,x)=>s+x.value,0);
+  const net=incTot-expTot;
+  const allItems=[
+    ...d.inc.map(x=>{{return{{label:x.label,value:x.value,type:'inc'}}}}),
+    ...d.exp.map(x=>{{return{{label:x.label,value:-x.value,type:'exp'}}}}),
+    {{label:'잔액',value:net,type:'net'}}
+  ];
+  const maxAbs=Math.max(...allItems.map(x=>Math.abs(x.value)),1);
+  const H=(rh+gap)*allItems.length+gap;
+  area.innerHTML='';
+  const sv=document.createElementNS(ns,'svg');
+  sv.setAttribute('width',BW);sv.setAttribute('height',H);sv.style.overflow='visible';
+  const zeroX=lw+Math.round((incTot/maxAbs)*((BW-lw-vw-8)/2));
+  let running=incTot;
+  allItems.forEach((item,i)=>{{
+    const y=gap+i*(rh+gap);
+    const barZone=BW-lw-vw-8;
+    const halfZone=barZone/2;
+    const scale=halfZone/maxAbs;
+    let x0,bw2,fill;
+    if(item.type==='inc'){{
+      const w=Math.max(2,Math.round(item.value*scale));
+      x0=lw+Math.round(incTot*scale)-w;bw2=w;fill='#81C784';
+    }}else if(item.type==='exp'){{
+      const w=Math.max(2,Math.round(Math.abs(item.value)*scale));
+      running+=item.value;
+      x0=lw+Math.round(running*scale);bw2=w;fill='#FFB74D';
+    }}else{{
+      const w=Math.max(2,Math.round(Math.abs(item.value)*scale));
+      fill=net>=0?'#66BB6A':'#EF5350';
+      x0=net>=0?lw:lw+Math.round(net*scale);bw2=w;
+    }}
+    const r=document.createElementNS(ns,'rect');
+    r.setAttribute('x',x0);r.setAttribute('y',y);r.setAttribute('width',bw2);r.setAttribute('height',rh);
+    r.setAttribute('fill',fill);r.setAttribute('rx','3');
+    if(item.type!=='net')addTip(r,item.type==='inc'?'수입':'지출',{{label:item.label,value:Math.abs(item.value)}},Math.abs(item.value)/(item.type==='inc'?incTot:expTot));
+    sv.appendChild(r);
+    const tl=document.createElementNS(ns,'text');
+    tl.setAttribute('x',lw-4);tl.setAttribute('y',y+rh/2+4);tl.setAttribute('text-anchor','end');
+    tl.setAttribute('font-size','10');tl.setAttribute('fill',item.type==='net'?_txt():_muted());
+    tl.setAttribute('font-weight',item.type==='net'?'700':'400');
+    tl.textContent=item.label;sv.appendChild(tl);
+    const tv=document.createElementNS(ns,'text');
+    tv.setAttribute('x',BW-vw+4);tv.setAttribute('y',y+rh/2+4);tv.setAttribute('text-anchor','start');
+    tv.setAttribute('font-size','10');tv.setAttribute('fill',item.type==='net'?(net>=0?'#66BB6A':'#EF5350'):_muted());
+    tv.textContent=(item.value>=0?'':'-')+fmt(Math.abs(item.value));sv.appendChild(tv);
+  }});
+  area.appendChild(sv);
+}}
+
+function renderSweep(d){{
+  const area=document.getElementById('chart-area');
+  const SDS=Math.floor((CW-24)/2);
+  area.innerHTML='<div class="charts"><div class="chart-box"><div class="chart-title" style="color:#81C784">수입</div><svg id="sw-inc" viewBox="0 0 160 160" width="'+SDS+'" height="'+SDS+'" style="overflow:visible"></svg><div class="chart-total" id="sw-tot-inc"></div></div><div class="chart-box"><div class="chart-title" style="color:#FFB74D">지출</div><svg id="sw-exp" viewBox="0 0 160 160" width="'+SDS+'" height="'+SDS+'" style="overflow:visible"></svg><div class="chart-total" id="sw-tot-exp"></div></div></div>';
+  const incTot=d.inc.reduce((s,x)=>s+x.value,0);
+  const expTot=d.exp.reduce((s,x)=>s+x.value,0);
+  document.getElementById('sw-tot-inc').textContent=fmt(incTot);
+  document.getElementById('sw-tot-exp').textContent=fmt(expTot);
+  const incC=mkColors(d.inc,'#81C784','#C8E6C9');
+  const expC=mkColors(d.exp,'#FFB74D','#FFE0B2');
+  const svInc=document.getElementById('sw-inc');
+  const svExp=document.getElementById('sw-exp');
+  const start=performance.now(),DUR=900;
+  function eOut(t){{return 1-(1-t)*(1-t)*(1-t);}}
+  function drawSweep(svgEl,data,colors,lbl,prog){{
+    svgEl.innerHTML='';
+    const S=160,cx=S/2,cy=S/2,R=68,ri=44;
+    const tot=data.reduce((s,x)=>s+x.value,0);
+    const maxA=-Math.PI/2+2*Math.PI*prog;
+    let ang=-Math.PI/2;
+    data.forEach((item,i)=>{{
+      const segA=(item.value/tot)*2*Math.PI,sa=ang;
+      const ea=Math.min(ang+segA,maxA);
+      if(ea>sa){{
+        const la=(ea-sa)>Math.PI?1:0,co=Math.cos,si=Math.sin;
+        const p=document.createElementNS(ns,'path');
+        p.setAttribute('d',['M '+(cx+R*co(sa))+' '+(cy+R*si(sa)),
+          'A '+R+' '+R+' 0 '+la+' 1 '+(cx+R*co(ea))+' '+(cy+R*si(ea)),
+          'L '+(cx+ri*co(ea))+' '+(cy+ri*si(ea)),
+          'A '+ri+' '+ri+' 0 '+la+' 0 '+(cx+ri*co(sa))+' '+(cy+ri*si(sa))+' Z'].join(' '));
+        p.setAttribute('fill',colors[i]);p.setAttribute('stroke','rgba(0,0,0,.1)');p.setAttribute('stroke-width','1');
+        if(prog>=1)addTip(p,lbl,item,item.value/tot);
+        svgEl.appendChild(p);
+      }}
+      ang+=segA;
+    }});
+    if(prog>=1){{
+      const mk=(txt,y,fs,fw,cl)=>{{
+        const t=document.createElementNS(ns,'text');
+        t.setAttribute('x',cx);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');
+        t.setAttribute('font-size',fs);t.setAttribute('font-weight',fw);t.setAttribute('fill',cl);
+        t.textContent=txt;svgEl.appendChild(t);
+      }};
+      mk(lbl,cy-5,10,'400',lbl==='수입'?'#81C784':'#FFB74D');
+      mk(fmt(tot),cy+9,10,'700',_txt());
+    }}
+  }}
+  function frame(now){{
+    const t=Math.min(1,eOut((now-start)/DUR));
+    drawSweep(svInc,d.inc,incC,'수입',t);
+    drawSweep(svExp,d.exp,expC,'지출',t);
+    if(t<1)requestAnimationFrame(frame);
+  }}
+  requestAnimationFrame(frame);
+}}
+
+function renderBubble(d){{
+  const area=document.getElementById('chart-area');
+  const W=310,H=210;
+  area.innerHTML='<svg id="sv-bub" viewBox="0 0 '+W+' '+H+'" width="'+Math.min(W,CW)+'" height="'+Math.round(H*Math.min(W,CW)/W)+'" style="overflow:visible;display:block"></svg>';
+  const sv=document.getElementById('sv-bub');
+  const ln=document.createElementNS(ns,'line');
+  ln.setAttribute('x1',W/2);ln.setAttribute('y1',16);ln.setAttribute('x2',W/2);ln.setAttribute('y2',H);
+  ln.setAttribute('stroke','rgba(255,255,255,.08)');ln.setAttribute('stroke-width','1');sv.appendChild(ln);
+  function addLbl(txt,x,col){{
+    const t=document.createElementNS(ns,'text');
+    t.setAttribute('x',x);t.setAttribute('y',12);t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size','10');t.setAttribute('font-weight','600');t.setAttribute('fill',col);
+    t.textContent=txt;sv.appendChild(t);
+  }}
+  addLbl('수입',W/4,'#81C784');addLbl('지출',3*W/4,'#FFB74D');
+  function packSection(items,dark,light,lbl,x0,x1){{
+    if(!items.length)return[];
+    const sW=x1-x0,sH=H-18;
+    const maxV=Math.max(...items.map(x=>x.value));
+    const maxR=Math.min(sW*0.42,sH*0.42);
+    const circles=items.map((item,i)=>{{
+      const angle=i*2.399963,radius=i===0?0:Math.sqrt(i/items.length)*maxR*0.4;
+      return{{d:item,targetR:Math.max(5,Math.sqrt(item.value/maxV)*maxR),
+        x:x0+sW/2+Math.cos(angle)*radius,y:18+sH/2+Math.sin(angle)*radius*0.8,el:null,tl:null}};
+    }});
+    for(let iter=0;iter<250;iter++){{
+      for(let i=0;i<circles.length;i++){{
+        for(let j=i+1;j<circles.length;j++){{
+          const dx=circles[j].x-circles[i].x,dy=circles[j].y-circles[i].y;
+          const dist=Math.sqrt(dx*dx+dy*dy)||0.01;
+          const minD=circles[i].targetR+circles[j].targetR+2;
+          if(dist<minD){{
+            const push=(minD-dist)/2;
+            circles[i].x-=dx/dist*push;circles[i].y-=dy/dist*push;
+            circles[j].x+=dx/dist*push;circles[j].y+=dy/dist*push;
+          }}
+        }}
+        const c=circles[i];
+        c.x=Math.max(x0+c.targetR+2,Math.min(x1-c.targetR-2,c.x));
+        c.y=Math.max(18+c.targetR+2,Math.min(H-c.targetR-2,c.y));
+      }}
+    }}
+    const colors=mkColors(items,dark,light);
+    const tot=items.reduce((s,x)=>s+x.value,0);
+    circles.forEach((c,i)=>{{
+      const el=document.createElementNS(ns,'circle');
+      el.setAttribute('cx',Math.round(c.x));el.setAttribute('cy',Math.round(c.y));
+      el.setAttribute('r','0');el.setAttribute('fill',colors[i]);
+      el.setAttribute('stroke','rgba(0,0,0,.08)');el.setAttribute('stroke-width','1');
+      addTip(el,lbl,c.d,c.d.value/tot);sv.appendChild(el);c.el=el;
+      if(c.targetR>16){{
+        const tl=document.createElementNS(ns,'text');
+        tl.setAttribute('x',Math.round(c.x));tl.setAttribute('y',Math.round(c.y)+4);
+        tl.setAttribute('text-anchor','middle');tl.setAttribute('font-size','9');
+        tl.setAttribute('fill','rgba(0,0,0,.5)');tl.setAttribute('pointer-events','none');
+        tl.setAttribute('opacity','0');
+        tl.textContent=c.d.label.length>4?c.d.label.slice(0,4)+'…':c.d.label;
+        sv.appendChild(tl);c.tl=tl;
+      }}
+    }});
+    return circles;
+  }}
+  const incCircles=packSection(d.inc,'#81C784','#C8E6C9','수입',0,W/2);
+  const expCircles=packSection(d.exp,'#FFB74D','#FFE0B2','지출',W/2,W);
+  const all=[...incCircles,...expCircles];
+  const start=performance.now(),DUR=600;
+  function spring(t){{
+    if(t<=0)return 0;if(t>=1)return 1;
+    return Math.pow(2,-10*t)*Math.sin((t*10-0.75)*(2*Math.PI)/3)+1;
+  }}
+  function frame(now){{
+    const elapsed=now-start;
+    all.forEach((c,i)=>{{
+      const delay=i*45;
+      const ct=Math.max(0,Math.min(1,(elapsed-delay)/500));
+      const e=spring(ct);
+      c.el.setAttribute('r',Math.max(0,c.targetR*e));
+      if(c.tl)c.tl.setAttribute('opacity',Math.max(0,ct*2-1));
+    }});
+    if(elapsed<DUR+all.length*45)requestAnimationFrame(frame);
+  }}
+  requestAnimationFrame(frame);
+}}
+
+function drawIdx(idx){{
+  curIdx=idx;
+  const d=ALL[idx];
+  if(curMode==='donut') renderDonut(d);
+  else if(curMode==='concentric') renderConcentric(d);
+  else if(curMode==='stacked') renderStacked(d);
+  else if(curMode==='treemap') renderTreemap(d);
+  else if(curMode==='waterfall') renderWaterfall(d);
+  else if(curMode==='sweep') renderSweep(d);
+  else if(curMode==='bubble') renderBubble(d);
+  else renderBar(d);
+  document.getElementById('age-lbl').textContent=d.age+'세';
+  const tdBox=document.getElementById('td-box');
+  const taxHtml=TAX[String(d.age)];
+  if(taxHtml){{
+    document.getElementById('td-content').innerHTML=taxHtml;
+    tdBox.style.display='block';
+  }}else{{tdBox.style.display='none';}}
+}}
+function setMode(mode,btn){{
+  curMode=mode;
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  drawIdx(curIdx);
+}}
+function reportH(){{
+  const h=Math.ceil(document.body.scrollHeight)+12;
+  window.parent.postMessage({{type:'streamlit:setFrameHeight',height:h}},'*');
+}}
+window.parent.postMessage({{type:'streamlit:componentReady',apiVersion:1}},'*');
+if(window.ResizeObserver)new ResizeObserver(reportH).observe(document.body);
+window.addEventListener('resize',reportH);
+const sl=document.getElementById('age-sl');
+sl.max=ALL.length-1;
+document.getElementById('age-min').textContent=ALL[0].age+'세';
+document.getElementById('age-max').textContent=ALL[ALL.length-1].age+'세';
+sl.addEventListener('input',()=>drawIdx(parseInt(sl.value)));
+drawIdx(0);
+setTimeout(reportH,200);
+function _syncTheme(){{
+  try{{
+    var t=window.parent.document.documentElement.getAttribute('data-theme');
+    if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}
+    return t||null;
+  }}catch(e){{return null;}}
+}}
+try{{
+  new MutationObserver(function(){{
+    var t=_syncTheme();
+    if(t){{document.documentElement.setAttribute('data-theme',t);drawIdx(curIdx);}}
+  }}).observe(window.parent.document.documentElement,{{attributes:true,attributeFilter:['data-theme','class','style']}});
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',function(){{
+    var t=_syncTheme();if(t){{document.documentElement.setAttribute('data-theme',t);drawIdx(curIdx);}}
+  }});
+  var _lastPieTheme=_syncTheme();
+  setInterval(function(){{
+    var t=_syncTheme();
+    if(t&&t!==_lastPieTheme){{_lastPieTheme=t;document.documentElement.setAttribute('data-theme',t);drawIdx(curIdx);}}
+  }},500);
+}}catch(e){{}}
+</script></body></html>"""
+                st.components.v1.html(_pie_html, height=700, scrolling=False)
 
         # ── 핵심 지표 (그래프 다음 위치) ─────────────────────
-        surplus = cf.get('월잉여(부족)', 0)
-        assets  = result.get('자산현황', {})
-        with st.expander("📈 핵심 지표", expanded=True):
-            c1, c2 = st.columns(2)
-            with c1:
-                _metric_card("월 수입", fmt_won(cf.get('월수입', 0)))
-            with c2:
-                _metric_card("월 지출", fmt_won(cf.get('월지출_합계', 0)))
-            _metric_card(
-                "월 잉여/부족", fmt_won(surplus),
-                delta=fmt_won(surplus * 12) + " (연환산)" if surplus else None,
-                delta_color="normal" if surplus >= 0 else "inverse",
-            )
-            _metric_card("순자산", fmt_won(assets.get('순자산', 0)))
+        _inc_val = cf.get('월수입', 0)
+        _exp_val = cf.get('월지출_합계', 0)
+        surplus  = cf.get('월잉여(부족)', 0)
+        assets   = result.get('자산현황', {})
+        _net_val = assets.get('순자산', 0)
+        with st.expander("📈 핵심 지표(은퇴 후 예상 월수입·지출 기준)", expanded=True):
+            _kpi_html = f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+:root{{--txt:#ddd;--txt-muted:#aaa;--bg-card:rgba(255,255,255,.05);--border:rgba(255,255,255,.09)}}
+[data-theme="light"]{{--txt:#1a1a1a;--txt-muted:#555;--bg-card:rgba(0,0,0,.04);--border:rgba(0,0,0,.10)}}
+[data-theme="dark"]{{--txt:#ddd;--txt-muted:#aaa;--bg-card:rgba(255,255,255,.05);--border:rgba(255,255,255,.09)}}
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--txt);padding:10px 6px 8px}}
+.kpi-row{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}}
+.kpi{{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}}
+.kpi-lbl{{font-size:10px;color:var(--txt-muted);letter-spacing:.03em;margin-bottom:3px}}
+.kpi-val{{font-size:15px;font-weight:700}}
+.kpi-sub{{font-size:10px;color:var(--txt-muted);margin-top:2px}}
+.sec-ttl{{font-size:10px;font-weight:600;color:var(--txt-muted);letter-spacing:.06em;margin-bottom:8px}}
+.br-row{{display:flex;align-items:center;gap:8px;margin-bottom:6px}}
+.br-lbl{{font-size:10px;color:var(--txt-muted);width:26px;text-align:right;flex-shrink:0}}
+.br-track{{flex:1;height:10px;background:var(--bg-card);border-radius:4px;overflow:hidden;border:1px solid var(--border)}}
+.br-fill{{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}}
+.br-val{{font-size:10px;color:var(--txt-muted);width:62px;text-align:right;flex-shrink:0}}
+</style>
+<script>(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t)document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})()</script>
+</head><body>
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-lbl">월 수입</div><div class="kpi-val" style="color:#81C784" id="kv-inc"></div></div>
+  <div class="kpi"><div class="kpi-lbl">월 지출</div><div class="kpi-val" style="color:#FFB74D" id="kv-exp"></div></div>
+  <div class="kpi"><div class="kpi-lbl">월 잉여/부족</div><div class="kpi-val" id="kv-sur"></div><div class="kpi-sub" id="kv-sur-sub"></div></div>
+  <div class="kpi"><div class="kpi-lbl">순자산</div><div class="kpi-val" id="kv-net"></div></div>
+</div>
+<div style="margin-bottom:14px">
+  <div class="sec-ttl">수입 · 지출 구조</div>
+  <div class="br-row"><div class="br-lbl">수입</div><div class="br-track"><div class="br-fill" style="background:#81C784;width:100%"></div></div><div class="br-val" id="bv-inc"></div></div>
+  <div class="br-row"><div class="br-lbl">지출</div><div class="br-track"><div class="br-fill" id="bf-exp" style="background:#FFB74D"></div></div><div class="br-val" id="bv-exp"></div></div>
+  <div class="br-row"><div class="br-lbl">잉여</div><div class="br-track"><div class="br-fill" id="bf-sur"></div></div><div class="br-val" id="bv-sur"></div></div>
+</div>
+<div>
+  <div class="sec-ttl">노후준비 건강도</div>
+  <div style="display:flex;align-items:center;gap:5px;padding-left:34px;font-size:10px;margin-bottom:8px">
+    <div id="g-dot" style="width:7px;height:7px;border-radius:50%;flex-shrink:0"></div>
+    <span id="g-zone"></span>
+  </div>
+  <div class="br-row">
+    <div class="br-lbl"></div>
+    <div class="br-track" style="background:linear-gradient(to right,#B71C1C 0%,#B71C1C 8%,#C54949 8%,#C54949 13%,#EF5350 13%,#EF5350 20%,#FFB74D 20%,#FFB74D 32%,#FFCA28 32%,#FFCA28 45%,#66BB6A 45%,#66BB6A 65%,#42A5F5 65%,#42A5F5 85%,#7C4DFF 85%,#7C4DFF 100%);overflow:visible;position:relative">
+      <div id="g-mk" style="position:absolute;top:-3px;width:3px;height:16px;border-radius:2px;transform:translateX(-50%);transition:left .7s cubic-bezier(.4,0,.2,1)"></div>
+      <div style="position:absolute;left:8%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">0</span></div>
+      <div style="position:absolute;left:13%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">5</span></div>
+      <div style="position:absolute;left:20%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">10</span></div>
+      <div style="position:absolute;left:32%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">15</span></div>
+      <div style="position:absolute;left:45%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">20</span></div>
+      <div style="position:absolute;left:65%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">30</span></div>
+      <div style="position:absolute;left:85%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">40</span></div>
+    </div>
+    <div class="br-val" id="g-pct"></div>
+  </div>
+  <div style="display:flex;padding:2px 70px 0 34px">
+    <span style="flex:8;font-size:8px;color:var(--txt-muted);text-align:center">적자</span>
+    <span style="flex:5;font-size:8px;color:var(--txt-muted);text-align:center">위기</span>
+    <span style="flex:7;font-size:8px;color:var(--txt-muted);text-align:center">위험</span>
+    <span style="flex:12;font-size:8px;color:var(--txt-muted);text-align:center">주의</span>
+    <span style="flex:13;font-size:8px;color:var(--txt-muted);text-align:center">보통</span>
+    <span style="flex:20;font-size:8px;color:var(--txt-muted);text-align:center">양호</span>
+    <span style="flex:20;font-size:8px;color:var(--txt-muted);text-align:center">우수</span>
+    <span style="flex:15;font-size:8px;color:var(--txt-muted);text-align:center">매우우수</span>
+  </div>
+</div>
+<script>
+const INC={_inc_val},EXP={_exp_val},SUR={surplus},NET={_net_val};
+function fmt(v){{const a=Math.abs(v),s=v<0?'-':'',m=Math.round(a/10000);if(m>=10000)return s+(m/10000).toFixed(1)+'억원';if(m>=1000)return s+(m/1000).toFixed(1)+'천만원';return s+m.toLocaleString()+'만원';}}
+document.getElementById('kv-inc').textContent=fmt(INC);
+document.getElementById('kv-exp').textContent=fmt(EXP);
+const surEl=document.getElementById('kv-sur');surEl.textContent=fmt(SUR);surEl.style.color=SUR>=0?'#81C784':'#EF5350';
+if(SUR!==0)document.getElementById('kv-sur-sub').textContent=fmt(SUR*12)+' 연환산';
+document.getElementById('kv-net').textContent=fmt(NET);
+const maxV=Math.max(INC,EXP,1);
+document.getElementById('bf-exp').style.width=(EXP/maxV*100).toFixed(1)+'%';
+document.getElementById('bv-inc').textContent=fmt(INC);
+document.getElementById('bv-exp').textContent=fmt(EXP);
+document.getElementById('bv-sur').textContent=fmt(SUR);
+const surF=document.getElementById('bf-sur');
+surF.style.width=(Math.min(100,Math.abs(SUR)/maxV*100)).toFixed(1)+'%';
+const rate=INC>0?SUR/INC*100:(SUR<0?-100:0);
+function rateToBar(r){{if(r<=-50)return 0;if(r<0)return(r+50)/50*8;if(r<5)return 8+r/5*5;if(r<10)return 13+(r-5)/5*7;if(r<15)return 20+(r-10)/5*12;if(r<20)return 32+(r-15)/5*13;if(r<30)return 45+(r-20)/10*20;if(r<40)return 65+(r-30)/10*20;return Math.min(99,85+(r-40)/10*15);}}
+const pct=Math.max(1,rateToBar(rate));
+document.getElementById('g-mk').style.left=pct+'%';
+let zc,zn;
+if(rate<0){{zc='#B71C1C';zn='적자';}}else if(rate<5){{zc='#C54949';zn='위기';}}else if(rate<10){{zc='#EF5350';zn='위험';}}else if(rate<15){{zc='#FFB74D';zn='주의';}}else if(rate<20){{zc='#FFCA28';zn='보통';}}else if(rate<30){{zc='#66BB6A';zn='양호';}}else if(rate<40){{zc='#42A5F5';zn='우수';}}else{{zc='#7C4DFF';zn='매우우수';}}
+surF.style.background=zc;
+document.getElementById('g-mk').style.background=zc;
+document.getElementById('g-dot').style.background=zc;
+document.getElementById('g-pct').textContent=zn;
+document.getElementById('g-pct').style.color=zc;
+document.getElementById('g-zone').textContent='재정비율(잉여금액 / 수입금액 * 100) : '+fmt(SUR)+' ÷ '+fmt(INC)+' = '+rate.toFixed(1)+'%';
+document.getElementById('g-zone').style.color=zc;
+function reportH(){{const h=Math.ceil(document.body.scrollHeight)+12;window.parent.postMessage({{type:'streamlit:setFrameHeight',height:h}},'*');}}
+window.parent.postMessage({{type:'streamlit:componentReady',apiVersion:1}},'*');
+if(window.ResizeObserver)new ResizeObserver(reportH).observe(document.body);
+setTimeout(reportH,200);
+var _lt=null;
+setInterval(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t&&t!==_lt){{_lt=t;document.documentElement.setAttribute('data-theme',t);}}}}catch(e){{}}}},500);
+</script></body></html>"""
+            st.components.v1.html(_kpi_html, height=370, scrolling=False)
 
         # ── 기초연금 ─────────────────────────────────────────
         _bp = result.get('기초연금', {})

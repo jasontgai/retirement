@@ -1519,6 +1519,8 @@ def admin_activity_log(
     offset: int = 0,
     user_id: Optional[int] = None,
     action: Optional[str] = None,
+    email: Optional[str] = None,
+    ip: Optional[str] = None,
     current_user=Depends(require_admin),
     db: Session = Depends(get_db),
 ):
@@ -1529,6 +1531,10 @@ def admin_activity_log(
         q = q.filter(UserActivity.user_id == user_id)
     if action:
         q = q.filter(UserActivity.action.like(f"%{action}%"))
+    if email:
+        q = q.filter(UserActivity.user_email.like(f"%{email}%"))
+    if ip:
+        q = q.filter(UserActivity.ip_address.like(f"%{ip}%"))
     total = q.count()
     rows = q.order_by(UserActivity.created_at.desc()).offset(offset).limit(min(limit, 200)).all()
     return {

@@ -25,10 +25,11 @@ def generate_detail_html(data: dict, compact: bool = False, show_detail: bool = 
                else '<script src="https://d3js.org/d3.v7.min.js"></script>')
     _detail_cls  = 'show-detail' if show_detail else ''
     _detail_js   = 'true'  if show_detail else 'false'
+    _fs_btn      = '<button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">⛶ 전체화면</button>' if show_detail else ''
     _get_height_js = (
         # compact: 너비 기반 반응형 — 넓은 화면일수록 차트가 높아짐 (height ↔ iframe 연동)
         # innerWidth(=iframe 너비)는 height와 순환 의존성이 없어 안전
-        "function getHeight() { const w = window.innerWidth || 400; return Math.max(180, Math.min(280, Math.round(w * 0.42))); }"
+        "function getHeight() { if (document.fullscreenElement) { const cc = document.getElementById('chart-container'); if (cc && cc.clientHeight > 50) return cc.clientHeight; return Math.max(400, window.innerHeight - 280); } const w = window.innerWidth || 400; return Math.max(180, Math.min(280, Math.round(w * 0.42))); }"
         if compact else
         "function getHeight() { return Math.max(400, window.innerHeight - 280); }"
     )
@@ -91,7 +92,7 @@ reportHeightDeferred();"""
     --dot-stroke:  #0077CC;
   }}
   @media (prefers-color-scheme: dark) {{
-    :root {{
+    :root:not([data-theme="light"]) {{
       --bg:          #0A0A12;
       --bg-panel:    #10101E;
       --border:      #28283E;
@@ -121,6 +122,64 @@ reportHeightDeferred();"""
       --dot-stroke:  #0077CC;
     }}
   }}
+  :root[data-theme="dark"] {{
+    --bg:          #0A0A12;
+    --bg-panel:    #10101E;
+    --border:      #28283E;
+    --text:        #e0e0f4;
+    --text-muted:  #6868a0;
+    --h1-color:    #9B5FFF;
+    --val-color:   #FF8833;
+    --input-bg:    #14141E;
+    --input-bdr:   #28283E;
+    --grid-line:   #12121E;
+    --axis-text:   #505078;
+    --zero-line:   #5858a0;
+    --tt-bg:       rgba(10,10,20,0.96);
+    --tt-border:   #28283E;
+    --tt-age:      #9B5FFF;
+    --tt-key:      #6868a0;
+    --tt-pos:      #44DD88;
+    --tt-neg:      #FF4499;
+    --sb-bg:       #10101E;
+    --sb-border:   #28283E;
+    --retire-clr:  #FF8833;
+    --inc-line:    #00AAFF;
+    --exp-line:    #FF0077;
+    --sur-line:    #9B5FFF;
+    --def-fill:    rgba(255,0,119,0.10);
+    --dot-fill:    #00AAFF;
+    --dot-stroke:  #0077CC;
+  }}
+  :root[data-theme="light"] {{
+    --bg:          #ffffff;
+    --bg-panel:    #f8f8ff;
+    --border:      #e0e0f0;
+    --text:        #1a1a2e;
+    --text-muted:  #7070a0;
+    --h1-color:    #7B2FFF;
+    --val-color:   #FF6600;
+    --input-bg:    #ffffff;
+    --input-bdr:   #d0d0e8;
+    --grid-line:   #f0f0f8;
+    --axis-text:   #9090b0;
+    --zero-line:   #9090b8;
+    --tt-bg:       rgba(255,255,255,0.97);
+    --tt-border:   #e0e0f0;
+    --tt-age:      #7B2FFF;
+    --tt-key:      #9090b0;
+    --tt-pos:      #00AA55;
+    --tt-neg:      #FF0077;
+    --sb-bg:       #f8f8ff;
+    --sb-border:   #e0e0f0;
+    --retire-clr:  #FF6600;
+    --inc-line:    #00AAFF;
+    --exp-line:    #FF0077;
+    --sur-line:    #7B2FFF;
+    --def-fill:    rgba(255,0,119,0.08);
+    --dot-fill:    #00AAFF;
+    --dot-stroke:  #0077CC;
+  }}
 
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
   html {{ height: auto; }}
@@ -130,17 +189,90 @@ reportHeightDeferred();"""
     color: var(--text);
     {'min-height:0;' if compact else 'min-height:100vh;'}
   }}
+  /* ─── 전체화면 레이아웃 ─── */
+  html.fs, html.fs body {{ height: 100%; overflow: hidden; }}
+  html.fs body {{ display: flex; flex-direction: column; }}
+  html.fs .header-row,
+  html.fs .controls,
+  html.fs #legend,
+  html.fs #statusbar {{ flex-shrink: 0; }}
+  html.fs #chart-container {{ flex: 1; min-height: 0; overflow: hidden; }}
+  html.fs #statusbar {{ position: static; }}
+  .header-row {{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 6px 16px 0;
+    gap: 8px;
+  }}
   h1 {{
     font-size: 1.1rem;
     font-weight: 600;
-    padding: 8px 16px 2px;
+    padding: 2px 0;
     color: var(--h1-color);
   }}
   .subtitle {{
     font-size: 0.72rem;
     color: var(--text-muted);
-    padding: 0 16px 6px;
+    padding: 0 0 6px;
   }}
+  .fs-btn {{
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: background 0.15s, color 0.15s;
+  }}
+  .fs-btn:hover {{ background: var(--border); color: var(--text); }}
+
+  /* ─── 차트 로딩 오버레이 ─── */
+  #chart-loading-overlay {{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    padding: 40px 0 20px;
+  }}
+  #chart-loading-overlay.hidden {{ display: none; }}
+  .clo-inner {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }}
+  .clo-icon {{
+    font-size: 2rem;
+    animation: _clo_spin 1.5s linear infinite;
+    display: inline-block;
+  }}
+  .clo-text {{
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }}
+  .clo-bar {{
+    width: 160px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }}
+  .clo-fill {{
+    height: 100%;
+    width: 45%;
+    background: linear-gradient(90deg, var(--sur-line), var(--inc-line));
+    border-radius: 2px;
+    animation: _clo_slide 1.4s ease-in-out infinite;
+  }}
+  @keyframes _clo_spin {{ 0%{{transform:rotate(0deg)}} 100%{{transform:rotate(360deg)}} }}
+  @keyframes _clo_slide {{ 0%{{transform:translateX(-220%)}} 100%{{transform:translateX(450%)}} }}
 
   /* ─── 컨트롤 패널 ─── */
   .controls {{
@@ -233,8 +365,13 @@ reportHeightDeferred();"""
     text-align: center;
   }}
   .spending-item input[type=number] {{
-    width: 60px;
+    width: 52px;
     text-align: center;
+    font-size: 0.72rem;
+  }}
+  .spending-item .mr-input {{
+    border-color: var(--inc-line);
+    opacity: 0.85;
   }}
 
   /* ─── 차트 영역 ─── */
@@ -402,7 +539,7 @@ reportHeightDeferred();"""
 
   /* ─── 하단 상태 바 ─── */
   #statusbar {{
-    position: sticky;
+    position: {'static' if compact else 'sticky'};
     bottom: 0;
     background: var(--sb-bg);
     border-top: 1px solid var(--sb-border);
@@ -414,11 +551,34 @@ reportHeightDeferred();"""
   }}
   #statusbar span b {{ color: var(--text); }}
 </style>
+<script>
+/* 페인트 전 테마 동기화 — FOUC 방지 */
+(function(){{
+  try {{
+    var t = window.parent.document.documentElement.getAttribute('data-theme');
+    if (!t) {{
+      /* data-theme 없으면 부모 body 배경색으로 판단 (System 모드) */
+      var bg = window.getComputedStyle(window.parent.document.body).backgroundColor;
+      var rgb = bg.match(/\d+/g);
+      if (rgb && rgb.length >= 3) {{
+        var avg = (parseInt(rgb[0]) + parseInt(rgb[1]) + parseInt(rgb[2])) / 3;
+        t = avg < 128 ? 'dark' : 'light';
+      }}
+    }}
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  }} catch(e) {{}}
+}})();
+</script>
 </head>
 <body>
 
-<h1>📊 시나리오 분석</h1>
-<p class="subtitle">은퇴선을 드래그하여 은퇴연령 조정 | 슬라이더로 물가·지출 체감률 실시간 변경 | 범례 클릭으로 항목 숨김/표시</p>
+<div class="header-row">
+  <div>
+    <h1>📊 시나리오 분석</h1>
+    <p class="subtitle">은퇴연령 조정 | 슬라이더로 물가·지출 체감률 실시간 변경 | 범례 클릭으로 항목 숨김/표시</p>
+  </div>
+  {_fs_btn}
+</div>
 
 <div class="controls">
   <div class="ctrl-group">
@@ -433,40 +593,50 @@ reportHeightDeferred();"""
   </div>
 
   <div class="ctrl-group" style="min-width:auto">
-    <label>💸 나이별 지출 체감률 (%)
-      <span style="font-weight:400;font-size:0.75em;opacity:0.7;margin-left:8px;">
-        🏥 의료비 별도 증가: ~64세×1.0 / 65~69×1.3 / 70~74×1.7 / 75~79×2.2 / 80~84×2.8 / 85+×3.5
-      </span>
+    <label>💸 나이별 체감률(상) / 의료비 체증률(하) %
     </label>
     <div class="spending-grid">
       <div class="spending-item">
-        <label> ~64세</label>
+        <label>~64세</label>
         <input type="number" class="sr-input" id="sr0" min="10" max="150" step="5" value="100">
+        <input type="number" class="mr-input" id="mr0" min="50" max="500" step="10" value="100">
       </div>
       <div class="spending-item">
         <label>65~69세</label>
         <input type="number" class="sr-input" id="sr1" min="10" max="150" step="5" value="90">
+        <input type="number" class="mr-input" id="mr1" min="50" max="500" step="10" value="130">
       </div>
       <div class="spending-item">
         <label>70~74세</label>
         <input type="number" class="sr-input" id="sr2" min="10" max="150" step="5" value="80">
+        <input type="number" class="mr-input" id="mr2" min="50" max="500" step="10" value="170">
       </div>
       <div class="spending-item">
         <label>75~79세</label>
         <input type="number" class="sr-input" id="sr3" min="10" max="150" step="5" value="70">
+        <input type="number" class="mr-input" id="mr3" min="50" max="500" step="10" value="220">
       </div>
       <div class="spending-item">
         <label>80~84세</label>
         <input type="number" class="sr-input" id="sr4" min="10" max="150" step="5" value="65">
+        <input type="number" class="mr-input" id="mr4" min="50" max="500" step="10" value="280">
       </div>
       <div class="spending-item">
         <label>85세+</label>
         <input type="number" class="sr-input" id="sr5" min="10" max="150" step="5" value="55">
+        <input type="number" class="mr-input" id="mr5" min="50" max="500" step="10" value="350">
       </div>
     </div>
   </div>
 </div>
 
+<div id="chart-loading-overlay">
+  <div class="clo-inner">
+    <div class="clo-icon">📊</div>
+    <div class="clo-text">차트 렌더링 중...</div>
+    <div class="clo-bar"><div class="clo-fill"></div></div>
+  </div>
+</div>
 <div id="chart-container">
   <svg id="main-svg"></svg>
 </div>
@@ -492,6 +662,7 @@ function cssVar(name) {{
 // ─── 초기 설정 ───
 let retireAge  = RAW.retire_age;
 let inflRate   = RAW.inflation;
+let medicalRates = [1.0, 1.3, 1.7, 2.2, 2.8, 3.5];
 let spendRates = [
   RAW.spending_rates.under65,
   RAW.spending_rates['65_69'],
@@ -514,6 +685,9 @@ document.getElementById('inflVal').textContent = inflRate.toFixed(1);
 document.querySelectorAll('.sr-input').forEach((el, i) => {{
   el.value = Math.round(spendRates[i] * 100);
 }});
+document.querySelectorAll('.mr-input').forEach((el, i) => {{
+  el.value = Math.round(medicalRates[i] * 100);
+}});
 
 // ─── 유틸 ───
 function expMult(age) {{
@@ -525,12 +699,12 @@ function expMult(age) {{
   return spendRates[5];
 }}
 function medicalMult(age) {{
-  if (age < 65)  return 1.0;
-  if (age < 70)  return 1.3;
-  if (age < 75)  return 1.7;
-  if (age < 80)  return 2.2;
-  if (age < 85)  return 2.8;
-  return 3.5;
+  if (age < 65)  return medicalRates[0];
+  if (age < 70)  return medicalRates[1];
+  if (age < 75)  return medicalRates[2];
+  if (age < 80)  return medicalRates[3];
+  if (age < 85)  return medicalRates[4];
+  return medicalRates[5];
 }}
 function fmt(v) {{ return Math.round(v).toLocaleString() + '만'; }}
 function fmtSign(v) {{ return (v >= 0 ? '+' : '') + Math.round(v).toLocaleString() + '만'; }}
@@ -1052,6 +1226,27 @@ function _renderTooltip(event, data, xScale, hoverKey) {{
   html += `<button class="tt-toggle" onclick="toggleTTAll()">${{_ttShowAll ? '📌 항목별 보기' : '📋 전체 보기'}}</button>`;
 
   tooltip.innerHTML = html;
+  // 호버된 항목 행 강조 — 배경색 + 왼쪽 테두리
+  if (hoverKey) {{
+    const _norm = hoverKey === '대출상환금' ? '대출 월상환금' : hoverKey === '임차료' ? '월세 임차료' : hoverKey;
+    const _isInc = new Set(RAW.income_sources).has(hoverKey);
+    const _hlColor = _isInc ? 'var(--inc-line)' : 'var(--exp-line)';
+    const _hlBg    = _isInc ? 'rgba(0,170,255,0.10)' : 'rgba(255,0,119,0.10)';
+    tooltip.querySelectorAll('.tt-row').forEach(function(row) {{
+      const keyEl = row.querySelector('.tt-key');
+      if (!keyEl) return;
+      const t = keyEl.textContent.trim();
+      if (t === _norm || (_norm === '의료비' && t.startsWith('의료비'))) {{
+        row.style.background = _hlBg;
+        row.style.borderLeft = '3px solid ' + _hlColor;
+        row.style.paddingLeft = '5px';
+        row.style.borderRadius = '3px';
+        row.style.margin = '1px -2px';
+        keyEl.style.fontWeight = '700';
+        keyEl.style.color = 'var(--text)';
+      }}
+    }});
+  }}
   tooltip.style.display = 'block';
   tooltip.style.left = '-9999px';
   tooltip.style.top  = '-9999px';
@@ -1171,9 +1366,13 @@ function buildLegend() {{
     legendEl.appendChild(div);
   }}
 
-  // 수입 세부항목
+  // 수입 세부항목 — 은퇴연령 기준 금액 내림차순
   addLegendLabel('▸ 수입');
-  RAW.income_sources.forEach(k => addLegendItem(k));
+  const _incAtRetire = (RAW.income || {{}})[retireAge] || {{}};
+  const _sortedInc = [...RAW.income_sources].sort((a, b) =>
+    ((_incAtRetire[b] || 0) - (_incAtRetire[a] || 0))
+  );
+  _sortedInc.forEach(k => addLegendItem(k));
 
   // 구분선 (상세보기에서만 표시)
   const sep2 = document.createElement('div');
@@ -1181,17 +1380,26 @@ function buildLegend() {{
   sep2.style.cssText = 'width:100%;border-top:1px solid var(--border);margin:2px 0 1px;flex-basis:100%;';
   legendEl.appendChild(sep2);
 
-  // 지출 세부항목
+  // 지출 세부항목 — 전체 금액 기준 내림차순
   addLegendLabel('▸ 지출');
-  const _expItems = [
-    ...(RAW.living_man    > 0 ? ['생활비']       : []),
-    ...(RAW.medical_man   > 0 ? ['의료비']       : []),
-    ...(RAW.leisure_man   > 0 ? ['여가/취미']    : []),
-    ...(RAW.family_man    > 0 ? ['자녀/부모지원'] : []),
-    ...(RAW.insurance_man > 0 ? ['보험료']       : []),
-    ...(RAW.other_man     > 0 ? ['기타']         : []),
-  ];
-  ['소득세', '건보료', ..._expItems, ..._contribLabels, ..._legFixed].forEach(k => addLegendItem(k));
+  const _expAmts = {{}};
+  _expAmts['소득세']       = Math.abs(((RAW.tax || {{}})[retireAge]) || 0);
+  _expAmts['건보료']       = Math.abs(((RAW.hi  || {{}})[retireAge]) || 0);
+  if (RAW.living_man    > 0) _expAmts['생활비']       = RAW.living_man;
+  if (RAW.medical_man   > 0) _expAmts['의료비']       = RAW.medical_man;
+  if (RAW.leisure_man   > 0) _expAmts['여가/취미']    = RAW.leisure_man;
+  if (RAW.family_man    > 0) _expAmts['자녀/부모지원'] = RAW.family_man;
+  if (RAW.insurance_man > 0) _expAmts['보험료']       = RAW.insurance_man;
+  if (RAW.other_man     > 0) _expAmts['기타']         = RAW.other_man;
+  if (RAW.debt_man      > 0) _expAmts['대출상환금']   = RAW.debt_man;
+  if (RAW.rent_man      > 0) _expAmts['임차료']       = RAW.rent_man;
+  _contribLabels.forEach(cl => {{
+    const _ci = (RAW.contrib_items || []).find(c => c.label === cl);
+    _expAmts[cl] = _ci ? (_ci.amount_man || 0) : 0;
+  }});
+  Object.entries(_expAmts)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([k]) => addLegendItem(k));
 }}
 
 // ─── 이벤트 리스너 (RAF 쓰로틀로 과도한 draw 방지) ───
@@ -1221,6 +1429,62 @@ document.querySelectorAll('.sr-input').forEach((el, i) => {{
     scheduleDraw();
   }});
 }});
+document.querySelectorAll('.mr-input').forEach((el, i) => {{
+  el.addEventListener('change', function() {{
+    medicalRates[i] = Math.max(0.5, Math.min(5.0, +this.value / 100));
+    scheduleDraw();
+  }});
+}});
+
+// ─── Streamlit 테마 동기화 ───
+(function syncStreamlitTheme() {{
+  function getParentTheme() {{
+    try {{
+      var t = window.parent.document.documentElement.getAttribute('data-theme');
+      if (t) return t;
+      /* data-theme 없으면 부모 body 배경색으로 판단 (System/자동 모드) */
+      var bg = window.getComputedStyle(window.parent.document.body).backgroundColor;
+      var rgb = bg.match(/\d+/g);
+      if (rgb && rgb.length >= 3) {{
+        var avg = (parseInt(rgb[0]) + parseInt(rgb[1]) + parseInt(rgb[2])) / 3;
+        return avg < 128 ? 'dark' : 'light';
+      }}
+      return window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+    }} catch(e) {{ return null; }}
+  }}
+  function applyTheme(theme) {{
+    if (theme) {{
+      document.documentElement.setAttribute('data-theme', theme);
+    }} else {{
+      document.documentElement.removeAttribute('data-theme');
+    }}
+  }}
+  applyTheme(getParentTheme());
+  try {{
+    new MutationObserver(function() {{
+      applyTheme(getParentTheme());
+      scheduleDraw();
+    }}).observe(window.parent.document.documentElement, {{
+      attributes: true,
+      attributeFilter: ['data-theme', 'class', 'style']
+    }});
+  }} catch(e) {{}}
+  /* System 모드 대응: OS 테마 변경도 감지 */
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', function() {{
+    applyTheme(getParentTheme());
+    scheduleDraw();
+  }});
+  /* 폴링 fallback: MutationObserver가 못 잡는 테마 전환 대비 */
+  var _lastTheme = getParentTheme();
+  setInterval(function() {{
+    var t = getParentTheme();
+    if (t && t !== _lastTheme) {{
+      _lastTheme = t;
+      applyTheme(t);
+      scheduleDraw();
+    }}
+  }}, 500);
+}})();
 
 // 시스템 다크/라이트 모드 변경 감지 → 재드로우
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {{
@@ -1242,7 +1506,9 @@ if (window.ResizeObserver) {{
 buildLegend();
 function initAndDraw() {{
   if (getWidth() > 0) {{
-    draw();  // draw() 내부에서 initSvg() 호출하므로 별도 호출 불필요
+    draw();
+    var _ov = document.getElementById('chart-loading-overlay');
+    if (_ov) _ov.classList.add('hidden');
     requestAnimationFrame(function() {{
       if (typeof reportHeight === 'function') reportHeight();
     }});
@@ -1252,6 +1518,21 @@ function initAndDraw() {{
 }}
 initAndDraw();
 {_resize_report_js}
+
+// ─── 전체화면 토글 ───
+function toggleFullscreen() {{
+  if (!document.fullscreenElement) {{
+    document.documentElement.requestFullscreen().catch(function(){{}});
+  }} else {{
+    document.exitFullscreen().catch(function(){{}});
+  }}
+}}
+document.addEventListener('fullscreenchange', function() {{
+  document.documentElement.classList.toggle('fs', !!document.fullscreenElement);
+  var btn = document.getElementById('fsBtn');
+  if (btn) btn.textContent = document.fullscreenElement ? '✕ 전체화면 종료' : '⛶ 전체화면';
+  setTimeout(_scheduleDraw, 80);  // 레이아웃 확정 후 리드로우
+}});
 </script>
 </body>
 </html>"""
