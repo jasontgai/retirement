@@ -206,6 +206,7 @@ _OAUTH_CONFIG = {
 
 _oauth_states: dict[str, tuple[str, float]] = {}        # state -> (provider, timestamp)
 _delete_pending: dict[str, tuple[int, str, float]] = {}  # state -> (user_id, provider, timestamp)
+_consent_pending: dict[str, dict] = {}                   # token -> {oauth info} 신규 가입자 동의 대기
 
 
 @app.on_event("startup")
@@ -299,6 +300,9 @@ class FinancialAssetIn(BaseModel):
     amount: float = 0
     annual_return_rate: float = 0.03
     is_taxable: bool = True
+    monthly_contribution: float = 0
+    isa_user_type: str = "일반형"
+    isa_transfer_to_pension: bool = False
 
 
 class MembershipIn(BaseModel):
@@ -431,7 +435,10 @@ def pydantic_to_userprofile(data: FullProfileIn) -> UserProfile:
     ]
     financial_assets = [
         FinancialAsset(name=f.name, asset_type=f.asset_type, amount=f.amount,
-                       annual_return_rate=f.annual_return_rate, is_taxable=f.is_taxable)
+                       annual_return_rate=f.annual_return_rate, is_taxable=f.is_taxable,
+                       monthly_contribution=f.monthly_contribution,
+                       isa_user_type=f.isa_user_type,
+                       isa_transfer_to_pension=f.isa_transfer_to_pension)
         for f in data.financial_assets
     ]
     memberships = [
@@ -711,6 +718,9 @@ def _serialize_profile(row) -> dict:
             {
                 "name": f.name, "asset_type": f.asset_type, "amount": f.amount,
                 "annual_return_rate": f.annual_return_rate, "is_taxable": f.is_taxable,
+                "monthly_contribution": getattr(f, 'monthly_contribution', 0),
+                "isa_user_type": getattr(f, 'isa_user_type', '일반형'),
+                "isa_transfer_to_pension": getattr(f, 'isa_transfer_to_pension', False),
             } for f in row.financial_assets
         ],
         "memberships": [
@@ -990,10 +1000,23 @@ def _apply_session_cookies(resp: RedirectResponse, token: str,
 
 
 @app.get("/auth/set-session")
-def set_session_endpoint(token: str, user_id: int = 0,
-                         name: str = "", email: str = ""):
+def set_session_endpoint(
+    token: str, user_id: int = 0, name: str = "", email: str = "",
+    social_birth_year: int = 0, social_birth_month: int = 0,
+    social_birth_day: int = 0, social_gender: str = "", social_name: str = "",
+):
     """이메일 로그인 후 브라우저가 호출 → 서버에서 Set-Cookie 후 앱으로 리다이렉트"""
-    resp = RedirectResponse(STREAMLIT_URL, status_code=302)
+    # 소셜 데이터가 있으면 Streamlit redirect URL에 포함시켜 프로필 자동 채움에 활용
+    redirect_url = STREAMLIT_URL
+    _social_parts = []
+    if social_birth_year:  _social_parts.append(f"social_birth_year={social_birth_year}")
+    if social_birth_month: _social_parts.append(f"social_birth_month={social_birth_month}")
+    if social_birth_day:   _social_parts.append(f"social_birth_day={social_birth_day}")
+    if social_gender:      _social_parts.append(f"social_gender={quote(social_gender)}")
+    if social_name:        _social_parts.append(f"social_name={quote(social_name)}")
+    if _social_parts:
+        redirect_url += ("&" if "?" in redirect_url else "?") + "&".join(_social_parts)
+    resp = RedirectResponse(redirect_url, status_code=302)
     _apply_session_cookies(resp, token, user_id, name, email)
     return resp
 
@@ -1239,17 +1262,28 @@ def oauth_callback(
     if not user:
         existing = auth_utils.get_user_by_email(db, email)
         if existing and not existing.oauth_provider:
-            # 이메일/비밀번호 계정에 소셜 연동 (ex. 이메일 가입 후 카카오로 로그인)
+            # 이메일/비밀번호 계정에 소셜 연동 — 이미 약관 동의된 계정이므로 바로 연동
             existing.oauth_provider = provider
             existing.oauth_id = oauth_id
             db.commit()
             user = existing
-        elif existing and existing.oauth_provider:
-            # 다른 소셜 계정이 이미 같은 이메일 사용 중 → 별도 계정 생성
-            user = auth_utils.create_oauth_user(
-                db, f"{provider}_{oauth_id}@oauth.local", name, provider, oauth_id)
         else:
-            user = auth_utils.create_oauth_user(db, email, name, provider, oauth_id)
+            # 신규 가입 → 약관 동의 화면으로 이동
+            _ct = secrets.token_urlsafe(24)
+            _consent_pending[_ct] = {
+                "provider": provider, "oauth_id": oauth_id,
+                "email": email if not existing else f"{provider}_{oauth_id}@oauth.local",
+                "name": name,
+                "birth_year": birth_year, "birth_month": birth_month, "birth_day": birth_day,
+                "gender": gender,
+                "ts": time.time(),
+            }
+            _cred = (
+                f"{STREAMLIT_URL}?consent_pending={_ct}"
+                f"&name={quote(name or '')}"
+                f"&provider={quote(provider)}"
+            )
+            return RedirectResponse(_cred, status_code=302)
 
     jwt_token = auth_utils.create_access_token(user.id, user.email)
     request.state._log_user_id = user.id
@@ -1271,6 +1305,47 @@ def oauth_callback(
     _resp = RedirectResponse(_redirect, status_code=302)
     _apply_session_cookies(_resp, jwt_token, user.id, user.name, user.email)
     return _resp
+
+
+class ConsentConfirmIn(BaseModel):
+    token: str
+    terms_agreed: bool
+    privacy_agreed: bool
+    marketing_agreed: bool = False
+
+
+@app.post("/auth/consent-confirm")
+def consent_confirm(data: ConsentConfirmIn, request: Request, db: Session = Depends(get_db)):
+    """소셜 신규 가입자 약관 동의 확인 후 계정 생성"""
+    pending = _consent_pending.pop(data.token, None)
+    if not pending or time.time() - pending["ts"] > 600:
+        raise HTTPException(400, "동의 정보가 만료되었습니다. 다시 소셜 로그인을 시도하세요.")
+    if not data.terms_agreed or not data.privacy_agreed:
+        raise HTTPException(400, "필수 약관에 동의해야 가입할 수 있습니다.")
+
+    now = datetime.utcnow()
+    user = auth_utils.create_oauth_user(
+        db,
+        email=pending["email"], name=pending["name"],
+        provider=pending["provider"], oauth_id=pending["oauth_id"],
+        terms_agreed_at=now, privacy_agreed_at=now,
+        marketing_agreed=data.marketing_agreed,
+    )
+    jwt_token = auth_utils.create_access_token(user.id, user.email)
+    request.state._log_user_id = user.id
+    request.state._log_email   = user.email
+    result = {
+        "access_token": jwt_token,
+        "user_id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "is_admin": int(bool(getattr(user, "is_admin", False))),
+        "oauth_provider": pending["provider"],
+    }
+    for k in ("birth_year", "birth_month", "birth_day", "gender"):
+        if pending.get(k):
+            result[f"social_{k}"] = pending[k]
+    return result
 
 
 _delete_tokens: dict[str, tuple[int, str, float]] = {}  # dt -> (user_id, provider, timestamp)

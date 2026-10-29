@@ -72,6 +72,9 @@ def run_column_migrations(engine):
         ('profiles',     'spouse_other_monthly',  'BIGINT DEFAULT 0'),
         ('profiles',     'spouse_other_start_age','INT DEFAULT 65'),
         ('users',        'is_admin',              'TINYINT(1) NOT NULL DEFAULT 0'),
+        ('users',        'terms_agreed_at',       'DATETIME NULL'),
+        ('users',        'privacy_agreed_at',     'DATETIME NULL'),
+        ('users',        'marketing_agreed',      'TINYINT(1) NOT NULL DEFAULT 0'),
         ('real_estates', 'property_category',     "VARCHAR(50) NOT NULL DEFAULT '아파트'"),
         ('real_estates', 'received_deposit',       'BIGINT DEFAULT 0'),
     ]

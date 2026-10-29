@@ -51,6 +51,7 @@ class RetirementAnalyzer:
             '시나리오비교': self._compare_scenarios(),
             '제언': self._generate_recommendations(),
             '세액공제최적화': self._analyze_tax_optimization(),
+            'ISA분석': self._analyze_isa(),
         }
         return self.results
 
@@ -597,7 +598,11 @@ class RetirementAnalyzer:
                 annual_pension += pension.expected_monthly_payout * 12
 
         for fa in self.profile.financial_assets:
-            annual_financial += fa.amount * fa.annual_return_rate
+            if fa.asset_type == "ISA":
+                # ISA 수익은 비과세/분리과세 → 금융소득종합과세 대상 제외
+                pass
+            else:
+                annual_financial += fa.amount * fa.annual_return_rate
 
         for re in self.profile.real_estates:
             annual_rental += re.monthly_rent_income * 12
@@ -961,6 +966,59 @@ class RetirementAnalyzer:
 
         return scenarios
 
+    def _analyze_isa(self) -> dict:
+        """ISA 계좌 분석 — 비과세 절세효과 + 만기 연금전환 세액공제"""
+        ISA_ANNUAL_LIMIT = 20_000_000        # 연 납입 한도 2,000만원
+        ISA_TAX_FREE = {"일반형": 2_000_000, "서민형": 4_000_000}  # 비과세 한도
+        ISA_EXCESS_RATE = 0.099              # 초과분 9.9% 분리과세
+        TRANSFER_RATE = 0.10                 # 연금전환 세액공제율 10%
+        TRANSFER_MAX_DEDUCTION = 3_000_000   # 최대 300만원
+
+        isa_assets = [fa for fa in self.profile.financial_assets if fa.asset_type == "ISA"]
+        if not isa_assets:
+            return {'보유여부': False}
+
+        results = []
+        for fa in isa_assets:
+            annual_return = round(fa.amount * fa.annual_return_rate)
+            user_type = fa.isa_user_type if fa.isa_user_type in ISA_TAX_FREE else "일반형"
+            tax_free_limit = ISA_TAX_FREE[user_type]
+            taxable_excess = max(0, annual_return - tax_free_limit)
+            tax_saved = round(min(annual_return, tax_free_limit) * 0.154)  # 일반세율 대비 절세
+            isa_tax = round(taxable_excess * ISA_EXCESS_RATE)
+            normal_tax = round(annual_return * 0.154)
+            net_saving = normal_tax - isa_tax
+
+            annual_contrib = min(fa.monthly_contribution * 12, ISA_ANNUAL_LIMIT)
+            remaining_room = max(0, ISA_ANNUAL_LIMIT - annual_contrib)
+
+            transfer_deduction = 0
+            if fa.isa_transfer_to_pension:
+                transfer_deduction = round(min(fa.amount * TRANSFER_RATE, TRANSFER_MAX_DEDUCTION))
+
+            results.append({
+                '이름': fa.name,
+                '잔액': round(fa.amount),
+                '월납입액': round(fa.monthly_contribution),
+                '연납입액': round(annual_contrib),
+                '연납입_잔여한도': round(remaining_room),
+                '가입자유형': user_type,
+                '비과세한도': tax_free_limit,
+                '연간수익': annual_return,
+                '연간절세액': net_saving,
+                '연금전환_예정': fa.isa_transfer_to_pension,
+                '연금전환_예상세액공제': transfer_deduction,
+            })
+
+        total_saving = sum(r['연간절세액'] for r in results)
+        total_transfer_deduction = sum(r['연금전환_예상세액공제'] for r in results)
+        return {
+            '보유여부': True,
+            '계좌목록': results,
+            '총_연간절세액': total_saving,
+            '총_연금전환_세액공제': total_transfer_deduction,
+        }
+
     def _analyze_tax_optimization(self) -> dict:
         """IRP/연금저축 세액공제 최적화 분석"""
         TAX_DEDUCTION_LIMIT = 9_000_000  # 연 900만원 한도
@@ -1079,7 +1137,28 @@ class RetirementAnalyzer:
                         '비과세 수령으로 부족분 보완 가능. 거주권 보장되며 사망시 정산.',
             })
 
-        # 7. 세액공제 최적화
+        # 7. ISA 활용 제언
+        isa_info = self._analyze_isa()
+        annual_financial_income = tax_info.get('예상금융소득', 0)
+        if not isa_info['보유여부'] and annual_financial_income > 0:
+            recs.append({
+                '우선순위': '검토',
+                '항목': 'ISA 계좌 미활용',
+                '내용': (f'금융자산 수익 연 {annual_financial_income:,}원 발생 예상. '
+                         'ISA 계좌(연 2,000만원 한도) 활용 시 비과세 200만원 '
+                         '+ 초과분 9.9% 분리과세로 세부담 절감 가능.'),
+            })
+        if isa_info['보유여부'] and isa_info['총_연금전환_세액공제'] > 0:
+            total_tc = isa_info['총_연금전환_세액공제']
+            recs.append({
+                '우선순위': '높음',
+                '항목': 'ISA 만기 → 연금계좌 전환 세액공제',
+                '내용': (f'ISA 만기 시 IRP/연금저축으로 전환하면 전환금액의 10%, '
+                         f'최대 300만원 추가 세액공제 가능 (예상 {total_tc:,}원). '
+                         '기존 IRP 세액공제 한도(900만원)와 별도 적용됩니다.'),
+            })
+
+        # 8. 세액공제 최적화
         tax_opt = self._analyze_tax_optimization()
         if not tax_opt['한도도달여부'] and tax_opt['추가_환급가능액'] > 0:
             recs.append({

@@ -351,14 +351,15 @@ init_state()
 
 # ── 쿠키 기반 세션 유지 (st.context.cookies + st.html JS 방식) ──────────
 
-def _save_session_to_cookie(token, user_id, user_name, user_email):
-    """다음 렌더에서 JavaScript로 쿠키 저장"""
+def _save_session_to_cookie(token, user_id, user_name, user_email, social=None):
+    """다음 렌더에서 JavaScript로 쿠키 저장. social={birth_year,birth_month,birth_day,gender,name}"""
     st.session_state['_pending_cookie'] = {
         'action': 'set',
         'token':  token,
         'uid':    str(user_id),
         'name':   user_name.replace('"', ''),
         'email':  user_email.replace('"', ''),
+        'social': social or {},
     }
 
 def _clear_session_cookie():
@@ -389,6 +390,13 @@ def _flush_cookie_js():
         _name  = _q(str(_pc.get('name', '')))
         _email = _q(str(_pc.get('email', '')))
         _url   = f"/auth/set-session?token={_token}&user_id={_uid}&name={_name}&email={_email}"
+        # 소셜 데이터 전달 (출생년월일·성별·이름)
+        _soc = _pc.get('social', {})
+        if _soc.get('birth_year'):  _url += f"&social_birth_year={_soc['birth_year']}"
+        if _soc.get('birth_month'): _url += f"&social_birth_month={_soc['birth_month']}"
+        if _soc.get('birth_day'):   _url += f"&social_birth_day={_soc['birth_day']}"
+        if _soc.get('gender'):      _url += f"&social_gender={_q(str(_soc['gender']))}"
+        if _soc.get('soc_name'):    _url += f"&social_name={_q(str(_soc['soc_name']))}"
         _log.debug(f"[flush_cookie] → /auth/set-session 리다이렉트")
         st.html(f'<script>window.parent.location.href="{_url}";</script>', unsafe_allow_javascript=True)
         st.stop()
@@ -454,6 +462,13 @@ if "account_deleted" in _qp:
     _end_session()
     st.session_state['_account_deleted'] = True
     st.rerun()
+elif "consent_pending" in _qp:
+    # 신규 소셜 가입자 → 약관 동의 화면으로 전환
+    st.session_state['_consent_token']    = _qp["consent_pending"]
+    st.session_state['_consent_name']     = unquote(_qp.get("name", ""))
+    st.session_state['_consent_provider'] = _qp.get("provider", "")
+    st.query_params.clear()
+    st.rerun()
 elif "token" in _qp:
     # OAuth 콜백 토큰은 기존 세션보다 항상 우선 (다른 소셜로 전환 시 이전 쿠키 덮어씀)
     _end_session()
@@ -464,19 +479,23 @@ elif "token" in _qp:
     st.session_state.is_admin       = bool(int(_qp.get("is_admin", 0)))
     st.session_state.oauth_provider = _qp.get("oauth_provider", "")
     st.session_state.pop('session_invalidated', None)
-    # 소셜 계정 생년월일·성별 pre-fill (제공된 경우만 덮어씀)
+    # 소셜 계정 생년월일·성별·이름 — set-session을 통해 보존
     _sy = int(_qp.get("social_birth_year",  0) or 0)
     _sm = int(_qp.get("social_birth_month", 0) or 0)
     _sd = int(_qp.get("social_birth_day",   0) or 0)
     _sg = unquote(_qp.get("social_gender", "") or "")
-    if _sy: st.session_state['inp_birth_year']  = _sy
-    if _sm: st.session_state['inp_birth_month'] = _sm
-    if _sd: st.session_state['inp_birth_day']   = _sd
-    if _sg: st.session_state['inp_gender']       = _sg
+    _sn = unquote(_qp.get("name", "") or "")
+    _social_data = {}
+    if _sy: _social_data['birth_year']  = _sy
+    if _sm: _social_data['birth_month'] = _sm
+    if _sd: _social_data['birth_day']   = _sd
+    if _sg: _social_data['gender']      = _sg
+    if _sn: _social_data['soc_name']    = _sn
     # _end_session()이 _pending_cookie='delete'를 설정했으므로 'set'으로 덮어씀
     _log.debug("[oauth] _save_session_to_cookie 호출")
     _save_session_to_cookie(_qp["token"], int(_qp.get("user_id", 0)),
-                             unquote(_qp.get("name", "")), unquote(_qp.get("email", "")))
+                             unquote(_qp.get("name", "")), unquote(_qp.get("email", "")),
+                             social=_social_data)
     st.query_params.clear()
     st.rerun()
 elif "oauth_error" in _qp:
@@ -486,6 +505,23 @@ elif "oauth_error" in _qp:
         st.info(f"ℹ️ {_err}")
     else:
         st.error(f"소셜 로그인 실패: {_err}")
+    st.query_params.clear()
+elif "social_birth_year" in _qp or "social_name" in _qp:
+    # set-session → Streamlit 리다이렉트 시 소셜 데이터(토큰 없이) 도착
+    _sy = int(_qp.get("social_birth_year",  0) or 0)
+    _sm = int(_qp.get("social_birth_month", 0) or 0)
+    _sd = int(_qp.get("social_birth_day",   0) or 0)
+    _sg = unquote(_qp.get("social_gender", "") or "")
+    _sn = unquote(_qp.get("social_name",   "") or "")
+    if _sy: st.session_state['inp_birth_year']  = _sy
+    if _sm: st.session_state['inp_birth_month'] = _sm
+    if _sd: st.session_state['inp_birth_day']   = _sd
+    if _sg: st.session_state['inp_gender']       = _sg
+    if _sn and not st.session_state.get('inp_name'):
+        st.session_state['inp_name'] = _sn
+    # _apply_national_avg가 이 값들을 덮어쓰지 않도록 플래그 설정
+    if _sy or _sm or _sd or _sg:
+        st.session_state['_social_prefill_done'] = True
     st.query_params.clear()
 
 
@@ -540,6 +576,124 @@ def call_api(endpoint, payload=None, method="POST", form=False):
         return None, f"오류 {resp.status_code}: {detail}"
     except Exception as e:
         return None, f"오류: {str(e)}"
+
+
+@st.cache_data(show_spinner=False)
+def _cached_analyze(payload_json: str, token: str, api_base: str):
+    """분석 API 캐싱 — 동일 페이로드+토큰이면 재호출 없이 캐시 반환."""
+    url = f"{api_base}/analyze"
+    headers = {"Authorization": f"Bearer {token}"} if token else {}
+    try:
+        resp = requests.post(url, json=json.loads(payload_json), headers=headers, timeout=30)
+        resp.raise_for_status()
+        return resp.json(), None
+    except requests.exceptions.ConnectionError:
+        return None, f"서버 연결 실패. 백엔드가 켜져있는지 확인하세요. ({api_base})"
+    except Exception as e:
+        return None, f"오류: {str(e)}"
+
+
+@st.cache_data(show_spinner=False)
+def _build_kpi_html(inc_val: int, exp_val: int, surplus: int, net_val: int) -> str:
+    """핵심지표 HTML 캐싱 — 수치가 같으면 f-string 재생성 없이 캐시 반환."""
+    return f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+:root{{--txt:#ddd;--txt-muted:#aaa;--bg-card:rgba(255,255,255,.05);--border:rgba(255,255,255,.09)}}
+[data-theme="light"]{{--txt:#1a1a1a;--txt-muted:#555;--bg-card:rgba(0,0,0,.04);--border:rgba(0,0,0,.10)}}
+[data-theme="dark"]{{--txt:#ddd;--txt-muted:#aaa;--bg-card:rgba(255,255,255,.05);--border:rgba(255,255,255,.09)}}
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--txt);padding:10px 6px 8px}}
+.kpi-row{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}}
+.kpi{{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}}
+.kpi-lbl{{font-size:10px;color:var(--txt-muted);letter-spacing:.03em;margin-bottom:3px}}
+.kpi-val{{font-size:15px;font-weight:700}}
+.kpi-sub{{font-size:10px;color:var(--txt-muted);margin-top:2px}}
+.sec-ttl{{font-size:10px;font-weight:600;color:var(--txt-muted);letter-spacing:.06em;margin-bottom:8px}}
+.br-row{{display:flex;align-items:center;gap:8px;margin-bottom:6px}}
+.br-lbl{{font-size:10px;color:var(--txt-muted);width:26px;text-align:right;flex-shrink:0}}
+.br-track{{flex:1;height:10px;background:var(--bg-card);border-radius:4px;overflow:hidden;border:1px solid var(--border)}}
+.br-fill{{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}}
+.br-val{{font-size:10px;color:var(--txt-muted);width:62px;text-align:right;flex-shrink:0}}
+</style>
+<script>(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t)document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})()</script>
+</head><body>
+<div class="kpi-row">
+  <div class="kpi"><div class="kpi-lbl">월 수입</div><div class="kpi-val" style="color:#81C784" id="kv-inc"></div></div>
+  <div class="kpi"><div class="kpi-lbl">월 지출</div><div class="kpi-val" style="color:#FFB74D" id="kv-exp"></div></div>
+  <div class="kpi"><div class="kpi-lbl">월 잉여/부족</div><div class="kpi-val" id="kv-sur"></div><div class="kpi-sub" id="kv-sur-sub"></div></div>
+  <div class="kpi"><div class="kpi-lbl">순자산</div><div class="kpi-val" id="kv-net"></div></div>
+</div>
+<div style="margin-bottom:14px">
+  <div class="sec-ttl">수입 · 지출 구조</div>
+  <div class="br-row"><div class="br-lbl">수입</div><div class="br-track"><div class="br-fill" style="background:#81C784;width:100%"></div></div><div class="br-val" id="bv-inc"></div></div>
+  <div class="br-row"><div class="br-lbl">지출</div><div class="br-track"><div class="br-fill" id="bf-exp" style="background:#FFB74D"></div></div><div class="br-val" id="bv-exp"></div></div>
+  <div class="br-row"><div class="br-lbl">잉여</div><div class="br-track"><div class="br-fill" id="bf-sur"></div></div><div class="br-val" id="bv-sur"></div></div>
+</div>
+<div>
+  <div class="sec-ttl">노후준비 건강도</div>
+  <div style="display:flex;align-items:center;gap:5px;padding-left:34px;font-size:10px;margin-bottom:8px">
+    <div id="g-dot" style="width:7px;height:7px;border-radius:50%;flex-shrink:0"></div>
+    <span id="g-zone"></span>
+  </div>
+  <div class="br-row">
+    <div class="br-lbl"></div>
+    <div class="br-track" style="background:linear-gradient(to right,#B71C1C 0%,#B71C1C 8%,#C54949 8%,#C54949 13%,#EF5350 13%,#EF5350 20%,#FFB74D 20%,#FFB74D 32%,#FFCA28 32%,#FFCA28 45%,#66BB6A 45%,#66BB6A 65%,#42A5F5 65%,#42A5F5 85%,#7C4DFF 85%,#7C4DFF 100%);overflow:visible;position:relative">
+      <div id="g-mk" style="position:absolute;top:-4px;width:4px;height:18px;border-radius:2px;transform:translateX(-50%);transition:left .7s cubic-bezier(.4,0,.2,1);box-shadow:0 0 0 1.5px rgba(255,255,255,.9),0 0 4px rgba(0,0,0,.55)"></div>
+      <div style="position:absolute;left:8%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">0</span></div>
+      <div style="position:absolute;left:13%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">5</span></div>
+      <div style="position:absolute;left:20%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">10</span></div>
+      <div style="position:absolute;left:32%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">15</span></div>
+      <div style="position:absolute;left:45%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">20</span></div>
+      <div style="position:absolute;left:65%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">30</span></div>
+      <div style="position:absolute;left:85%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">40</span></div>
+    </div>
+    <div class="br-val" id="g-pct"></div>
+  </div>
+  <div style="display:flex;padding:2px 70px 0 34px">
+    <span style="flex:8;font-size:8px;color:var(--txt-muted);text-align:center">적자</span>
+    <span style="flex:5;font-size:8px;color:var(--txt-muted);text-align:center">위기</span>
+    <span style="flex:7;font-size:8px;color:var(--txt-muted);text-align:center">위험</span>
+    <span style="flex:12;font-size:8px;color:var(--txt-muted);text-align:center">주의</span>
+    <span style="flex:13;font-size:8px;color:var(--txt-muted);text-align:center">보통</span>
+    <span style="flex:20;font-size:8px;color:var(--txt-muted);text-align:center">양호</span>
+    <span style="flex:20;font-size:8px;color:var(--txt-muted);text-align:center">우수</span>
+    <span style="flex:15;font-size:8px;color:var(--txt-muted);text-align:center">매우우수</span>
+  </div>
+</div>
+<script>
+const INC={inc_val},EXP={exp_val},SUR={surplus},NET={net_val};
+function fmt(v){{const a=Math.abs(v),s=v<0?'-':'',m=Math.round(a/10000);if(m>=10000)return s+(m/10000).toFixed(1)+'억원';if(m>=1000)return s+(m/1000).toFixed(1)+'천만원';return s+m.toLocaleString()+'만원';}}
+document.getElementById('kv-inc').textContent=fmt(INC);
+document.getElementById('kv-exp').textContent=fmt(EXP);
+const surEl=document.getElementById('kv-sur');surEl.textContent=fmt(SUR);surEl.style.color=SUR>=0?'#81C784':'#EF5350';
+if(SUR!==0)document.getElementById('kv-sur-sub').textContent=fmt(SUR*12)+' 연환산';
+document.getElementById('kv-net').textContent=fmt(NET);
+const maxV=Math.max(INC,EXP,1);
+document.getElementById('bf-exp').style.width=(EXP/maxV*100).toFixed(1)+'%';
+document.getElementById('bv-inc').textContent=fmt(INC);
+document.getElementById('bv-exp').textContent=fmt(EXP);
+document.getElementById('bv-sur').textContent=fmt(SUR);
+const surF=document.getElementById('bf-sur');
+surF.style.width=(Math.min(100,Math.abs(SUR)/maxV*100)).toFixed(1)+'%';
+const rate=INC>0?SUR/INC*100:(SUR<0?-100:0);
+function rateToBar(r){{if(r<=-50)return 0;if(r<0)return(r+50)/50*8;if(r<5)return 8+r/5*5;if(r<10)return 13+(r-5)/5*7;if(r<15)return 20+(r-10)/5*12;if(r<20)return 32+(r-15)/5*13;if(r<30)return 45+(r-20)/10*20;if(r<40)return 65+(r-30)/10*20;return Math.min(99,85+(r-40)/10*15);}}
+const pct=Math.max(1,rateToBar(rate));
+document.getElementById('g-mk').style.left=pct+'%';
+let zc,zn;
+if(rate<0){{zc='#B71C1C';zn='적자';}}else if(rate<5){{zc='#C54949';zn='위기';}}else if(rate<10){{zc='#EF5350';zn='위험';}}else if(rate<15){{zc='#FFB74D';zn='주의';}}else if(rate<20){{zc='#FFCA28';zn='보통';}}else if(rate<30){{zc='#66BB6A';zn='양호';}}else if(rate<40){{zc='#42A5F5';zn='우수';}}else{{zc='#7C4DFF';zn='매우우수';}}
+surF.style.background=zc;
+document.getElementById('g-mk').style.background=zc;
+document.getElementById('g-dot').style.background=zc;
+document.getElementById('g-pct').textContent=zn;
+document.getElementById('g-pct').style.color=zc;
+document.getElementById('g-zone').textContent='재정비율(잉여금액 / 수입금액 * 100) : '+fmt(SUR)+' ÷ '+fmt(INC)+' = '+rate.toFixed(1)+'%';
+document.getElementById('g-zone').style.color=zc;
+function reportH(){{const h=Math.ceil(document.body.scrollHeight)+12;window.parent.postMessage({{type:'streamlit:setFrameHeight',height:h}},'*');}}
+window.parent.postMessage({{type:'streamlit:componentReady',apiVersion:1}},'*');
+if(window.ResizeObserver)new ResizeObserver(reportH).observe(document.body);
+setTimeout(reportH,200);
+var _lt=null;
+setInterval(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t&&t!==_lt){{_lt=t;document.documentElement.setAttribute('data-theme',t);}}}}catch(e){{}}}},500);
+</script></body></html>"""
 
 
 def _restore_from_profile(p: dict):
@@ -805,6 +959,135 @@ def _social_btn(label: str, url: str, bg: str, color: str = "white",
         f'padding:13px 0;border-radius:24px;margin-bottom:8px;{_border}">'
         f'{_icon_html}{label}</a>'
     )
+
+
+def _show_consent_screen():
+    _PROVIDER_LABEL = {"kakao": "카카오", "naver": "네이버", "google": "구글"}
+    _token    = st.session_state.get('_consent_token', '')
+    _name     = st.session_state.get('_consent_name', '')
+    _provider = st.session_state.get('_consent_provider', '')
+    _prov_kr  = _PROVIDER_LABEL.get(_provider, _provider)
+
+    # 중앙 정렬 카드 스타일
+    st.markdown("""
+<style>
+.consent-wrap{max-width:480px;margin:60px auto 0;padding:0 16px}
+.consent-card{background:var(--background-color,#fff);border:1px solid rgba(0,0,0,0.12);
+  border-radius:16px;padding:28px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
+.consent-app{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.consent-app-icon{width:48px;height:48px;background:linear-gradient(135deg,#2D6A8B,#1a4a65);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  color:white;font-size:22px;flex-shrink:0}
+.consent-app-name{font-size:1.2rem;font-weight:700}
+.consent-app-sub{font-size:0.78rem;color:#888;margin-top:2px}
+.consent-desc{font-size:0.83rem;color:#555;line-height:1.6;margin-bottom:20px;
+  padding:12px 14px;background:rgba(0,0,0,0.03);border-radius:8px}
+.consent-section{border:1px solid rgba(0,0,0,0.10);border-radius:10px;
+  padding:14px 16px;margin-bottom:10px}
+.consent-section-title{font-weight:600;font-size:0.9rem;margin-bottom:8px}
+.consent-tag-req{background:#E8F4FD;color:#1a6fa0;font-size:0.72rem;padding:2px 7px;
+  border-radius:10px;margin-left:6px;font-weight:600}
+.consent-tag-opt{background:#F0F0F0;color:#666;font-size:0.72rem;padding:2px 7px;
+  border-radius:10px;margin-left:6px;font-weight:600}
+.consent-divider{border:none;border-top:1px solid rgba(0,0,0,0.08);margin:16px 0}
+</style>
+<div class="consent-wrap">
+  <div class="consent-card">
+    <div class="consent-app">
+      <div class="consent-app-icon">🏦</div>
+      <div>
+        <div class="consent-app-name">은퇴설계</div>
+        <div class="consent-app-sub">{prov_kr} 계정으로 가입</div>
+      </div>
+    </div>
+    <div class="consent-desc">
+      <strong>{name}</strong>님, 가입을 환영합니다!<br>
+      서비스 이용을 위해 아래 약관에 동의해 주세요.
+    </div>
+  </div>
+</div>
+""".replace("{prov_kr}", _prov_kr).replace("{name}", _name or "회원"), unsafe_allow_html=True)
+
+    _all = st.checkbox("✅ 전체 동의하기 (선택 동의 포함)", key="_consent_all")
+    st.markdown("<hr style='margin:4px 0 12px'>", unsafe_allow_html=True)
+
+    with st.container(border=True):
+        st.markdown("**서비스 이용약관** <span style='background:#E8F4FD;color:#1a6fa0;font-size:0.72rem;padding:2px 7px;border-radius:10px;font-weight:600'>필수</span>", unsafe_allow_html=True)
+        _terms = st.checkbox("이용약관에 동의합니다", value=_all, key="_consent_terms")
+        with st.expander("약관 보기", expanded=False):
+            st.markdown("""
+**은퇴설계 서비스 이용약관 (요약)**
+
+- 본 서비스는 개인 은퇴 재무 시뮬레이션을 제공합니다.
+- 서비스 내 계산 결과는 참고용이며 실제 투자·세무 상담을 대체하지 않습니다.
+- 회원은 본인의 정보를 정확하게 입력할 책임이 있습니다.
+- 서비스 부당 이용 시 계정이 제한될 수 있습니다.
+""")
+
+    with st.container(border=True):
+        st.markdown("**개인정보 처리방침** <span style='background:#E8F4FD;color:#1a6fa0;font-size:0.72rem;padding:2px 7px;border-radius:10px;font-weight:600'>필수</span>", unsafe_allow_html=True)
+        _privacy = st.checkbox("개인정보 수집·이용에 동의합니다", value=_all, key="_consent_privacy")
+        with st.expander("처리방침 보기", expanded=False):
+            st.markdown(f"""
+**수집 항목**: 이메일, 이름 (소셜 제공 정보)
+**수집 목적**: 회원 식별, 서비스 제공, 저장된 은퇴설계 프로필 관리
+**보유 기간**: 회원 탈퇴 시까지
+**제3자 제공**: 없음
+소셜 로그인 제공자({_prov_kr})로부터 전달받은 정보는 본 서비스 외 용도로 사용되지 않습니다.
+""")
+
+    with st.container(border=True):
+        st.markdown("**마케팅 수신 동의** <span style='background:#F0F0F0;color:#666;font-size:0.72rem;padding:2px 7px;border-radius:10px;font-weight:600'>선택</span>", unsafe_allow_html=True)
+        _marketing = st.checkbox("서비스 업데이트·유용한 재무 정보 수신에 동의합니다", value=_all, key="_consent_marketing")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    col_cancel, col_confirm = st.columns(2)
+    with col_cancel:
+        if st.button("취소", use_container_width=True):
+            for k in ('_consent_token', '_consent_name', '_consent_provider'):
+                st.session_state.pop(k, None)
+            st.rerun()
+    with col_confirm:
+        if st.button("**동의하기**", type="primary", use_container_width=True):
+            if not _terms or not _privacy:
+                st.error("필수 약관(이용약관, 개인정보 처리방침)에 동의해 주세요.")
+            else:
+                _resp, _err = call_api("/auth/consent-confirm", {
+                    "token": _token,
+                    "terms_agreed": _terms,
+                    "privacy_agreed": _privacy,
+                    "marketing_agreed": _marketing,
+                })
+                if _err:
+                    st.error(f"오류: {_err}")
+                else:
+                    # 계정 생성 완료 → 일반 로그인과 동일하게 처리
+                    for k in ('_consent_token', '_consent_name', '_consent_provider'):
+                        st.session_state.pop(k, None)
+                    _end_session()
+                    st.session_state.token          = _resp["access_token"]
+                    st.session_state.user_id        = int(_resp.get("user_id", 0))
+                    st.session_state.user_name      = _resp.get("name", "")
+                    st.session_state.user_email     = _resp.get("email", "")
+                    st.session_state.is_admin       = bool(int(_resp.get("is_admin", 0)))
+                    st.session_state.oauth_provider = _resp.get("oauth_provider", "")
+                    _sy = int(_resp.get("social_birth_year",  0) or 0)
+                    _sm = int(_resp.get("social_birth_month", 0) or 0)
+                    _sd = int(_resp.get("social_birth_day",   0) or 0)
+                    _sg = _resp.get("social_gender", "") or ""
+                    _sn = _resp.get("name", "") or ""
+                    _social_data = {}
+                    if _sy: _social_data['birth_year']  = _sy
+                    if _sm: _social_data['birth_month'] = _sm
+                    if _sd: _social_data['birth_day']   = _sd
+                    if _sg: _social_data['gender']      = _sg
+                    if _sn: _social_data['soc_name']    = _sn
+                    _save_session_to_cookie(
+                        _resp["access_token"], int(_resp.get("user_id", 0)),
+                        _resp.get("name", ""), _resp.get("email", ""),
+                        social=_social_data,
+                    )
+                    st.rerun()
 
 
 def show_auth_screen():
@@ -1281,10 +1564,15 @@ def _apply_national_avg(current_age: int, birth_year: int = None):
     )
 
     if not _has_saved_profile:
-        ss.inp_birth_year     = birth_year if birth_year is not None else (_cur_year - current_age)
-        ss.inp_birth_month    = 1
-        ss.inp_birth_day      = 1
-        ss.inp_gender         = '남'
+        _social_prefill = ss.get('_social_prefill_done', False)
+        if not _social_prefill:
+            ss.inp_birth_year  = birth_year if birth_year is not None else (_cur_year - current_age)
+            ss.inp_birth_month = 1
+            ss.inp_birth_day   = 1
+            ss.inp_gender      = '남'
+        elif birth_year is not None:
+            # 소셜 데이터가 있어도 외부에서 birth_year를 명시 지정한 경우는 반영
+            ss.inp_birth_year  = birth_year
         ss.inp_retirement_age = avg['retirement_age']
         ss.inp_lifespan       = avg['lifespan']
         ss.inp_dependents     = avg['dependents']
@@ -1609,8 +1897,9 @@ def show_main_app():
 
     def _run_analysis():
         payload = _build_analyze_payload()
+        payload_json = json.dumps(payload, sort_keys=True, ensure_ascii=False)
         with st.spinner("분석 중..."):
-            result, err = call_api("/analyze", payload)
+            result, err = _cached_analyze(payload_json, st.session_state.token or "", API_BASE)
         if err:
             st.session_state['_analysis_error'] = err
         else:
@@ -1696,21 +1985,37 @@ button[data-baseweb="tab"][aria-selected="true"]:last-of-type {
                 icon=None,
             )
         tabs = st.tabs(_tab_labels)
-        # 컨설팅(6번째)·게시판(7번째)·관리자(8번째) 탭 활성 시 stTabs 이후 형제 요소 숨김
-        # CSS :has() 방식 — JS 타이밍 문제 없이 즉각 반응
+        # 컨설팅(3)·커뮤니티(4)·관리자(5) 탭 활성 시 stTabs 이후 형제 요소 숨김
+        # JS 방식 — CSS :has()는 내부 서브탭(자산/부채=3, 지출=4)과 nth-child가 충돌해 그래프를 잘못 숨김
         st.markdown("""
 <style>
-/* 컨설팅(3)·커뮤니티(4)·관리자(5) 탭 활성 시 탭 외부 요소 숨김 */
-[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(3)[aria-selected="true"]):not(:has([role="tablist"] > button:nth-child(5))) ~ *,
-[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(4)[aria-selected="true"]):not(:has([role="tablist"] > button:nth-child(6))) ~ *,
-[data-testid="stTabs"]:has([role="tablist"] > button:nth-child(5)[aria-selected="true"]):not(:has([role="tablist"] > button:nth-child(6))) ~ * {
-    display: none !important;
-}
 /* 탭↔저장버튼 사이 공백 제거 */
 [role="tabpanel"] { padding-bottom: 0 !important; }
 div:has(> [data-testid="stTabs"]) + div { margin-top: -2rem !important; }
 </style>
 """, unsafe_allow_html=True)
+        st.components.v1.html("""<script>
+(function(){
+  var pd=window.parent.document;
+  function run(){
+    var t=pd.querySelector('[data-testid="stTabs"]');
+    if(!t)return;
+    // querySelector는 DOM 순서상 첫 번째 tablist를 반환 = 외부(상위) tablist
+    var li=t.querySelector('[role="tablist"]');
+    if(!li)return;
+    var idx=-1;
+    var bs=li.querySelectorAll(':scope>button[role="tab"]');
+    for(var i=0;i<bs.length;i++){
+      if(bs[i].getAttribute('aria-selected')==='true'){idx=i;break;}
+    }
+    // 분석(0)·내정보(1) = 표시, 컨설팅(2)·커뮤니티(3)·관리자(4) = 숨김
+    var hide=idx>=2;
+    var s=t.nextElementSibling;
+    while(s){s.style.display=hide?'none':'';s=s.nextElementSibling;}
+  }
+  setInterval(run,150);
+})();
+</script>""", height=1)
         # "내 정보 직접 입력하기" 클릭 후 ✏️내 정보 탭(index=1)으로 자동 포커스
         if st.session_state.pop('_goto_personal_tab', False):
             st.iframe("""<script>
@@ -2487,6 +2792,23 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -2rem !important; }
                 FA_TYPES = ["예금/적금", "주식/펀드", "채권", "ISA", "가상자산", "기타"]
                 fa_edit_idx = st.session_state.editing_fa_idx
 
+                def _fa_isa_fields(prefix, f=None):
+                    """ISA 선택 시 전용 입력 필드 반환. f=기존값dict or None=신규"""
+                    _isa_types = ["일반형", "서민형"]
+                    mc_default = int((f or {}).get('monthly_contribution', 0) // 10000) if f else 0
+                    ut_default = (f or {}).get('isa_user_type', '일반형')
+                    tr_default = (f or {}).get('isa_transfer_to_pension', False)
+                    st.caption("💡 ISA: 연 2,000만원 납입 한도 · 일반형 비과세 200만원 · 서민형 400만원")
+                    mc = _sl("월 납입액", 0, 167, mc_default, 10, f"{prefix}_mc", "won") * 10000
+                    ut = st.selectbox("가입자 유형", _isa_types,
+                                      index=_isa_types.index(ut_default) if ut_default in _isa_types else 0,
+                                      key=f"{prefix}_ut",
+                                      help="서민형: 연소득 5,000만원 이하 근로자 또는 사업소득자")
+                    tr = st.toggle("만기 후 IRP/연금저축 전환 예정",
+                                   value=tr_default, key=f"{prefix}_tr",
+                                   help="전환금액의 10%, 최대 300만원 추가 세액공제 (IRP 한도와 별도)")
+                    return mc, ut, tr
+
                 if fa_edit_idx is not None and fa_edit_idx < len(st.session_state.financial_assets):
                     f = st.session_state.financial_assets[fa_edit_idx]
                     col_back, col_title = st.columns([1, 4])
@@ -2499,38 +2821,72 @@ div:has(> [data-testid="stTabs"]) + div { margin-top: -2rem !important; }
                         fa_name = st.text_input("이름", f['name'])
                         fa_type = st.selectbox("종류", FA_TYPES,
                                                index=FA_TYPES.index(f['asset_type']) if f['asset_type'] in FA_TYPES else 0)
-                        fa_amount = _sl("금액", 0, 100000,
+                        fa_amount = _sl("현재 잔액", 0, 100000,
                                         min(100000, int(f['amount'] // 10000)), 500, fmt="won") * 10000
                         fa_return = _sl("예상 연수익률", 0.0, 50.0,
                             min(round(f['annual_return_rate'] * 100, 1), 50.0), 0.5, fmt="%") / 100
                         fa_taxable = st.toggle("과세대상", value=f['is_taxable'])
+                        fa_mc, fa_ut, fa_tr = (0, "일반형", False)
+                        if fa_type == "ISA":
+                            fa_mc, fa_ut, fa_tr = _fa_isa_fields("edit_fa", f)
                         if st.form_submit_button("저장", width='stretch'):
                             st.session_state.financial_assets[fa_edit_idx] = {
                                 "name": fa_name, "asset_type": fa_type,
                                 "amount": fa_amount, "annual_return_rate": fa_return,
                                 "is_taxable": fa_taxable,
+                                "monthly_contribution": fa_mc,
+                                "isa_user_type": fa_ut,
+                                "isa_transfer_to_pension": fa_tr,
                             }
                             st.session_state.editing_fa_idx = None; st.rerun()
                 else:
                     with st.expander("➕ 금융자산 추가", expanded=False):
-                        with st.form("add_fa", clear_on_submit=True):
-                            fa_name = st.text_input("이름", "주거래은행 예금")
-                            fa_type = st.selectbox("종류", FA_TYPES)
-                            fa_amount = _sl("금액", 0, 100000, 0, 500, fmt="won") * 10000
-                            fa_return = _sl("예상 연수익률", 0.0, 50.0, 3.0, 0.5, fmt="%") / 100
-                            fa_taxable = st.toggle("과세대상", value=(fa_type != "ISA"))
-                            if st.form_submit_button("추가", width='stretch'):
-                                st.session_state.financial_assets.append({
-                                    "name": fa_name, "asset_type": fa_type,
-                                    "amount": fa_amount, "annual_return_rate": fa_return,
-                                    "is_taxable": fa_taxable,
-                                })
-                                st.rerun()
+                        # form 밖에서 종류를 선택해야 ISA 전용 필드가 동적으로 표시됨
+                        _add_fa_is_isa = st.toggle("🏦 ISA 계좌 추가", key="add_fa_is_isa_toggle",
+                                                    help="ISA 계좌는 비과세·분리과세 혜택 및 연금전환 세액공제를 별도 분석합니다")
+                        if not _add_fa_is_isa:
+                            with st.form("add_fa", clear_on_submit=True):
+                                fa_name = st.text_input("이름", "주거래은행 예금")
+                                fa_type = st.selectbox("종류", [t for t in FA_TYPES if t != "ISA"])
+                                fa_amount = _sl("현재 잔액", 0, 100000, 0, 500, fmt="won") * 10000
+                                fa_return = _sl("예상 연수익률", 0.0, 50.0, 3.0, 0.5, fmt="%") / 100
+                                fa_taxable = st.toggle("과세대상", value=True)
+                                if st.form_submit_button("추가", width='stretch'):
+                                    st.session_state.financial_assets.append({
+                                        "name": fa_name, "asset_type": fa_type,
+                                        "amount": fa_amount, "annual_return_rate": fa_return,
+                                        "is_taxable": fa_taxable,
+                                        "monthly_contribution": 0,
+                                        "isa_user_type": "일반형",
+                                        "isa_transfer_to_pension": False,
+                                    })
+                                    st.rerun()
+                        else:
+                            with st.form("add_isa", clear_on_submit=True):
+                                fa_name = st.text_input("이름", "ISA 계좌")
+                                fa_amount = _sl("현재 잔액", 0, 100000, 0, 500, fmt="won") * 10000
+                                fa_return = _sl("예상 연수익률", 0.0, 50.0, 4.0, 0.5, fmt="%") / 100
+                                fa_mc, fa_ut, fa_tr = _fa_isa_fields("add_isa_form")
+                                if st.form_submit_button("추가", width='stretch'):
+                                    st.session_state.financial_assets.append({
+                                        "name": fa_name, "asset_type": "ISA",
+                                        "amount": fa_amount, "annual_return_rate": fa_return,
+                                        "is_taxable": False,
+                                        "monthly_contribution": fa_mc,
+                                        "isa_user_type": fa_ut,
+                                        "isa_transfer_to_pension": fa_tr,
+                                    })
+                                    st.rerun()
                     for i, f in enumerate(st.session_state.financial_assets):
                         c1, c2, c3 = st.columns([5, 1, 1])
                         with c1:
                             st.markdown(f"**{f['name']}** ({f['asset_type']})")
-                            st.caption(f"{fmt_won(f['amount'])} · 연 {f['annual_return_rate']*100:.1f}%")
+                            _fa_cap = f"{fmt_won(f['amount'])} · 연 {f['annual_return_rate']*100:.1f}%"
+                            if f.get('asset_type') == 'ISA' and f.get('monthly_contribution', 0) > 0:
+                                _fa_cap += f" · 월납입 {fmt_won(f['monthly_contribution'])}"
+                            if f.get('asset_type') == 'ISA' and f.get('isa_transfer_to_pension'):
+                                _fa_cap += " · 연금전환예정"
+                            st.caption(_fa_cap)
                         with c2:
                             if st.button("✏️", key=f"edit_fa_{i}", help="수정"):
                                 st.session_state.editing_fa_idx = i; st.rerun()
@@ -5528,13 +5884,13 @@ input[type=range]{{width:100%;accent-color:#81C784;cursor:pointer}}
 </head><body>
 <div style="display:flex;flex-direction:column;align-items:center;gap:0">
   <div class="type-bar">
-    <button class="tbtn on" data-mode="donut" onclick="setMode('donut',this)">도넛</button>
+    <button class="tbtn" data-mode="donut" onclick="setMode('donut',this)">도넛</button>
     <button class="tbtn" data-mode="concentric" onclick="setMode('concentric',this)">동심원</button>
     <button class="tbtn" data-mode="bar" onclick="setMode('bar',this)">막대</button>
     <button class="tbtn" data-mode="stacked" onclick="setMode('stacked',this)">누적막대</button>
     <button class="tbtn" data-mode="treemap" onclick="setMode('treemap',this)">트리맵</button>
     <button class="tbtn" data-mode="waterfall" onclick="setMode('waterfall',this)">폭포</button>
-    <button class="tbtn" data-mode="sweep" onclick="setMode('sweep',this)">✦ 스윕</button>
+    <button class="tbtn on" data-mode="sweep" onclick="setMode('sweep',this)">✦ 스윕</button>
     <button class="tbtn" data-mode="bubble" onclick="setMode('bubble',this)">✦ 버블</button>
   </div>
   <div class="age-bar">
@@ -5554,7 +5910,7 @@ input[type=range]{{width:100%;accent-color:#81C784;cursor:pointer}}
 <script>
 const ALL={_all_ages_js};
 const TAX={_tax_details_g_js};
-let curMode='donut', curIdx=0;
+let curMode='sweep', curIdx=0;
 function fmt(v){{const m=Math.round(v/10000);if(m>=10000)return(m/10000).toFixed(1)+'억원';if(m>=1000)return(m/1000).toFixed(1)+'천만원';return m.toLocaleString()+'만원'}}
 function lerp(h1,h2,t){{
   const p=s=>parseInt(s,16);
@@ -6046,105 +6402,8 @@ try{{
         surplus  = cf.get('월잉여(부족)', 0)
         assets   = result.get('자산현황', {})
         _net_val = assets.get('순자산', 0)
-        with st.expander("📈 핵심 지표(은퇴 후 예상 월수입·지출 기준)", expanded=True):
-            _kpi_html = f"""<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-:root{{--txt:#ddd;--txt-muted:#aaa;--bg-card:rgba(255,255,255,.05);--border:rgba(255,255,255,.09)}}
-[data-theme="light"]{{--txt:#1a1a1a;--txt-muted:#555;--bg-card:rgba(0,0,0,.04);--border:rgba(0,0,0,.10)}}
-[data-theme="dark"]{{--txt:#ddd;--txt-muted:#aaa;--bg-card:rgba(255,255,255,.05);--border:rgba(255,255,255,.09)}}
-*{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--txt);padding:10px 6px 8px}}
-.kpi-row{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}}
-.kpi{{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}}
-.kpi-lbl{{font-size:10px;color:var(--txt-muted);letter-spacing:.03em;margin-bottom:3px}}
-.kpi-val{{font-size:15px;font-weight:700}}
-.kpi-sub{{font-size:10px;color:var(--txt-muted);margin-top:2px}}
-.sec-ttl{{font-size:10px;font-weight:600;color:var(--txt-muted);letter-spacing:.06em;margin-bottom:8px}}
-.br-row{{display:flex;align-items:center;gap:8px;margin-bottom:6px}}
-.br-lbl{{font-size:10px;color:var(--txt-muted);width:26px;text-align:right;flex-shrink:0}}
-.br-track{{flex:1;height:10px;background:var(--bg-card);border-radius:4px;overflow:hidden;border:1px solid var(--border)}}
-.br-fill{{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}}
-.br-val{{font-size:10px;color:var(--txt-muted);width:62px;text-align:right;flex-shrink:0}}
-</style>
-<script>(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t)document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})()</script>
-</head><body>
-<div class="kpi-row">
-  <div class="kpi"><div class="kpi-lbl">월 수입</div><div class="kpi-val" style="color:#81C784" id="kv-inc"></div></div>
-  <div class="kpi"><div class="kpi-lbl">월 지출</div><div class="kpi-val" style="color:#FFB74D" id="kv-exp"></div></div>
-  <div class="kpi"><div class="kpi-lbl">월 잉여/부족</div><div class="kpi-val" id="kv-sur"></div><div class="kpi-sub" id="kv-sur-sub"></div></div>
-  <div class="kpi"><div class="kpi-lbl">순자산</div><div class="kpi-val" id="kv-net"></div></div>
-</div>
-<div style="margin-bottom:14px">
-  <div class="sec-ttl">수입 · 지출 구조</div>
-  <div class="br-row"><div class="br-lbl">수입</div><div class="br-track"><div class="br-fill" style="background:#81C784;width:100%"></div></div><div class="br-val" id="bv-inc"></div></div>
-  <div class="br-row"><div class="br-lbl">지출</div><div class="br-track"><div class="br-fill" id="bf-exp" style="background:#FFB74D"></div></div><div class="br-val" id="bv-exp"></div></div>
-  <div class="br-row"><div class="br-lbl">잉여</div><div class="br-track"><div class="br-fill" id="bf-sur"></div></div><div class="br-val" id="bv-sur"></div></div>
-</div>
-<div>
-  <div class="sec-ttl">노후준비 건강도</div>
-  <div style="display:flex;align-items:center;gap:5px;padding-left:34px;font-size:10px;margin-bottom:8px">
-    <div id="g-dot" style="width:7px;height:7px;border-radius:50%;flex-shrink:0"></div>
-    <span id="g-zone"></span>
-  </div>
-  <div class="br-row">
-    <div class="br-lbl"></div>
-    <div class="br-track" style="background:linear-gradient(to right,#B71C1C 0%,#B71C1C 8%,#C54949 8%,#C54949 13%,#EF5350 13%,#EF5350 20%,#FFB74D 20%,#FFB74D 32%,#FFCA28 32%,#FFCA28 45%,#66BB6A 45%,#66BB6A 65%,#42A5F5 65%,#42A5F5 85%,#7C4DFF 85%,#7C4DFF 100%);overflow:visible;position:relative">
-      <div id="g-mk" style="position:absolute;top:-3px;width:3px;height:16px;border-radius:2px;transform:translateX(-50%);transition:left .7s cubic-bezier(.4,0,.2,1)"></div>
-      <div style="position:absolute;left:8%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">0</span></div>
-      <div style="position:absolute;left:13%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">5</span></div>
-      <div style="position:absolute;left:20%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">10</span></div>
-      <div style="position:absolute;left:32%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">15</span></div>
-      <div style="position:absolute;left:45%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">20</span></div>
-      <div style="position:absolute;left:65%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">30</span></div>
-      <div style="position:absolute;left:85%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.45)"><span style="position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);font-size:7px;color:var(--txt-muted);white-space:nowrap;line-height:1">40</span></div>
-    </div>
-    <div class="br-val" id="g-pct"></div>
-  </div>
-  <div style="display:flex;padding:2px 70px 0 34px">
-    <span style="flex:8;font-size:8px;color:var(--txt-muted);text-align:center">적자</span>
-    <span style="flex:5;font-size:8px;color:var(--txt-muted);text-align:center">위기</span>
-    <span style="flex:7;font-size:8px;color:var(--txt-muted);text-align:center">위험</span>
-    <span style="flex:12;font-size:8px;color:var(--txt-muted);text-align:center">주의</span>
-    <span style="flex:13;font-size:8px;color:var(--txt-muted);text-align:center">보통</span>
-    <span style="flex:20;font-size:8px;color:var(--txt-muted);text-align:center">양호</span>
-    <span style="flex:20;font-size:8px;color:var(--txt-muted);text-align:center">우수</span>
-    <span style="flex:15;font-size:8px;color:var(--txt-muted);text-align:center">매우우수</span>
-  </div>
-</div>
-<script>
-const INC={_inc_val},EXP={_exp_val},SUR={surplus},NET={_net_val};
-function fmt(v){{const a=Math.abs(v),s=v<0?'-':'',m=Math.round(a/10000);if(m>=10000)return s+(m/10000).toFixed(1)+'억원';if(m>=1000)return s+(m/1000).toFixed(1)+'천만원';return s+m.toLocaleString()+'만원';}}
-document.getElementById('kv-inc').textContent=fmt(INC);
-document.getElementById('kv-exp').textContent=fmt(EXP);
-const surEl=document.getElementById('kv-sur');surEl.textContent=fmt(SUR);surEl.style.color=SUR>=0?'#81C784':'#EF5350';
-if(SUR!==0)document.getElementById('kv-sur-sub').textContent=fmt(SUR*12)+' 연환산';
-document.getElementById('kv-net').textContent=fmt(NET);
-const maxV=Math.max(INC,EXP,1);
-document.getElementById('bf-exp').style.width=(EXP/maxV*100).toFixed(1)+'%';
-document.getElementById('bv-inc').textContent=fmt(INC);
-document.getElementById('bv-exp').textContent=fmt(EXP);
-document.getElementById('bv-sur').textContent=fmt(SUR);
-const surF=document.getElementById('bf-sur');
-surF.style.width=(Math.min(100,Math.abs(SUR)/maxV*100)).toFixed(1)+'%';
-const rate=INC>0?SUR/INC*100:(SUR<0?-100:0);
-function rateToBar(r){{if(r<=-50)return 0;if(r<0)return(r+50)/50*8;if(r<5)return 8+r/5*5;if(r<10)return 13+(r-5)/5*7;if(r<15)return 20+(r-10)/5*12;if(r<20)return 32+(r-15)/5*13;if(r<30)return 45+(r-20)/10*20;if(r<40)return 65+(r-30)/10*20;return Math.min(99,85+(r-40)/10*15);}}
-const pct=Math.max(1,rateToBar(rate));
-document.getElementById('g-mk').style.left=pct+'%';
-let zc,zn;
-if(rate<0){{zc='#B71C1C';zn='적자';}}else if(rate<5){{zc='#C54949';zn='위기';}}else if(rate<10){{zc='#EF5350';zn='위험';}}else if(rate<15){{zc='#FFB74D';zn='주의';}}else if(rate<20){{zc='#FFCA28';zn='보통';}}else if(rate<30){{zc='#66BB6A';zn='양호';}}else if(rate<40){{zc='#42A5F5';zn='우수';}}else{{zc='#7C4DFF';zn='매우우수';}}
-surF.style.background=zc;
-document.getElementById('g-mk').style.background=zc;
-document.getElementById('g-dot').style.background=zc;
-document.getElementById('g-pct').textContent=zn;
-document.getElementById('g-pct').style.color=zc;
-document.getElementById('g-zone').textContent='재정비율(잉여금액 / 수입금액 * 100) : '+fmt(SUR)+' ÷ '+fmt(INC)+' = '+rate.toFixed(1)+'%';
-document.getElementById('g-zone').style.color=zc;
-function reportH(){{const h=Math.ceil(document.body.scrollHeight)+12;window.parent.postMessage({{type:'streamlit:setFrameHeight',height:h}},'*');}}
-window.parent.postMessage({{type:'streamlit:componentReady',apiVersion:1}},'*');
-if(window.ResizeObserver)new ResizeObserver(reportH).observe(document.body);
-setTimeout(reportH,200);
-var _lt=null;
-setInterval(function(){{try{{var t=window.parent.document.documentElement.getAttribute('data-theme');if(!t){{var bg=window.getComputedStyle(window.parent.document.body).backgroundColor;var rgb=bg.match(/\\d+/g);if(rgb&&rgb.length>=3){{var avg=(parseInt(rgb[0])+parseInt(rgb[1])+parseInt(rgb[2]))/3;t=avg<128?'dark':'light';}}}}if(t&&t!==_lt){{_lt=t;document.documentElement.setAttribute('data-theme',t);}}}}catch(e){{}}}},500);
-</script></body></html>"""
+        with st.expander("📈 핵심 지표(은퇴 후 예상 월수입·지출 기준 · 현재 실질가치, 물가 미반영)", expanded=True):
+            _kpi_html = _build_kpi_html(_inc_val, _exp_val, surplus, _net_val)
             st.components.v1.html(_kpi_html, height=370, scrolling=False)
 
         # ── 기초연금 ─────────────────────────────────────────
@@ -6579,6 +6838,47 @@ setInterval(function(){{try{{var t=window.parent.document.documentElement.getAtt
                     )
                 st.caption("[세액공제 상세 기준 안내 (국세청)](https://www.nts.go.kr)")
 
+        # ── ISA 분석 ─────────────────────────────────────────
+        _isa_info = result.get('ISA분석', {})
+        if _isa_info.get('보유여부'):
+            _isa_accounts = _isa_info.get('계좌목록', [])
+            _isa_total_save = _isa_info.get('총_연간절세액', 0)
+            _isa_total_tc   = _isa_info.get('총_연금전환_세액공제', 0)
+            _isa_title = f"🏦 ISA 계좌 분석 — 연간 절세 {fmt_won(_isa_total_save)}"
+            if _isa_total_tc > 0:
+                _isa_title += f" · 만기전환 세액공제 {fmt_won(_isa_total_tc)}"
+            with st.expander(_isa_title, expanded=True):
+                for _ia in _isa_accounts:
+                    st.markdown(f"**{_ia['이름']}** ({_ia['가입자유형']})")
+                    _ic1, _ic2, _ic3 = st.columns(3)
+                    with _ic1:
+                        _metric_card("현재 잔액", fmt_won(_ia['잔액']))
+                    with _ic2:
+                        _metric_card("연간 절세액", fmt_won(_ia['연간절세액']),
+                                     delta=f"비과세 한도 {fmt_won(_ia['비과세한도'])}")
+                    with _ic3:
+                        if _ia['연금전환_예정']:
+                            _metric_card("만기 연금전환 세액공제", fmt_won(_ia['연금전환_예상세액공제']))
+                        else:
+                            _metric_card("월 납입액", fmt_won(_ia['월납입액']))
+                    if _ia['월납입액'] > 0:
+                        _annual_c = _ia['연납입액']
+                        _room = _ia['연납입_잔여한도']
+                        if _room > 0:
+                            st.caption(f"연납입 {fmt_won(_annual_c)} · 연간 추가 납입 가능 {fmt_won(_room)} (한도 2,000만원)")
+                        else:
+                            st.caption("✅ 연간 납입 한도 2,000만원 모두 활용 중")
+                    if _ia['연금전환_예정'] and _ia['연금전환_예상세액공제'] > 0:
+                        st.info(
+                            f"📌 만기 후 IRP/연금저축 전환 시 **{fmt_won(_ia['연금전환_예상세액공제'])} 추가 세액공제** "
+                            "(기존 IRP 한도 900만원과 별도 적용)"
+                        )
+                    st.divider()
+                st.caption(
+                    "ISA 비과세 한도 초과분은 9.9% 분리과세 적용 (종합소득세 대상 제외) · "
+                    "서민형: 연소득 5,000만원 이하 근로자·사업소득자"
+                )
+
         # ── 대출 분석 ────────────────────────────────────────
         _debts = st.session_state.get('debts', [])
         if _debts:
@@ -6975,7 +7275,9 @@ setInterval(function(){{try{{var t=window.parent.document.documentElement.getAtt
 # ============================================================
 # 라우팅
 # ============================================================
-if not st.session_state.token:
+if st.session_state.get('_consent_token'):
+    _show_consent_screen()
+elif not st.session_state.token:
     if st.session_state.get('_account_deleted'):
         st.success("탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.")
         del st.session_state['_account_deleted']
@@ -7008,6 +7310,11 @@ else:
             # 프로필 없음(신규 사용자) → 국가 평균으로 온보딩 (기본 55세 구간)
             st.session_state.pop('_prof_load_retry', None)
             _default_age = st.session_state.get('_reg_age', 55)
+            # 소셜 데이터로 출생년도가 이미 채워진 경우 그 나이 기준으로 평균 적용
+            _social_by = st.session_state.get('inp_birth_year', 0)
+            if st.session_state.get('_social_prefill_done') and _social_by > 1940:
+                import datetime as _dt_mod
+                _default_age = _dt_mod.date.today().year - _social_by
             _apply_national_avg(int(_default_age))
             st.session_state.onboarding_done = True
             st.session_state.analysis_result = None

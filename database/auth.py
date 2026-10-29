@@ -68,8 +68,15 @@ def get_user_by_oauth(db: Session, provider: str, oauth_id: str) -> User | None:
     ).first()
 
 
-def create_oauth_user(db: Session, email: str, name: str, provider: str, oauth_id: str) -> User:
-    user = User(email=email, name=name, oauth_provider=provider, oauth_id=oauth_id)
+def create_oauth_user(
+    db: Session, email: str, name: str, provider: str, oauth_id: str,
+    terms_agreed_at=None, privacy_agreed_at=None, marketing_agreed: bool = False,
+) -> User:
+    user = User(
+        email=email, name=name, oauth_provider=provider, oauth_id=oauth_id,
+        terms_agreed_at=terms_agreed_at, privacy_agreed_at=privacy_agreed_at,
+        marketing_agreed=marketing_agreed,
+    )
     db.add(user)
     db.commit()
     db.refresh(user)

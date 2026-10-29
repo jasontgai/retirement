@@ -98,6 +98,10 @@ class FinancialAsset:
     amount: float = 0
     annual_return_rate: float = 0.03  # 예상 연수익률
     is_taxable: bool = True          # 과세대상 여부 (ISA 등 비과세 구분)
+    # ISA 전용 필드
+    monthly_contribution: float = 0  # 월 납입액 (연 2,000만원 한도)
+    isa_user_type: str = "일반형"    # "일반형"(비과세 200만원) / "서민형"(400만원)
+    isa_transfer_to_pension: bool = False  # 만기 후 IRP/연금저축 전환 예정
 
 
 @dataclass
